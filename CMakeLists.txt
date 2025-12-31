@@ -13,6 +13,8 @@ qt_add_executable(Before_Effects
     main.cpp
     mainwindow.cpp
     mainwindow.h
+    timeline.h
+    timeline.cpp
     mainwindow.ui
 )
 
