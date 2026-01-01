@@ -1,6 +1,9 @@
 #include "timeline.h"
 #include <QLayout>
 #include <QPainter>
+#include <QPolygon>
+#include <QPoint>
+#include <QPainterPath>
 #include <QSlider>
 #include <QIcon>
 #include <QPushButton>
@@ -72,14 +75,10 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 
 
 
-
-
-
-
-
 Timeline::Timeline (QWidget *parent) : QWidget(parent){
 
     QString theme = "Dark";
+    this->setPalette(QPalette(QColor("#333333")));
 
     QWidget* toolbar = new QWidget(this);
     toolbar->setFixedHeight(25);
@@ -199,8 +198,15 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
     timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate, frameWidth, frameCount, 5 * frameCount + 235, 23);
     setIndicatorBarFrameWidth(zoomSlider->value() * 5);
 
+    timeIndicator = new TimeIndicator(scroller);
+    timeIndicator->show();
+    timeIndicator->MoveCenter(500,20);
+    
+    timeIndicatorBar->lower();
+    timeIndicator->raise();
 
     scroller->setWidget(timeIndicatorBar);
+    timeIndicator->setAttribute(Qt::WA_AlwaysStackOnTop);
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -217,4 +223,54 @@ void Timeline::setIndicatorBarFrameWidth(int newFrameWidth)
 {
     timeIndicatorBar->frameWidth = newFrameWidth;
     timeIndicatorBar->resize(qMax(timeIndicatorBar->frameCount * timeIndicatorBar->frameWidth + 235, this->width() - 4), timeIndicatorBar->height);
+}
+
+
+
+
+
+TimeIndicator::TimeIndicator(QWidget *parent) : QWidget(parent)
+{
+    this->setFixedSize(width, height);
+    setAttribute(Qt::WA_TranslucentBackground);
+    setStyleSheet("background: transparent;");
+}
+
+void TimeIndicator::Elongate(int newHeight)
+{
+    height = newHeight;
+    this->setFixedHeight(height);
+}
+
+void TimeIndicator::MoveCenter(int x, int y)
+{
+    this->move(x - width/2, y);
+    update();
+}
+
+void TimeIndicator::paintEvent(QPaintEvent *event)
+{
+    int centerX = width/2;
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    QPen pen(QColor("#7BC7B0"), 2, Qt::SolidLine);
+    QBrush brush(QColor("#7BC7B0"));
+
+    painter.setPen(pen);
+    painter.setBrush(brush);
+
+
+    QPainterPath path;
+    path.moveTo(centerX -5,0);
+    path.lineTo(centerX -5,3);
+    path.lineTo(centerX +0,8);
+    path.lineTo(centerX +5,3);
+    path.lineTo(centerX +5,0);
+    path.closeSubpath();
+
+    painter.drawPath(path);
+    painter.drawLine(centerX,8, centerX, height);
 }

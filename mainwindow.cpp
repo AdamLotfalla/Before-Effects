@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     
     Timeline* TimelinePanel = new Timeline(this);
     TimelinePanel->setAutoFillBackground(true);
-    TimelinePanel->setPalette(QPalette(QColor(100,100,200)));
+    // TimelinePanel->setPalette(QPalette(QColor(100,100,200)));
     
     QSplitter* timelineSplitter = new QSplitter(Qt::Vertical, centralWidget);
     timelineSplitter->addWidget(RPanel);

@@ -18,7 +18,15 @@ protected:
     int singleBarHeight = 50;
 };
 
-
+class TimeIndicator : public QWidget{
+private:
+    void paintEvent(QPaintEvent* event);
+    int height = 500, width = 12;
+public:
+    TimeIndicator(QWidget* parent);
+    void Elongate(int newHeight);
+    void MoveCenter(int x, int y);
+};
 
 
 class Timeline : public QWidget{
@@ -26,10 +34,13 @@ public:
     Timeline(QWidget *parent = nullptr);
 
     TimeIndicatorBar* timeIndicatorBar;
+    TimeIndicator* timeIndicator;
 
     void clickTimeIndicatorBar(QEvent* event);
     void zoomSliderChanged(int value);
     void setIndicatorBarFrameWidth(int value);
+
+    int currentFrame = 0;
 
 protected:
     int frameRate = 24;
