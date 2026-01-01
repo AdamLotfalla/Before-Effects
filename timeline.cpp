@@ -11,7 +11,58 @@
 #include <QDebug>
 #include <QFile>
 #include <QToolButton>
+#include <QMouseEvent>
 
+TimeIndicator::TimeIndicator(QWidget *parent) : QWidget(parent)
+{
+    this->setFixedSize(width, height);
+    setAttribute(Qt::WA_TranslucentBackground);
+    setStyleSheet("background: transparent;");
+}
+
+void TimeIndicator::Elongate(int newHeight)
+{
+    height = newHeight;
+    this->setFixedHeight(height);
+}
+
+void TimeIndicator::MoveCenter(int x, int y)
+{
+    this->move(x - width/2, y);
+    update();
+}
+
+void TimeIndicator::paintEvent(QPaintEvent *event)
+{
+    int centerX = width/2;
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    QPen pen(QColor("#7BC7B0"), 2, Qt::SolidLine);
+    QBrush brush(QColor("#7BC7B0"));
+
+    painter.setPen(pen);
+    painter.setBrush(brush);
+
+
+    QPainterPath path;
+    path.moveTo(centerX -5,0);
+    path.lineTo(centerX -5,3);
+    path.lineTo(centerX +0,8);
+    path.lineTo(centerX +5,3);
+    path.lineTo(centerX +5,0);
+    path.closeSubpath();
+
+    painter.drawPath(path);
+    painter.drawLine(centerX,8, centerX, height);
+}
+
+
+
+
+// ----------------------- INDICATOR BAR -----------------------
 TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int FCOUNT, int WIDTH, int HEIGHT){
     frameRate = FRATE;
     frameWidth = FWIDTH;
@@ -19,8 +70,15 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int F
     height = HEIGHT;
     width = WIDTH;
     this->resize(WIDTH, HEIGHT);
-    update();
 
+    timeIndicator = new TimeIndicator(parent);
+    timeIndicator->show();
+    timeIndicator->MoveCenter(500, 20);
+    // timeIndicator->setAttribute(Qt::WA_AlwaysStackOnTop);
+
+
+    // QObject::connect(this, &TimeIndicatorBar::leftButtonClicked, &TimeIndicatorBar::onClick);
+    update();
 }
 
 void TimeIndicatorBar::paintEvent(QPaintEvent *event)
@@ -68,13 +126,24 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
         }
     }
 
-    painter.drawText(QPoint(width, height), "End");
+    pen.setColor("#444444");
+    pen.setWidth(2);
+    painter.setPen(pen);
+    painter.drawLine(0, height, width, height);
+}
+
+void TimeIndicatorBar::onClick(QMouseEvent *event)
+{
+    setMouseTracking(true);
+    int x = event->pos().x();
+
+    timeIndicator->MoveCenter(x/frameWidth * frameWidth, 20);
 }
 
 
 
 
-
+// ----------------------- TIMELINE -----------------------
 Timeline::Timeline (QWidget *parent) : QWidget(parent){
 
     QString theme = "Dark";
@@ -98,8 +167,6 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
     zoomInButton->setToolTip("Zoom In Timeline");
     zoomOutButton->setToolTip("Zoom Out Timeline");
 
-
-
     // For QToolButton - better for icon-only buttons
     QString buttonStyle = 
         "QToolButton {"
@@ -116,7 +183,7 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
         "    background-color: #3A3A3A;"  // Subtle hover
         "    border-radius: 3px;"
         "}";
-
+    
     zoomInButton->setStyleSheet(buttonStyle);
     zoomOutButton->setStyleSheet(buttonStyle);
         
@@ -198,15 +265,7 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
     timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate, frameWidth, frameCount, 5 * frameCount + 235, 23);
     setIndicatorBarFrameWidth(zoomSlider->value() * 5);
 
-    timeIndicator = new TimeIndicator(scroller);
-    timeIndicator->show();
-    timeIndicator->MoveCenter(500,20);
-    
-    timeIndicatorBar->lower();
-    timeIndicator->raise();
-
     scroller->setWidget(timeIndicatorBar);
-    timeIndicator->setAttribute(Qt::WA_AlwaysStackOnTop);
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -229,48 +288,3 @@ void Timeline::setIndicatorBarFrameWidth(int newFrameWidth)
 
 
 
-TimeIndicator::TimeIndicator(QWidget *parent) : QWidget(parent)
-{
-    this->setFixedSize(width, height);
-    setAttribute(Qt::WA_TranslucentBackground);
-    setStyleSheet("background: transparent;");
-}
-
-void TimeIndicator::Elongate(int newHeight)
-{
-    height = newHeight;
-    this->setFixedHeight(height);
-}
-
-void TimeIndicator::MoveCenter(int x, int y)
-{
-    this->move(x - width/2, y);
-    update();
-}
-
-void TimeIndicator::paintEvent(QPaintEvent *event)
-{
-    int centerX = width/2;
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
-    QPen pen(QColor("#7BC7B0"), 2, Qt::SolidLine);
-    QBrush brush(QColor("#7BC7B0"));
-
-    painter.setPen(pen);
-    painter.setBrush(brush);
-
-
-    QPainterPath path;
-    path.moveTo(centerX -5,0);
-    path.lineTo(centerX -5,3);
-    path.lineTo(centerX +0,8);
-    path.lineTo(centerX +5,3);
-    path.lineTo(centerX +5,0);
-    path.closeSubpath();
-
-    painter.drawPath(path);
-    painter.drawLine(centerX,8, centerX, height);
-}

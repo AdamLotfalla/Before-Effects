@@ -2,22 +2,6 @@
 #include <QWidget>
 #include <QScrollArea>
 
-class TimeIndicatorBar : public QWidget{
-public:
-    TimeIndicatorBar(QWidget* parent, int frameRate, int frameWidth, int frameCount, int width, int height);
-    void paintEvent(QPaintEvent* event);
-    int frameWidth; 
-    int frameCount; 
-    int height, width;
-protected:
-    int frameRate;  
-    int tickInterval = 10;
-    
-    QWidget* parent;
-    
-    int singleBarHeight = 50;
-};
-
 class TimeIndicator : public QWidget{
 private:
     void paintEvent(QPaintEvent* event);
@@ -27,6 +11,25 @@ public:
     void Elongate(int newHeight);
     void MoveCenter(int x, int y);
 };
+
+
+class TimeIndicatorBar : public QWidget{   
+public:
+    TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int FCOUNT, int WIDTH, int HEIGHT);
+    void paintEvent(QPaintEvent* event);
+    int frameWidth; 
+    int frameCount; 
+    int height, width;
+    TimeIndicator* timeIndicator;
+protected:
+    int frameRate;  
+    int tickInterval = 10;
+    int singleBarHeight = 50;
+    QWidget* parent;
+    void onClick(QMouseEvent* event);
+    void onUnClick(QMouseEvent* event);
+};
+
 
 
 class Timeline : public QWidget{
