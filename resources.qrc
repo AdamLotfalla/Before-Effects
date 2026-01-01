@@ -1,0 +1,11 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/icons/Light">
+    <file>zoomIn_Light.svg</file>
+    <file>zoomOut_Light.svg</file>
+  </qresource>
+  <qresource prefix="/icons/Dark">
+    <file>zoomIn_Dark.svg</file>
+    <file>zoomOut_Dark.svg</file>
+  </qresource>
+</RCC>

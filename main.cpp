@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     
     MainWindow w;
     w.setWindowTitle("Before Effects");
-    w.show();
+    w.showMaximized();
 
     return a.exec();
 }
