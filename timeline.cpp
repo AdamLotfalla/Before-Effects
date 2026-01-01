@@ -15,30 +15,28 @@
 
 TimeIndicator::TimeIndicator(QWidget *parent) : QWidget(parent)
 {
-    this->setFixedSize(width, height);
     setAttribute(Qt::WA_TranslucentBackground);
     setStyleSheet("background: transparent;");
 }
 
-void TimeIndicator::Elongate(int newHeight)
-{
-    height = newHeight;
-    this->setFixedHeight(height);
-}
+// void TimeIndicator::Elongate(int newHeight)
+// {
+//     height = newHeight;
+//     this->setFixedHeight(height);
+// }
 
 void TimeIndicator::MoveCenter(int x, int y)
 {
-    this->move(x - width/2, y);
+    this->move(x - IndicatorWidth/2, y);
     update();
 }
 
 void TimeIndicator::paintEvent(QPaintEvent *event)
 {
-    int centerX = width/2;
+    int centerX = IndicatorWidth/2;
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
-    painter.setRenderHint(QPainter::Antialiasing, true);
 
     QPen pen(QColor("#7BC7B0"), 2, Qt::SolidLine);
     QBrush brush(QColor("#7BC7B0"));
@@ -56,28 +54,38 @@ void TimeIndicator::paintEvent(QPaintEvent *event)
     path.closeSubpath();
 
     painter.drawPath(path);
-    painter.drawLine(centerX,8, centerX, height);
+
+    painter.drawLine(centerX, 8, centerX, this->height());
 }
 
 
 
 
 // ----------------------- INDICATOR BAR -----------------------
-TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int FCOUNT, int WIDTH, int HEIGHT){
+TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int FCOUNT, int WIDTH, int BARHEIGHT, int FULLHEIGHT, int &CURRENTF){
+    //TEMPORARY
+    currentFrame = 19;
+    
     frameRate = FRATE;
     frameWidth = FWIDTH;
     frameCount = FCOUNT;
-    height = HEIGHT;
-    width = WIDTH;
-    this->resize(WIDTH, HEIGHT);
+    barHeight = BARHEIGHT;
+    fullHeight = FULLHEIGHT;
+    fullWidth = WIDTH;
+    this->resize(fullWidth, fullHeight);
 
-    timeIndicator = new TimeIndicator(parent);
+    timeIndicator = new TimeIndicator(this);
     timeIndicator->show();
     timeIndicator->MoveCenter(500, 20);
+    setAttribute(Qt::WA_TranslucentBackground);
+    setStyleSheet("background: transparent;");
     // timeIndicator->setAttribute(Qt::WA_AlwaysStackOnTop);
-
-
+    
+    
     // QObject::connect(this, &TimeIndicatorBar::leftButtonClicked, &TimeIndicatorBar::onClick);
+    // setAttribute(Qt::WA_TranslucentBackground);
+    // setStyleSheet("background: transparent;");
+    // timeIndicator->raise();
     update();
 }
 
@@ -85,6 +93,8 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QPen pen;
+    // fullHeight = this->height();
+    fullWidth = frameCount*frameWidth;
 
     switch (int((float)frameWidth/5))
     {
@@ -105,8 +115,11 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     pen.setWidth(0);
     painter.setPen(pen);
 
-    for(int i = 0; i<= frameCount; i++){
-        QRect rect(i*frameWidth, 0, frameWidth, height);
+    QRect fullRect(0, 0, this->width(), barHeight);
+    painter.fillRect(fullRect, QColor("#1E1E1E"));
+
+    for(int i = 0; i< frameCount; i++){
+        QRect rect(i*frameWidth, 0, frameWidth, barHeight);
         
         if(i % 2){
             painter.fillRect(rect, QColor("#2D2D2D"));
@@ -121,15 +134,17 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 
     for(int i = 0; i <= frameCount; i++){
         if(i % tickInterval == 0){
-            painter.drawLine(i*frameWidth, height * 7/8, i*frameWidth, height);
-            painter.drawText(QPoint(i*frameWidth + 1, height * 11/16), QString::number(i));
+            painter.drawLine(i*frameWidth, barHeight * 7/8, i*frameWidth, barHeight - 3); // -3 to compensate for pen width
+            painter.drawText(QPoint(i*frameWidth + 1, barHeight * 11/16), QString::number(i));
         }
     }
 
     pen.setColor("#444444");
     pen.setWidth(2);
     painter.setPen(pen);
-    painter.drawLine(0, height, width, height);
+    painter.drawLine(0, barHeight, this->width(), barHeight);
+
+    timeIndicator->MoveCenter(currentFrame * frameWidth, 20);
 }
 
 void TimeIndicatorBar::onClick(QMouseEvent *event)
@@ -140,7 +155,15 @@ void TimeIndicatorBar::onClick(QMouseEvent *event)
     timeIndicator->MoveCenter(x/frameWidth * frameWidth, 20);
 }
 
+void TimeIndicatorBar::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
 
+    timeIndicator->resize(
+        timeIndicator->width(),
+        height()
+    );
+}
 
 
 // ----------------------- TIMELINE -----------------------
@@ -231,10 +254,10 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
         "QSlider::handle:horizontal {"
         "    background: white;"
         "    border: 2px solid #2E2E2E;"  // Border matches toolbar
-        "    width: 14px;"
-        "    height: 14px;"
+        "    width: 6px;"
+        "    height: 6px;"
         "    margin: -6px 0;"
-        "    border-radius: 7px;"
+        "    border-radius: 3px;"
         "}"
         "QSlider::handle:horizontal:hover {"
         "    border: 2px solid #3E3E3E;"
@@ -262,10 +285,15 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
     verticalLayout->addWidget(toolbar);
     verticalLayout->addWidget(scroller);
 
-    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate, frameWidth, frameCount, 5 * frameCount + 235, 23);
+    frameWidth = 5 * zoomSlider->value();
+    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate, frameWidth, frameCount, frameWidth * frameCount + 235, 23, scroller->viewport()->height(), currentFrame);
+    timeIndicatorBar->show();
     setIndicatorBarFrameWidth(zoomSlider->value() * 5);
 
     scroller->setWidget(timeIndicatorBar);
+    // scroller->setWidgetResizable(true);
+    // scroller->setPalette(QPalette(QColor("#FF0000")));
+    // scroller->viewport()->setPalette(QPalette(QColor("#00FF00")));
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -281,10 +309,18 @@ void Timeline::zoomSliderChanged(int value)
 void Timeline::setIndicatorBarFrameWidth(int newFrameWidth)
 {
     timeIndicatorBar->frameWidth = newFrameWidth;
-    timeIndicatorBar->resize(qMax(timeIndicatorBar->frameCount * timeIndicatorBar->frameWidth + 235, this->width() - 4), timeIndicatorBar->height);
+    timeIndicatorBar->resize(qMax(timeIndicatorBar->frameCount * timeIndicatorBar->frameWidth + 235, this->width() - 4), scroller->viewport()->height());
 }
 
+void Timeline::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
 
-
-
-
+    if (timeIndicatorBar)
+    {
+        timeIndicatorBar->resize(
+            timeIndicatorBar->width(),
+            scroller->viewport()->height()
+        );
+    }
+}

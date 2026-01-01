@@ -1,25 +1,27 @@
 #pragma once
 #include <QWidget>
 #include <QScrollArea>
+#include <QResizeEvent>
 
 class TimeIndicator : public QWidget{
 private:
     void paintEvent(QPaintEvent* event);
-    int height = 500, width = 12;
+    int IndicatorWidth = 12;
 public:
     TimeIndicator(QWidget* parent);
-    void Elongate(int newHeight);
+    // void Elongate(int newHeight);
     void MoveCenter(int x, int y);
 };
 
 
 class TimeIndicatorBar : public QWidget{   
 public:
-    TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int FCOUNT, int WIDTH, int HEIGHT);
+    TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int FCOUNT, int WIDTH, int BARHEIGHT, int FULLHEIGHT, int &CURRENTF);
     void paintEvent(QPaintEvent* event);
     int frameWidth; 
     int frameCount; 
-    int height, width;
+    int barHeight, fullHeight, fullWidth;
+    int currentFrame;
     TimeIndicator* timeIndicator;
 protected:
     int frameRate;  
@@ -28,6 +30,7 @@ protected:
     QWidget* parent;
     void onClick(QMouseEvent* event);
     void onUnClick(QMouseEvent* event);
+    void resizeEvent(QResizeEvent *event) override;
 };
 
 
@@ -51,6 +54,8 @@ protected:
     int frameCount = 240;
 
     int singleBarHeight = 50;
+
+    void resizeEvent(QResizeEvent *event) override;
 
     QScrollArea* scroller;
 };
