@@ -4,6 +4,7 @@
 #include <QPushButton.h>
 #include <QLabel.h>
 #include <QObject>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,7 +22,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    int frameRate_ = 24;
+    QTimer* timer_;
 
-    QLabel* updatelabel;
-    void changeText();
+private slots:
+    void startTimer(bool playing);
 };

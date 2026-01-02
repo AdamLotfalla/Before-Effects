@@ -10,7 +10,6 @@
 #include <QSvgRenderer>
 #include <QDebug>
 #include <QFile>
-#include <QToolButton>
 #include <QMouseEvent>
 #include "common_widget_styles.h"
 
@@ -193,9 +192,10 @@ void TimeIndicatorBar::resizeEvent(QResizeEvent *event)
 }
 
 // ----------------------- TIMELINE -----------------------
-Timeline::Timeline (QWidget *parent) : QWidget(parent){
+Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
-    QString theme = "Dark";
+    frameRate_ = frameRate;
+    theme = "Dark";
     this->setPalette(QPalette(QColor("#333333")));
 
     QWidget* toolbar = new QWidget(this);
@@ -215,13 +215,16 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
     zoomOutButton->setIconSize(QSize(-1,15));
     zoomInButton->setToolTip("Zoom In Timeline");
     zoomOutButton->setToolTip("Zoom Out Timeline");
-
-    // For QToolButton - better for icon-only buttons
-    
     zoomInButton->setStyleSheet(buttonStyle);
     zoomOutButton->setStyleSheet(buttonStyle);
         
 
+    playButton = new QToolButton(toolbar);
+    playButton->setFixedSize(21,21);
+    playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme)));
+    playButton->setIconSize(QSize(-1,15));
+    playButton->setToolTip("Play");
+    playButton->setStyleSheet(buttonStyle);
 
     
     QSlider* zoomSlider = new QSlider(toolbar);
@@ -229,6 +232,8 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
     zoomSlider->setSingleStep(1);
     zoomSlider->setFixedWidth(100);
     zoomSlider->setOrientation(Qt::Horizontal);
+    zoomSlider->setStyleSheet(sliderStyle);
+
     QObject::connect(zoomSlider, &QSlider::valueChanged, this, &Timeline::zoomSliderChanged);
     
     QObject::connect(zoomInButton, &QToolButton::pressed, [zoomSlider](){
@@ -243,14 +248,15 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
         }
     });
 
-
-
-    zoomSlider->setStyleSheet(sliderStyle);
+    QObject::connect(playButton, &QToolButton::pressed,
+                     this, &Timeline::playButtonClickEvent);
 
 
     QHBoxLayout* toolBarLayout = new QHBoxLayout(toolbar);
     toolBarLayout->setContentsMargins(0,0,0,0);
     toolBarLayout->setSpacing(5);
+    toolBarLayout->addStretch();
+    toolBarLayout->addWidget(playButton);
     toolBarLayout->addStretch();
     toolBarLayout->addWidget(zoomOutButton);
     toolBarLayout->addWidget(zoomSlider, 0, Qt::AlignVCenter);
@@ -267,11 +273,20 @@ Timeline::Timeline (QWidget *parent) : QWidget(parent){
 
     frameWidth_ = 5 * zoomSlider->value();
     currentFrame_ = 19;
-    timeIndicatorBar = new TimeIndicatorBar(scroller, &frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, 23, scroller->viewport()->height(), &currentFrame_);
+    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, 23, scroller->viewport()->height(), &currentFrame_);
     timeIndicatorBar->show();
 
     scroller->setWidget(timeIndicatorBar);
     // scroller->setWidgetResizable(true);
+}
+
+void Timeline::step()
+{
+    if(currentFrame_ < frameCount_) 
+        currentFrame_ ++;
+    else
+        currentFrame_ = 0;
+    update();
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -297,4 +312,18 @@ void Timeline::resizeEvent(QResizeEvent *event)
             scroller->viewport()->height()
         );
     }
+}
+
+void Timeline::playButtonClickEvent()
+{
+    playing_ = !playing_;
+
+    if(playing_){
+        playButton->setIcon(QIcon(QString(":/icons/%1/pause_%1.svg").arg(theme)));
+    }
+    else{
+        playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme)));
+    }
+
+    emit playSignal(playing_);
 }

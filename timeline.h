@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QScrollArea>
 #include <QResizeEvent>
+#include <QToolButton>
 
 class TimeIndicator : public QWidget{
     Q_OBJECT
@@ -14,7 +15,6 @@ private:
     int IndicatorWidth_ = 12;
     void paintEvent(QPaintEvent* event);
 };
-
 
 class TimeIndicatorBar : public QWidget{   
     Q_OBJECT
@@ -54,26 +54,33 @@ signals:
     void unClicked();
 };
 
-
-
 class Timeline : public QWidget{
     Q_OBJECT
 public:
-    Timeline(QWidget *parent = nullptr);
+    Timeline(QWidget *parent, int *frameRate);
 
     TimeIndicatorBar* timeIndicatorBar;
     int currentFrame_;
+    bool playing_ = false;
 
+    void step();
     // void clickTimeIndicatorBar(QEvent* event);
     
 private:
-    int frameRate_ = 24;
+    int *frameRate_; // initialized on creating the instance 
     int frameWidth_ = 10;
     int frameCount_ = 240;
     int singleBarHeight_ = 50;
+    QString theme;
     QScrollArea* scroller;
+    QToolButton* playButton;
+
     void resizeEvent(QResizeEvent *event) override;
+    void playButtonClickEvent();
     
 private slots:
     void zoomSliderChanged(int value);
+
+signals:
+    void playSignal(bool playing);
 };

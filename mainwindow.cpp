@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     RPanel->setAutoFillBackground(true);
     RPanel->setPalette(QPalette(QColor(200,100,100)));
     
-    Timeline* TimelinePanel = new Timeline(this);
+    Timeline* TimelinePanel = new Timeline(this, &frameRate_);
     TimelinePanel->setAutoFillBackground(true);
     // TimelinePanel->setPalette(QPalette(QColor(100,100,200)));
     
@@ -51,10 +51,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
     mainLayout->addWidget(sideSplitter);
     mainLayout->setContentsMargins(0, 0, 0, 0); 
+
+
+    QObject::connect(TimelinePanel, &Timeline::playSignal,
+                     this, &MainWindow::startTimer);
     
+    timer_ = new QTimer(this); 
+    timer_->setInterval(1000/frameRate_);
+    QObject::connect(timer_, &QTimer::timeout, TimelinePanel, &Timeline::step);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::startTimer(bool playing){
+    if(playing){
+        timer_->start();
+    }
+    else{
+        timer_->stop();
+    }
 }
