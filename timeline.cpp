@@ -53,9 +53,6 @@ void TimeIndicator::paintEvent(QPaintEvent *event)
     painter.drawLine(centerX, 8, centerX, this->height());
 }
 
-
-
-
 // ----------------------- INDICATOR BAR -----------------------
 TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int barHeight, int fullHeight, int *currentFrame){
     //TEMPORARY
@@ -68,7 +65,9 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
     barHeight_ = barHeight;
     fullHeight_ = fullHeight;
     fullWidth_ = width;
-    this->resize(fullWidth_, fullHeight_);
+
+    resize(fullWidth_, fullHeight_);
+    setMouseTracking(true);
 
     timeIndicator_ = new TimeIndicator(this);
     timeIndicator_->show();
@@ -77,10 +76,11 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
     // timeIndicator->setAttribute(Qt::WA_AlwaysStackOnTop);
     
     
-    // QObject::connect(this, &TimeIndicatorBar::leftButtonClicked, &TimeIndicatorBar::onClick);
-    // setAttribute(Qt::WA_TranslucentBackground);
-    // setStyleSheet("background: transparent;");
-    // timeIndicator->raise();
+    connect(this, &TimeIndicatorBar::clicked,
+            this, &TimeIndicatorBar::onClick);
+    connect(this, &TimeIndicatorBar::unClicked,
+            this, TimeIndicatorBar::onUnClick);
+    
     update();
 }
 
@@ -142,17 +142,44 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     timeIndicator_->MoveCenter(*currentFrame_ * *frameWidth_);
 }
 
-void TimeIndicatorBar::setFrameWidth(int value)
+void TimeIndicatorBar::onClick(QPoint pos)
 {
-    *frameWidth_ = value;
+    clicked_ = true;
+    int frame = round(pos.x() / (float)*frameWidth_);
+    *currentFrame_ = frame;
+    timeIndicator_->MoveCenter(frame * (*frameWidth_));
 }
 
-void TimeIndicatorBar::onClick(QMouseEvent *event)
+void TimeIndicatorBar::mousePressEvent(QMouseEvent *event)
 {
-    setMouseTracking(true);
-    int x = event->pos().x();
+    if(event->button() == Qt::LeftButton){
+        emit clicked(event->pos());
+    } 
+    QWidget::mousePressEvent(event);
+}
 
-    timeIndicator_->MoveCenter(x/ *frameWidth_ * *frameWidth_);
+void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
+{
+    if(clicked_){
+        int frame = round(event->pos().x() / (float)*frameWidth_);
+        frame = qBound(0, frame, *frameCount_);
+        *currentFrame_ = frame;
+
+        // The paint event does the movement for me
+    }
+    update();
+}
+
+void TimeIndicatorBar::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton){
+        emit unClicked();
+    }
+}
+
+void TimeIndicatorBar::onUnClick()
+{
+    clicked_ = false;
 }
 
 void TimeIndicatorBar::resizeEvent(QResizeEvent *event)
@@ -164,7 +191,6 @@ void TimeIndicatorBar::resizeEvent(QResizeEvent *event)
         height()
     );
 }
-
 
 // ----------------------- TIMELINE -----------------------
 Timeline::Timeline (QWidget *parent) : QWidget(parent){
