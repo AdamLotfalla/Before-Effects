@@ -4,30 +4,39 @@
 #include <QResizeEvent>
 
 class TimeIndicator : public QWidget{
-private:
-    void paintEvent(QPaintEvent* event);
-    int IndicatorWidth = 12;
 public:
     TimeIndicator(QWidget* parent);
-    // void Elongate(int newHeight);
-    void MoveCenter(int x, int y);
+
+    void MoveCenter(int x, int y = 20);
+
+private:
+    int IndicatorWidth_ = 12;
+    void paintEvent(QPaintEvent* event);
 };
 
 
 class TimeIndicatorBar : public QWidget{   
 public:
-    TimeIndicatorBar(QWidget* parent, int FRATE, int FWIDTH, int FCOUNT, int WIDTH, int BARHEIGHT, int FULLHEIGHT, int &CURRENTF);
+    TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int barHeight, int fullHeight, int *currentFrame);
+    TimeIndicator* timeIndicator_;
+    
     void paintEvent(QPaintEvent* event);
-    int frameWidth; 
-    int frameCount; 
-    int barHeight, fullHeight, fullWidth;
-    int currentFrame;
-    TimeIndicator* timeIndicator;
-protected:
-    int frameRate;  
-    int tickInterval = 10;
-    int singleBarHeight = 50;
-    QWidget* parent;
+    void setFrameWidth(int value);
+    int getFrameWidth();
+    int getFrameCount();
+
+private:
+    int* frameWidth_; 
+    int* frameCount_; 
+    int* currentFrame_;
+    int* frameRate_;
+
+    int barHeight_;
+    int fullHeight_;
+    int fullWidth_;
+    int tickInterval_ = 10;
+    // int singleBarHeight_ = 50;
+
     void onClick(QMouseEvent* event);
     void onUnClick(QMouseEvent* event);
     void resizeEvent(QResizeEvent *event) override;
@@ -40,22 +49,17 @@ public:
     Timeline(QWidget *parent = nullptr);
 
     TimeIndicatorBar* timeIndicatorBar;
-    TimeIndicator* timeIndicator;
+    int currentFrame_;
 
-    void clickTimeIndicatorBar(QEvent* event);
+    // void clickTimeIndicatorBar(QEvent* event);
     void zoomSliderChanged(int value);
-    void setIndicatorBarFrameWidth(int value);
 
-    int currentFrame = 0;
-
-protected:
-    int frameRate = 24;
-    int frameWidth = 10; // how much is each step in the time line
-    int frameCount = 240;
-
-    int singleBarHeight = 50;
+private:
+    int frameRate_ = 24;
+    int frameWidth_ = 10;
+    int frameCount_ = 240;
+    int singleBarHeight_ = 50;
+    QScrollArea* scroller;
 
     void resizeEvent(QResizeEvent *event) override;
-
-    QScrollArea* scroller;
 };
