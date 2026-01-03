@@ -226,6 +226,34 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     playButton->setToolTip("Play");
     playButton->setStyleSheet(buttonStyle);
 
+    QToolButton* goToStartButton = new QToolButton(toolbar);
+    goToStartButton->setFixedSize(21,21);
+    goToStartButton->setIcon(QIcon(QString(":/icons/%1/goToStart_%1.svg").arg(theme)));
+    goToStartButton->setIconSize(QSize(-1,15));
+    goToStartButton->setToolTip("Go To Playback Start");
+    goToStartButton->setStyleSheet(buttonStyle);
+
+    QToolButton* goToEndButton = new QToolButton(toolbar);
+    goToEndButton->setFixedSize(21,21);
+    goToEndButton->setIcon(QIcon(QString(":/icons/%1/goToEnd_%1.svg").arg(theme)));
+    goToEndButton->setIconSize(QSize(-1,15));
+    goToEndButton->setToolTip("Go To Playback End");
+    goToEndButton->setStyleSheet(buttonStyle);
+
+    QToolButton* nextFrameButton = new QToolButton(toolbar);
+    nextFrameButton->setFixedSize(21,21);
+    nextFrameButton->setIcon(QIcon(QString(":/icons/%1/nextFrame_%1.svg").arg(theme)));
+    nextFrameButton->setIconSize(QSize(-1,15));
+    nextFrameButton->setToolTip("Go To Next Frame");
+    nextFrameButton->setStyleSheet(buttonStyle);
+
+
+    QToolButton* previousFrameButton = new QToolButton(toolbar);
+    previousFrameButton->setFixedSize(21,21);
+    previousFrameButton->setIcon(QIcon(QString(":/icons/%1/previousFrame_%1.svg").arg(theme)));
+    previousFrameButton->setIconSize(QSize(-1,15));
+    previousFrameButton->setToolTip("Go To Previous Frame");
+    previousFrameButton->setStyleSheet(buttonStyle);
     
     QSlider* zoomSlider = new QSlider(toolbar);
     zoomSlider->setRange(1, 20); //zoom amount from 1x to 20x
@@ -251,12 +279,37 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     QObject::connect(playButton, &QToolButton::pressed,
                      this, &Timeline::playButtonClickEvent);
 
+    QObject::connect(goToStartButton, &QToolButton::pressed, [this](){
+        currentFrame_ = 0;
+        timeIndicatorBar->update();
+    });
+
+    QObject::connect(goToEndButton, &QToolButton::pressed, [this](){
+        currentFrame_ = frameCount_;
+        timeIndicatorBar->update();
+    });
+
+    QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
+        if(currentFrame_ < frameCount_)
+            currentFrame_ ++;
+        timeIndicatorBar->update();
+    });
+
+    QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
+        if(currentFrame_ > 0)
+            currentFrame_ --;
+        timeIndicatorBar->update();
+    });
 
     QHBoxLayout* toolBarLayout = new QHBoxLayout(toolbar);
     toolBarLayout->setContentsMargins(0,0,0,0);
     toolBarLayout->setSpacing(5);
     toolBarLayout->addStretch();
+    toolBarLayout->addWidget(goToStartButton);
+    toolBarLayout->addWidget(previousFrameButton);
     toolBarLayout->addWidget(playButton);
+    toolBarLayout->addWidget(nextFrameButton);
+    toolBarLayout->addWidget(goToEndButton);
     toolBarLayout->addStretch();
     toolBarLayout->addWidget(zoomOutButton);
     toolBarLayout->addWidget(zoomSlider, 0, Qt::AlignVCenter);
@@ -272,7 +325,6 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     verticalLayout->addWidget(scroller);
 
     frameWidth_ = 5 * zoomSlider->value();
-    currentFrame_ = 19;
     timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, 23, scroller->viewport()->height(), &currentFrame_);
     timeIndicatorBar->show();
 

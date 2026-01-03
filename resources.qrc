@@ -5,11 +5,19 @@
     <file>zoomOut_Light.svg</file>
     <file>play_Light.svg</file>
     <file>pause_Light.svg</file>
+    <file>goToEnd_Light.svg</file>
+    <file>goToStart_Light.svg</file>
+    <file>previousFrame_Light.svg</file>
+    <file>nextFrame_Light.svg</file>
   </qresource>
   <qresource prefix="/icons/Dark">
     <file>zoomIn_Dark.svg</file>
     <file>zoomOut_Dark.svg</file>
     <file>play_Dark.svg</file>
     <file>pause_Dark.svg</file>
+    <file>goToEnd_Dark.svg</file>
+    <file>goToStart_Dark.svg</file>
+    <file>nextFrame_Dark.svg</file>
+    <file>previousFrame_Dark.svg</file>
   </qresource>
 </RCC>

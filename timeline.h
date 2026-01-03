@@ -60,7 +60,7 @@ public:
     Timeline(QWidget *parent, int *frameRate);
 
     TimeIndicatorBar* timeIndicatorBar;
-    int currentFrame_;
+    int currentFrame_ = 0;
     bool playing_ = false;
 
     void step();
@@ -68,9 +68,9 @@ public:
     
 private:
     int *frameRate_; // initialized on creating the instance 
-    int frameWidth_ = 10;
+    int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
-    int singleBarHeight_ = 50;
+    int layerHeight_ = 50;
     QString theme;
     QScrollArea* scroller;
     QToolButton* playButton;
