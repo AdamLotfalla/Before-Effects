@@ -55,7 +55,7 @@ void TimeIndicator::paintEvent(QPaintEvent *event)
 }
 
 // ----------------------- INDICATOR BAR -----------------------
-TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int barHeight, int fullHeight, int *currentFrame){
+TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame){
     //TEMPORARY
     currentFrame_ = currentFrame;
     
@@ -63,9 +63,11 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
     frameWidth_ = frameWidth;
     frameCount_ = frameCount;
 
-    barHeight_ = barHeight;
     fullHeight_ = fullHeight;
     fullWidth_ = width;
+
+    RBoundFrame_ = *frameCount_;
+    LBoundFrame_ = 0;
 
     resize(fullWidth_, fullHeight_);
     setMouseTracking(true);
@@ -76,11 +78,35 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
     setStyleSheet("background: transparent;");
     // timeIndicator->setAttribute(Qt::WA_AlwaysStackOnTop);
     
+    LBound = new QWidget(this);
+    RBound = new QWidget(this);
+
+    LBound->setFixedSize(boundHandleThickness, tickLayerHeight_);
+    RBound->setFixedSize(boundHandleThickness, tickLayerHeight_);
+
+    LBound->setAttribute(Qt::WA_TranslucentBackground);
+    LBound->setStyleSheet("background: transparent;");
+
+    RBound->setAttribute(Qt::WA_TranslucentBackground);
+    RBound->setStyleSheet("background: transparent;");
+
+    offset_ = (this->width() - *frameCount_ * *frameWidth_) / 2;
+
+
     
-    connect(this, &TimeIndicatorBar::clicked,
-            this, &TimeIndicatorBar::onClick);
-    connect(this, &TimeIndicatorBar::unClicked,
-            this, TimeIndicatorBar::onUnClick);
+    connect(this, &TimeIndicatorBar::tickBarClickedSignal,
+            this, &TimeIndicatorBar::onTickBarClick);
+    connect(this, &TimeIndicatorBar::tickBarUnClickedSignal,
+            this, &TimeIndicatorBar::onTickBarUnClick);
+    connect(this, &TimeIndicatorBar::LBoundClickedSignal,
+            this, &TimeIndicatorBar::onLBoundClick);
+    connect(this, &TimeIndicatorBar::LBoundUnClickedSignal,
+            this, &TimeIndicatorBar::onLBoundUnClick);
+    connect(this, &TimeIndicatorBar::RBoundClickedSignal,
+            this, &TimeIndicatorBar::onRBoundClick);
+    connect(this, &TimeIndicatorBar::RBoundUnClickedSignal,
+            this, &TimeIndicatorBar::onRBoundUnClick);
+    
     
     update();
 }
@@ -112,18 +138,23 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     pen.setWidth(0);
     painter.setPen(pen);
 
-    QRect fullRect(0, 0, this->width(), barHeight_);
+    QRect fullRect(0, 0, this->width(), tickLayerHeight_);
     painter.fillRect(fullRect, QColor("#1E1E1E"));
 
-    QRect leftMargin(0, barHeight_, offset_, height() - barHeight_);
-    QRect rightMargin(offset_ + *frameCount_ * *frameWidth_, barHeight_, width() - offset_ - (*frameCount_ * *frameWidth_), height() - barHeight_); 
+    QRect leftMargin(0, tickLayerHeight_, offset_, height() - tickLayerHeight_);
+    QRect rightMargin(offset_ + *frameCount_ * *frameWidth_, tickLayerHeight_, width() - offset_ - (*frameCount_ * *frameWidth_), height() - tickLayerHeight_); 
         //added this long expression for width in case the total margin is not even, so division will be short by 1
-    painter.fillRect(leftMargin, QColor("#242424"));
-    painter.fillRect(rightMargin, QColor("#242424"));
+    painter.fillRect(leftMargin, QColor("#202020"));
+    painter.fillRect(rightMargin, QColor("#202020"));
 
+    QRect LOutsideBound(offset_ , tickLayerHeight_ + boundLayerHeight_, LBoundFrame_ * *frameWidth_, height());
+    QRect ROutsideBound(offset_ + RBoundFrame_ * *frameWidth_, tickLayerHeight_ + boundLayerHeight_, (*frameCount_ - RBoundFrame_) * *frameWidth_, height());
+
+    painter.fillRect(LOutsideBound, QColor("#252525"));
+    painter.fillRect(ROutsideBound, QColor("#252525"));
     
     for(int i = 0; i< *frameCount_; i++){
-        QRect rect(offset_ + i* *frameWidth_, 0, *frameWidth_, barHeight_);
+        QRect rect(offset_ + i* *frameWidth_, 0, *frameWidth_, tickLayerHeight_);
         
         if(i % 2){
             painter.fillRect(rect, QColor("#2D2D2D"));
@@ -138,44 +169,122 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 
     for(int i = 0; i <= *frameCount_; i++){
         if(i % tickInterval_ == 0){
-            painter.drawLine(offset_ + i* *frameWidth_, barHeight_ * 7/8, offset_ + i* *frameWidth_, barHeight_ - 3); // -3 to compensate for pen width
-            painter.drawText(QPoint(offset_ + i* *frameWidth_ + 1, barHeight_ * 11/16), QString::number(i));
+            painter.drawLine(offset_ + i* *frameWidth_, tickLayerHeight_ * 7/8, offset_ + i* *frameWidth_, tickLayerHeight_ - 3); // -3 to compensate for pen width
+            painter.drawText(QPoint(offset_ + i* *frameWidth_ + 1, tickLayerHeight_ * 11/16), QString::number(i));
         }
     }
 
     pen.setColor("#444444");
     pen.setWidth(2);
     painter.setPen(pen);
-    painter.drawLine(0, barHeight_, this->width(), barHeight_);
+    painter.drawLine(0, tickLayerHeight_, this->width(), tickLayerHeight_);
 
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
+
+    QRect boundLayerRect(
+        offset_ + *frameWidth_ * LBoundFrame_,
+        tickLayerHeight_,
+        *frameWidth_ * (RBoundFrame_ - LBoundFrame_),
+        boundLayerHeight_
+    );
+
+    painter.fillRect(boundLayerRect, QColor("#444444"));
+
+    pen.setColor(QColor("#52786D"));
+    QBrush brush(QColor("#52786D"));
+    painter.setPen(pen);
+    painter.setBrush(brush);
+
+
+    LBound->move(offset_ + LBoundFrame_ * *frameWidth_ - boundHandleThickness, tickLayerHeight_);
+    RBound->move(offset_ + RBoundFrame_ * *frameWidth_, tickLayerHeight_);
+    painter.drawRoundedRect(RBound->x(), RBound->y(), boundHandleThickness, boundLayerHeight_, 1, 1);
+    painter.drawRoundedRect(LBound->x(), LBound->y(), boundHandleThickness, boundLayerHeight_, 1, 1);
+    
     timeIndicator_->MoveCenter(offset_ + *currentFrame_ * *frameWidth_);
 }
 
-void TimeIndicatorBar::onClick(QPoint pos)
+int TimeIndicatorBar::getRBound()
 {
-    clicked_ = true;
+    return RBoundFrame_;
+}
+
+int TimeIndicatorBar::getLBound()
+{
+    return LBoundFrame_;
+}
+
+void TimeIndicatorBar::onTickBarClick(QPoint pos)
+{
+    barClicked_ = true;
     repaint();
     int frame = round((pos.x() - offset_) / (float)*frameWidth_);
-    *currentFrame_ = frame;
-    timeIndicator_->MoveCenter(frame * (*frameWidth_));
+
+    if(frame > RBoundFrame_){
+        *currentFrame_ = RBoundFrame_;
+    }
+    else if(frame < LBoundFrame_){
+        *currentFrame_ = LBoundFrame_;
+    }
+    else{
+        *currentFrame_ = frame;
+    }
+        
+    timeIndicator_->MoveCenter(*currentFrame_ * (*frameWidth_));
 }
 
 void TimeIndicatorBar::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton){
-        emit clicked(event->pos());
+        int x = event->pos().x();
+        int y = event->pos().y();
+
+        int minLBound = offset_ + LBoundFrame_ * *frameWidth_ - boundHandleThickness;
+        int maxLBound = offset_ + LBoundFrame_ * *frameWidth_;
+
+        int minRBound = offset_ + RBoundFrame_ * *frameWidth_;
+        int maxRBound = offset_ + RBoundFrame_ * *frameWidth_ + boundHandleThickness;
+
+        if(y < tickLayerHeight_){
+            emit tickBarClickedSignal(event->pos());
+        }
+        else if(y < tickLayerHeight_ + boundLayerHeight_){
+            if(minLBound < x && x < maxLBound){
+                emit LBoundClickedSignal(event->pos());
+            }
+            else if(minRBound < x && x < maxRBound){
+                emit RBoundClickedSignal(event->pos());
+            }
+        }
+            
     } 
     QWidget::mousePressEvent(event);
 }
 
 void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
 {
-    if(clicked_){
-        int frame = round((event->pos().x() - offset_) / (float)*frameWidth_);
-        frame = qBound(0, frame, *frameCount_);
+    int frame = round((event->pos().x() - offset_) / (float)*frameWidth_);
+    frame = qBound(0, frame, *frameCount_);
+    if(barClicked_){
         *currentFrame_ = frame;
-
         // The paint event does the movement for me
+    }
+    else if(LBoundClicked_){
+        if(frame > RBoundFrame_){
+            LBoundFrame_ = RBoundFrame_ - 1;
+        }
+        else{
+            LBoundFrame_ = frame;
+        }
+    }
+    else if(RBoundClicked_){
+        if (frame < LBoundFrame_){
+            RBoundFrame_ = LBoundFrame_ + 1;
+        }
+        else{
+            RBoundFrame_ = frame;
+        }
     }
     update();
 }
@@ -183,13 +292,35 @@ void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
 void TimeIndicatorBar::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton){
-        emit unClicked();
+        emit tickBarUnClickedSignal();
+        emit LBoundUnClickedSignal();
+        emit RBoundUnClickedSignal();
     }
 }
 
-void TimeIndicatorBar::onUnClick()
+void TimeIndicatorBar::onTickBarUnClick()
 {
-    clicked_ = false;
+    barClicked_ = false;
+}
+
+void TimeIndicatorBar::onLBoundClick(QPoint pos)
+{
+    LBoundClicked_ = true;
+}
+
+void TimeIndicatorBar::onLBoundUnClick()
+{
+    LBoundClicked_ = false;
+}
+
+void TimeIndicatorBar::onRBoundClick(QPoint pos)
+{
+    RBoundClicked_ = true;
+}
+
+void TimeIndicatorBar::onRBoundUnClick()
+{
+    RBoundClicked_ = false;
 }
 
 void TimeIndicatorBar::resizeEvent(QResizeEvent *event)
@@ -291,23 +422,23 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
                      this, &Timeline::playButtonClickEvent);
 
     QObject::connect(goToStartButton, &QToolButton::pressed, [this](){
-        currentFrame_ = 0;
+        currentFrame_ = timeIndicatorBar->getLBound();
         timeIndicatorBar->update();
     });
 
     QObject::connect(goToEndButton, &QToolButton::pressed, [this](){
-        currentFrame_ = frameCount_;
+        currentFrame_ = timeIndicatorBar->getRBound();
         timeIndicatorBar->update();
     });
 
     QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
-        if(currentFrame_ < frameCount_)
+        if(currentFrame_ < timeIndicatorBar->getRBound())
             currentFrame_ ++;
         timeIndicatorBar->update();
     });
 
     QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
-        if(currentFrame_ > 0)
+        if(currentFrame_ > timeIndicatorBar->getLBound())
             currentFrame_ --;
         timeIndicatorBar->update();
     });
@@ -336,7 +467,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     verticalLayout->addWidget(scroller);
 
     frameWidth_ = 5 * zoomSlider->value();
-    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, 23, scroller->viewport()->height(), &currentFrame_);
+    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), &currentFrame_);
     timeIndicatorBar->show();
 
     scroller->setWidget(timeIndicatorBar);
@@ -344,11 +475,13 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 }
 
 void Timeline::step()
-{
-    if(currentFrame_ < frameCount_) 
+{   
+    if(currentFrame_ < timeIndicatorBar->getLBound() || currentFrame_ == timeIndicatorBar->getRBound())
+        currentFrame_ = timeIndicatorBar->getLBound();
+    else if(currentFrame_ < timeIndicatorBar->getRBound()) 
         currentFrame_ ++;
     else
-        currentFrame_ = 0;
+        currentFrame_ = timeIndicatorBar->getRBound();
     update();
 }
 
@@ -395,7 +528,6 @@ void Timeline::zoomSliderChanged(int value)
     update();
     timeIndicatorBar->update();
 }
-
 
 void Timeline::resizeEvent(QResizeEvent *event)
 {

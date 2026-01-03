@@ -19,13 +19,14 @@ private:
 class TimeIndicatorBar : public QWidget{   
     Q_OBJECT
 public:
-    TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int barHeight, int fullHeight, int *currentFrame);
+    TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame);
     TimeIndicator* timeIndicator_;
+    QWidget* LBound;
+    QWidget* RBound;
     
     void paintEvent(QPaintEvent* event);
-    void setFrameWidth(int value);
-    int getFrameWidth();
-    int getFrameCount();
+    int getRBound();
+    int getLBound();
 
 private:
     int* frameWidth_; 
@@ -33,13 +34,19 @@ private:
     int* currentFrame_;
     int* frameRate_;
 
-    int barHeight_;
     int fullHeight_;
     int fullWidth_;
     int tickInterval_ = 10;
     int offset_;
-    // int singleBarHeight_ = 50;
-    bool clicked_ = false;
+    int tickLayerHeight_ = 23;
+    int boundHandleThickness = 8;
+    int boundLayerHeight_ = 10;
+    bool barClicked_ = false;
+    bool LBoundClicked_ = false;
+    bool RBoundClicked_ = false;
+
+    int RBoundFrame_;
+    int LBoundFrame_;
     
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -47,12 +54,24 @@ private:
     void mouseReleaseEvent(QMouseEvent *event) override;
     
 private slots:
-    void onClick(QPoint pos);
-    void onUnClick();
+    void onTickBarClick(QPoint pos);
+    void onTickBarUnClick();
+    void onLBoundClick(QPoint pos);
+    void onLBoundUnClick();
+    void onRBoundClick(QPoint pos);
+    void onRBoundUnClick();
 
 signals:
-    void clicked(QPoint position);    
-    void unClicked();
+    void tickBarClickedSignal(QPoint position);    
+    void tickBarUnClickedSignal();
+
+    void RBoundClickedSignal(QPoint position);
+    void RBoundUnClickedSignal();
+
+    void LBoundClickedSignal(QPoint position);
+    void LBoundUnClickedSignal();
+
+
 };
 
 class Timeline : public QWidget{
