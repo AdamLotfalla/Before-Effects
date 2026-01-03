@@ -89,6 +89,7 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     QPen pen;
     // fullHeight = this->height();
     fullWidth_ = *frameCount_ * *frameWidth_;
+    int offset = (width() - *frameCount_ * *frameWidth_) / 2;
 
     switch (int((float)*frameWidth_/5))
     {
@@ -112,8 +113,15 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     QRect fullRect(0, 0, this->width(), barHeight_);
     painter.fillRect(fullRect, QColor("#1E1E1E"));
 
+    QRect leftMargin(0, barHeight_, offset, height() - barHeight_);
+    QRect rightMargin(offset + *frameCount_ * *frameWidth_, barHeight_, width() - offset - (*frameCount_ * *frameWidth_), height() - barHeight_); 
+        //added this long expression for width in case the total margin is not even, so division will be short by 1
+    painter.fillRect(leftMargin, QColor("#242424"));
+    painter.fillRect(rightMargin, QColor("#242424"));
+
+    
     for(int i = 0; i< *frameCount_; i++){
-        QRect rect(i* *frameWidth_, 0, *frameWidth_, barHeight_);
+        QRect rect(offset + i* *frameWidth_, 0, *frameWidth_, barHeight_);
         
         if(i % 2){
             painter.fillRect(rect, QColor("#2D2D2D"));
@@ -128,8 +136,8 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 
     for(int i = 0; i <= *frameCount_; i++){
         if(i % tickInterval_ == 0){
-            painter.drawLine(i* *frameWidth_, barHeight_ * 7/8, i* *frameWidth_, barHeight_ - 3); // -3 to compensate for pen width
-            painter.drawText(QPoint(i* *frameWidth_ + 1, barHeight_ * 11/16), QString::number(i));
+            painter.drawLine(offset + i* *frameWidth_, barHeight_ * 7/8, offset + i* *frameWidth_, barHeight_ - 3); // -3 to compensate for pen width
+            painter.drawText(QPoint(offset + i* *frameWidth_ + 1, barHeight_ * 11/16), QString::number(i));
         }
     }
 
@@ -138,7 +146,7 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     painter.setPen(pen);
     painter.drawLine(0, barHeight_, this->width(), barHeight_);
 
-    timeIndicator_->MoveCenter(*currentFrame_ * *frameWidth_);
+    timeIndicator_->MoveCenter(offset + *currentFrame_ * *frameWidth_);
 }
 
 void TimeIndicatorBar::onClick(QPoint pos)
