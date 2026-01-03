@@ -37,6 +37,7 @@ private:
     int fullHeight_;
     int fullWidth_;
     int tickInterval_ = 10;
+    int offset_;
     // int singleBarHeight_ = 50;
     bool clicked_ = false;
     

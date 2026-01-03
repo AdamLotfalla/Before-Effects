@@ -10,6 +10,8 @@
 #include <QSvgRenderer>
 #include <QDebug>
 #include <QFile>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <QMouseEvent>
 #include "common_widget_styles.h"
 
@@ -89,7 +91,7 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     QPen pen;
     // fullHeight = this->height();
     fullWidth_ = *frameCount_ * *frameWidth_;
-    int offset = (width() - *frameCount_ * *frameWidth_) / 2;
+    offset_ = (width() - *frameCount_ * *frameWidth_) / 2;
 
     switch (int((float)*frameWidth_/5))
     {
@@ -113,15 +115,15 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     QRect fullRect(0, 0, this->width(), barHeight_);
     painter.fillRect(fullRect, QColor("#1E1E1E"));
 
-    QRect leftMargin(0, barHeight_, offset, height() - barHeight_);
-    QRect rightMargin(offset + *frameCount_ * *frameWidth_, barHeight_, width() - offset - (*frameCount_ * *frameWidth_), height() - barHeight_); 
+    QRect leftMargin(0, barHeight_, offset_, height() - barHeight_);
+    QRect rightMargin(offset_ + *frameCount_ * *frameWidth_, barHeight_, width() - offset_ - (*frameCount_ * *frameWidth_), height() - barHeight_); 
         //added this long expression for width in case the total margin is not even, so division will be short by 1
     painter.fillRect(leftMargin, QColor("#242424"));
     painter.fillRect(rightMargin, QColor("#242424"));
 
     
     for(int i = 0; i< *frameCount_; i++){
-        QRect rect(offset + i* *frameWidth_, 0, *frameWidth_, barHeight_);
+        QRect rect(offset_ + i* *frameWidth_, 0, *frameWidth_, barHeight_);
         
         if(i % 2){
             painter.fillRect(rect, QColor("#2D2D2D"));
@@ -136,8 +138,8 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 
     for(int i = 0; i <= *frameCount_; i++){
         if(i % tickInterval_ == 0){
-            painter.drawLine(offset + i* *frameWidth_, barHeight_ * 7/8, offset + i* *frameWidth_, barHeight_ - 3); // -3 to compensate for pen width
-            painter.drawText(QPoint(offset + i* *frameWidth_ + 1, barHeight_ * 11/16), QString::number(i));
+            painter.drawLine(offset_ + i* *frameWidth_, barHeight_ * 7/8, offset_ + i* *frameWidth_, barHeight_ - 3); // -3 to compensate for pen width
+            painter.drawText(QPoint(offset_ + i* *frameWidth_ + 1, barHeight_ * 11/16), QString::number(i));
         }
     }
 
@@ -146,13 +148,14 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     painter.setPen(pen);
     painter.drawLine(0, barHeight_, this->width(), barHeight_);
 
-    timeIndicator_->MoveCenter(offset + *currentFrame_ * *frameWidth_);
+    timeIndicator_->MoveCenter(offset_ + *currentFrame_ * *frameWidth_);
 }
 
 void TimeIndicatorBar::onClick(QPoint pos)
 {
     clicked_ = true;
-    int frame = round(pos.x() / (float)*frameWidth_);
+    repaint();
+    int frame = round((pos.x() - offset_) / (float)*frameWidth_);
     *currentFrame_ = frame;
     timeIndicator_->MoveCenter(frame * (*frameWidth_));
 }
@@ -168,7 +171,7 @@ void TimeIndicatorBar::mousePressEvent(QMouseEvent *event)
 void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
 {
     if(clicked_){
-        int frame = round(event->pos().x() / (float)*frameWidth_);
+        int frame = round((event->pos().x() - offset_) / (float)*frameWidth_);
         frame = qBound(0, frame, *frameCount_);
         *currentFrame_ = frame;
 
@@ -351,15 +354,48 @@ void Timeline::step()
 
 void Timeline::zoomSliderChanged(int value)
 {
-    if(frameWidth_ != value * 5){
-        frameWidth_ = value * 5;
+    int newFrameWidth = value * 5;
+    if (frameWidth_ == newFrameWidth)
+        return;
 
-        timeIndicatorBar->resize(qMax(frameCount_ * frameWidth_ + 235, this->width() - 4), scroller->viewport()->height());
+    // --- 1️⃣ compute OLD content position ---
+    int oldOffset =
+        (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
 
-        repaint();
-        timeIndicatorBar->repaint();
-    }
+    int oldContentX =
+        oldOffset + currentFrame_ * frameWidth_;
+
+    int oldScroll =
+        scroller->horizontalScrollBar()->value();
+
+    int indicatorViewportX =
+        oldContentX - oldScroll;
+
+    // --- 2️⃣ apply zoom ---
+    frameWidth_ = newFrameWidth;
+
+    timeIndicatorBar->resize(
+        qMax(frameCount_ * frameWidth_ + 235, width() - 4),
+        scroller->viewport()->height()
+    );
+
+    // --- 3️⃣ compute NEW content position ---
+    int newOffset =
+        (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
+
+    int newContentX =
+        newOffset + currentFrame_ * frameWidth_;
+
+    // --- 4️⃣ restore viewport position ---
+    int newScroll =
+        newContentX - indicatorViewportX;
+
+    scroller->horizontalScrollBar()->setValue(newScroll);
+
+    update();
+    timeIndicatorBar->update();
 }
+
 
 void Timeline::resizeEvent(QResizeEvent *event)
 {
