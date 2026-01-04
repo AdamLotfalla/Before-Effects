@@ -1,19 +1,5 @@
 #include "timeline.h"
-#include <QLayout>
-#include <QPainter>
-#include <QPolygon>
-#include <QPoint>
-#include <QPainterPath>
-#include <QSlider>
-#include <QIcon>
-#include <QPushButton>
-#include <QSvgRenderer>
-#include <QDebug>
-#include <QFile>
-#include <QScrollArea>
-#include <QScrollBar>
-#include <QMouseEvent>
-#include "common_widget_styles.h"
+
 
 TimeIndicator::TimeIndicator(QWidget *parent) : QWidget(parent)
 {
@@ -536,7 +522,7 @@ void Timeline::resizeEvent(QResizeEvent *event)
     if (timeIndicatorBar)
     {
         timeIndicatorBar->resize(
-            timeIndicatorBar->width(),
+            qMax(frameCount_ * frameWidth_ + 235, width() - 4),
             scroller->viewport()->height()
         );
     }

@@ -3,6 +3,22 @@
 #include <QScrollArea>
 #include <QResizeEvent>
 #include <QToolButton>
+#include <QLayout>
+#include <QPainter>
+#include <QPolygon>
+#include <QPoint>
+#include <QPainterPath>
+#include <QSlider>
+#include <QIcon>
+#include <QPushButton>
+#include <QSvgRenderer>
+#include <QDebug>
+#include <QFile>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QMouseEvent>
+#include "common_widget_styles.h"
+
 
 class TimeIndicator : public QWidget{
     Q_OBJECT
