@@ -1,10 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QBoxLayout>
-#include <QWidget>
-#include <QPalette>
-#include <QSplitter>
-#include "timeline.h"
+
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -17,9 +14,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     LPanel->setAutoFillBackground(true);
     LPanel->setPalette(QPalette(QColor(100,200,100)));
     
-    QWidget* RPanel = new QWidget(this);
-    RPanel->setAutoFillBackground(true);
-    RPanel->setPalette(QPalette(QColor(200,100,100)));
+    // QWidget* RPanel = new QWidget(this);
+    // RPanel->setAutoFillBackground(true);
+    // RPanel->setPalette(QPalette(QColor(200,100,100)));
+
+    viewPort* RPanel = new viewPort(this);
     
     Timeline* TimelinePanel = new Timeline(this, &frameRate_);
     TimelinePanel->setAutoFillBackground(true);

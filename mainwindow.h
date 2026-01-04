@@ -3,8 +3,13 @@
 #include <QMainWindow>
 #include <QPushButton.h>
 #include <QLabel.h>
-#include <QObject>
+#include <QBoxLayout>
+#include <QWidget>
+#include <QPalette>
+#include <QSplitter>
 #include <QTimer>
+#include "viewPort.h"
+#include "timeline.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

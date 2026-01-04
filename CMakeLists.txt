@@ -19,6 +19,8 @@ qt_add_executable(Before_Effects
     timeline.cpp
     mainwindow.ui
     resources.qrc
+    viewPort.h
+    viewPort.cpp
 )
 
 target_link_libraries(Before_Effects PRIVATE Qt${QT_VERSION_MAJOR}::Widgets 
