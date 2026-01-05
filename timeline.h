@@ -100,6 +100,7 @@ public:
     bool playing_ = false;
 
     void step();
+    void setTheme(QString theme = "Dark");
     // void clickTimeIndicatorBar(QEvent* event);
     
 private:
@@ -107,7 +108,7 @@ private:
     int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
     int layerHeight_ = 50;
-    QString theme;
+    QString theme_;
     QScrollArea* scroller;
     QToolButton* playButton;
 

@@ -257,7 +257,7 @@ void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
         // The paint event does the movement for me
     }
     else if(LBoundClicked_){
-        if(frame > RBoundFrame_){
+        if(frame >= RBoundFrame_){
             LBoundFrame_ = RBoundFrame_ - 1;
         }
         else{
@@ -265,7 +265,7 @@ void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
         }
     }
     else if(RBoundClicked_){
-        if (frame < LBoundFrame_){
+        if (frame <= LBoundFrame_){
             RBoundFrame_ = LBoundFrame_ + 1;
         }
         else{
@@ -323,7 +323,7 @@ void TimeIndicatorBar::resizeEvent(QResizeEvent *event)
 Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     frameRate_ = frameRate;
-    theme = "Dark";
+    theme_= "Dark";
     this->setPalette(QPalette(QColor("#333333")));
 
     QWidget* toolbar = new QWidget(this);
@@ -337,8 +337,8 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     zoomInButton->setFixedSize(21,21);
     zoomOutButton->setFixedSize(21,21);
 
-    zoomInButton->setIcon(QIcon(QString(":/icons/%1/zoomIn_%1.svg").arg(theme)));
-    zoomOutButton->setIcon(QIcon(QString(":/icons/%1/zoomOut_%1.svg").arg(theme)));
+    zoomInButton->setIcon(QIcon(QString(":/icons/%1/zoomIn_%1.svg").arg(theme_)));
+    zoomOutButton->setIcon(QIcon(QString(":/icons/%1/zoomOut_%1.svg").arg(theme_)));
     zoomInButton->setIconSize(QSize(-1, 15));
     zoomOutButton->setIconSize(QSize(-1,15));
     zoomInButton->setToolTip("Zoom In Timeline");
@@ -349,28 +349,28 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     playButton = new QToolButton(toolbar);
     playButton->setFixedSize(21,21);
-    playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme)));
+    playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme_)));
     playButton->setIconSize(QSize(-1,15));
     playButton->setToolTip("Play");
     playButton->setStyleSheet(buttonStyle);
 
     QToolButton* goToStartButton = new QToolButton(toolbar);
     goToStartButton->setFixedSize(21,21);
-    goToStartButton->setIcon(QIcon(QString(":/icons/%1/goToStart_%1.svg").arg(theme)));
+    goToStartButton->setIcon(QIcon(QString(":/icons/%1/goToStart_%1.svg").arg(theme_)));
     goToStartButton->setIconSize(QSize(-1,15));
     goToStartButton->setToolTip("Go To Playback Start");
     goToStartButton->setStyleSheet(buttonStyle);
 
     QToolButton* goToEndButton = new QToolButton(toolbar);
     goToEndButton->setFixedSize(21,21);
-    goToEndButton->setIcon(QIcon(QString(":/icons/%1/goToEnd_%1.svg").arg(theme)));
+    goToEndButton->setIcon(QIcon(QString(":/icons/%1/goToEnd_%1.svg").arg(theme_)));
     goToEndButton->setIconSize(QSize(-1,15));
     goToEndButton->setToolTip("Go To Playback End");
     goToEndButton->setStyleSheet(buttonStyle);
 
     QToolButton* nextFrameButton = new QToolButton(toolbar);
     nextFrameButton->setFixedSize(21,21);
-    nextFrameButton->setIcon(QIcon(QString(":/icons/%1/nextFrame_%1.svg").arg(theme)));
+    nextFrameButton->setIcon(QIcon(QString(":/icons/%1/nextFrame_%1.svg").arg(theme_)));
     nextFrameButton->setIconSize(QSize(-1,15));
     nextFrameButton->setToolTip("Go To Next Frame");
     nextFrameButton->setStyleSheet(buttonStyle);
@@ -378,7 +378,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     QToolButton* previousFrameButton = new QToolButton(toolbar);
     previousFrameButton->setFixedSize(21,21);
-    previousFrameButton->setIcon(QIcon(QString(":/icons/%1/previousFrame_%1.svg").arg(theme)));
+    previousFrameButton->setIcon(QIcon(QString(":/icons/%1/previousFrame_%1.svg").arg(theme_)));
     previousFrameButton->setIconSize(QSize(-1,15));
     previousFrameButton->setToolTip("Go To Previous Frame");
     previousFrameButton->setStyleSheet(buttonStyle);
@@ -471,13 +471,18 @@ void Timeline::step()
     update();
 }
 
+void Timeline::setTheme(QString theme)
+{
+    theme_ = theme;
+}
+
 void Timeline::zoomSliderChanged(int value)
 {
     int newFrameWidth = value * 5;
     if (frameWidth_ == newFrameWidth)
         return;
 
-    // --- 1️⃣ compute OLD content position ---
+    // --- compute OLD content position ---
     int oldOffset =
         (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
 
@@ -490,7 +495,7 @@ void Timeline::zoomSliderChanged(int value)
     int indicatorViewportX =
         oldContentX - oldScroll;
 
-    // --- 2️⃣ apply zoom ---
+    // --- apply zoom ---
     frameWidth_ = newFrameWidth;
 
     timeIndicatorBar->resize(
@@ -498,14 +503,14 @@ void Timeline::zoomSliderChanged(int value)
         scroller->viewport()->height()
     );
 
-    // --- 3️⃣ compute NEW content position ---
+    // --- compute NEW content position ---
     int newOffset =
         (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
 
     int newContentX =
         newOffset + currentFrame_ * frameWidth_;
 
-    // --- 4️⃣ restore viewport position ---
+    // --- restore viewport position ---
     int newScroll =
         newContentX - indicatorViewportX;
 
@@ -533,10 +538,10 @@ void Timeline::playButtonClickEvent()
     playing_ = !playing_;
 
     if(playing_){
-        playButton->setIcon(QIcon(QString(":/icons/%1/pause_%1.svg").arg(theme)));
+        playButton->setIcon(QIcon(QString(":/icons/%1/pause_%1.svg").arg(theme_)));
     }
     else{
-        playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme)));
+        playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme_)));
     }
 
     emit playSignal(playing_);
