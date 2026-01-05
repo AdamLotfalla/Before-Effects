@@ -9,6 +9,7 @@
     <file>goToStart_Light.svg</file>
     <file>previousFrame_Light.svg</file>
     <file>nextFrame_Light.svg</file>
+    <file>bezierPen_Light.svg</file>
   </qresource>
   <qresource prefix="/icons/Dark">
     <file>zoomIn_Dark.svg</file>
@@ -19,5 +20,6 @@
     <file>goToStart_Dark.svg</file>
     <file>nextFrame_Dark.svg</file>
     <file>previousFrame_Dark.svg</file>
+    <file>bezierPen_Dark.svg</file>
   </qresource>
 </RCC>

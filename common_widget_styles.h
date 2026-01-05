@@ -1,7 +1,10 @@
-#pragma once
-#include <QString>
+#ifndef COMMON_WIDGET_STYLES_H
+    #include <QString>
+    #define COMMON_WIDGET_STYLES_H
 
-QString sliderStyle = 
+
+
+inline QString sliderStyle = 
     "QSlider {"
     "    background: transparent;"  // Transparent background
     "}"
@@ -34,7 +37,7 @@ QString sliderStyle =
     "    border: 2px solid #4E4E4E;"
     "}";
 
-QString buttonStyle = 
+inline QString buttonStyle = 
     "QToolButton {"
     "    background-color: #2E2E2E;"  // Match toolbar exactly
     "    border: none;"
@@ -49,3 +52,37 @@ QString buttonStyle =
     "    background-color: #3A3A3A;"  // Subtle hover
     "    border-radius: 3px;"
     "}";
+
+inline QString toolBarButtonStyle = 
+    "QToolButton {"
+    "    background-color: #2E2E2E;"  // Match toolbar exactly
+    "    border: none;"
+    "    padding: 4px;"
+    "    margin: 0px;"
+    "}"
+    "QToolButton:pressed {"
+    "    background-color: #4E4E4E;"  // Much lighter for visibility
+    "    border-radius: 3px;"
+    "}"
+    "QToolButton:hover:!pressed {"
+    "    background-color: #3A3A3A;"  // Subtle hover
+    "    border-radius: 3px;"
+    "}"
+    "QToolButton:checked {"
+    "    background-color: #4E4E4E;"  // Same as pressed state
+    "    border: 1px solid #7BC7B0;"  // Border with your color
+    "    border-radius: 3px;"
+    "    padding: 2px;"  // Adjust padding to account for border
+    "}"
+    "QToolButton:checked:hover {"
+    "    background-color: #5E5E5E;"  // Even lighter on hover when checked
+    "    border: 2px solid #7BC7B0;"
+    "    border-radius: 3px;"
+    "}"
+    "QToolButton:checked:pressed {"
+    "    background-color: #6E6E6E;"  // Lightest when pressed while checked
+    "    border: 1px solid #7BC7B0;"
+    "    border-radius: 3px;"
+    "}";
+
+#endif

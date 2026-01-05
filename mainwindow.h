@@ -29,6 +29,11 @@ private:
     Ui::MainWindow *ui;
     int frameRate_ = 24;
     QTimer* timer_;
+    viewPort* ViewPort_;
+    bool enableBezier_ = false;
+    QToolButton* bezierPen;
+
+    void bezierTool();
 
 private slots:
     void startTimer(bool playing);
