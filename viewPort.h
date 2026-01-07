@@ -4,15 +4,23 @@
 #include <QGraphicsRectItem>
 #include <QMouseEvent>
 #include <QScrollBar>
+#include <QWidget>
 
-
-using namespace std;
+class node{
+    private:
+    char mode = 'L'; // L: linear, B: Bezier, S: symmetric
+    
+    public:
+    QPointF position_;
+    node (QPointF position);
+    // void paint (QPaintEvent* event);
+};
 
 class path : public QGraphicsItem{
     // Q_OBJECT
     
     public:
-    path(QVector<QPointF>& points, QGraphicsItem* parent, bool *pathEditing);
+    path(QVector<node*>& nodes, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
     // void select();
     QRectF boundingRect() const override;
@@ -38,7 +46,9 @@ class path : public QGraphicsItem{
     int strokeWidth_ = 2.0; //temporary
     QColor strokeColor_ = Qt::blue; //temporary
     QColor fillColor_ = Qt::red; //temporary
-    QVector<QPointF> points_;
+    // QVector<QPointF> points_;
+    QVector<node*> nodes_;
+    QVector<QVector<int>> edges_; //edgest connect indices
 
 
     bool *inPathEditingMode_;

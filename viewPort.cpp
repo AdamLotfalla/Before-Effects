@@ -1,25 +1,56 @@
 #include "viewPort.h"
 
-
-path::path(QVector<QPointF>& points, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
+node::node(QPointF position)
 {
-    points_ = points;
+    position_ = position;
+}
+
+// void node::paint(QPaintEvent *event)
+// {
+//     QPainter* painter;
+//     painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+//     painter->setPen(handlePen_);
+//     painter->setBrush(handleBrush_);
+
+//     QPainterPath Rhombus;
+//     Rhombus.moveTo(5, 0);
+//     Rhombus.lineTo(9,5);
+//     Rhombus.lineTo(5,9);
+//     Rhombus.lineTo(0,5);
+//     Rhombus.closeSubpath();
+
+//     switch (mode)
+//     {
+//     case 'L':
+//         painter->drawPath(Rhombus);
+//         break;
+    
+//     default:
+//         break;
+//     }
+// }
+
+
+
+path::path(QVector<node*>& nodes, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
+{
+    nodes_ = nodes;
     inPathEditingMode_ = pathEditing;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
-    if(!points_.isEmpty()){
-        minX_ = points_[0].x();
-        minY_ = points_[0].y();
-        maxX_ = points_[0].x();
-        maxY_ = points_[0].y();
+    if(!nodes_.isEmpty()){
+        minX_ = nodes_[0]->position_.x();
+        minY_ = nodes_[0]->position_.y();
+        maxX_ = nodes_[0]->position_.x();
+        maxY_ = nodes_[0]->position_.y();
     }
 
-    for (const QPointF& point : points_) {
-        if (point.x() < minX_) minX_ = point.x();
-        if (point.y() < minY_) minY_ = point.y();
-        if (point.x() > maxX_) maxX_ = point.x();
-        if (point.y() > maxY_) maxY_ = point.y();
+    for (auto Anode : nodes_){
+        if (Anode->position_.x() < minX_) minX_ = Anode->position_.x();
+        if (Anode->position_.y() < minY_) minY_ = Anode->position_.y();
+        if (Anode->position_.x() > maxX_) maxX_ = Anode->position_.x();
+        if (Anode->position_.y() > maxY_) maxY_ = Anode->position_.y();
     }
 }
 
@@ -38,7 +69,7 @@ path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGr
 
 QRectF path::boundingRect() const 
 {
-    if (points_.isEmpty()) return QRectF();
+    if (nodes_.isEmpty()) return QRectF();
 
     qreal padding = strokeWidth_ / 2.0;
     return QRectF(minX_ - padding, minY_ - padding,
@@ -47,7 +78,8 @@ QRectF path::boundingRect() const
 
 void path::addPoint(QPointF point)
 {
-    points_.push_back(point);
+    node* newNode = new node(point);
+    nodes_.push_back(newNode);
 
     if(point.x() < minX_) minX_ = point.x();
     if(point.y() < minY_) minY_ = point.y();
@@ -57,10 +89,9 @@ void path::addPoint(QPointF point)
     update();
 }
 
-
 void path::modifyLastPoint(QPointF point)
 {
-    points_[points_.size() - 1] = point;
+    nodes_[nodes_.size() - 1]->position_ = point;
 
     if (point.x() < minX_) minX_ = point.x();
     if (point.y() < minY_) minY_ = point.y();
@@ -77,7 +108,7 @@ void path::setHighlightFirstPoint(bool state)
 
 QPointF path::getFirstPoint()
 {
-    return points_[0];
+    return nodes_[0]->position_;
 }
 
 void path::setPreviewPoint(QPointF point) {
@@ -104,13 +135,13 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     
     // Create and draw the path
     QPainterPath path;
-    path.moveTo(points_[0]);
+    path.moveTo(nodes_[0]->position_);
     
-    for (int i = 1; i < points_.size(); ++i) {
-        path.lineTo(points_[i]);
+    for (int i = 1; i < nodes_.size(); ++i) {
+        path.lineTo(nodes_[i]->position_);
     }
     
-    if (points_[0] == points_.back()) {
+    if (nodes_[0]->position_ == nodes_.back()->position_) {
         path.closeSubpath();
     }
     
@@ -123,11 +154,11 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->setPen(QPen(strokeColor_, strokeWidth_));
     painter->drawPath(path);
     
-
+    // Preview for next point to draw when using bezier pen
     if (hasPreview_) {
         painter->setPen(QPen(Qt::gray, 1, Qt::DotLine));
         painter->setBrush(Qt::NoBrush);
-        painter->drawLine(points_.back(), previewPoint_);
+        painter->drawLine(nodes_.back()->position_, previewPoint_);
 
         painter->setBrush(QBrush(Qt::lightGray));
         painter->setPen(QPen(Qt::darkGray, 1));
@@ -161,17 +192,18 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
         painter->setPen(handlePen_);
         painter->setBrush(handleBrush_);
-        for(int i = 0; i<points_.size(); i++){
-            painter->drawEllipse(points_[i].x() - handleD_ / 2.0, points_[i].y() - handleD_ / 2.0, handleD_, handleD_);
+        for(int i = 0; i<nodes_.size(); i++){
+            painter->drawEllipse(nodes_[i]->position_.x() - handleD_ / 2.0, nodes_[i]->position_.y() - handleD_ / 2.0, handleD_, handleD_);
         }
     }
 
+    // Snapping rectangle to the first point
     if(firstPointHighlighted_){
         painter->setCompositionMode(QPainter::CompositionMode_Difference);
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
 
-        QPointF p = points_.first();
+        QPointF p = nodes_.first()->position_;
         painter->drawRect(QRectF(p - QPointF(6,6), QSizeF(12,12)));
     }
 }
