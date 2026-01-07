@@ -135,6 +135,11 @@ void path::clearHighlightedNodes()
 
 void path::calculateBoundaries()
 {
+    minX_ = std::numeric_limits<qreal>::max();
+    minY_ = std::numeric_limits<qreal>::max();
+    maxX_ = std::numeric_limits<qreal>::min();
+    maxY_ = std::numeric_limits<qreal>::min();
+
     for (auto Anode : nodes_){
         if (Anode->position_.x() < minX_) minX_ = Anode->position_.x();
         if (Anode->position_.y() < minY_) minY_ = Anode->position_.y();
@@ -483,11 +488,11 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 selectedPath_->nodes_[selectedPath_->highlightedNodes_[i]]->position_ += (canvasLocalPos - holdStartPosition_); //TEMPORARY
             }
             holdStartPosition_ = canvasLocalPos;
-            selectedPath_->update();
         }
     }
-
+    
     selectedPath_->calculateBoundaries();
+    selectedPath_->update();
 }
 
 void viewPort::mouseReleaseEvent(QMouseEvent *event)
