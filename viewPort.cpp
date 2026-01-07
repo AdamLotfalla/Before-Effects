@@ -5,6 +5,16 @@ node::node(QPointF position)
     position_ = position;
 }
 
+bool node::isHighlighted()
+{
+    return highlighted_;
+}
+
+void node::setHighlighted(bool state)
+{
+    highlighted_ = state;
+}
+
 path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
 {
     nodes_ = nodes;
@@ -13,19 +23,7 @@ path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* p
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
-    if(!nodes_.isEmpty()){
-        minX_ = nodes_[0]->position_.x();
-        minY_ = nodes_[0]->position_.y();
-        maxX_ = nodes_[0]->position_.x();
-        maxY_ = nodes_[0]->position_.y();
-    }
-
-    for (auto Anode : nodes_){
-        if (Anode->position_.x() < minX_) minX_ = Anode->position_.x();
-        if (Anode->position_.y() < minY_) minY_ = Anode->position_.y();
-        if (Anode->position_.x() > maxX_) maxX_ = Anode->position_.x();
-        if (Anode->position_.y() > maxY_) maxY_ = Anode->position_.y();
-    }
+    calculateBoundaries();
 }
 
 path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGraphicsItem(parent)
@@ -35,10 +33,7 @@ path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGr
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
-    minX_ = initialPoint.x();
-    minY_ = initialPoint.y();
-    maxX_ = initialPoint.x();
-    maxY_ = initialPoint.y();
+    calculateBoundaries();
 }
 
 QRectF path::boundingRect() const 
@@ -58,10 +53,7 @@ void path::addPoint(QPointF point)
     QVector<int> emptyVector = {};
     edges_.push_back(emptyVector);
 
-    if(point.x() < minX_) minX_ = point.x();
-    if(point.y() < minY_) minY_ = point.y();
-    if(point.x() > maxX_) maxX_ = point.x();
-    if(point.y() > maxY_) maxY_ = point.y();
+    calculateBoundaries();
 
     update();
 }
@@ -74,16 +66,12 @@ void path::addEdge(int start, int end)
 void path::modifyLastPoint(QPointF point)
 {
     nodes_[nodes_.size() - 1]->position_ = point;
-
-    if (point.x() < minX_) minX_ = point.x();
-    if (point.y() < minY_) minY_ = point.y();
-    if (point.x() > maxX_) maxX_ = point.x();
-    if (point.y() > maxY_) maxY_ = point.y();
+    calculateBoundaries();
 
     update();
 }
 
-void path::setHighlightFirstPoint(bool state)
+void path::showSnapMargin(bool state)
 {
     firstPointHighlighted_ = state;
 }
@@ -95,22 +83,64 @@ QPointF path::getFirstPoint()
 
 void path::setPreviewPoint(QPointF point) {
     previewPoint_ = point;
-    hasPreview_ = true;
+    hasDrawingPreview_ = true;
     update();
 }
 
 void path::clearPreviewPoint() {
-    hasPreview_ = false;
+    hasDrawingPreview_ = false;
     update();
 }
 
 bool path::hasPreviewPoint() const {
-    return hasPreview_;
+    return hasDrawingPreview_;
 }
 
 int path::getLastPointIndex()
 {
     return nodes_.size() - 1;
+}
+
+int path::getNodeCount()
+{
+    return nodes_.size();
+}
+
+void path::addHighlightedNodeIndex(int index)
+{
+    nodes_[index]->setHighlighted();
+    highlightedNodes_.push_back(index);
+}
+
+void path::removeHighlightedNodeIndex(int index)
+{
+    nodes_[index]->setHighlighted(false);
+    highlightedNodes_.remove(highlightedNodes_.indexOf(index));
+}
+
+bool path::nodesHighlightedExist()
+{
+    return highlightedNodes_.size();
+}
+
+void path::clearHighlightedNodes()
+{
+    for(auto i : highlightedNodes_){
+        nodes_[i]->setHighlighted(false);
+    }
+
+    QVector<int> emptyVector;
+    highlightedNodes_ = emptyVector;
+}
+
+void path::calculateBoundaries()
+{
+    for (auto Anode : nodes_){
+        if (Anode->position_.x() < minX_) minX_ = Anode->position_.x();
+        if (Anode->position_.y() < minY_) minY_ = Anode->position_.y();
+        if (Anode->position_.x() > maxX_) maxX_ = Anode->position_.x();
+        if (Anode->position_.y() > maxY_) maxY_ = Anode->position_.y();
+    }
 }
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -144,7 +174,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->drawPath(path);
     
     // Preview for next point to draw when using bezier pen
-    if (hasPreview_) {
+    if (hasDrawingPreview_) {
         painter->setPen(QPen(Qt::gray, 1, Qt::DotLine));
         painter->setBrush(Qt::NoBrush);
         painter->drawLine(nodes_.back()->position_, previewPoint_);
@@ -190,8 +220,12 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         setFlag(ItemIsMovable, false);
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
         painter->setPen(handlePen_);
-        painter->setBrush(handleBrush_);
+
         for(int i = 0; i<nodes_.size(); i++){
+            if(nodes_[i]->isHighlighted())
+                painter->setBrush(QBrush(QColor("#2A7FFF")));
+            else
+                painter->setBrush(handleBrush_);
             switch (nodes_[i]->mode)
             {
             case 'L':
@@ -240,6 +274,7 @@ viewPort::viewPort(QWidget* parent): QGraphicsView(parent)
     verticalScrollBar()->setEnabled(false);
 
 
+
         // Setup rendering
     
     // Create 16:9 canvas rectangle
@@ -265,39 +300,68 @@ viewPort::viewPort(QWidget* parent): QGraphicsView(parent)
     canvas_->setPos((scene_->width() - canvasWidth) /2, (scene_->height() - canvasHeight)/2);
 }
 
-void viewPort::enableBezier(bool state)
+void viewPort::enableBezierTool(bool state)
 {
-    bezierActivated_ = state;
+    bezierToolActivated_ = state;
     startedNewPath_ = false;
-
+    
     if(!objects_.empty()){
         objects_.back()->clearPreviewPoint();
     }
+}
+
+void viewPort::enableNodeTool(bool state)
+{
+    nodeToolActivated_ = state;
+    
+    if(selectedPath_ != nullptr){
+        selectedPath_->update();
+    }
+}
+
+void viewPort::setSelectedPath(path *newSelectedPath, bool state)
+{
+    if(state)
+        selectedPath_ = newSelectedPath;
+    else
+        selectedPath_ = nullptr;
+
+    newSelectedPath->setSelected(state);
+    newSelectedPath->update();
+}
+
+void viewPort::setPathEditingMode(bool state)
+{
+    inPathEditingMode_ = state;
 }
 
 void viewPort::mousePressEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
     QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
-    
-    if (bezierActivated_ && event->button() == Qt::LeftButton)
-    {
+
+
+    if(event->button() == Qt::LeftButton){
+        holdStartPosition_= canvasLocalPos;
         holding_ = true;
+    } //set holding information
+
+    if (bezierToolActivated_ && event->button() == Qt::LeftButton)
+    {
+        path* currentPath;
 
         if(!startedNewPath_){
             if(!objects_.empty()){
-                objects_.back()->setSelected(false);
+                setSelectedPath(objects_.back(), false);
             }
             startedNewPath_ = true;
-            path* newPath = new path(canvasLocalPos, canvas_, &bezierActivated_);
-            newPath->addPoint(canvasLocalPos);
-            newPath->setSelected(true);
-            newPath->update();
+            currentPath = new path(canvasLocalPos, canvas_, &inPathEditingMode_);
+            setSelectedPath(currentPath);
             
-            objects_.push_back(newPath);
+            objects_.push_back(currentPath);
         }
         else{
-            path* currentPath = objects_.back();
+            currentPath = objects_.back();
             int lastPointIndex = currentPath->getLastPointIndex();
             QPointF pointToAdd = canvasLocalPos;
             QPointF firstPoint = currentPath->getFirstPoint();
@@ -307,27 +371,76 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
         
             if (snap) {
-                // currentPath->addPoint(firstPoint);
                 currentPath->addEdge(lastPointIndex, 0);
                 currentPath->clearPreviewPoint();
-                currentPath->setHighlightFirstPoint(false);
+                currentPath->showSnapMargin(false);
             
                 startedNewPath_ = false;
-                currentPath->update();
-                return;
             }
             else{
                 currentPath->addPoint(pointToAdd);
                 currentPath->addEdge(lastPointIndex, lastPointIndex + 1);
-                currentPath->update();
             }        
         }
 
+        currentPath->calculateBoundaries();
+        currentPath->update();
         scene_->update();
         return;
     }
-    else if(event->button() == Qt::LeftButton && !objects_.empty()){ //click outside of any shape deselects the last shape
-        objects_.back()->setSelected(false);
+    else if(nodeToolActivated_ && event->button() == Qt::LeftButton){
+        bool clickedOnNode = false;
+
+        if(selectedPath_ == nullptr){
+            inPathEditingMode_ = true;
+            QGraphicsView::mousePressEvent(event);
+            return;
+        }
+        
+        QRectF searchRect(
+                scenePos.x() - nodeSelectMargin_, 
+                scenePos.y() - nodeSelectMargin_,
+                nodeSelectMargin_ * 2, 
+                nodeSelectMargin_ * 2
+            );
+        for (int i = 0; i < selectedPath_->getNodeCount(); i++) {
+            QPointF nodePos = canvas_->mapToScene(selectedPath_->nodes_[i]->position_); //converted to scene coordincates
+            if (searchRect.contains(nodePos)) {
+                // QGraphicsRectItem* debugRect = new QGraphicsRectItem(searchRect);
+                // debugRect->setBrush(QBrush(QColor("#b19127")));
+                // debugRect->setPen(QPen(QColor("#b19127")));
+                // debugRect->setOpacity(0.5); // Make it semi-transparent
+                // debugRect->setZValue(1000); // Draw on top
+                // scene_->addItem(debugRect);
+                if(shifting_){
+                    if(selectedPath_->nodes_[i]->isHighlighted())
+                    selectedPath_->removeHighlightedNodeIndex(i);
+                    else
+                    selectedPath_->addHighlightedNodeIndex(i);
+                }
+                else{
+                    if(selectedPath_->nodes_[i]->isHighlighted() && selectedPath_->highlightedNodes_.size() > 1)
+                    return;
+                    selectedPath_->clearHighlightedNodes();
+                    selectedPath_->addHighlightedNodeIndex(i);
+                }
+                clickedOnNode = true;
+            }
+        }
+        selectedPath_->update();
+
+        if(!clickedOnNode){
+            if(selectedPath_ != nullptr){
+                QVector<int> emptyVector;
+                selectedPath_->highlightedNodes_ = emptyVector;
+                selectedPath_->update();
+            }
+            QGraphicsView::mousePressEvent(event);
+            return;
+        }
+    }
+    else if(event->button() == Qt::LeftButton && selectedPath_ != nullptr){ //click outside of any shape deselects the last shape
+        setSelectedPath(selectedPath_, false);
     }
     
     QGraphicsView::mousePressEvent(event);
@@ -335,38 +448,63 @@ void viewPort::mousePressEvent(QMouseEvent *event)
 
 void viewPort::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!bezierActivated_ || objects_.empty()) {
+    if (!(bezierToolActivated_ || nodeToolActivated_) || selectedPath_ == nullptr) {
         QGraphicsView::mouseMoveEvent(event);
         return;
     }
 
     QPointF scenePos = mapToScene(event->pos());
     QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
-    path* current = objects_.back();
+    QPointF firstPoint = selectedPath_->getFirstPoint();
 
-    QPointF firstPoint = current->getFirstPoint();
-
-    snap =  std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
-            std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
-
-    QPointF target = snap ? firstPoint : canvasLocalPos;
-    current->setHighlightFirstPoint(snap);
-
-    if (startedNewPath_ && holding_) {
-        current->clearPreviewPoint();
-        current->modifyLastPoint(target);
-    } else if(startedNewPath_) {
-        current->setPreviewPoint(target);
-    }
-    else{
-        if(!objects_.empty() && holding_){
-            objects_.back()->setSelected(false);
+    if(bezierToolActivated_){
+        snap_ =  std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
+                std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
+    
+        QPointF target = snap_ ? firstPoint : canvasLocalPos;
+        selectedPath_->showSnapMargin(snap_);
+    
+        if (startedNewPath_ && holding_) {
+            selectedPath_->clearPreviewPoint();
+            selectedPath_->modifyLastPoint(target);
+        } else if(startedNewPath_) {
+            selectedPath_->setPreviewPoint(target);
         }
-        QGraphicsView::mouseMoveEvent(event);
+        else{
+            if(!objects_.empty() && holding_){
+                setSelectedPath(objects_.back(), false);
+            }
+            QGraphicsView::mouseMoveEvent(event);
+        }
     }
+    else if(nodeToolActivated_){
+        if(selectedPath_ != nullptr && selectedPath_->nodesHighlightedExist() && holding_){
+            for(int i = 0; i < selectedPath_->highlightedNodes_.size(); i++){
+                selectedPath_->nodes_[selectedPath_->highlightedNodes_[i]]->position_ += (canvasLocalPos - holdStartPosition_); //TEMPORARY
+            }
+            holdStartPosition_ = canvasLocalPos;
+            selectedPath_->update();
+        }
+    }
+
+    selectedPath_->calculateBoundaries();
 }
 
 void viewPort::mouseReleaseEvent(QMouseEvent *event)
 {
     holding_ = false;
+}
+
+void viewPort::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Shift){
+        shifting_ = true;
+    }
+}
+
+void viewPort::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Shift){
+        shifting_ = false;
+    }
 }

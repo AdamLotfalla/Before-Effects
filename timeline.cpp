@@ -337,8 +337,8 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     zoomInButton->setFixedSize(21,21);
     zoomOutButton->setFixedSize(21,21);
 
-    zoomInButton->setIcon(QIcon(QString(":/icons/%1/zoomIn_%1.svg").arg(theme_)));
-    zoomOutButton->setIcon(QIcon(QString(":/icons/%1/zoomOut_%1.svg").arg(theme_)));
+    zoomInButton->setIcon(QIcon(QString(":/%1/icons/zoomIn_%1.svg").arg(theme_)));
+    zoomOutButton->setIcon(QIcon(QString(":/%1/icons/zoomOut_%1.svg").arg(theme_)));
     zoomInButton->setIconSize(QSize(-1, 15));
     zoomOutButton->setIconSize(QSize(-1,15));
     zoomInButton->setToolTip("Zoom In Timeline");
@@ -349,28 +349,28 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     playButton = new QToolButton(toolbar);
     playButton->setFixedSize(21,21);
-    playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme_)));
+    playButton->setIcon(QIcon(QString(":/%1/icons/play_%1.svg").arg(theme_)));
     playButton->setIconSize(QSize(-1,15));
     playButton->setToolTip("Play");
     playButton->setStyleSheet(buttonStyle);
 
     QToolButton* goToStartButton = new QToolButton(toolbar);
     goToStartButton->setFixedSize(21,21);
-    goToStartButton->setIcon(QIcon(QString(":/icons/%1/goToStart_%1.svg").arg(theme_)));
+    goToStartButton->setIcon(QIcon(QString(":/%1/icons/goToStart_%1.svg").arg(theme_)));
     goToStartButton->setIconSize(QSize(-1,15));
     goToStartButton->setToolTip("Go To Playback Start");
     goToStartButton->setStyleSheet(buttonStyle);
 
     QToolButton* goToEndButton = new QToolButton(toolbar);
     goToEndButton->setFixedSize(21,21);
-    goToEndButton->setIcon(QIcon(QString(":/icons/%1/goToEnd_%1.svg").arg(theme_)));
+    goToEndButton->setIcon(QIcon(QString(":/%1/icons/goToEnd_%1.svg").arg(theme_)));
     goToEndButton->setIconSize(QSize(-1,15));
     goToEndButton->setToolTip("Go To Playback End");
     goToEndButton->setStyleSheet(buttonStyle);
 
     QToolButton* nextFrameButton = new QToolButton(toolbar);
     nextFrameButton->setFixedSize(21,21);
-    nextFrameButton->setIcon(QIcon(QString(":/icons/%1/nextFrame_%1.svg").arg(theme_)));
+    nextFrameButton->setIcon(QIcon(QString(":/%1/icons/nextFrame_%1.svg").arg(theme_)));
     nextFrameButton->setIconSize(QSize(-1,15));
     nextFrameButton->setToolTip("Go To Next Frame");
     nextFrameButton->setStyleSheet(buttonStyle);
@@ -378,7 +378,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     QToolButton* previousFrameButton = new QToolButton(toolbar);
     previousFrameButton->setFixedSize(21,21);
-    previousFrameButton->setIcon(QIcon(QString(":/icons/%1/previousFrame_%1.svg").arg(theme_)));
+    previousFrameButton->setIcon(QIcon(QString(":/%1/icons/previousFrame_%1.svg").arg(theme_)));
     previousFrameButton->setIconSize(QSize(-1,15));
     previousFrameButton->setToolTip("Go To Previous Frame");
     previousFrameButton->setStyleSheet(buttonStyle);
@@ -538,10 +538,10 @@ void Timeline::playButtonClickEvent()
     playing_ = !playing_;
 
     if(playing_){
-        playButton->setIcon(QIcon(QString(":/icons/%1/pause_%1.svg").arg(theme_)));
+        playButton->setIcon(QIcon(QString(":/%1/icons/pause_%1.svg").arg(theme_)));
     }
     else{
-        playButton->setIcon(QIcon(QString(":/icons/%1/play_%1.svg").arg(theme_)));
+        playButton->setIcon(QIcon(QString(":/%1/icons/play_%1.svg").arg(theme_)));
     }
 
     emit playSignal(playing_);

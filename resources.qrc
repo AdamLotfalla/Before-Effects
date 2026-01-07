@@ -1,25 +1,27 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
-  <qresource prefix="/icons/Light">
-    <file>zoomIn_Light.svg</file>
-    <file>zoomOut_Light.svg</file>
-    <file>play_Light.svg</file>
-    <file>pause_Light.svg</file>
-    <file>goToEnd_Light.svg</file>
-    <file>goToStart_Light.svg</file>
-    <file>previousFrame_Light.svg</file>
-    <file>nextFrame_Light.svg</file>
-    <file>bezierPen_Light.svg</file>
+  <qresource prefix="/Light">
+    <file>icons/bezierPen_Light.svg</file>
+    <file>icons/goToStart_Light.svg</file>
+    <file>icons/previousFrame_Light.svg</file>
+    <file>icons/goToEnd_Light.svg</file>
+    <file>icons/nextFrame_Light.svg</file>
+    <file>icons/pause_Light.svg</file>
+    <file>icons/zoomOut_Light.svg</file>
+    <file>icons/play_Light.svg</file>
+    <file>icons/nodeTool_Light.svg</file>
+    <file>icons/zoomIn_Light.svg</file>
   </qresource>
-  <qresource prefix="/icons/Dark">
-    <file>zoomIn_Dark.svg</file>
-    <file>zoomOut_Dark.svg</file>
-    <file>play_Dark.svg</file>
-    <file>pause_Dark.svg</file>
-    <file>goToEnd_Dark.svg</file>
-    <file>goToStart_Dark.svg</file>
-    <file>nextFrame_Dark.svg</file>
-    <file>previousFrame_Dark.svg</file>
-    <file>bezierPen_Dark.svg</file>
+  <qresource prefix="/Dark">
+    <file>icons/nodeTool_Dark.svg</file>
+    <file>icons/bezierPen_Dark.svg</file>
+    <file>icons/nextFrame_Dark.svg</file>
+    <file>icons/goToEnd_Dark.svg</file>
+    <file>icons/pause_Dark.svg</file>
+    <file>icons/play_Dark.svg</file>
+    <file>icons/goToStart_Dark.svg</file>
+    <file>icons/previousFrame_Dark.svg</file>
+    <file>icons/zoomOut_Dark.svg</file>
+    <file>icons/zoomIn_Dark.svg</file>
   </qresource>
 </RCC>

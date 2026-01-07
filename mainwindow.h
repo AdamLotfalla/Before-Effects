@@ -31,9 +31,12 @@ private:
     QTimer* timer_;
     viewPort* ViewPort_;
     bool enableBezier_ = false;
-    QToolButton* bezierPen;
+    bool enableNodeTool_ = false;
+    QToolButton* bezierPen_;
+    QToolButton* nodeTool_;
 
-    void bezierTool();
+    void bezierTool(bool checked);
+    void nodeTool(bool checked);
 
 private slots:
     void startTimer(bool playing);

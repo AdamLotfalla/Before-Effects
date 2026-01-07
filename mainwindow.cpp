@@ -20,20 +20,33 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QHBoxLayout* toolBarLayout = new QHBoxLayout(toolBar); 
     toolBar->setLayout(toolBarLayout);
 
-    bezierPen = new QToolButton(toolBar);
-    bezierPen->setStyleSheet(toolBarButtonStyle);
-    bezierPen->setIcon(QIcon(QString(":/icons/%1/bezierPen_%1.svg").arg(theme)));
-    bezierPen->setIconSize(QSize(20,20));
-    bezierPen->setFixedSize(QSize(28,28));
-    bezierPen->setCheckable(true);
-    bezierPen->setChecked(false);
-
-    connect(bezierPen, &QToolButton::pressed,
-            this, &MainWindow::bezierTool);
-
+    bezierPen_ = new QToolButton(toolBar);
+    bezierPen_->setStyleSheet(toolBarButtonStyle);
+    bezierPen_->setIcon(QIcon(QString(":/%1/icons/bezierPen_%1.svg").arg(theme)));
+    bezierPen_->setIconSize(QSize(20,20));
+    bezierPen_->setFixedSize(QSize(28,28));
+    bezierPen_->setCheckable(true);
+    bezierPen_->setChecked(false);
+    
+    nodeTool_ = new QToolButton(toolBar);
+    nodeTool_->setStyleSheet(toolBarButtonStyle);
+    nodeTool_->setIcon(QIcon(QString(":/%1/icons/nodeTool_%1.svg").arg(theme)));
+    nodeTool_->setIconSize(QSize(20,20));
+    nodeTool_->setFixedSize(QSize(28,28));
+    nodeTool_->setCheckable(true);
+    nodeTool_->setChecked(false);
+    
+    
+        connect(bezierPen_, &QToolButton::toggled,
+                this, &MainWindow::bezierTool);
+    
+        connect(nodeTool_, &QToolButton::toggled,
+                this, &MainWindow::nodeTool);
+    
     toolBarLayout->setContentsMargins(0,0,0,0);
     toolBarLayout->setSpacing(5);
-    toolBarLayout->addWidget(bezierPen, 0, Qt::AlignVCenter);
+    toolBarLayout->addWidget(bezierPen_, 0, Qt::AlignVCenter);
+    toolBarLayout->addWidget(nodeTool_, 0, Qt::AlignVCenter);
     toolBarLayout->addStretch();
     
 
@@ -96,11 +109,28 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::bezierTool()
+void MainWindow::bezierTool(bool checked)
 {
-    bezierPen->setChecked(enableBezier_);    
-    enableBezier_ = !enableBezier_;
-    ViewPort_->enableBezier(enableBezier_);
+    bezierPen_->setChecked(checked);    
+    enableBezier_ = checked;
+    ViewPort_->enableBezierTool(checked);
+    
+    if(enableNodeTool_ && checked)
+        nodeTool(!checked);
+    
+    ViewPort_->setPathEditingMode(checked);
+}
+
+void MainWindow::nodeTool(bool checked)
+{
+    nodeTool_->setChecked(checked);
+    enableNodeTool_ = checked;
+    ViewPort_->enableNodeTool(checked);
+    
+    if(enableBezier_ && checked)
+        bezierTool(!checked);
+    
+    ViewPort_->setPathEditingMode(checked);
 }
 
 void MainWindow::startTimer(bool playing){
