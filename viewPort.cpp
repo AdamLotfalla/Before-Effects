@@ -5,36 +5,10 @@ node::node(QPointF position)
     position_ = position;
 }
 
-// void node::paint(QPaintEvent *event)
-// {
-//     QPainter* painter;
-//     painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
-//     painter->setPen(handlePen_);
-//     painter->setBrush(handleBrush_);
-
-//     QPainterPath Rhombus;
-//     Rhombus.moveTo(5, 0);
-//     Rhombus.lineTo(9,5);
-//     Rhombus.lineTo(5,9);
-//     Rhombus.lineTo(0,5);
-//     Rhombus.closeSubpath();
-
-//     switch (mode)
-//     {
-//     case 'L':
-//         painter->drawPath(Rhombus);
-//         break;
-    
-//     default:
-//         break;
-//     }
-// }
-
-
-
-path::path(QVector<node*>& nodes, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
+path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
 {
     nodes_ = nodes;
+    edges_ = edges;
     inPathEditingMode_ = pathEditing;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -81,12 +55,20 @@ void path::addPoint(QPointF point)
     node* newNode = new node(point);
     nodes_.push_back(newNode);
 
+    QVector<int> emptyVector = {};
+    edges_.push_back(emptyVector);
+
     if(point.x() < minX_) minX_ = point.x();
     if(point.y() < minY_) minY_ = point.y();
     if(point.x() > maxX_) maxX_ = point.x();
     if(point.y() > maxY_) maxY_ = point.y();
 
     update();
+}
+
+void path::addEdge(int start, int end)
+{
+    edges_[start].push_back(end);
 }
 
 void path::modifyLastPoint(QPointF point)
@@ -126,6 +108,11 @@ bool path::hasPreviewPoint() const {
     return hasPreview_;
 }
 
+int path::getLastPointIndex()
+{
+    return nodes_.size() - 1;
+}
+
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option);
@@ -137,8 +124,10 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     QPainterPath path;
     path.moveTo(nodes_[0]->position_);
     
-    for (int i = 1; i < nodes_.size(); ++i) {
-        path.lineTo(nodes_[i]->position_);
+    for (int i = 0; i < nodes_.size(); i++) {
+        for(auto j : edges_[i]){
+            path.lineTo(nodes_[j]->position_);
+        }
     }
     
     if (nodes_[0]->position_ == nodes_.back()->position_) {
@@ -188,12 +177,34 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->drawEllipse(maxX_ - handleD_/2.0 + selectionGrowth_, maxY_ - handleD_/2.0 + selectionGrowth_, handleD_, handleD_);
     }
     else if(isSelected() && *inPathEditingMode_){
+
+        QPainterPath Rhombus;
+        Rhombus.moveTo(5,0);
+        Rhombus.lineTo(9,5);
+        Rhombus.lineTo(5,9);
+        Rhombus.lineTo(0,5);
+        Rhombus.closeSubpath();
+
+
+
         setFlag(ItemIsMovable, false);
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
         painter->setPen(handlePen_);
         painter->setBrush(handleBrush_);
         for(int i = 0; i<nodes_.size(); i++){
-            painter->drawEllipse(nodes_[i]->position_.x() - handleD_ / 2.0, nodes_[i]->position_.y() - handleD_ / 2.0, handleD_, handleD_);
+            switch (nodes_[i]->mode)
+            {
+            case 'L':
+                Rhombus.translate(nodes_[i]->position_-QPoint(5,5));
+                painter->drawPath(Rhombus);
+                Rhombus.translate(-nodes_[i]->position_+QPoint(5,5));
+                break;
+            case 'S':
+                painter->drawEllipse(nodes_[i]->position_.x() - handleD_ / 2.0, nodes_[i]->position_.y() - handleD_ / 2.0, handleD_, handleD_);
+                break;
+            default:
+                break;
+            }
         }
     }
 
@@ -287,6 +298,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         }
         else{
             path* currentPath = objects_.back();
+            int lastPointIndex = currentPath->getLastPointIndex();
             QPointF pointToAdd = canvasLocalPos;
             QPointF firstPoint = currentPath->getFirstPoint();
                     
@@ -295,7 +307,8 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
         
             if (snap) {
-                currentPath->addPoint(firstPoint);
+                // currentPath->addPoint(firstPoint);
+                currentPath->addEdge(lastPointIndex, 0);
                 currentPath->clearPreviewPoint();
                 currentPath->setHighlightFirstPoint(false);
             
@@ -305,6 +318,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             }
             else{
                 currentPath->addPoint(pointToAdd);
+                currentPath->addEdge(lastPointIndex, lastPointIndex + 1);
                 currentPath->update();
             }        
         }

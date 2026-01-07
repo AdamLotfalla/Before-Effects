@@ -8,9 +8,9 @@
 
 class node{
     private:
-    char mode = 'L'; // L: linear, B: Bezier, S: symmetric
     
     public:
+    char mode = 'L'; // L: linear, B: Bezier, S: symmetric
     QPointF position_;
     node (QPointF position);
     // void paint (QPaintEvent* event);
@@ -20,17 +20,19 @@ class path : public QGraphicsItem{
     // Q_OBJECT
     
     public:
-    path(QVector<node*>& nodes, QGraphicsItem* parent, bool *pathEditing);
+    path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
     // void select();
     QRectF boundingRect() const override;
     void addPoint(QPointF point);
+    void addEdge(int start, int end);
     void modifyLastPoint(QPointF point);
     void setHighlightFirstPoint(bool state);
     QPointF getFirstPoint();
     void setPreviewPoint(QPointF point);
     void clearPreviewPoint();
     bool hasPreviewPoint() const;
+    int getLastPointIndex();
 
     private:
     qreal minX_ = std::numeric_limits<qreal>::max();
@@ -46,7 +48,6 @@ class path : public QGraphicsItem{
     int strokeWidth_ = 2.0; //temporary
     QColor strokeColor_ = Qt::blue; //temporary
     QColor fillColor_ = Qt::red; //temporary
-    // QVector<QPointF> points_;
     QVector<node*> nodes_;
     QVector<QVector<int>> edges_; //edgest connect indices
 
