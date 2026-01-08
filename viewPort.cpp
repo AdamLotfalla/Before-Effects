@@ -373,6 +373,16 @@ void viewPort::mousePressEvent(QMouseEvent *event)
     QPointF scenePos = mapToScene(event->pos());
     QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
 
+    if((event->button() == Qt::LeftButton && panning_) || (event->button() == Qt::MiddleButton)){
+        panning_ = true;
+        holding_ = true;
+        setCursor(Qt::ClosedHandCursor);
+        holdStartPosition_ = canvasLocalPos;
+
+        panStartScenePos_ = scenePos;
+        panStartCanvasPos_ = canvas_->pos();
+        return;
+    } //panning
 
     if(event->button() == Qt::LeftButton){
         holdStartPosition_= canvasLocalPos;
@@ -503,6 +513,16 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
     QPointF scenePos = mapToScene(event->pos());
     QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
     
+    if(panning_ && holding_){
+        QPointF delta = scenePos - panStartScenePos_;
+        canvas_->setPos(panStartCanvasPos_ + delta);
+
+        holdStartPosition_ = canvasLocalPos;
+
+        canvas_->update();
+        return;
+    }
+    
     if(bezierToolActivated_ && selectedPath_ != nullptr){
         QPointF firstPoint = selectedPath_->getFirstPoint();
         snap_ =  std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
@@ -551,6 +571,10 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
 
 void viewPort::mouseReleaseEvent(QMouseEvent *event)
 {
+    if(event->button() == Qt::MiddleButton) {
+        setCursor(Qt::ArrowCursor);
+        panning_ = false;
+    }
     holding_ = false;
 }
 

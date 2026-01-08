@@ -28,7 +28,7 @@ class path : public QGraphicsItem{
     public:
     enum { Type = UserType + 1 };           // <--- Unique ID for path
     int type() const override { return Type; } // <--- Override standard type
-    
+
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
     // void select();
@@ -110,6 +110,10 @@ class viewPort : public QGraphicsView{
     bool snap_ = false;
     bool inPathEditingMode_ = false;
     bool shifting_ = false;
+    bool panning_ = false;
+
+    QPointF panStartScenePos_;
+    QPointF panStartCanvasPos_;
 
     path* selectedPath_ = nullptr;
     
