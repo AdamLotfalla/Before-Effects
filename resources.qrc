@@ -11,6 +11,7 @@
     <file>icons/play_Light.svg</file>
     <file>icons/nodeTool_Light.svg</file>
     <file>icons/zoomIn_Light.svg</file>
+    <file>icons/selectionTool_Light.svg</file>
   </qresource>
   <qresource prefix="/Dark">
     <file>icons/nodeTool_Dark.svg</file>
@@ -23,5 +24,6 @@
     <file>icons/previousFrame_Dark.svg</file>
     <file>icons/zoomOut_Dark.svg</file>
     <file>icons/zoomIn_Dark.svg</file>
+    <file>icons/selectionTool_Dark.svg</file>
   </qresource>
 </RCC>

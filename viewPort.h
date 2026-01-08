@@ -26,6 +26,9 @@ class path : public QGraphicsItem{
     // Q_OBJECT
     
     public:
+    enum { Type = UserType + 1 };           // <--- Unique ID for path
+    int type() const override { return Type; } // <--- Override standard type
+    
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
     // void select();
@@ -44,6 +47,7 @@ class path : public QGraphicsItem{
     void removeHighlightedNodeIndex(int index);
     bool nodesHighlightedExist();
     void clearHighlightedNodes();
+    void movePath(QPointF offset);
     void calculateBoundaries();
     QVector<node*> nodes_;
     QVector<int> highlightedNodes_;
@@ -73,7 +77,6 @@ class path : public QGraphicsItem{
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget = nullptr) override;
-    
 };
 
 class viewPort : public QGraphicsView{
@@ -82,8 +85,12 @@ class viewPort : public QGraphicsView{
 
     public:
     viewPort(QWidget* parent);
-    void enableBezierTool(bool state);
+
+    void enableSelectionTool(bool state);
     void enableNodeTool(bool state);
+    void enableBezierTool(bool state);
+
+
     void setSelectedPath(path* newSelectedPath = nullptr, bool state = true);
     void setPathEditingMode(bool state);
 
@@ -93,8 +100,11 @@ class viewPort : public QGraphicsView{
     QGraphicsScene* scene_;
     int snapMargin_ = 10;
     int nodeSelectMargin_ = 10;
+
+    bool selectionToolActivated_ = false;
     bool bezierToolActivated_ = false;
     bool nodeToolActivated_ = false;
+
     bool startedNewPath_ = false;
     bool holding_ = false;
     bool snap_ = false;

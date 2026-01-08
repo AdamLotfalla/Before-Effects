@@ -36,17 +36,28 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     nodeTool_->setCheckable(true);
     nodeTool_->setChecked(false);
     
+    selectionTool_ = new QToolButton(toolBar);
+    selectionTool_->setStyleSheet(toolBarButtonStyle);
+    selectionTool_->setIcon(QIcon(QString(":/%1/icons/selectionTool_%1.svg").arg(theme)));
+    selectionTool_->setIconSize(QSize(20,20));
+    selectionTool_->setFixedSize(QSize(28,28));
+    selectionTool_->setCheckable(true);
+    selectionTool_->setChecked(false);
     
-        connect(bezierPen_, &QToolButton::toggled,
-                this, &MainWindow::bezierTool);
-    
-        connect(nodeTool_, &QToolButton::toggled,
-                this, &MainWindow::nodeTool);
+    connect(selectionTool_, &QToolButton::toggled,
+            this, &MainWindow::selectionTool);
+
+    connect(nodeTool_, &QToolButton::toggled,
+            this, &MainWindow::nodeTool);
+
+    connect(bezierPen_, &QToolButton::toggled,
+            this, &MainWindow::bezierTool);
     
     toolBarLayout->setContentsMargins(0,0,0,0);
     toolBarLayout->setSpacing(5);
+    toolBarLayout->addWidget(selectionTool_, 0, Qt::AlignVCenter); 
+    toolBarLayout->addWidget(nodeTool_, 0, Qt::AlignVCenter); 
     toolBarLayout->addWidget(bezierPen_, 0, Qt::AlignVCenter);
-    toolBarLayout->addWidget(nodeTool_, 0, Qt::AlignVCenter);
     toolBarLayout->addStretch();
     
 
@@ -117,8 +128,25 @@ void MainWindow::bezierTool(bool checked)
     
     if(enableNodeTool_ && checked)
         nodeTool(!checked);
+    if(enableSelectionTool_ && checked)
+        selectionTool(!checked);
+    
     
     ViewPort_->setPathEditingMode(checked);
+}
+
+void MainWindow::selectionTool(bool checked)
+{
+    selectionTool_->setChecked(checked);
+    enableSelectionTool_ = checked;
+    ViewPort_->enableSelectionTool(checked);
+
+    if(enableBezier_ && checked)
+        bezierTool(!checked);
+    if(enableNodeTool_ && checked)
+        nodeTool(!checked);
+
+    ViewPort_->setPathEditingMode(false);
 }
 
 void MainWindow::nodeTool(bool checked)
@@ -129,6 +157,8 @@ void MainWindow::nodeTool(bool checked)
     
     if(enableBezier_ && checked)
         bezierTool(!checked);
+    if(enableSelectionTool_ && checked)
+        selectionTool(!checked);
     
     ViewPort_->setPathEditingMode(checked);
 }
