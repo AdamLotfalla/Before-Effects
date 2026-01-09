@@ -26,4 +26,10 @@
     <file>icons/zoomIn_Dark.svg</file>
     <file>icons/selectionTool_Dark.svg</file>
   </qresource>
+  <qresource prefix="/Handles">
+    <file>icons/NDiagonalArrows.svg</file>
+    <file>icons/PDiagonalArrows.svg</file>
+    <file>icons/UDArrows.svg</file>
+    <file>icons/LRArrows.svg</file>
+  </qresource>
 </RCC>
