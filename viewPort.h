@@ -41,7 +41,6 @@ class path : public QGraphicsItem{
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
 
     void calculateBoundaries();
-    void updateTransform();
     QRectF boundingRect() const override;
 
     void addPoint(QPointF point);
@@ -83,11 +82,12 @@ class path : public QGraphicsItem{
     QRectF URHandle; 
     QRectF DRHandle; 
     
-    qreal scaleX = 0, scaleY = 0;
+    qreal scaleX = 1, scaleY = 1;
+    qreal originalScaleX, originalScaleY;
     qreal originalWidth, originalHeight;
     QPointF scalePivotPoint_ = QPointF();
     qreal minX_, minY_, maxX_, maxY_;
-    qreal t_MinX_, t_MaxX_, t_MinY_, t_MaxY_;
+    qreal originalMinX_, originalMinY_, originalMaxX_, originalMaxY_;
     private:
     
     QPen handlePen_ = QPen(QColor("#000000"));
@@ -105,7 +105,7 @@ class path : public QGraphicsItem{
     
     
     QVector<node*> originalNodes_;
-    QVector<QPointF> transformedNodes_;
+    // QVector<node*> scaledNodes;
     QVector<QVector<int>> edges_; //edgest connect indices
     QVector<int> highlightedNodes_;
 
