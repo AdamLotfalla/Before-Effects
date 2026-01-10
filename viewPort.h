@@ -90,8 +90,8 @@ class path : public QGraphicsItem{
     QPointF scalePivotPoint_ = QPointF();
     qreal minX_, minY_, maxX_, maxY_;
     qreal originalMinX_, originalMinY_, originalMaxX_, originalMaxY_;
-    private:
     
+    private:
     QPen handlePen_ = QPen(QColor("#000000"));
     QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
     

@@ -244,51 +244,18 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         return;
     }
 
-    // calculate pivot point
-    if(scalePivotPoint_.isNull()){
-        calculateBoundaries();
-        // CHANGE: Use originalMinX_ instead of minX_ to ensure pivot matches unscaled data space
-        scalePivotPoint_= QPointF(originalMinX_, originalMinY_);
-    }
-
-    // scalePivotPoint_ = QPointF(0,0);
-
-
     painter->setBrush(QBrush(QColor("#2ea15e")));
     painter->drawEllipse(scalePivotPoint_, 4, 4);
 
     //calculate scaled nodes
-
     QPainterPath path;
-    QVector<QPointF> scaledNodePositions(originalNodes_.size());
-    for(int i = 0; i<originalNodes_.size(); i++){
-        QPointF scaledNodePos = QPointF(
-            (originalNodes_[i]->position_.x() - scalePivotPoint_.x())*scaleX + scalePivotPoint_.x(),
-            (originalNodes_[i]->position_.y() - scalePivotPoint_.y())*scaleY + scalePivotPoint_.y()
-            );
-        scaledNodePositions[i] = scaledNodePos;
-    }
+    applyCurrentTransform();
 
-    // Update boundaries based on scaled positions
-    minX_ = std::numeric_limits<qreal>::max();
-    minY_ = std::numeric_limits<qreal>::max();
-    maxX_ = std::numeric_limits<qreal>::lowest();
-    maxY_ = std::numeric_limits<qreal>::lowest();
-    
-    // Apply scaling to nodes
-    for (int i = 0; i < scaledNodePositions.size(); i++){
-        if (scaledNodePositions[i].x() < minX_) minX_ = scaledNodePositions[i].x();
-        if (scaledNodePositions[i].y() < minY_) minY_ = scaledNodePositions[i].y();
-        if (scaledNodePositions[i].x() > maxX_) maxX_ = scaledNodePositions[i].x();
-        if (scaledNodePositions[i].y() > maxY_) maxY_ = scaledNodePositions[i].y();
-    }
-
-    path.moveTo(scaledNodePositions[0]);
-    
     // Draw Edges
+    path.moveTo(originalNodes_[0]->position_);
     for (int i = 0; i < originalNodes_.size(); i++) {
         for(auto j : edges_[i]){
-            path.lineTo(scaledNodePositions[j]);
+            path.lineTo(originalNodes_[j]->position_);
         }
     }
     
@@ -305,7 +272,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     if (hasDrawingPreview_) {
         painter->setPen(QPen(Qt::gray, 1, Qt::DotLine));
         painter->setBrush(Qt::NoBrush);
-        painter->drawLine(scaledNodePositions.back(), previewPoint_);
+        painter->drawLine(originalNodes_.back()->position_, previewPoint_);
 
         painter->setBrush(QBrush(Qt::lightGray));
         painter->setPen(QPen(Qt::darkGray, 1));
@@ -369,14 +336,16 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             switch (originalNodes_[i]->mode)
             {
             case 'L':
-                Rhombus.translate(scaledNodePositions[i] - QPoint(5,5));
+                Rhombus.translate(originalNodes_[i]->position_ - QPoint(5,5));
                 painter->drawPath(Rhombus);
-                // painter->drawText(scaledNodePositions[i], QString("(%1,%2)").arg(scaledNodePositions[i].x()).arg(scaledNodePositions[i].y()));
-                Rhombus.translate(-1 * scaledNodePositions[i] + QPoint(5,5));
+                
+                // painter->drawText(originalNodes_[i]->position_, QString("(%1,%2)").arg(originalNodes_[i]->position_.x()).arg(originalNodes_[i]->position_.y())); //debug point positions
+
+                Rhombus.translate(-1 * originalNodes_[i]->position_ + QPoint(5,5)); //reset the rohumbus to the original position to be moved in the next iteration (next node)
                 break;
             case 'S':
                 painter->drawEllipse(
-                    scaledNodePositions[i],
+                    originalNodes_[i]->position_,
                     handleD_, 
                     handleD_);
                 break;
@@ -392,7 +361,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
 
-        QPointF p = scaledNodePositions[0];
+        QPointF p = originalNodes_[0]->position_;
         painter->drawRect(QRectF(p - QPointF(6,6), QSizeF(12,12)));
     }
 }
@@ -431,8 +400,7 @@ viewPort::viewPort(QWidget* parent): QGraphicsView(parent)
     
     canvas_->addToGroup(canvasRect);
     canvas_->setHandlesChildEvents(false); // Let children handle their own events
-    canvas_->setFlag(QGraphicsItem::ItemIsSelectable, false); // Group itself not selectable
-    // canvas_->setFlag(QGraphicsItem::ItemIsMovable, true); // But movable
+    canvas_->setFlag(QGraphicsItem::ItemIsSelectable, false);
 
     
     scene_->addItem(canvas_);    
@@ -571,8 +539,6 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             else{
                 return;
             }
-
-            // QGraphicsView::mousePressEvent(event);
         }
         
         QRectF searchRect(
@@ -625,7 +591,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             holdStartPosition_ = canvasLocalPos;
             holding_ = true;
 
-            // FIX 1: Apply existing transform before starting a new one.
+            // Apply existing transform before starting a new one.
             // This prevents the shape from jumping when changing the pivot.
             selectedPath_->applyCurrentTransform(); 
             
@@ -637,7 +603,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
 
             uint8_t states;
 
-            // FIX 2: Use originalMinX_/originalMaxY_ etc. for Pivot.
+            // Use originalMinX_/originalMaxY_ etc. for Pivot.
             // The math (node - pivot) * scale requires pivot to be in original node space.
             if(selectedPath_->URHandle.contains(canvasLocalPos)){
                 states = URMask;
@@ -661,16 +627,10 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             return;
         }
     }
-    
-    // QGraphicsView::mousePressEvent(event);
 }
 
 void viewPort::mouseMoveEvent(QMouseEvent *event)
-{
-    // if (!(bezierToolActivated_ || nodeToolActivated_ || selectionToolActivated_) || selectedPath_ == nullptr) {
-    //     QGraphicsView::mouseMoveEvent(event);
-    //     return;
-    // }        
+{    
 
     QPointF scenePos = mapToScene(event->pos());
     QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
@@ -728,11 +688,6 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             uint8_t state = selectedPath_->getHandleStates();
             QPointF delta = canvasLocalPos - holdStartPosition_;
             
-            // FIX 3: REMOVE this line. 
-            // selectedPath_->calculateBoundaries(); 
-            // Calling this here resets minX_ to unscaled values while paint sets them to scaled,
-            // causing conflict and jitter.
-            
             selectedPath_->update();
             if(state == URMask){
                 selectedPath_->scaleY -= delta.y() / selectedPath_->originalHeight; //- delta.y() because y increases as you move down
@@ -767,21 +722,11 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             //     selectedPath_->scaleX -= delta.x() / selectedPath_->originalWidth; 
             // }
             holdStartPosition_ = canvasLocalPos;
-            // selectedPath_->scalePivotPoint_ = selectedPath_->getCenter(); // You need to add this method
-            // uint8_t scaleState = state >> 4;
-            // if(scaleState){
-            //     for(int i = 4; i>0; i--){
-            //         selectedPath_->strechPath((scaleState % 10) * i, canvasLocalPos-holdStartPosition_);
-            //         scaleState /= 10;
-            //     }
-            //     holdStartPosition_ = canvasLocalPos;
-            // }
             selectedPath_->update();
         }
     }
     
     if(selectedPath_ != nullptr){
-        // selectedPath_->calculateBoundaries();
         selectedPath_->update();
     }
 }
