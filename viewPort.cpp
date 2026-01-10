@@ -19,13 +19,15 @@ void node::setHighlighted(bool state)
 
 path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
 {
-    nodes_ = nodes;
+    originalNodes_ = nodes;
     edges_ = edges;
     inPathEditingMode_ = pathEditing;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
     calculateBoundaries();
+    originalWidth = maxX_ - minX_;
+    originalHeight = maxY_ - minY_;
 }
 
 path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGraphicsItem(parent)
@@ -35,28 +37,33 @@ path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGr
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
-    calculateBoundaries();
+    updateTransform();
+    originalWidth = maxX_ - minX_;
+    originalHeight = maxY_ - minY_;
 }
 
-QRectF path::boundingRect() const 
+QRectF path::boundingRect() const
 {
-    if (nodes_.isEmpty()) return QRectF();
-
-    qreal padding = strokeWidth_ / 2.0;
-    return QRectF(minX_ - padding, minY_ - padding,
-                  maxX_ - minX_ + strokeWidth_, maxY_ - minY_ + strokeWidth_);
+    qreal pad = strokeWidth_ / 2.0;
+    return QRectF(
+        t_MinX_ - pad,
+        t_MinY_ - pad,
+        (t_MaxX_ - t_MinX_) + strokeWidth_,
+        (t_MaxY_ - t_MinY_) + strokeWidth_
+    );
 }
+
 
 void path::addPoint(QPointF point)
 {
     node* newNode = new node(point);
-    nodes_.push_back(newNode);
+    originalNodes_.push_back(newNode);
+    transformedNodes_.push_back(newNode->position_);
 
     QVector<int> emptyVector = {};
     edges_.push_back(emptyVector);
 
     calculateBoundaries();
-
     update();
 }
 
@@ -67,14 +74,20 @@ void path::addEdge(int start, int end)
 
 QPointF path::getPointPosition(int index)
 {
-    return nodes_[index]->position_;
+    return transformedNodes_[index];
 }
 
 void path::modifyLastPoint(QPointF point)
 {
-    nodes_[nodes_.size() - 1]->position_ = point;
-    calculateBoundaries();
+    QPointF pivot = scalePivotPoint_;
+    
+    QPointF original;
+    original.setX((point.x() - pivot.x()) / (1 + scaleX) + pivot.x());
+    original.setY((point.y() - pivot.y()) / (1 + scaleY) + pivot.y());
 
+    originalNodes_.last()->position_ = original;
+
+    updateTransform();
     update();
 }
 
@@ -85,7 +98,7 @@ void path::showSnapMargin(bool state)
 
 QPointF path::getFirstPoint()
 {
-    return nodes_[0]->position_;
+    return transformedNodes_[0];
 }
 
 void path::setPreviewPoint(QPointF point) {
@@ -105,23 +118,27 @@ bool path::hasPreviewPoint() const {
 
 int path::getLastPointIndex()
 {
-    return nodes_.size() - 1;
+    return originalNodes_.size() - 1;
+}
+
+QPointF path::getCenter() const {
+    return QPointF((minX_ + maxX_) / 2.0, (minY_ + maxY_) / 2.0);
 }
 
 int path::getNodeCount()
 {
-    return nodes_.size();
+    return originalNodes_.size();
 }
 
 void path::addHighlightedNode(int index)
 {
-    nodes_[index]->setHighlighted(true);
+    originalNodes_[index]->setHighlighted(true);
     highlightedNodes_.push_back(index);
 }
 
 void path::removeHighlightedNode(int index)
 {
-    nodes_[index]->setHighlighted(false);
+    originalNodes_[index]->setHighlighted(false);
     if(highlightedNodes_.indexOf(index) != -1){
         highlightedNodes_.remove(highlightedNodes_.indexOf(index));
     }
@@ -134,7 +151,7 @@ int path::nodesHighlighted()
 
 bool path::isHighlighted(int index)
 {
-    return nodes_[index]->isHighlighted();
+    return originalNodes_[index]->isHighlighted();
 }
 
 int path::accessHighlightedVector(int index)
@@ -155,7 +172,7 @@ void path::setHandleStates(uint8_t newStates)
 void path::clearHighlightedNodes()
 {
     for(auto i : highlightedNodes_){
-        nodes_[i]->setHighlighted(false);
+        originalNodes_[i]->setHighlighted(false);
     }
 
     QVector<int> emptyVector;
@@ -166,72 +183,20 @@ void path::movePath(QPointF offset)
 {
     prepareGeometryChange(); // Notify Qt BEFORE changing data
     
-    for(int i = 0; i < nodes_.size(); i++){
-        nodes_[i]->position_ += offset;
+    for(int i = 0; i < originalNodes_.size(); i++){
+        originalNodes_[i]->position_ += offset;
     }
-    
-    calculateBoundaries();
+
+    updateTransform();
+    update(); //update calls calculateboundries inside
 }
 
 void path::moveNode(QPointF offset, int index)
 {
-    nodes_[index]->position_ += (offset);
-}
+    originalNodes_[index]->position_ += (offset);
 
-void path::strechPath(int direction, QPointF offset)
-{
-    if(direction < 1 || direction > 4)
-        return;
-
-    prepareGeometryChange();
-
-    qreal oldMinX = minX_, oldMinY = minY_, oldMaxX = maxX_, oldMaxY = maxY_;
-
-    switch (direction)
-    {
-    case 1:
-        minY_ += offset.y();
-        break;
-    case 2:
-        maxX_ += offset.x();
-        break;
-    case 3:
-        maxY_ += offset.y();
-        break;
-    case 4:
-        minX_ += offset.x();
-        break;
-    }
-
-    for(int i = 0; i<nodes_.size(); i++){
-        if(maxX_ != minX_){
-            double Xproportion = (nodes_[i]->position_.x() - oldMinX) / (oldMaxX - oldMinX); //from left
-
-            switch (direction)
-            {
-            case 4:
-                nodes_[i]->position_.setX(maxX_ - (1-Xproportion) * (maxX_ - minX_));
-                break;
-            case 2:
-                nodes_[i]->position_.setX(Xproportion * (maxX_ - minX_) + minX_);
-                break;
-            }
-        }
-
-        if(maxY_ != minY_){
-            double Yproportion = (nodes_[i]->position_.y() - oldMinY) / (oldMaxY - oldMinY); //from top
-            
-            switch (direction)
-            {
-            case 1:
-                nodes_[i]->position_.setY(maxY_ - (1-Yproportion) * (maxY_ - minY_));
-                break;
-            case 3:
-                nodes_[i]->position_.setY(Yproportion * (maxY_ - minY_) + minY_);
-                break;
-            }
-        }
-    }
+    updateTransform();
+    update();
 }
 
 void path::calculateBoundaries()
@@ -241,12 +206,56 @@ void path::calculateBoundaries()
     maxX_ = std::numeric_limits<qreal>::lowest();
     maxY_ = std::numeric_limits<qreal>::lowest();
 
-    for (int i = 0; i < nodes_.size(); i++){
-        if (nodes_[i]->position_.x() < minX_) minX_ = nodes_[i]->position_.x();
-        if (nodes_[i]->position_.y() < minY_) minY_ = nodes_[i]->position_.y();
-        if (nodes_[i]->position_.x() > maxX_) maxX_ = nodes_[i]->position_.x();
-        if (nodes_[i]->position_.y() > maxY_) maxY_ = nodes_[i]->position_.y();
+    for (int i = 0; i < originalNodes_.size(); i++){
+        if (originalNodes_[i]->position_.x() < minX_) minX_ = originalNodes_[i]->position_.x();
+        if (originalNodes_[i]->position_.y() < minY_) minY_ = originalNodes_[i]->position_.y();
+        if (originalNodes_[i]->position_.x() > maxX_) maxX_ = originalNodes_[i]->position_.x();
+        if (originalNodes_[i]->position_.y() > maxY_) maxY_ = originalNodes_[i]->position_.y();
     }
+
+    originalHeight = maxY_ - minY_;
+    originalWidth = maxX_ - minX_;
+
+    t_MaxX_ = std::numeric_limits<qreal>::max();
+    t_MaxY_ = std::numeric_limits<qreal>::max();
+    t_MinY_ = std::numeric_limits<qreal>::lowest();
+    t_MinX_ = std::numeric_limits<qreal>::lowest();
+
+    for (int i = 0; i < originalNodes_.size(); i++){
+        if (transformedNodes_[i].x() < t_MinX_) t_MinX_ = transformedNodes_[i].x();
+        if (transformedNodes_[i].y() < t_MinY_) t_MinY_ = transformedNodes_[i].y();
+        if (transformedNodes_[i].x() > t_MaxX_) t_MaxX_ = transformedNodes_[i].x();
+        if (transformedNodes_[i].y() > t_MaxY_) t_MaxY_ = transformedNodes_[i].y();
+    } 
+}
+
+void path::updateTransform()
+{
+    prepareGeometryChange();
+
+    transformedNodes_.resize(originalNodes_.size());
+
+    for (int i = 0; i < originalNodes_.size(); i++) {
+        const QPointF& p = originalNodes_[i]->position_;
+        transformedNodes_[i] = QPointF(
+            (p.x() - scalePivotPoint_.x()) * (1 + scaleX) + scalePivotPoint_.x(),
+            (p.y() - scalePivotPoint_.y()) * (1 + scaleY) + scalePivotPoint_.y()
+        );
+    }
+
+    // compute transformed bounds HERE
+    t_MinX_ = t_MinY_ = std::numeric_limits<qreal>::max();
+    t_MaxX_ = t_MaxY_ = std::numeric_limits<qreal>::lowest();
+
+    for (const auto& p : transformedNodes_) {
+        t_MinX_ = std::min(t_MinX_, p.x());
+        t_MinY_ = std::min(t_MinY_, p.y());
+        t_MaxX_ = std::max(t_MaxX_, p.x());
+        t_MaxY_ = std::max(t_MaxY_, p.y());
+    }
+
+
+    calculateBoundaries();
 }
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -257,17 +266,18 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     painter->setRenderHint(QPainter::Antialiasing);
     
     // return if the shape has no nodes
-    if(nodes_.isEmpty()){
+    if(originalNodes_.isEmpty()){
         return;
     }
 
     QPainterPath path;
-    path.moveTo(nodes_[0]->position_);
+
+    path.moveTo(transformedNodes_[0]);
     
     // Draw Edges
-    for (int i = 0; i < nodes_.size(); i++) {
+    for (int i = 0; i < originalNodes_.size(); i++) {
         for(auto j : edges_[i]){
-            path.lineTo(nodes_[j]->position_);
+            path.lineTo(transformedNodes_[j]);
         }
     }
     
@@ -284,19 +294,24 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     if (hasDrawingPreview_) {
         painter->setPen(QPen(Qt::gray, 1, Qt::DotLine));
         painter->setBrush(Qt::NoBrush);
-        painter->drawLine(nodes_.back()->position_, previewPoint_);
+        painter->drawLine(transformedNodes_.back(), previewPoint_);
 
         painter->setBrush(QBrush(Qt::lightGray));
         painter->setPen(QPen(Qt::darkGray, 1));
         painter->drawEllipse(previewPoint_, 3, 3);
     }
+    
+
 
     // Draw selection highlight and handles if selected
     if (isSelected() && inPathEditingMode_ != nullptr && !*inPathEditingMode_) {
         painter->setCompositionMode(QPainter::CompositionMode_Difference);
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
-        painter->drawRect(boundingRect().adjusted(
+        qreal padding = strokeWidth_ / 2.0;
+        QRectF scaledBounds(minX_ - padding, minY_ - padding,
+                            maxX_ - minX_ + strokeWidth_, maxY_ - minY_ + strokeWidth_);
+        painter->drawRect(scaledBounds.adjusted(
             -selectionGrowth_,
             -selectionGrowth_,
             selectionGrowth_,
@@ -306,10 +321,10 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 
         //remember that coordinates are those of the tope left corner
-        ULHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
-        URHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
-        DRHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
-        DLHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
+        ULHandle = QRectF(t_MinX_ - handleD_/2.0 - handleGrowth_, t_MinY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
+        URHandle = QRectF(t_MaxX_ - handleD_/2.0 + handleGrowth_, t_MinY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
+        DRHandle = QRectF(t_MaxX_ - handleD_/2.0 + handleGrowth_, t_MaxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
+        DLHandle = QRectF(t_MinX_ - handleD_/2.0 - handleGrowth_, t_MaxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
 
         QSvgRenderer PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
         QSvgRenderer NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
@@ -334,20 +349,20 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
         painter->setPen(handlePen_);
 
-        for(int i = 0; i<nodes_.size(); i++){
-            if(nodes_[i]->isHighlighted())
+        for(int i = 0; i<originalNodes_.size(); i++){
+            if(originalNodes_[i]->isHighlighted())
                 painter->setBrush(QBrush(QColor("#2A7FFF")));
             else
                 painter->setBrush(handleBrush_);
-            switch (nodes_[i]->mode)
+            switch (originalNodes_[i]->mode)
             {
             case 'L':
-                Rhombus.translate(nodes_[i]->position_-QPoint(5,5));
+                Rhombus.translate(transformedNodes_[i] - QPoint(5,5));
                 painter->drawPath(Rhombus);
-                Rhombus.translate(-nodes_[i]->position_+QPoint(5,5));
+                Rhombus.translate(-transformedNodes_[i] + QPoint(5,5));
                 break;
             case 'S':
-                painter->drawEllipse(nodes_[i]->position_.x() - handleD_ / 2.0, nodes_[i]->position_.y() - handleD_ / 2.0, handleD_, handleD_);
+                painter->drawEllipse(transformedNodes_[i].x() - handleD_ / 2.0, transformedNodes_[i].y() - handleD_ / 2.0, handleD_, handleD_);
                 break;
             default:
                 break;
@@ -361,7 +376,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
 
-        QPointF p = nodes_.first()->position_;
+        QPointF p = transformedNodes_.first();
         painter->drawRect(QRectF(p - QPointF(6,6), QSizeF(12,12)));
     }
 }
@@ -517,10 +532,12 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             else{
                 currentPath->addPoint(pointToAdd);
                 currentPath->addEdge(lastPointIndex, lastPointIndex + 1);
+
+                currentPath->updateTransform();
             }        
         }
 
-        currentPath->calculateBoundaries();
+        currentPath->updateTransform();
         currentPath->update();
         scene_->update();
         return;
@@ -568,6 +585,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 clickedOnNode = true;
             }
         }
+        selectedPath_->updateTransform();
         selectedPath_->update();
 
         if(!clickedOnNode){
@@ -594,23 +612,29 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             holdStartPosition_ = canvasLocalPos;
             holding_ = true;
 
-            selectedPath_->setHandleStates(0b00001111); //temporary until implementing rotation
-            uint8_t states = selectedPath_->getHandleStates();
+            selectedPath_->calculateBoundaries();
+
+            uint8_t states;
 
             if(selectedPath_->URHandle.contains(canvasLocalPos)){
-                states |= URMask;
+                states = URMask;
+                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->minX_, selectedPath_->maxY_);
             }
             else if(selectedPath_->ULHandle.contains(canvasLocalPos)){
-                states |= ULMask;
+                states = ULMask;
+                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->maxX_, selectedPath_->maxY_);
             }
             else if(selectedPath_->DLHandle.contains(canvasLocalPos)){
-                states |= DLMask;
+                states = DLMask;
+                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->maxX_, selectedPath_->minY_);
             }
             else if(selectedPath_->DRHandle.contains(canvasLocalPos)){
-                states |= DRMask;
+                states = DRMask;
+                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->minX_, selectedPath_->minY_);
             }
             
             selectedPath_->setHandleStates(states);
+            selectedPath_->updateTransform();
             selectedPath_->update();
             return;
         }
@@ -625,17 +649,10 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         }
         return; 
     }
-    
-    // QGraphicsView::mousePressEvent(event);
 }
 
 void viewPort::mouseMoveEvent(QMouseEvent *event)
 {
-    // if (!(bezierToolActivated_ || nodeToolActivated_ || selectionToolActivated_) || selectedPath_ == nullptr) {
-    //     QGraphicsView::mouseMoveEvent(event);
-    //     return;
-    // }        
-
     QPointF scenePos = mapToScene(event->pos());
     QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
     
@@ -677,8 +694,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 selectedPath_->moveNode(canvasLocalPos - holdStartPosition_, selectedPath_->accessHighlightedVector(i));
             }
             holdStartPosition_ = canvasLocalPos;
-
-            selectedPath_->calculateBoundaries();
+            selectedPath_->updateTransform();
             selectedPath_->update();
         }
     }
@@ -687,18 +703,49 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             QPointF offset = canvasLocalPos - holdStartPosition_;
             selectedPath_->movePath(offset);
             holdStartPosition_ = canvasLocalPos;
+
+            selectedPath_->updateTransform();
         }
         else if(selectedPath_ != nullptr && holding_ && scaling_){
             uint8_t state = selectedPath_->getHandleStates();
-            uint8_t scaleState = state >> 4;
-            if(scaleState){
-                for(int i = 4; i>0; i--){
-                    selectedPath_->strechPath((scaleState % 10) * i, canvasLocalPos-holdStartPosition_);
-                    scaleState /= 10;
-                }
-                holdStartPosition_ = canvasLocalPos;
+            QPointF delta = canvasLocalPos - holdStartPosition_;
+            selectedPath_->updateTransform();
+            selectedPath_->update();
+            if(state == URMask){
+                selectedPath_->scaleY -= delta.y() / selectedPath_->originalHeight; //- delta.y() because y increases as you move down
+                selectedPath_->scaleX += delta.x() / selectedPath_->originalWidth;
             }
+            else if(state == ULMask ){
+                selectedPath_->scaleY -= delta.y() / selectedPath_->originalHeight;
+                selectedPath_->scaleX -= delta.x() / selectedPath_->originalWidth; // - delta.x() because x increases as you move right
+            }
+            else if(state == DRMask){
+                selectedPath_->scaleX += delta.x() / selectedPath_->originalWidth;
+                selectedPath_->scaleY += delta.y() / selectedPath_->originalHeight;
+            }
+            else if(state == DLMask){
+                selectedPath_->scaleX -= delta.x() / selectedPath_->originalWidth;
+                selectedPath_->scaleY += delta.y() / selectedPath_->originalHeight;
+            }
+            // else if(state &UMask){
+            //     selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->maxY_);
+            //     selectedPath_->scaleY -= delta.y() / selectedPath_->originalHeight;
+            // }
+            // else if(state &DMask){
+            //     selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->minY_);
+            //     selectedPath_->scaleY += delta.y() / selectedPath_->originalHeight;
+            // }
+            // else if(state & RMask){
+            //     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->minX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
+            //     selectedPath_->scaleX += delta.x() / selectedPath_->originalWidth;
+            // }
+            // else if(state & LMask){
+            //     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->maxX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
+            //     selectedPath_->scaleX -= delta.x() / selectedPath_->originalWidth; 
+            // }
 
+            holdStartPosition_ = canvasLocalPos;
+            selectedPath_->updateTransform();
             selectedPath_->update();
         }
     }

@@ -41,6 +41,7 @@ class path : public QGraphicsItem{
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
 
     void calculateBoundaries();
+    void updateTransform();
     QRectF boundingRect() const override;
 
     void addPoint(QPointF point);
@@ -50,6 +51,8 @@ class path : public QGraphicsItem{
     QPointF getFirstPoint();
     void modifyLastPoint(QPointF point);
     int getLastPointIndex();
+
+    QPointF getCenter() const;
     
     void setPreviewPoint(QPointF point);
     void clearPreviewPoint();
@@ -74,16 +77,18 @@ class path : public QGraphicsItem{
 
     void movePath(QPointF offset);
     void moveNode(QPointF offset, int index);
-    void strechPath(int direction, QPointF offset);
 
     QRectF ULHandle;
     QRectF DLHandle; 
     QRectF URHandle; 
     QRectF DRHandle; 
     
-    private:
+    qreal scaleX = 0, scaleY = 0;
+    qreal originalWidth, originalHeight;
+    QPointF scalePivotPoint_ = QPointF();
     qreal minX_, minY_, maxX_, maxY_;
-    qreal scaleX, scaleY;
+    qreal t_MinX_, t_MaxX_, t_MinY_, t_MaxY_;
+    private:
     
     QPen handlePen_ = QPen(QColor("#000000"));
     QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
@@ -99,7 +104,8 @@ class path : public QGraphicsItem{
     QColor fillColor_ = Qt::red;
     
     
-    QVector<node*> nodes_;
+    QVector<node*> originalNodes_;
+    QVector<QPointF> transformedNodes_;
     QVector<QVector<int>> edges_; //edgest connect indices
     QVector<int> highlightedNodes_;
 
