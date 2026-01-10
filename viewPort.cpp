@@ -69,7 +69,7 @@ void path::addEdge(int start, int end)
     edges_[start].push_back(end);
 }
 
-QPointF path::getPointPosition(int index)
+QPointF path::getPoint(int index)
 {
     return originalNodes_[index]->position_;
 }
@@ -107,7 +107,7 @@ bool path::hasPreviewPoint() const {
     return hasDrawingPreview_;
 }
 
-int path::getLastPointIndex()
+int path::getLastNodeIndex()
 {
     return originalNodes_.size() - 1;
 }
@@ -135,13 +135,20 @@ void path::applyCurrentTransform()
     calculateBoundaries();
 }
 
-QPointF path::getCenter() const {
-    return QPointF((minX_ + maxX_) / 2.0, (minY_ + maxY_) / 2.0);
-}
-
 int path::getNodeCount()
 {
     return originalNodes_.size();
+}
+
+void path::rescale(qreal xOffset, qreal yOffset)
+{
+    scaleX += xOffset;
+    scaleY += yOffset;
+}
+
+QPointF path::getScale()
+{
+    return QPointF(scaleX, scaleY);
 }
 
 void path::addHighlightedNode(int index)
@@ -498,7 +505,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         }
         else{
             currentPath = objects_.back();
-            int lastPointIndex = currentPath->getLastPointIndex();
+            int lastPointIndex = currentPath->getLastNodeIndex();
             QPointF pointToAdd = canvasLocalPos;
             QPointF firstPoint = currentPath->getFirstPoint();
                     
@@ -548,7 +555,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 nodeSelectMargin_ * 2
             );
         for (int i = 0; i < selectedPath_->getNodeCount(); i++) {
-            QPointF nodePos = canvas_->mapToScene(selectedPath_->getPointPosition(i)); //converted to scene coordincates
+            QPointF nodePos = canvas_->mapToScene(selectedPath_->getPoint(i)); //converted to scene coordincates
             if (searchRect.contains(nodePos)) {
                 if(shifting_){
                     if(selectedPath_->isHighlighted(i))
@@ -598,8 +605,8 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             // Note: applyCurrentTransform calls calculateBoundaries internaly, 
             // so originalMinX_ etc are fresh.
 
-            selectedPath_->originalScaleX = selectedPath_->scaleX;
-            selectedPath_->originalScaleY = selectedPath_->scaleY;
+            selectedPath_->originalScaleX = selectedPath_->getScale().x();
+            selectedPath_->originalScaleY = selectedPath_->getScale().y();
 
             uint8_t states;
 
@@ -687,23 +694,23 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         else if(selectedPath_ != nullptr && holding_ && scaling_){
             uint8_t state = selectedPath_->getHandleStates();
             QPointF delta = canvasLocalPos - holdStartPosition_;
+
+            // scale offsets
+            qreal xOffset = delta.x() / selectedPath_->originalWidth;
+            qreal yOffset = delta.y() / selectedPath_->originalHeight;
             
             selectedPath_->update();
             if(state == URMask){
-                selectedPath_->scaleY -= delta.y() / selectedPath_->originalHeight; //- delta.y() because y increases as you move down
-                selectedPath_->scaleX += delta.x() / selectedPath_->originalWidth;
+                selectedPath_->rescale(xOffset, -1 * yOffset); //- delta.y() because y increases as you move down
             }
             else if(state == ULMask ){
-                selectedPath_->scaleY -= delta.y() / selectedPath_->originalHeight;
-                selectedPath_->scaleX -= delta.x() / selectedPath_->originalWidth; // - delta.x() because x increases as you move right
+                selectedPath_->rescale(-1 * xOffset, -1 * yOffset); // - delta.x() because x increases as you move right
             }
             else if(state == DRMask){
-                selectedPath_->scaleX += delta.x() / selectedPath_->originalWidth;
-                selectedPath_->scaleY += delta.y() / selectedPath_->originalHeight;
+                selectedPath_->rescale(xOffset, yOffset);
             }
             else if(state == DLMask){
-                selectedPath_->scaleX -= delta.x() / selectedPath_->originalWidth;
-                selectedPath_->scaleY += delta.y() / selectedPath_->originalHeight;
+                selectedPath_->rescale(-1 * xOffset, yOffset);
             }
             // else if(state &UMask){
             //     selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->maxY_);

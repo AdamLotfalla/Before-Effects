@@ -41,26 +41,28 @@ class path : public QGraphicsItem{
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
 
     void calculateBoundaries();
+    void applyCurrentTransform();
     QRectF boundingRect() const override;
 
     void addPoint(QPointF point);
     void addEdge(int start, int end);
 
-    QPointF getPointPosition(int index);
+    //using name convention: point = position; node = object that has more than position
+
+    QPointF getPoint(int index);
     QPointF getFirstPoint();
     void modifyLastPoint(QPointF point);
-    int getLastPointIndex();
+    int getLastNodeIndex();
 
-    void applyCurrentTransform();
-
-    QPointF getCenter() const;
-    
     void setPreviewPoint(QPointF point);
     void clearPreviewPoint();
     bool hasPreviewPoint() const;
     
     void showSnapMargin(bool state);
     int getNodeCount();
+
+    void rescale(qreal xOffset, qreal yOffset);
+    QPointF getScale();
     
     void addHighlightedNode(int index);
     void removeHighlightedNode(int index);
@@ -84,7 +86,6 @@ class path : public QGraphicsItem{
     QRectF URHandle; 
     QRectF DRHandle; 
     
-    qreal scaleX = 1, scaleY = 1;
     qreal originalScaleX, originalScaleY;
     qreal originalWidth, originalHeight;
     QPointF scalePivotPoint_ = QPointF();
@@ -92,6 +93,7 @@ class path : public QGraphicsItem{
     qreal originalMinX_, originalMinY_, originalMaxX_, originalMaxY_;
     
     private:
+    qreal scaleX = 1, scaleY = 1;
     QPen handlePen_ = QPen(QColor("#000000"));
     QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
     
