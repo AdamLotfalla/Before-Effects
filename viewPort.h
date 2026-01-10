@@ -51,6 +51,8 @@ class path : public QGraphicsItem{
     void modifyLastPoint(QPointF point);
     int getLastPointIndex();
 
+    void applyCurrentTransform();
+
     QPointF getCenter() const;
     
     void setPreviewPoint(QPointF point);
@@ -105,7 +107,7 @@ class path : public QGraphicsItem{
     
     
     QVector<node*> originalNodes_;
-    // QVector<node*> scaledNodes;
+    QVector<QPointF> scaledNodePositions;
     QVector<QVector<int>> edges_; //edgest connect indices
     QVector<int> highlightedNodes_;
 
