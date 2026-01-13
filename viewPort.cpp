@@ -251,8 +251,16 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         return;
     }
 
-    painter->setBrush(QBrush(QColor("#2ea15e")));
-    painter->drawEllipse(scalePivotPoint_, 4, 4);
+    QPainterPath cross;
+    cross.moveTo(scalePivotPoint_ + QPointF(-3,-3));
+    cross.lineTo(scalePivotPoint_ + QPointF( 3, 3));
+    cross.moveTo(scalePivotPoint_ + QPointF(-3, 3));
+    cross.lineTo(scalePivotPoint_ + QPointF( 3,-3));
+
+    
+    painter->setBrush(QColor(Qt::transparent));
+    painter->setPen(QPen(QColor("#2ea15e"), 2));
+    painter->drawPath(cross);
 
     //calculate scaled nodes
     QPainterPath path;
@@ -310,15 +318,26 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         URHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
         DRHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
         DLHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
+        UHandle  = QRectF(0.5 * (maxX_ + minX_) - handleD_/2.0, minY_ - handleD_ /2.0 - handleGrowth_, handleD_, handleD_);
+        DHandle  = QRectF(0.5 * (maxX_ + minX_) - handleD_/2.0, maxY_ - handleD_ /2.0 + handleGrowth_, handleD_, handleD_);
+        RHandle  = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
+        LHandle  = QRectF(minX_ - handleD_/2.0 - handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
 
         QSvgRenderer PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
         QSvgRenderer NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
+        QSvgRenderer UDArrow(QString(":/Handles/icons/UDArrows.svg"));
+        QSvgRenderer LRArrow(QString(":/Handles/icons/LRArrows.svg"));
 
         PDiagonalArrow.render(painter, URHandle);
         PDiagonalArrow.render(painter, DLHandle);
 
         NDiagonalArrow.render(painter, ULHandle);
         NDiagonalArrow.render(painter, DRHandle);
+
+        UDArrow.render(painter, UHandle);
+        UDArrow.render(painter, DHandle);
+        LRArrow.render(painter, RHandle);
+        LRArrow.render(painter, LHandle);
     }
     else if(isSelected() && inPathEditingMode_ != nullptr && *inPathEditingMode_){
 
@@ -559,15 +578,20 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             if (searchRect.contains(nodePos)) {
                 if(shifting_){
                     if(selectedPath_->isHighlighted(i))
-                    selectedPath_->removeHighlightedNode(i);
-                    else
-                    selectedPath_->addHighlightedNode(i);
+                        selectedPath_->removeHighlightedNode(i);
+                    else{
+                        selectedPath_->addHighlightedNode(i);
+                        holdStartPosition_ = canvasLocalPos;
+                        holding_ = true;
+                    }  
                 }
                 else{
                     if(selectedPath_->isHighlighted(i) && selectedPath_->nodesHighlighted() > 1)
-                    return;
+                        return;
                     selectedPath_->clearHighlightedNodes();
                     selectedPath_->addHighlightedNode(i);
+                    holdStartPosition_ = canvasLocalPos;
+                    holding_ = true;
                 }
                 clickedOnNode = true;
             }
@@ -586,53 +610,89 @@ void viewPort::mousePressEvent(QMouseEvent *event)
     else if (selectionToolActivated_ && event->button() == Qt::LeftButton) {
         path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
 
+        if(clickedPath){
+            setSelectedPath(clickedPath, true);
+            holdStartPosition_ = canvasLocalPos;
+            holding_ = true;
+
+            return;
+        }
+
         if(selectedPath_ != nullptr){
             scaling_ =  event->button() == Qt::LeftButton &&
                         (selectedPath_->URHandle.contains(canvasLocalPos) ||
                          selectedPath_->ULHandle.contains(canvasLocalPos) ||
                          selectedPath_->DRHandle.contains(canvasLocalPos) ||
-                         selectedPath_->DLHandle.contains(canvasLocalPos));
+                         selectedPath_->DLHandle.contains(canvasLocalPos) ||
+                         selectedPath_->UHandle.contains(canvasLocalPos)  ||
+                         selectedPath_->DHandle.contains(canvasLocalPos)  ||
+                         selectedPath_->RHandle.contains(canvasLocalPos)  ||
+                         selectedPath_->LHandle.contains(canvasLocalPos)
+                        );
+
+            if(scaling_){
+                holdStartPosition_ = canvasLocalPos;
+                holding_ = true;
+    
+                // Apply existing transform before starting a new one.
+                // This prevents the shape from jumping when changing the pivot.
+                selectedPath_->applyCurrentTransform(); 
+                
+                // Note: applyCurrentTransform calls calculateBoundaries internaly, 
+                // so originalMinX_ etc are fresh.
+    
+                selectedPath_->originalScaleX = selectedPath_->getScale().x();
+                selectedPath_->originalScaleY = selectedPath_->getScale().y();
+    
+                uint8_t states;
+    
+                // Use originalMinX_/originalMaxY_ etc. for Pivot.
+                // The math (node - pivot) * scale requires pivot to be in original node space.
+                if(selectedPath_->URHandle.contains(canvasLocalPos)){
+                    states = URMask;
+                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMaxY_);
+                }
+                else if(selectedPath_->ULHandle.contains(canvasLocalPos)){
+                    states = ULMask;
+                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMaxY_);
+                }
+                else if(selectedPath_->DLHandle.contains(canvasLocalPos)){
+                    states = DLMask;
+                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMinY_);
+                }
+                else if(selectedPath_->DRHandle.contains(canvasLocalPos)){
+                    states = DRMask;
+                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMinY_);
+                }
+                else if(selectedPath_->UHandle.contains(canvasLocalPos)){
+                    states = UMask;
+                    selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->maxY_);
+                }
+                else if(selectedPath_->DHandle.contains(canvasLocalPos)){
+                    states = DMask;
+                    selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->minY_);
+                }
+                else if(selectedPath_->RHandle.contains(canvasLocalPos)){
+                    states = RMask;
+                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->minX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
+                }
+                else if(selectedPath_->LHandle.contains(canvasLocalPos)){
+                    states = LMask;
+                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->maxX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
+                }
+                
+                selectedPath_->setHandleStates(states);
+                selectedPath_->update();
+                return;
+            }
+            else if(!clickedPath){
+                selectedPath_->setSelected(false);
+                selectedPath_->update();
+                selectedPath_ = nullptr;
+            }
         }
 
-        if(selectedPath_ != nullptr && scaling_){
-            holdStartPosition_ = canvasLocalPos;
-            holding_ = true;
-
-            // Apply existing transform before starting a new one.
-            // This prevents the shape from jumping when changing the pivot.
-            selectedPath_->applyCurrentTransform(); 
-            
-            // Note: applyCurrentTransform calls calculateBoundaries internaly, 
-            // so originalMinX_ etc are fresh.
-
-            selectedPath_->originalScaleX = selectedPath_->getScale().x();
-            selectedPath_->originalScaleY = selectedPath_->getScale().y();
-
-            uint8_t states;
-
-            // Use originalMinX_/originalMaxY_ etc. for Pivot.
-            // The math (node - pivot) * scale requires pivot to be in original node space.
-            if(selectedPath_->URHandle.contains(canvasLocalPos)){
-                states = URMask;
-                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMaxY_);
-            }
-            else if(selectedPath_->ULHandle.contains(canvasLocalPos)){
-                states = ULMask;
-                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMaxY_);
-            }
-            else if(selectedPath_->DLHandle.contains(canvasLocalPos)){
-                states = DLMask;
-                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMinY_);
-            }
-            else if(selectedPath_->DRHandle.contains(canvasLocalPos)){
-                states = DRMask;
-                selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMinY_);
-            }
-            
-            selectedPath_->setHandleStates(states);
-            selectedPath_->update();
-            return;
-        }
+        
     }
 }
 
@@ -712,22 +772,19 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             else if(state == DLMask){
                 selectedPath_->rescale(-1 * xOffset, yOffset);
             }
-            // else if(state &UMask){
-            //     selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->maxY_);
-            //     selectedPath_->scaleY -= delta.y() / selectedPath_->originalHeight;
-            // }
-            // else if(state &DMask){
-            //     selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->minY_);
-            //     selectedPath_->scaleY += delta.y() / selectedPath_->originalHeight;
-            // }
-            // else if(state & RMask){
-            //     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->minX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
-            //     selectedPath_->scaleX += delta.x() / selectedPath_->originalWidth;
-            // }
-            // else if(state & LMask){
-            //     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->maxX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
-            //     selectedPath_->scaleX -= delta.x() / selectedPath_->originalWidth; 
-            // }
+            else if(state &UMask){
+                selectedPath_->rescale(0, -1 * yOffset);
+            }
+            else if(state &DMask){
+                selectedPath_->rescale(0, yOffset);
+            }
+            else if(state & RMask){
+                selectedPath_->rescale(xOffset, 0);
+            }
+            else if(state & LMask){
+                selectedPath_->rescale(-1 * xOffset, 0);
+            }
+
             holdStartPosition_ = canvasLocalPos;
             selectedPath_->update();
         }

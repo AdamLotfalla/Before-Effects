@@ -85,6 +85,10 @@ class path : public QGraphicsItem{
     QRectF DLHandle; 
     QRectF URHandle; 
     QRectF DRHandle; 
+    QRectF UHandle;
+    QRectF DHandle;
+    QRectF RHandle;
+    QRectF LHandle;
     
     qreal originalScaleX, originalScaleY;
     qreal originalWidth, originalHeight;
