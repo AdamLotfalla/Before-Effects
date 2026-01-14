@@ -140,6 +140,47 @@ int path::getNodeCount()
     return originalNodes_.size();
 }
 
+void path::toggleRotationMode()
+{
+    inRotationMode_ = !inRotationMode_;
+}
+
+bool path::inRotationMode()
+{
+    return inRotationMode_;
+}
+
+void path::rotate(float angle)
+{
+    rotation += angle;
+    update();
+}
+
+QPointF path::mapToItemRotation(const QPointF& point) const {
+    if (qFuzzyCompare(rotation, 0.0f)) return point;
+    
+    QPointF center = QPointF(
+        (minX_ + maxX_) * 0.5,
+        (minY_ + maxY_) * 0.5
+    );
+    
+    // Translate to origin
+    QPointF translated = point - center;
+    
+    // Apply inverse rotation
+    qreal radians = -rotation * M_PI / 180.0;
+    qreal cosA = std::cos(radians);
+    qreal sinA = std::sin(radians);
+    
+    QPointF rotated(
+        translated.x() * cosA - translated.y() * sinA,
+        translated.x() * sinA + translated.y() * cosA
+    );
+    
+    // Translate back
+    return rotated + center;
+}
+
 void path::rescale(qreal xOffset, qreal yOffset)
 {
     scaleX += xOffset;
@@ -244,6 +285,21 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
+        // Save painter state
+    painter->save();
+    
+    // Apply rotation transformation
+    if (!qFuzzyCompare(rotation, (float)0.0)) {
+        QPointF center = QPointF(
+            (minX_ + maxX_) * 0.5,
+            (minY_ + maxY_) * 0.5
+        );
+        
+        painter->translate(center);
+        painter->rotate(rotation);
+        painter->translate(-center);
+    }
+
     painter->setRenderHint(QPainter::Antialiasing);
     
     // return if the shape has no nodes
@@ -316,6 +372,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         //remember that coordinates are those of the tope left corner
         ULHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
         URHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
+        URRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
         DRHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
         DLHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
         UHandle  = QRectF(0.5 * (maxX_ + minX_) - handleD_/2.0, minY_ - handleD_ /2.0 - handleGrowth_, handleD_, handleD_);
@@ -327,17 +384,23 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         QSvgRenderer NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
         QSvgRenderer UDArrow(QString(":/Handles/icons/UDArrows.svg"));
         QSvgRenderer LRArrow(QString(":/Handles/icons/LRArrows.svg"));
+        QSvgRenderer RotationArrow(QString(":/Handles/icons/cornerArrow.svg"));
 
-        PDiagonalArrow.render(painter, URHandle);
-        PDiagonalArrow.render(painter, DLHandle);
-
-        NDiagonalArrow.render(painter, ULHandle);
-        NDiagonalArrow.render(painter, DRHandle);
-
-        UDArrow.render(painter, UHandle);
-        UDArrow.render(painter, DHandle);
-        LRArrow.render(painter, RHandle);
-        LRArrow.render(painter, LHandle);
+        
+        if(inRotationMode_)
+        RotationArrow.render(painter, URRotationHandle);
+        else{
+            PDiagonalArrow.render(painter, URHandle);
+            PDiagonalArrow.render(painter, DLHandle);
+    
+            NDiagonalArrow.render(painter, ULHandle);
+            NDiagonalArrow.render(painter, DRHandle);
+            UDArrow.render(painter, UHandle);
+            UDArrow.render(painter, DHandle);
+            LRArrow.render(painter, RHandle);
+            LRArrow.render(painter, LHandle);
+        }
+            
     }
     else if(isSelected() && inPathEditingMode_ != nullptr && *inPathEditingMode_){
 
@@ -379,6 +442,10 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 break;
             }
         }
+
+    }
+    else{
+        painter->restore();
     }
 
     // Snapping rectangle to the first point
@@ -611,27 +678,37 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
 
         if(clickedPath){
-            setSelectedPath(clickedPath, true);
-            holdStartPosition_ = canvasLocalPos;
-            holding_ = true;
-
+            if(clickedPath == selectedPath_){
+                clickedPath->toggleRotationMode();
+            }
+            else{
+                setSelectedPath(clickedPath, true);
+                holdStartPosition_ = canvasLocalPos;
+                holding_ = true;
+            }
+                
             return;
         }
 
         if(selectedPath_ != nullptr){
-            scaling_ =  event->button() == Qt::LeftButton &&
-                        (selectedPath_->URHandle.contains(canvasLocalPos) ||
-                         selectedPath_->ULHandle.contains(canvasLocalPos) ||
-                         selectedPath_->DRHandle.contains(canvasLocalPos) ||
-                         selectedPath_->DLHandle.contains(canvasLocalPos) ||
-                         selectedPath_->UHandle.contains(canvasLocalPos)  ||
-                         selectedPath_->DHandle.contains(canvasLocalPos)  ||
-                         selectedPath_->RHandle.contains(canvasLocalPos)  ||
-                         selectedPath_->LHandle.contains(canvasLocalPos)
+            QPointF rotatedPos = selectedPath_->mapToItemRotation(canvasLocalPos);
+
+            scaling_ =  !selectedPath_->inRotationMode() && event->button() == Qt::LeftButton &&
+                        (selectedPath_->URHandle.contains(rotatedPos) ||
+                         selectedPath_->ULHandle.contains(rotatedPos) ||
+                         selectedPath_->DRHandle.contains(rotatedPos) ||
+                         selectedPath_->DLHandle.contains(rotatedPos) ||
+                          selectedPath_->UHandle.contains(rotatedPos) ||
+                          selectedPath_->DHandle.contains(rotatedPos) ||
+                          selectedPath_->RHandle.contains(rotatedPos) ||
+                          selectedPath_->LHandle.contains(rotatedPos)
+                        );
+            rotating_ = selectedPath_->inRotationMode() && event->button() == Qt::LeftButton &&
+                        (selectedPath_->URRotationHandle.contains(rotatedPos)
                         );
 
             if(scaling_){
-                holdStartPosition_ = canvasLocalPos;
+                holdStartPosition_ = rotatedPos;
                 holding_ = true;
     
                 // Apply existing transform before starting a new one.
@@ -684,6 +761,10 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 selectedPath_->setHandleStates(states);
                 selectedPath_->update();
                 return;
+            }
+            else if(rotating_){
+                holding_ = true;
+                holdStartPosition_ = canvasLocalPos;
             }
             else if(!clickedPath){
                 selectedPath_->setSelected(false);
@@ -746,12 +827,26 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         }
     }
     else if(selectionToolActivated_ && selectedPath_ != nullptr){
-        if(selectedPath_ != nullptr && holding_ && !scaling_){
+        if(holding_ && !scaling_ && !rotating_){
             QPointF offset = canvasLocalPos - holdStartPosition_;
             selectedPath_->movePath(offset);
             holdStartPosition_ = canvasLocalPos;
         }
-        else if(selectedPath_ != nullptr && holding_ && scaling_){
+        else if(holding_ && rotating_){
+            // QPointF rotatedPos = selectedPath_->mapToItemRotation(canvasLocalPos);
+            
+            QPointF rotationCenter = QPointF(0.5 * (selectedPath_->maxX_ + selectedPath_->minX_), 0.5 * (selectedPath_->maxY_ + selectedPath_->minY_));
+            QPointF startVector = holdStartPosition_ - rotationCenter;
+            QPointF endVector =  canvasLocalPos - rotationCenter;
+            qreal startAngle = std::atan2(startVector.x(), startVector.y());
+            qreal endAngle = std::atan2(endVector.x(), endVector.y());
+            qreal angleDifference = (endAngle - startAngle) * 180.0 / M_PI;
+            selectedPath_->rotate(-1 * angleDifference);
+            selectedPath_->update();
+
+            holdStartPosition_ = canvasLocalPos;
+        }
+        else if(holding_ && scaling_){
             uint8_t state = selectedPath_->getHandleStates();
             QPointF delta = canvasLocalPos - holdStartPosition_;
 
@@ -801,12 +896,24 @@ void viewPort::mouseReleaseEvent(QMouseEvent *event)
         setCursor(Qt::ArrowCursor);
         panning_ = false;
     }
+
     holding_ = false;
+
+    if(rotating_){
+        rotating_ = false;
+        if(selectedPath_ != nullptr)
+            selectedPath_->update();
+    }
+        
     if(scaling_){
         scaling_ = false;
-        selectedPath_->calculateBoundaries();
-        selectedPath_->update();
+        if(selectedPath_ != nullptr){
+            selectedPath_->calculateBoundaries();
+            selectedPath_->update();
+        }
     }
+
+            
 }
 
 void viewPort::keyPressEvent(QKeyEvent *event)

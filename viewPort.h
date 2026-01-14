@@ -61,6 +61,11 @@ class path : public QGraphicsItem{
     void showSnapMargin(bool state);
     int getNodeCount();
 
+    void toggleRotationMode();
+    bool inRotationMode();
+    void rotate(float angle);
+    QPointF mapToItemRotation(const QPointF& point) const;
+
     void rescale(qreal xOffset, qreal yOffset);
     QPointF getScale();
     
@@ -89,12 +94,15 @@ class path : public QGraphicsItem{
     QRectF DHandle;
     QRectF RHandle;
     QRectF LHandle;
+    QRectF URRotationHandle;
     
     qreal originalScaleX, originalScaleY;
     qreal originalWidth, originalHeight;
     QPointF scalePivotPoint_ = QPointF();
+    float originalRotation;
     qreal minX_, minY_, maxX_, maxY_;
     qreal originalMinX_, originalMinY_, originalMaxX_, originalMaxY_;
+    float rotation = 0;
     
     private:
     qreal scaleX = 1, scaleY = 1;
@@ -122,6 +130,7 @@ class path : public QGraphicsItem{
 
 
     bool *inPathEditingMode_;
+    bool inRotationMode_ = false;
     bool firstPointHighlighted_ = false;
     bool hasDrawingPreview_ = false;
 
@@ -159,13 +168,17 @@ class viewPort : public QGraphicsView{
     bool shifting_ = false;
     bool panning_ = false;
     bool scaling_ = false;
+    bool rotating_ = false;
     
     QPointF holdStartPosition_;
+    // QPointF rotationStartPosition_;
+    float originalRotation_;
     bool snap_ = false;
     bool inPathEditingMode_ = false;
 
     QPointF panStartScenePos_;
     QPointF panStartCanvasPos_;
+
 
     path* selectedPath_ = nullptr;
     
