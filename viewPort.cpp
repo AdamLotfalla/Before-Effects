@@ -285,7 +285,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-        // Save painter state
+    // Save painter state
     painter->save();
     
     // Apply rotation transformation
@@ -372,7 +372,6 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         //remember that coordinates are those of the tope left corner
         ULHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
         URHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
-        URRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
         DRHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
         DLHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
         UHandle  = QRectF(0.5 * (maxX_ + minX_) - handleD_/2.0, minY_ - handleD_ /2.0 - handleGrowth_, handleD_, handleD_);
@@ -380,15 +379,28 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         RHandle  = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
         LHandle  = QRectF(minX_ - handleD_/2.0 - handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
 
+        ULRotationHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
+        URRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
+        DRRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
+        DLRotationHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
+        
         QSvgRenderer PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
         QSvgRenderer NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
         QSvgRenderer UDArrow(QString(":/Handles/icons/UDArrows.svg"));
         QSvgRenderer LRArrow(QString(":/Handles/icons/LRArrows.svg"));
-        QSvgRenderer RotationArrow(QString(":/Handles/icons/cornerArrow.svg"));
+        QSvgRenderer URRotationArrow(QString(":/Handles/icons/URcornerArrow.svg"));
+        QSvgRenderer ULRotationArrow(QString(":/Handles/icons/ULcornerArrow.svg"));
+        QSvgRenderer DRRotationArrow(QString(":/Handles/icons/DRcornerArrow.svg"));
+        QSvgRenderer DLRotationArrow(QString(":/Handles/icons/DLcornerArrow.svg"));
+        
 
         
-        if(inRotationMode_)
-        RotationArrow.render(painter, URRotationHandle);
+        if(inRotationMode_){
+            URRotationArrow.render(painter, URRotationHandle);
+            ULRotationArrow.render(painter, ULRotationHandle);
+            DRRotationArrow.render(painter, DRRotationHandle);
+            DLRotationArrow.render(painter, DLRotationHandle);
+        }
         else{
             PDiagonalArrow.render(painter, URHandle);
             PDiagonalArrow.render(painter, DLHandle);
@@ -458,6 +470,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->drawRect(QRectF(p - QPointF(6,6), QSizeF(12,12)));
     }
 }
+
 
 
 viewPort::viewPort(QWidget* parent): QGraphicsView(parent)
@@ -704,7 +717,10 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                           selectedPath_->LHandle.contains(rotatedPos)
                         );
             rotating_ = selectedPath_->inRotationMode() && event->button() == Qt::LeftButton &&
-                        (selectedPath_->URRotationHandle.contains(rotatedPos)
+                        (selectedPath_->URRotationHandle.contains(rotatedPos) ||
+                         selectedPath_->ULRotationHandle.contains(rotatedPos) ||
+                         selectedPath_->DRRotationHandle.contains(rotatedPos) ||
+                         selectedPath_->DLRotationHandle.contains(rotatedPos)
                         );
 
             if(scaling_){

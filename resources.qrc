@@ -31,6 +31,9 @@
     <file>icons/PDiagonalArrows.svg</file>
     <file>icons/UDArrows.svg</file>
     <file>icons/LRArrows.svg</file>
-    <file>icons/cornerArrow.svg</file>
+    <file>icons/DLcornerArrow.svg</file>
+    <file>icons/ULcornerArrow.svg</file>
+    <file>icons/DRcornerArrow.svg</file>
+    <file>icons/URcornerArrow.svg</file>
   </qresource>
 </RCC>

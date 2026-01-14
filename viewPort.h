@@ -95,6 +95,9 @@ class path : public QGraphicsItem{
     QRectF RHandle;
     QRectF LHandle;
     QRectF URRotationHandle;
+    QRectF ULRotationHandle;
+    QRectF DLRotationHandle;
+    QRectF DRRotationHandle;
     
     qreal originalScaleX, originalScaleY;
     qreal originalWidth, originalHeight;
