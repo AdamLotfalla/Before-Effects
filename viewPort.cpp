@@ -1,8 +1,15 @@
 #include "viewPort.h"
 
+bezierHandle::bezierHandle(QPointF position)
+{
+    position_ = position;
+}
+
 node::node(QPointF position)
 {
     position_ = position;
+    H1 = nullptr;
+    H2 = nullptr;
 }
 
 bool node::isHighlighted()
@@ -140,6 +147,41 @@ int path::getNodeCount()
     return originalNodes_.size();
 }
 
+void path::changeNodeMode(char newMode, int index)
+{
+    originalNodes_[index]->mode = newMode;
+}
+
+void path::moveBezierHandle(QPointF newPosition, int index, int handleIndex)
+{
+    node* currentNode = originalNodes_[index];
+
+    if (currentNode->H1 == nullptr){
+        currentNode->H1 = new bezierHandle(currentNode->position_ - (newPosition - currentNode->position_));
+    }
+
+    if(currentNode->H2 == nullptr){
+        currentNode->H2 = new bezierHandle(newPosition);
+    }
+    
+
+    switch (handleIndex)
+    {
+    case 1:
+        currentNode->H1->position_ = newPosition;
+        if(currentNode->mode == 'S'){
+            currentNode->H2->position_ = currentNode->position_ - (newPosition - currentNode->position_);
+        }
+        break;
+    case 2:
+        currentNode->H2->position_ = newPosition;
+        if(currentNode->mode == 'S'){
+            currentNode->H1->position_ = currentNode->position_ - (newPosition - currentNode->position_);
+        }
+        break;
+    }
+}
+
 void path::toggleRotationMode()
 {
     inRotationMode_ = !inRotationMode_;
@@ -148,6 +190,11 @@ void path::toggleRotationMode()
 bool path::inRotationMode()
 {
     return inRotationMode_;
+}
+
+void path::setDrawingMode(bool state)
+{
+    inPathDrawingMode_ = state;
 }
 
 void path::rotate(float angle)
@@ -326,28 +373,62 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     path.moveTo(originalNodes_[0]->position_);
     for (int i = 0; i < originalNodes_.size(); i++) {
         for(auto j : edges_[i]){
-            path.lineTo(originalNodes_[j]->position_);
+            char initialMode = originalNodes_[i]->mode;
+            char FinalMode = originalNodes_[j]->mode;
+
+            if((FinalMode == 'S' || FinalMode == 'M') && initialMode == 'L'){
+                path.quadTo(originalNodes_[j]->H1->position_, originalNodes_[j]->position_);
+            }
+            else if((FinalMode == 'S' || FinalMode == 'M') && (initialMode == 'S' || initialMode == 'M')){
+                path.cubicTo(originalNodes_[i]->H2->position_, originalNodes_[j]->H1->position_, originalNodes_[j]->position_);
+            }
+            else if(FinalMode == 'L' && (initialMode == 'S' || initialMode == 'M')){
+                path.quadTo(originalNodes_[i]->H2->position_, originalNodes_[j]->position_);
+            }
+            else if(FinalMode == 'L' && initialMode == 'L'){
+                path.lineTo(originalNodes_[j]->position_);
+            }
         }
     }
     
     // Fill
-    if (fillColor_ != Qt::transparent) {
+    if (!inPathDrawingMode_) {
         painter->fillPath(path, QBrush(fillColor_));
+    }
+    else{
+        painter->fillPath(path, QBrush(Qt::transparent));
     }
     
     // Stroke
-    painter->setPen(QPen(strokeColor_, strokeWidth_));
+    if(!inPathDrawingMode_){
+        painter->setPen(QPen(strokeColor_, strokeWidth_));
+    }
+    else{
+        painter->setPen(QPen(QColor("#4C7FD1"), 1));
+    }
     painter->drawPath(path);
     
     // Preview for next point to draw when using bezier pen
     if (hasDrawingPreview_) {
-        painter->setPen(QPen(Qt::gray, 1, Qt::DotLine));
+        painter->setPen(QPen(QColor("#B84343"), 1));
+        // painter->setPen(QPen(Qt::gray, 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
-        painter->drawLine(originalNodes_.back()->position_, previewPoint_);
+
+        if(originalNodes_[getLastNodeIndex()]->mode == 'S' || originalNodes_[getLastNodeIndex()]->mode == 'M'){
+            QPainterPath previewPath;
+
+            previewPath.moveTo(originalNodes_[getLastNodeIndex()]->position_);
+            previewPath.quadTo(originalNodes_[getLastNodeIndex()]->H2->position_, previewPoint_);
+
+            painter->drawPath(previewPath);
+        }
+        else{
+            painter->drawLine(originalNodes_.back()->position_, previewPoint_);
+        }
 
         painter->setBrush(QBrush(Qt::lightGray));
         painter->setPen(QPen(Qt::darkGray, 1));
-        painter->drawEllipse(previewPoint_, 3, 3);
+        painter->drawEllipse(previewPoint_, 2, 2);
     }
     
 
@@ -428,13 +509,29 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
         painter->setPen(handlePen_);
 
+        // draw nodes
         for(int i = 0; i<originalNodes_.size(); i++){
+            
+            // draw bezier handles for current node if they exist
+            if((originalNodes_[i]->mode == 'S' || originalNodes_[i]->mode == 'M') && originalNodes_[i]->H1 != nullptr && originalNodes_[i]->H2 != nullptr){
+                painter->setPen(QPen(Qt::gray, 1, Qt::DashLine));
+                painter->setBrush(Qt::NoBrush);
+
+                painter->drawLine(originalNodes_[i]->position_, originalNodes_[i]->H1->position_);
+                painter->drawLine(originalNodes_[i]->position_, originalNodes_[i]->H2->position_);
+
+                painter->setBrush(QBrush(Qt::white));
+                painter->setPen(QPen(Qt::black, 1));
+                painter->drawEllipse(originalNodes_[i]->H1->position_, handleD_/2, handleD_/2);
+                painter->drawEllipse(originalNodes_[i]->H2->position_, handleD_/2, handleD_/2);
+            }
+
             if(originalNodes_[i]->isHighlighted())
                 painter->setBrush(QBrush(QColor("#2A7FFF")));
             else
                 painter->setBrush(handleBrush_);
 
-            switch (originalNodes_[i]->mode)
+            switch (originalNodes_[i]->mode) // L: linear (rhombus), M: smooth (circle),  S: symmetric (square)
             {
             case 'L':
                 Rhombus.translate(originalNodes_[i]->position_ - QPoint(5,5));
@@ -444,13 +541,18 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
                 Rhombus.translate(-1 * originalNodes_[i]->position_ + QPoint(5,5)); //reset the rohumbus to the original position to be moved in the next iteration (next node)
                 break;
-            case 'S':
+            case 'M':
                 painter->drawEllipse(
-                    originalNodes_[i]->position_,
+                    originalNodes_[i]->position_ - QPointF(handleD_/2, handleD_/2),
                     handleD_, 
                     handleD_);
                 break;
-            default:
+            case 'S':
+                painter->drawRect(
+                    originalNodes_[i]->position_.x() - handleD_/2,
+                    originalNodes_[i]->position_.y() - handleD_/2,
+                    handleD_,
+                    handleD_);
                 break;
             }
         }
@@ -598,6 +700,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             }
             startedNewPath_ = true;
             currentPath = new path(canvasLocalPos, canvas_, &inPathEditingMode_);
+            currentPath->setDrawingMode(true);
             setSelectedPath(currentPath);
             
             objects_.push_back(currentPath);
@@ -615,6 +718,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             if (snap) {
                 currentPath->addEdge(lastPointIndex, 0);
                 currentPath->clearPreviewPoint();
+                currentPath->setDrawingMode(false);
                 currentPath->showSnapMargin(false);
             
                 startedNewPath_ = false;
@@ -691,10 +795,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
 
         if(clickedPath){
-            if(clickedPath == selectedPath_){
-                clickedPath->toggleRotationMode();
-            }
-            else{
+            if(clickedPath != selectedPath_){
                 setSelectedPath(clickedPath, true);
                 holdStartPosition_ = canvasLocalPos;
                 holding_ = true;
@@ -820,7 +921,10 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
     
         if (startedNewPath_ && holding_) {
             selectedPath_->clearPreviewPoint();
-            selectedPath_->modifyLastPoint(target);
+            // selectedPath_->modifyLastPoint(target); //this was added before bezier functionality
+            selectedPath_->changeNodeMode('S', selectedPath_->getLastNodeIndex()); // this causes a crash
+            selectedPath_->moveBezierHandle(canvasLocalPos, selectedPath_->getNodeCount() - 1, 2); // or maybe this?!
+            selectedPath_->update();
         } else if(startedNewPath_) {
             selectedPath_->setPreviewPoint(target);
         }
@@ -843,7 +947,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         }
     }
     else if(selectionToolActivated_ && selectedPath_ != nullptr){
-        if(holding_ && !scaling_ && !rotating_){
+        if(holding_ && !scaling_){
             QPointF offset = canvasLocalPos - holdStartPosition_;
             selectedPath_->movePath(offset);
             holdStartPosition_ = canvasLocalPos;
@@ -913,13 +1017,24 @@ void viewPort::mouseReleaseEvent(QMouseEvent *event)
         panning_ = false;
     }
 
+    QPointF scenePos = mapToScene(event->pos());
+    QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
+
     holding_ = false;
+    
+    // switch between rotation mode and scale mode if mouse clicked and declicked without moving
+    path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
+    if (clickedPath && selectedPath_ != nullptr && clickedPath == selectedPath_  && holdStartPosition_ == canvasLocalPos){
+        selectedPath_->toggleRotationMode();
+        selectedPath_->update();
+    }
 
     if(rotating_){
         rotating_ = false;
         if(selectedPath_ != nullptr)
             selectedPath_->update();
     }
+    
         
     if(scaling_){
         scaling_ = false;

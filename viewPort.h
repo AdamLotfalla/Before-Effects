@@ -17,12 +17,21 @@
 #define DRMask 0b01100000
 #define DLMask 0b00110000
 
+class bezierHandle{ 
+    public:
+    QPointF position_;
+    bezierHandle (QPointF position);
+};
+
 class node{
     public:
     bool isHighlighted();
     node (QPointF position);
     QPointF position_;
-    char mode = 'L'; // L: linear, B: Bezier, S: symmetric
+    char mode = 'L'; // L: linear (rhombus), M: smooth (circle),  S: symmetric (square)
+
+    bezierHandle* H1;
+    bezierHandle* H2;
     
     private:
     void setHighlighted(bool state = true);
@@ -60,9 +69,13 @@ class path : public QGraphicsItem{
     
     void showSnapMargin(bool state);
     int getNodeCount();
+    void changeNodeMode(char newMode, int index);
+
+    void moveBezierHandle(QPointF newPosition, int index, int handleIndex);
 
     void toggleRotationMode();
     bool inRotationMode();
+    void setDrawingMode(bool state);
     void rotate(float angle);
     QPointF mapToItemRotation(const QPointF& point) const;
 
@@ -133,6 +146,7 @@ class path : public QGraphicsItem{
 
 
     bool *inPathEditingMode_;
+    bool inPathDrawingMode_;
     bool inRotationMode_ = false;
     bool firstPointHighlighted_ = false;
     bool hasDrawingPreview_ = false;
