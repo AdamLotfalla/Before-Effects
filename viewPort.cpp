@@ -1070,7 +1070,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         }
     }
     else if(selectionToolActivated_ && selectedPath_ != nullptr){
-        if(holding_ && !scaling_){
+        if(holding_ && !scaling_ && !rotating_){
             QPointF offset = canvasLocalPos - holdStartPosition_;
             selectedPath_->movePath(offset);
             holdStartPosition_ = canvasLocalPos;
