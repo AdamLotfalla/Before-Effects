@@ -49,6 +49,7 @@ class path : public QGraphicsItem{
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
 
+    void recalculateBoundariesForPoint(QPointF point);
     void calculateBoundaries();
     void applyCurrentTransform();
     QRectF boundingRect() const override;

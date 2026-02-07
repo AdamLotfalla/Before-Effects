@@ -132,6 +132,19 @@ void path::applyCurrentTransform()
             (n->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
             (n->position_.y() - scalePivotPoint_.y()) * scaleY + scalePivotPoint_.y()
         );
+
+        if(n->H1){
+            n->H1->position_ = QPointF(
+                (n->H1->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
+                (n->H1->position_.y() - scalePivotPoint_.y()) * scaleX + scalePivotPoint_.y()
+            );
+        }
+        if(n->H2){
+            n->H2->position_ = QPointF(
+                (n->H2->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
+                (n->H2->position_.y() - scalePivotPoint_.y()) * scaleX + scalePivotPoint_.y()
+            );
+        }
     }
 
     // Reset scale to 1.0
@@ -294,6 +307,12 @@ void path::movePath(QPointF offset)
     
     for(int i = 0; i < originalNodes_.size(); i++){
         originalNodes_[i]->position_ += offset;
+        bezierHandle* H1 = originalNodes_[i]->H1;
+        bezierHandle* H2 = originalNodes_[i]->H2;
+        if(H1 != nullptr)
+           H1->position_ += offset; 
+        if(H2 != nullptr)
+            H2->position_ += offset;
     }
     
     calculateBoundaries();
@@ -302,6 +321,16 @@ void path::movePath(QPointF offset)
 void path::moveNode(QPointF offset, int index)
 {
     originalNodes_[index]->position_ += (offset);
+    if(originalNodes_[index]->H1) originalNodes_[index]->H1->position_ += offset;
+    if(originalNodes_[index]->H2) originalNodes_[index]->H2->position_ += offset;
+}
+
+void path::recalculateBoundariesForPoint(QPointF point)
+{        
+    if (point.x() < minX_) minX_ = point.x();
+    if (point.y() < minY_) minY_ = point.y();
+    if (point.x() > maxX_) maxX_ = point.x();
+    if (point.y() > maxY_) maxY_ = point.y();
 }
 
 void path::calculateBoundaries()
@@ -311,11 +340,105 @@ void path::calculateBoundaries()
     maxX_ = std::numeric_limits<qreal>::lowest();
     maxY_ = std::numeric_limits<qreal>::lowest();
 
+    //quadratic bezier curve: B(t) = (1-t)^2 P0 + 2(1-t)t P1 + t^2 P2
+    //stationary point when t = (p0 - p1)/(p0 - 2p1 + p2)
+
     for (int i = 0; i < originalNodes_.size(); i++){
-        if (originalNodes_[i]->position_.x() < minX_) minX_ = originalNodes_[i]->position_.x();
-        if (originalNodes_[i]->position_.y() < minY_) minY_ = originalNodes_[i]->position_.y();
-        if (originalNodes_[i]->position_.x() > maxX_) maxX_ = originalNodes_[i]->position_.x();
-        if (originalNodes_[i]->position_.y() > maxY_) maxY_ = originalNodes_[i]->position_.y();
+        // int nextNodeIndex = (i+1) % getNodeCount();
+        for(int nextNodeIndex : edges_[i]){
+            QPointF P0 = originalNodes_[i]->position_;
+            QPointF P1,P2;
+            QPointF P3 = originalNodes_[nextNodeIndex]->position_;
+            
+            qreal tx,ty;
+            qreal stationaryPx, stationaryPy;
+            
+            char startMode = originalNodes_[i]->mode;
+            char endMode = originalNodes_[nextNodeIndex]->mode;
+
+            
+            if((endMode == 'S' || endMode == 'M') && (startMode == 'S' || startMode == 'M')){
+                P1 = originalNodes_[i]->H2->position_;
+                P2 = originalNodes_[nextNodeIndex]->H1->position_;
+
+                //calculate t using the derivative
+                
+                QPointF a = -3.0 * P0 + 9.0 * P1 - 9.0 * P2 + 3.0 * P3;
+                QPointF b = 6.0 * P0 - 12.0 * P1 + 6.0 * P2;
+                QPointF c = -3.0 * P0 + 3.0 * P1;
+                
+                // if((a.x() > 1e-10 && a.y() > 1e-10)){
+
+                    //first root (positive):
+                    if(b.x() * b.x() - 4.0 * a.x() * c.x() < 0) 
+                        tx = 0;
+                    else
+                        tx = (-1.0 * b.x() + sqrt(pow(b.x(),2) - 4.0 * a.x() * c.x())) / (2.0 * a.x());
+                    if(b.y() * b.y() - 4.0 * a.y() * c.y() < 0)
+                        ty = 0;
+                    else
+                        ty = (-1.0 * b.y() + sqrt(pow(b.y(),2) - 4.0 * a.y() * c.y())) / (2.0 * a.y());
+                    if(tx < 0 || tx > 1) tx=0;
+                    if(ty < 0 || ty > 1) ty=0;
+
+                    stationaryPx = pow(1.0-tx,3) * P0.x() + 3.0 * pow(1.0-tx,2) * tx * P1.x() + 3.0 * (1.0-tx) * pow(tx,2) * P2.x() + pow(tx,3) * P3.x() ;
+                    stationaryPy = pow(1.0-ty,3) * P0.y() + 3.0 * pow(1.0-ty,2) * ty * P1.y() + 3.0 * (1.0-ty) * pow(ty,2) * P2.y() + pow(ty,3) * P3.y() ;
+                    recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
+                    
+                    //second root (negative):
+                    if(b.x() * b.x() - 4.0 * a.x() * c.x() < 0) 
+                        tx = 0;
+                    else
+                        tx = (-1.0 * b.x() - sqrt(pow(b.x(),2) - 4.0 * a.x() * c.x())) / (2.0 * a.x());
+                    if(b.y() * b.y() - 4.0 * a.y() * c.y() < 0)
+                        ty = 0;
+                    else
+                        ty = (-1.0 * b.y() - sqrt(pow(b.y(),2) - 4.0 * a.y() * c.y())) / (2.0 * a.y());
+                    if(tx < 0 || tx > 1) tx=0;
+                    if(ty < 0 || ty > 1) ty=0;
+                    
+                    stationaryPx = pow(1.0-tx,3) * P0.x() + 3.0 * pow(1.0-tx,2) * tx * P1.x() + 3.0 * (1.0-tx) * pow(tx,2) * P2.x() + pow(tx,3) * P3.x() ;
+                    stationaryPy = pow(1.0-ty,3) * P0.y() + 3.0 * pow(1.0-ty,2) * ty * P1.y() + 3.0 * (1.0-ty) * pow(ty,2) * P2.y() + pow(ty,3) * P3.y() ;
+                    recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
+                // }
+            }
+            else if(endMode == 'L' && (startMode == 'S' || startMode == 'M')){
+                P1 = originalNodes_[i]->H2->position_;
+                P2 = P3;
+
+                if(abs(P0.x() - 2.0 * P1.x() + P2.x()) < 1e-10) continue;
+                
+                tx = (P0.x() - P1.x()) / (P0.x() - 2.0 * P1.x() + P2.x());
+                ty = (P0.y() - P1.y()) / (P0.y() - 2.0 * P1.y() + P2.y());
+
+                if(tx < 0 || tx > 1) tx=0;
+                if(ty < 0 || ty > 1) ty=0;
+
+                stationaryPx = pow(1.0 - tx,2) * P0.x() + 2.0 * (1.0 - tx) * tx * P1.x() + pow(tx,2) * P2.x();
+                stationaryPy = pow(1.0 - ty,2) * P0.y() + 2.0 * (1.0 - ty) * ty * P1.y() + pow(ty,2) * P2.y();
+
+                recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
+            }
+            else if((endMode == 'S' || endMode == 'M') && startMode == 'L'){
+                P1 = originalNodes_[nextNodeIndex]->H1->position_;
+                P2 = P3;
+
+                if(abs(P0.x() - 2.0 * P1.x() + P2.x()) < 1e-10) continue;
+
+                tx = (P0.x() - P1.x()) / (P0.x() - 2.0 * P1.x() + P2.x());
+                ty = (P0.y() - P1.y()) / (P0.y() - 2.0 * P1.y() + P2.y());
+
+                if(tx < 0 || tx > 1) tx=0;
+                if(ty < 0 || ty > 1) ty=0;
+
+                stationaryPx = pow(1.0 - tx,2) * P0.x() + 2.0 * (1.0 - tx) * tx * P1.x() + pow(tx,2) * P2.x();
+                stationaryPy = pow(1.0 - ty,2) * P0.y() + 2.0 * (1.0 - ty) * ty * P1.y() + pow(ty,2) * P2.y();
+
+                recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
+            }
+        }
+
+        recalculateBoundariesForPoint(originalNodes_[i]->position_);
     }
 
     originalMinX_ = minX_;
