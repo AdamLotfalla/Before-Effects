@@ -136,13 +136,13 @@ void path::applyCurrentTransform()
         if(n->H1){
             n->H1->position_ = QPointF(
                 (n->H1->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
-                (n->H1->position_.y() - scalePivotPoint_.y()) * scaleX + scalePivotPoint_.y()
+                (n->H1->position_.y() - scalePivotPoint_.y()) * scaleY + scalePivotPoint_.y()
             );
         }
         if(n->H2){
             n->H2->position_ = QPointF(
                 (n->H2->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
-                (n->H2->position_.y() - scalePivotPoint_.y()) * scaleX + scalePivotPoint_.y()
+                (n->H2->position_.y() - scalePivotPoint_.y()) * scaleY + scalePivotPoint_.y()
             );
         }
     }
