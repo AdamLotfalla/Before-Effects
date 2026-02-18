@@ -582,11 +582,12 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         DHandle  = QRectF(0.5 * (maxX_ + minX_) - handleD_/2.0, maxY_ - handleD_ /2.0 + handleGrowth_, handleD_, handleD_);
         RHandle  = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
         LHandle  = QRectF(minX_ - handleD_/2.0 - handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
-
+        
         ULRotationHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
         URRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
         DRRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
         DLRotationHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
+
         
         QSvgRenderer PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
         QSvgRenderer NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
@@ -845,6 +846,9 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 currentPath->showSnapMargin(false);
             
                 startedNewPath_ = false;
+
+                currentPath->calculateBoundaries();
+                currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
             }
             else{
                 currentPath->addPoint(pointToAdd);
@@ -965,35 +969,35 @@ void viewPort::mousePressEvent(QMouseEvent *event)
     
                 // Use originalMinX_/originalMaxY_ etc. for Pivot.
                 // The math (node - pivot) * scale requires pivot to be in original node space.
-                if(selectedPath_->URHandle.contains(canvasLocalPos)){
+                if(selectedPath_->URHandle.contains(rotatedPos)){
                     states = URMask;
                     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMaxY_);
                 }
-                else if(selectedPath_->ULHandle.contains(canvasLocalPos)){
+                else if(selectedPath_->ULHandle.contains(rotatedPos)){
                     states = ULMask;
                     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMaxY_);
                 }
-                else if(selectedPath_->DLHandle.contains(canvasLocalPos)){
+                else if(selectedPath_->DLHandle.contains(rotatedPos)){
                     states = DLMask;
                     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMinY_);
                 }
-                else if(selectedPath_->DRHandle.contains(canvasLocalPos)){
+                else if(selectedPath_->DRHandle.contains(rotatedPos)){
                     states = DRMask;
                     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMinY_);
                 }
-                else if(selectedPath_->UHandle.contains(canvasLocalPos)){
+                else if(selectedPath_->UHandle.contains(rotatedPos)){
                     states = UMask;
                     selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->maxY_);
                 }
-                else if(selectedPath_->DHandle.contains(canvasLocalPos)){
+                else if(selectedPath_->DHandle.contains(rotatedPos)){
                     states = DMask;
                     selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->minY_);
                 }
-                else if(selectedPath_->RHandle.contains(canvasLocalPos)){
+                else if(selectedPath_->RHandle.contains(rotatedPos)){
                     states = RMask;
                     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->minX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
                 }
-                else if(selectedPath_->LHandle.contains(canvasLocalPos)){
+                else if(selectedPath_->LHandle.contains(rotatedPos)){
                     states = LMask;
                     selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->maxX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
                 }
@@ -1073,6 +1077,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         if(holding_ && !scaling_ && !rotating_){
             QPointF offset = canvasLocalPos - holdStartPosition_;
             selectedPath_->movePath(offset);
+            selectedPath_->position_ += offset;
             holdStartPosition_ = canvasLocalPos;
         }
         else if(holding_ && rotating_){

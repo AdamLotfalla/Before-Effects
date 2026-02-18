@@ -119,7 +119,10 @@ class path : public QGraphicsItem{
     float originalRotation;
     qreal minX_, minY_, maxX_, maxY_;
     qreal originalMinX_, originalMinY_, originalMaxX_, originalMaxY_;
+
+    //attributes
     float rotation = 0;
+    QPointF position_ = QPointF(0,0);
     
     private:
     qreal scaleX = 1, scaleY = 1;
