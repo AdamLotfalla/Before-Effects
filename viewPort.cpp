@@ -26,15 +26,14 @@ void node::setHighlighted(bool state)
 
 path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
 {
-    originalNodes_ = nodes;
+    actualNodes_ = nodes;
     edges_ = edges;
     inPathEditingMode_ = pathEditing;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
     calculateBoundaries();
-    originalWidth = maxX_ - minX_;
-    originalHeight = maxY_ - minY_;
+    position_ = QPointF(0.5 * (minX_ + maxX_), 0.5 * (minY_ + maxY_));
 }
 
 path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGraphicsItem(parent)
@@ -45,13 +44,12 @@ path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGr
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
     calculateBoundaries();
-    originalWidth = maxX_ - minX_;
-    originalHeight = maxY_ - minY_;
+    position_ = QPointF(0.5 * (minX_ + maxX_), 0.5 * (minY_ + maxY_));
 }
 
 QRectF path::boundingRect() const 
 {
-    if (originalNodes_.isEmpty()) return QRectF();
+    if (actualNodes_.isEmpty()) return QRectF();
 
     qreal padding = strokeWidth_ / 2.0;
     return QRectF(minX_ - padding, minY_ - padding,
@@ -61,7 +59,7 @@ QRectF path::boundingRect() const
 void path::addPoint(QPointF point)
 {
     node* newNode = new node(point);
-    originalNodes_.push_back(newNode);
+    actualNodes_.push_back(newNode);
 
     QVector<int> emptyVector = {};
     edges_.push_back(emptyVector);
@@ -78,12 +76,12 @@ void path::addEdge(int start, int end)
 
 QPointF path::getPoint(int index)
 {
-    return originalNodes_[index]->position_;
+    return actualNodes_[index]->position_;
 }
 
 void path::modifyLastPoint(QPointF point)
 {
-    originalNodes_[originalNodes_.size() - 1]->position_ = point;
+    actualNodes_[actualNodes_.size() - 1]->position_ = point;
     calculateBoundaries();
 
     update();
@@ -96,7 +94,7 @@ void path::showSnapMargin(bool state)
 
 QPointF path::getFirstPoint()
 {
-    return originalNodes_[0]->position_;
+    return actualNodes_[0]->position_;
 }
 
 void path::setPreviewPoint(QPointF point) {
@@ -116,58 +114,22 @@ bool path::hasPreviewPoint() const {
 
 int path::getLastNodeIndex()
 {
-    return originalNodes_.size() - 1;
-}
-
-void path::applyCurrentTransform()
-{
-    // If there is no scale, do nothing
-    if (qFuzzyCompare(scaleX, 1.0) && qFuzzyCompare(scaleY, 1.0)) return;
-
-    prepareGeometryChange();
-
-    // Bake the current scale into the original node positions
-    for (node* n : originalNodes_) {
-        n->position_ = QPointF(
-            (n->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
-            (n->position_.y() - scalePivotPoint_.y()) * scaleY + scalePivotPoint_.y()
-        );
-
-        if(n->H1){
-            n->H1->position_ = QPointF(
-                (n->H1->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
-                (n->H1->position_.y() - scalePivotPoint_.y()) * scaleY + scalePivotPoint_.y()
-            );
-        }
-        if(n->H2){
-            n->H2->position_ = QPointF(
-                (n->H2->position_.x() - scalePivotPoint_.x()) * scaleX + scalePivotPoint_.x(),
-                (n->H2->position_.y() - scalePivotPoint_.y()) * scaleY + scalePivotPoint_.y()
-            );
-        }
-    }
-
-    // Reset scale to 1.0
-    scaleX = 1.0;
-    scaleY = 1.0;
-
-    // Recalculate boundaries based on new permanent positions
-    calculateBoundaries();
+    return actualNodes_.size() - 1;
 }
 
 int path::getNodeCount()
 {
-    return originalNodes_.size();
+    return actualNodes_.size();
 }
 
 void path::changeNodeMode(char newMode, int index)
 {
-    originalNodes_[index]->mode = newMode;
+    actualNodes_[index]->mode = newMode;
 }
 
 void path::moveBezierHandle(QPointF newPosition, int index, int handleIndex)
 {
-    node* currentNode = originalNodes_[index];
+    node* currentNode = actualNodes_[index];
 
     if (currentNode->H1 == nullptr){
         currentNode->H1 = new bezierHandle(currentNode->position_ - (newPosition - currentNode->position_));
@@ -210,14 +172,9 @@ void path::setDrawingMode(bool state)
     inPathDrawingMode_ = state;
 }
 
-void path::rotate(float angle)
+QPointF path::mapToItemRotation(const QPointF &point) const
 {
-    rotation += angle;
-    update();
-}
-
-QPointF path::mapToItemRotation(const QPointF& point) const {
-    if (qFuzzyCompare(rotation, 0.0f)) return point;
+    if (qFuzzyCompare(rotation_, 0.0f)) return point;
     
     QPointF center = QPointF(
         (minX_ + maxX_) * 0.5,
@@ -228,7 +185,39 @@ QPointF path::mapToItemRotation(const QPointF& point) const {
     QPointF translated = point - center;
     
     // Apply inverse rotation
-    qreal radians = -rotation * M_PI / 180.0;
+    qreal radians = rotation_ * M_PI / 180.0;
+    qreal cosA = std::cos(radians);
+    qreal sinA = std::sin(radians);
+    
+    QPointF rotated(
+        translated.x() * cosA - translated.y() * sinA,
+        translated.x() * sinA + translated.y() * cosA
+    );
+    
+    // Translate back
+    return rotated + center;
+}
+
+void path::rotate(float angle)
+{
+    rotation_ += angle;
+    update();
+    calculateBoundaries();
+}
+
+QPointF path::mapToItemRotation(const QPointF& point, const bool reverse) const {
+    if (qFuzzyCompare(rotation_, 0.0f)) return point;
+    
+    QPointF center = QPointF(
+        (minX_ + maxX_) * 0.5,
+        (minY_ + maxY_) * 0.5
+    );
+    
+    // Translate to origin
+    QPointF translated = point - center;
+    
+    // Apply inverse rotation
+    qreal radians = pow(-1,reverse) * rotation_ * M_PI / 180.0;
     qreal cosA = std::cos(radians);
     qreal sinA = std::sin(radians);
     
@@ -243,24 +232,41 @@ QPointF path::mapToItemRotation(const QPointF& point) const {
 
 void path::rescale(qreal xOffset, qreal yOffset)
 {
-    scaleX += xOffset;
-    scaleY += yOffset;
+    prepareGeometryChange();
+
+    qreal scaledHeight = maxY_ - minY_;
+    qreal scaledWidth = maxX_ - minX_;
+
+    //assuming scale != 0
+    //assuming original dimentions != 0 (not the same as scale != 0; the object itself could be linear);
+    if(scaleY_ != 0){
+        qreal originalHeight = scaledHeight / scaleY_;
+        if(originalHeight != 0) scaleY_ = (scaledHeight + yOffset) / originalHeight;
+    }
+    if(scaleX_ != 0){
+        qreal originalWidth = scaledWidth / scaleX_;
+        if(originalWidth != 0) scaleX_ = (scaledWidth + xOffset) / originalWidth;
+    }
+
+        
+    calculateBoundaries();
+    update();
 }
 
 QPointF path::getScale()
 {
-    return QPointF(scaleX, scaleY);
+    return QPointF(scaleX_, scaleY_);
 }
 
 void path::addHighlightedNode(int index)
 {
-    originalNodes_[index]->setHighlighted(true);
+    actualNodes_[index]->setHighlighted(true);
     highlightedNodes_.push_back(index);
 }
 
 void path::removeHighlightedNode(int index)
 {
-    originalNodes_[index]->setHighlighted(false);
+    actualNodes_[index]->setHighlighted(false);
     if(highlightedNodes_.indexOf(index) != -1){
         highlightedNodes_.remove(highlightedNodes_.indexOf(index));
     }
@@ -273,7 +279,7 @@ int path::nodesHighlighted()
 
 bool path::isHighlighted(int index)
 {
-    return originalNodes_[index]->isHighlighted();
+    return actualNodes_[index]->isHighlighted();
 }
 
 int path::accessHighlightedVector(int index)
@@ -281,20 +287,10 @@ int path::accessHighlightedVector(int index)
     return highlightedNodes_[index];
 }
 
-uint8_t path::getHandleStates()
-{
-    return handleStates_;
-}
-
-void path::setHandleStates(uint8_t newStates)
-{
-    handleStates_ = newStates;
-}
-
 void path::clearHighlightedNodes()
 {
     for(auto i : highlightedNodes_){
-        originalNodes_[i]->setHighlighted(false);
+        actualNodes_[i]->setHighlighted(false);
     }
 
     QVector<int> emptyVector;
@@ -305,10 +301,10 @@ void path::movePath(QPointF offset)
 {
     prepareGeometryChange(); // Notify Qt BEFORE changing data
     
-    for(int i = 0; i < originalNodes_.size(); i++){
-        originalNodes_[i]->position_ += offset;
-        bezierHandle* H1 = originalNodes_[i]->H1;
-        bezierHandle* H2 = originalNodes_[i]->H2;
+    for(int i = 0; i < actualNodes_.size(); i++){
+        actualNodes_[i]->position_ += offset;
+        bezierHandle* H1 = actualNodes_[i]->H1;
+        bezierHandle* H2 = actualNodes_[i]->H2;
         if(H1 != nullptr)
            H1->position_ += offset; 
         if(H2 != nullptr)
@@ -320,17 +316,14 @@ void path::movePath(QPointF offset)
 
 void path::moveNode(QPointF offset, int index)
 {
-    originalNodes_[index]->position_ += (offset);
-    if(originalNodes_[index]->H1) originalNodes_[index]->H1->position_ += offset;
-    if(originalNodes_[index]->H2) originalNodes_[index]->H2->position_ += offset;
+    actualNodes_[index]->position_ += (offset);
+    if(actualNodes_[index]->H1) actualNodes_[index]->H1->position_ += offset;
+    if(actualNodes_[index]->H2) actualNodes_[index]->H2->position_ += offset;
 }
 
-void path::recalculateBoundariesForPoint(QPointF point)
-{        
-    if (point.x() < minX_) minX_ = point.x();
-    if (point.y() < minY_) minY_ = point.y();
-    if (point.x() > maxX_) maxX_ = point.x();
-    if (point.y() > maxY_) maxY_ = point.y();
+void path::setSnapping(bool state)
+{
+    firstPointSnapping_ = state;
 }
 
 void path::calculateBoundaries()
@@ -340,26 +333,43 @@ void path::calculateBoundaries()
     maxX_ = std::numeric_limits<qreal>::lowest();
     maxY_ = std::numeric_limits<qreal>::lowest();
 
-    //quadratic bezier curve: B(t) = (1-t)^2 P0 + 2(1-t)t P1 + t^2 P2
-    //stationary point when t = (p0 - p1)/(p0 - 2p1 + p2)
+    auto recalculateBoundariesForPoint = [&](QPointF point){        
+        if (point.x() < minX_) minX_ = point.x();
+        if (point.y() < minY_) minY_ = point.y();
+        if (point.x() > maxX_) maxX_ = point.x();
+        if (point.y() > maxY_) maxY_ = point.y();
+    };
 
-    for (int i = 0; i < originalNodes_.size(); i++){
+    auto scalePoint = [&](QPointF point){
+        return QPointF(
+            point.x() * scaleX_ + (position_.x() + pivotPoint_.x()) * (1-scaleX_),
+            point.y() * scaleY_ + (position_.y() + pivotPoint_.y()) * (1-scaleY_)
+        );
+    };
+
+    for (int i = 0; i < actualNodes_.size(); i++){
         // int nextNodeIndex = (i+1) % getNodeCount();
         for(int nextNodeIndex : edges_[i]){
-            QPointF P0 = originalNodes_[i]->position_;
+
+            qreal x = actualNodes_[i]->position_.x();
+            qreal y = actualNodes_[i]->position_.y();
+
+
+
+            QPointF P0 = scalePoint(actualNodes_[i]->position_);
             QPointF P1,P2;
-            QPointF P3 = originalNodes_[nextNodeIndex]->position_;
+            QPointF P3 = scalePoint(actualNodes_[nextNodeIndex]->position_);
             
             qreal tx,ty;
             qreal stationaryPx, stationaryPy;
             
-            char startMode = originalNodes_[i]->mode;
-            char endMode = originalNodes_[nextNodeIndex]->mode;
+            char startMode = actualNodes_[i]->mode;
+            char endMode = actualNodes_[nextNodeIndex]->mode;
 
             
             if((endMode == 'S' || endMode == 'M') && (startMode == 'S' || startMode == 'M')){
-                P1 = originalNodes_[i]->H2->position_;
-                P2 = originalNodes_[nextNodeIndex]->H1->position_;
+                P1 = scalePoint(actualNodes_[i]->H2->position_);
+                P2 = scalePoint(actualNodes_[nextNodeIndex]->H1->position_);
 
                 //calculate t using the derivative
                 
@@ -402,8 +412,10 @@ void path::calculateBoundaries()
                     recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
                 // }
             }
+            //quadratic bezier curve: B(t) = (1-t)^2 P0 + 2(1-t)t P1 + t^2 P2
+            //stationary point when t = (p0 - p1)/(p0 - 2p1 + p2)
             else if(endMode == 'L' && (startMode == 'S' || startMode == 'M')){
-                P1 = originalNodes_[i]->H2->position_;
+                P1 = scalePoint(actualNodes_[i]->H2->position_);
                 P2 = P3;
 
                 if(abs(P0.x() - 2.0 * P1.x() + P2.x()) < 1e-10) continue;
@@ -420,7 +432,7 @@ void path::calculateBoundaries()
                 recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
             }
             else if((endMode == 'S' || endMode == 'M') && startMode == 'L'){
-                P1 = originalNodes_[nextNodeIndex]->H1->position_;
+                P1 = scalePoint(actualNodes_[nextNodeIndex]->H1->position_);
                 P2 = P3;
 
                 if(abs(P0.x() - 2.0 * P1.x() + P2.x()) < 1e-10) continue;
@@ -438,16 +450,8 @@ void path::calculateBoundaries()
             }
         }
 
-        recalculateBoundariesForPoint(originalNodes_[i]->position_);
+        recalculateBoundariesForPoint(scalePoint(actualNodes_[i]->position_));
     }
-
-    originalMinX_ = minX_;
-    originalMinY_ = minY_;
-    originalMaxX_ = maxX_;
-    originalMaxY_ = maxY_;
-
-    originalHeight = maxY_ - minY_;
-    originalWidth = maxX_ - minX_;
 }
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -455,64 +459,116 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    // Save painter state
-    painter->save();
-    
-    // Apply rotation transformation
-    if (!qFuzzyCompare(rotation, (float)0.0)) {
-        QPointF center = QPointF(
-            (minX_ + maxX_) * 0.5,
-            (minY_ + maxY_) * 0.5
-        );
-        
-        painter->translate(center);
-        painter->rotate(rotation);
-        painter->translate(-center);
-    }
-
-    painter->setRenderHint(QPainter::Antialiasing);
-    
     // return if the shape has no nodes
-    if(originalNodes_.isEmpty()){
-        return;
-    }
+    if(actualNodes_.isEmpty()) return;
+
+    QPointF globalPivotPoint = position_ + pivotPoint_;
+
+    // calculateBoundaries();
 
     QPainterPath cross;
-    cross.moveTo(scalePivotPoint_ + QPointF(-3,-3));
-    cross.lineTo(scalePivotPoint_ + QPointF( 3, 3));
-    cross.moveTo(scalePivotPoint_ + QPointF(-3, 3));
-    cross.lineTo(scalePivotPoint_ + QPointF( 3,-3));
+    cross.moveTo(globalPivotPoint + QPointF(-3,-3));
+    cross.lineTo(globalPivotPoint + QPointF( 3, 3));
+    cross.moveTo(globalPivotPoint + QPointF(-3, 3));
+    cross.lineTo(globalPivotPoint + QPointF( 3,-3));
 
-    
     painter->setBrush(QColor(Qt::transparent));
     painter->setPen(QPen(QColor("#2ea15e"), 2));
     painter->drawPath(cross);
 
-    //calculate scaled nodes
-    QPainterPath path;
-    applyCurrentTransform();
+    //apply scale & rotation
+    drawnNodes_.clear();
+    for(int i = 0; i<actualNodes_.size(); i++){
+
+        //scale
+        QPointF scaledPoint;
+        qreal x = actualNodes_[i]->position_.x();
+        qreal y = actualNodes_[i]->position_.y();
+
+        scaledPoint.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
+        scaledPoint.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
+
+        //rotation
+        QPointF rotatedPoint;
+        x = scaledPoint.x();
+        y = scaledPoint.y();
+
+        float theta_rad = rotation_ * M_PI / 180.0;
+
+        rotatedPoint.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
+        rotatedPoint.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
+
+        node* transformedNode = new node(rotatedPoint);
+        if(actualNodes_[i]->H1){
+            QPointF H1_pos = actualNodes_[i]->H1->position_;
+            x = H1_pos.x();
+            y = H1_pos.y();
+            
+            //scale
+            H1_pos.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
+            H1_pos.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
+            
+            x = H1_pos.x();
+            y = H1_pos.y();
+
+            //rotation
+            H1_pos.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
+            H1_pos.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
+
+            transformedNode->H1 = new bezierHandle(H1_pos);
+        }
+
+        if(actualNodes_[i]->H2){
+            QPointF H2_pos = actualNodes_[i]->H2->position_;
+            x = H2_pos.x();
+            y = H2_pos.y();
+            
+            //scale
+            H2_pos.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
+            H2_pos.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
+            
+            x = H2_pos.x();
+            y = H2_pos.y();
+
+            //rotation
+            H2_pos.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
+            H2_pos.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
+
+            transformedNode->H2 = new bezierHandle(H2_pos);
+        }
+        
+        transformedNode->mode = actualNodes_[i]->mode;
+
+        drawnNodes_.push_back(transformedNode);
+    }
+
 
     // Draw Edges
-    path.moveTo(originalNodes_[0]->position_);
-    for (int i = 0; i < originalNodes_.size(); i++) {
+    QPainterPath path;
+
+    path.moveTo(drawnNodes_[0]->position_);
+    for (int i = 0; i < drawnNodes_.size(); i++) {
         for(auto j : edges_[i]){
-            char initialMode = originalNodes_[i]->mode;
-            char FinalMode = originalNodes_[j]->mode;
+            char initialMode = drawnNodes_[i]->mode;
+            char FinalMode = drawnNodes_[j]->mode;
 
             if((FinalMode == 'S' || FinalMode == 'M') && initialMode == 'L'){
-                path.quadTo(originalNodes_[j]->H1->position_, originalNodes_[j]->position_);
+                path.quadTo(drawnNodes_[j]->H1->position_, drawnNodes_[j]->position_);
             }
             else if((FinalMode == 'S' || FinalMode == 'M') && (initialMode == 'S' || initialMode == 'M')){
-                path.cubicTo(originalNodes_[i]->H2->position_, originalNodes_[j]->H1->position_, originalNodes_[j]->position_);
+                path.cubicTo(drawnNodes_[i]->H2->position_, drawnNodes_[j]->H1->position_, drawnNodes_[j]->position_);
             }
             else if(FinalMode == 'L' && (initialMode == 'S' || initialMode == 'M')){
-                path.quadTo(originalNodes_[i]->H2->position_, originalNodes_[j]->position_);
+                path.quadTo(drawnNodes_[i]->H2->position_, drawnNodes_[j]->position_);
             }
             else if(FinalMode == 'L' && initialMode == 'L'){
-                path.lineTo(originalNodes_[j]->position_);
+                path.lineTo(drawnNodes_[j]->position_);
             }
         }
     }
+
+
+
     
     // Fill
     if (!inPathDrawingMode_) {
@@ -531,22 +587,27 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     }
     painter->drawPath(path);
     
+
     // Preview for next point to draw when using bezier pen
     if (hasDrawingPreview_) {
         painter->setPen(QPen(QColor("#B84343"), 1));
-        // painter->setPen(QPen(Qt::gray, 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
-
-        if(originalNodes_[getLastNodeIndex()]->mode == 'S' || originalNodes_[getLastNodeIndex()]->mode == 'M'){
-            QPainterPath previewPath;
-
-            previewPath.moveTo(originalNodes_[getLastNodeIndex()]->position_);
-            previewPath.quadTo(originalNodes_[getLastNodeIndex()]->H2->position_, previewPoint_);
+        
+        QPainterPath previewPath;
+        if((drawnNodes_[getLastNodeIndex()]->mode == 'S' || drawnNodes_[getLastNodeIndex()]->mode == 'M') && (drawnNodes_[0]->mode == 'S' || drawnNodes_[0]->mode == 'M') && firstPointSnapping_){
+            previewPath.moveTo(drawnNodes_[getLastNodeIndex()]->position_);
+            previewPath.cubicTo(drawnNodes_[getLastNodeIndex()]->H2->position_, drawnNodes_[0]->H1->position_, previewPoint_);
+            
+            painter->drawPath(previewPath);
+        }
+        else if((drawnNodes_[getLastNodeIndex()]->mode == 'S' || drawnNodes_[getLastNodeIndex()]->mode == 'M')){
+            previewPath.moveTo(drawnNodes_[getLastNodeIndex()]->position_);
+            previewPath.quadTo(drawnNodes_[getLastNodeIndex()]->H2->position_, previewPoint_);
 
             painter->drawPath(previewPath);
         }
         else{
-            painter->drawLine(originalNodes_.back()->position_, previewPoint_);
+            painter->drawLine(drawnNodes_.back()->position_, previewPoint_);
         }
 
         painter->setBrush(QBrush(Qt::lightGray));
@@ -574,19 +635,69 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 
         //remember that coordinates are those of the tope left corner
-        ULHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
-        URHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
-        DRHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
-        DLHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
-        UHandle  = QRectF(0.5 * (maxX_ + minX_) - handleD_/2.0, minY_ - handleD_ /2.0 - handleGrowth_, handleD_, handleD_);
-        DHandle  = QRectF(0.5 * (maxX_ + minX_) - handleD_/2.0, maxY_ - handleD_ /2.0 + handleGrowth_, handleD_, handleD_);
-        RHandle  = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
-        LHandle  = QRectF(minX_ - handleD_/2.0 - handleGrowth_, 0.5 * (maxY_ + minY_) - handleD_/2.0, handleD_, handleD_);
+        QPointF p;
+
+        // UL
+        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
+                                      minY_ - handleD_/2.0 - handleGrowth_));
+        ULHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
         
-        ULRotationHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_);
-        URRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, minY_ - handleD_/2.0 - handleGrowth_, handleD_, handleD_); 
-        DRRotationHandle = QRectF(maxX_ - handleD_/2.0 + handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
-        DLRotationHandle = QRectF(minX_ - handleD_/2.0 - handleGrowth_, maxY_ - handleD_/2.0 + handleGrowth_, handleD_, handleD_);
+        // UR
+        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
+                                      minY_ - handleD_/2.0 - handleGrowth_));
+        URHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        
+        // DR
+        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
+                                      maxY_ - handleD_/2.0 + handleGrowth_));
+        DRHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        
+        // DL
+        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
+                                      maxY_ - handleD_/2.0 + handleGrowth_));
+        DLHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        
+        // U
+        p = mapToItemRotation(QPointF(0.5 * (maxX_ + minX_) - handleD_/2.0,
+                                      minY_ - handleD_/2.0 - handleGrowth_));
+        UHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        
+        // D
+        p = mapToItemRotation(QPointF(0.5 * (maxX_ + minX_) - handleD_/2.0,
+                                      maxY_ - handleD_/2.0 + handleGrowth_));
+        DHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        
+        // R
+        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
+                                      0.5 * (maxY_ + minY_) - handleD_/2.0));
+        RHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        
+        // L
+        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
+                                      0.5 * (maxY_ + minY_) - handleD_/2.0));
+        LHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+
+        
+        // UL Rotation
+        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
+                                    minY_ - handleD_/2.0 - handleGrowth_));
+        ULRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+
+        // UR Rotation
+        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
+                                    minY_ - handleD_/2.0 - handleGrowth_));
+        URRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+
+        // DR Rotation
+        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
+                                    maxY_ - handleD_/2.0 + handleGrowth_));
+        DRRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+
+        // DL Rotation
+        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
+                                    maxY_ - handleD_/2.0 + handleGrowth_));
+        DLRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+
 
         
         QSvgRenderer PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
@@ -634,47 +745,47 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setPen(handlePen_);
 
         // draw nodes
-        for(int i = 0; i<originalNodes_.size(); i++){
+        for(int i = 0; i<drawnNodes_.size(); i++){
             
             // draw bezier handles for current node if they exist
-            if((originalNodes_[i]->mode == 'S' || originalNodes_[i]->mode == 'M') && originalNodes_[i]->H1 != nullptr && originalNodes_[i]->H2 != nullptr){
+            if((drawnNodes_[i]->mode == 'S' || drawnNodes_[i]->mode == 'M') && drawnNodes_[i]->H1 != nullptr && drawnNodes_[i]->H2 != nullptr){
                 painter->setPen(QPen(Qt::gray, 1, Qt::DashLine));
                 painter->setBrush(Qt::NoBrush);
 
-                painter->drawLine(originalNodes_[i]->position_, originalNodes_[i]->H1->position_);
-                painter->drawLine(originalNodes_[i]->position_, originalNodes_[i]->H2->position_);
+                painter->drawLine(drawnNodes_[i]->position_, drawnNodes_[i]->H1->position_);
+                painter->drawLine(drawnNodes_[i]->position_, drawnNodes_[i]->H2->position_);
 
                 painter->setBrush(QBrush(Qt::white));
                 painter->setPen(QPen(Qt::black, 1));
-                painter->drawEllipse(originalNodes_[i]->H1->position_, handleD_/2, handleD_/2);
-                painter->drawEllipse(originalNodes_[i]->H2->position_, handleD_/2, handleD_/2);
+                painter->drawEllipse(drawnNodes_[i]->H1->position_, handleD_/2, handleD_/2);
+                painter->drawEllipse(drawnNodes_[i]->H2->position_, handleD_/2, handleD_/2);
             }
 
-            if(originalNodes_[i]->isHighlighted())
+            if(drawnNodes_[i]->isHighlighted())
                 painter->setBrush(QBrush(QColor("#2A7FFF")));
             else
                 painter->setBrush(handleBrush_);
 
-            switch (originalNodes_[i]->mode) // L: linear (rhombus), M: smooth (circle),  S: symmetric (square)
+            switch (drawnNodes_[i]->mode) // L: linear (rhombus), M: smooth (circle),  S: symmetric (square)
             {
             case 'L':
-                Rhombus.translate(originalNodes_[i]->position_ - QPoint(5,5));
+                Rhombus.translate(drawnNodes_[i]->position_ - QPoint(5,5));
                 painter->drawPath(Rhombus);
                 
                 // painter->drawText(originalNodes_[i]->position_, QString("(%1,%2)").arg(originalNodes_[i]->position_.x()).arg(originalNodes_[i]->position_.y())); //debug point positions
 
-                Rhombus.translate(-1 * originalNodes_[i]->position_ + QPoint(5,5)); //reset the rohumbus to the original position to be moved in the next iteration (next node)
+                Rhombus.translate(-1 * drawnNodes_[i]->position_ + QPoint(5,5)); //reset the rohumbus to the original position to be moved in the next iteration (next node)
                 break;
             case 'M':
                 painter->drawEllipse(
-                    originalNodes_[i]->position_ - QPointF(handleD_/2, handleD_/2),
+                    drawnNodes_[i]->position_ - QPointF(handleD_/2, handleD_/2),
                     handleD_, 
                     handleD_);
                 break;
             case 'S':
                 painter->drawRect(
-                    originalNodes_[i]->position_.x() - handleD_/2,
-                    originalNodes_[i]->position_.y() - handleD_/2,
+                    drawnNodes_[i]->position_.x() - handleD_/2,
+                    drawnNodes_[i]->position_.y() - handleD_/2,
                     handleD_,
                     handleD_);
                 break;
@@ -682,9 +793,9 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         }
 
     }
-    else{
-        painter->restore();
-    }
+    // else{
+    //     painter->restore();
+    // }
 
     // Snapping rectangle to the first point
     if(firstPointHighlighted_){
@@ -692,7 +803,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
 
-        QPointF p = originalNodes_[0]->position_;
+        QPointF p = actualNodes_[0]->position_;
         painter->drawRect(QRectF(p - QPointF(6,6), QSizeF(12,12)));
     }
 }
@@ -838,7 +949,9 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             bool snap =
                 std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
                 std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
-        
+            
+            currentPath->setSnapping(snap);
+
             if (snap) {
                 currentPath->addEdge(lastPointIndex, 0);
                 currentPath->clearPreviewPoint();
@@ -932,77 +1045,36 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         }
 
         if(selectedPath_ != nullptr){
-            QPointF rotatedPos = selectedPath_->mapToItemRotation(canvasLocalPos);
-
             scaling_ =  !selectedPath_->inRotationMode() && event->button() == Qt::LeftButton &&
-                        (selectedPath_->URHandle.contains(rotatedPos) ||
-                         selectedPath_->ULHandle.contains(rotatedPos) ||
-                         selectedPath_->DRHandle.contains(rotatedPos) ||
-                         selectedPath_->DLHandle.contains(rotatedPos) ||
-                          selectedPath_->UHandle.contains(rotatedPos) ||
-                          selectedPath_->DHandle.contains(rotatedPos) ||
-                          selectedPath_->RHandle.contains(rotatedPos) ||
-                          selectedPath_->LHandle.contains(rotatedPos)
+                        (selectedPath_->URHandle.contains(canvasLocalPos) ||
+                         selectedPath_->ULHandle.contains(canvasLocalPos) ||
+                         selectedPath_->DRHandle.contains(canvasLocalPos) ||
+                         selectedPath_->DLHandle.contains(canvasLocalPos) ||
+                          selectedPath_->UHandle.contains(canvasLocalPos) ||
+                          selectedPath_->DHandle.contains(canvasLocalPos) ||
+                          selectedPath_->RHandle.contains(canvasLocalPos) ||
+                          selectedPath_->LHandle.contains(canvasLocalPos)
                         );
             rotating_ = selectedPath_->inRotationMode() && event->button() == Qt::LeftButton &&
-                        (selectedPath_->URRotationHandle.contains(rotatedPos) ||
-                         selectedPath_->ULRotationHandle.contains(rotatedPos) ||
-                         selectedPath_->DRRotationHandle.contains(rotatedPos) ||
-                         selectedPath_->DLRotationHandle.contains(rotatedPos)
+                        (selectedPath_->URRotationHandle.contains(canvasLocalPos) ||
+                         selectedPath_->ULRotationHandle.contains(canvasLocalPos) ||
+                         selectedPath_->DRRotationHandle.contains(canvasLocalPos) ||
+                         selectedPath_->DLRotationHandle.contains(canvasLocalPos)
                         );
 
             if(scaling_){
-                holdStartPosition_ = rotatedPos;
+                holdStartPosition_ = canvasLocalPos;
                 holding_ = true;
+
+                if (selectedPath_->ULHandle.contains(canvasLocalPos)) activeScaleHandle_ = TopLeft;
+                else if (selectedPath_->URHandle.contains(canvasLocalPos)) activeScaleHandle_ = TopRight;
+                else if (selectedPath_->DLHandle.contains(canvasLocalPos)) activeScaleHandle_ = BottomLeft;
+                else if (selectedPath_->DRHandle.contains(canvasLocalPos)) activeScaleHandle_ = BottomRight;
+                else if (selectedPath_->UHandle.contains(canvasLocalPos)) activeScaleHandle_ = Top;
+                else if (selectedPath_->DHandle.contains(canvasLocalPos)) activeScaleHandle_ = Bottom;
+                else if (selectedPath_->LHandle.contains(canvasLocalPos)) activeScaleHandle_ = Left;
+                else if (selectedPath_->RHandle.contains(canvasLocalPos)) activeScaleHandle_ = Right;
     
-                // Apply existing transform before starting a new one.
-                // This prevents the shape from jumping when changing the pivot.
-                selectedPath_->applyCurrentTransform(); 
-                
-                // Note: applyCurrentTransform calls calculateBoundaries internaly, 
-                // so originalMinX_ etc are fresh.
-    
-                selectedPath_->originalScaleX = selectedPath_->getScale().x();
-                selectedPath_->originalScaleY = selectedPath_->getScale().y();
-    
-                uint8_t states;
-    
-                // Use originalMinX_/originalMaxY_ etc. for Pivot.
-                // The math (node - pivot) * scale requires pivot to be in original node space.
-                if(selectedPath_->URHandle.contains(rotatedPos)){
-                    states = URMask;
-                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMaxY_);
-                }
-                else if(selectedPath_->ULHandle.contains(rotatedPos)){
-                    states = ULMask;
-                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMaxY_);
-                }
-                else if(selectedPath_->DLHandle.contains(rotatedPos)){
-                    states = DLMask;
-                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMaxX_, selectedPath_->originalMinY_);
-                }
-                else if(selectedPath_->DRHandle.contains(rotatedPos)){
-                    states = DRMask;
-                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->originalMinX_, selectedPath_->originalMinY_);
-                }
-                else if(selectedPath_->UHandle.contains(rotatedPos)){
-                    states = UMask;
-                    selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->maxY_);
-                }
-                else if(selectedPath_->DHandle.contains(rotatedPos)){
-                    states = DMask;
-                    selectedPath_->scalePivotPoint_ = QPointF((selectedPath_->maxX_ + selectedPath_->minX_) * 0.5, selectedPath_->minY_);
-                }
-                else if(selectedPath_->RHandle.contains(rotatedPos)){
-                    states = RMask;
-                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->minX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
-                }
-                else if(selectedPath_->LHandle.contains(rotatedPos)){
-                    states = LMask;
-                    selectedPath_->scalePivotPoint_ = QPointF(selectedPath_->maxX_, (selectedPath_->maxY_ + selectedPath_->minY_) * 0.5);
-                }
-                
-                selectedPath_->setHandleStates(states);
                 selectedPath_->update();
                 return;
             }
@@ -1042,6 +1114,8 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         QPointF firstPoint = selectedPath_->getFirstPoint();
         snap_ =  std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
                 std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
+
+        selectedPath_->setSnapping(snap_);
     
         QPointF target = snap_ ? firstPoint : canvasLocalPos;
         selectedPath_->showSnapMargin(snap_);
@@ -1081,8 +1155,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             holdStartPosition_ = canvasLocalPos;
         }
         else if(holding_ && rotating_){
-            // QPointF rotatedPos = selectedPath_->mapToItemRotation(canvasLocalPos);
-            
+        
             QPointF rotationCenter = QPointF(0.5 * (selectedPath_->maxX_ + selectedPath_->minX_), 0.5 * (selectedPath_->maxY_ + selectedPath_->minY_));
             QPointF startVector = holdStartPosition_ - rotationCenter;
             QPointF endVector =  canvasLocalPos - rotationCenter;
@@ -1095,41 +1168,31 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             holdStartPosition_ = canvasLocalPos;
         }
         else if(holding_ && scaling_){
-            uint8_t state = selectedPath_->getHandleStates();
             QPointF delta = canvasLocalPos - holdStartPosition_;
-
-            // scale offsets
-            qreal xOffset = delta.x() / selectedPath_->originalWidth;
-            qreal yOffset = delta.y() / selectedPath_->originalHeight;
-            
-            selectedPath_->update();
-            if(state == URMask){
-                selectedPath_->rescale(xOffset, -1 * yOffset); //- delta.y() because y increases as you move down
-            }
-            else if(state == ULMask ){
-                selectedPath_->rescale(-1 * xOffset, -1 * yOffset); // - delta.x() because x increases as you move right
-            }
-            else if(state == DRMask){
-                selectedPath_->rescale(xOffset, yOffset);
-            }
-            else if(state == DLMask){
-                selectedPath_->rescale(-1 * xOffset, yOffset);
-            }
-            else if(state &UMask){
-                selectedPath_->rescale(0, -1 * yOffset);
-            }
-            else if(state &DMask){
-                selectedPath_->rescale(0, yOffset);
-            }
-            else if(state & RMask){
-                selectedPath_->rescale(xOffset, 0);
-            }
-            else if(state & LMask){
-                selectedPath_->rescale(-1 * xOffset, 0);
-            }
-
             holdStartPosition_ = canvasLocalPos;
-            selectedPath_->update();
+
+            if(shifting_ && (activeScaleHandle_ == TopRight || activeScaleHandle_ == BottomRight || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft)){
+                delta.setX(std::max(abs(delta.x()), abs(delta.y())));
+                delta.setY(std::max(abs(delta.x()), abs(delta.y())));
+            }
+
+            if(activeScaleHandle_ == Left || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft){
+                delta.setX(delta.x() * -1);
+            }
+            if(activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight){
+                delta.setY(delta.y() * -1);
+            }
+
+            if(activeScaleHandle_ == Right || activeScaleHandle_ == Left){
+                delta.setY(0);
+            }
+            if(activeScaleHandle_ == Top || activeScaleHandle_ == Bottom){
+                delta.setX(0);
+            }
+
+
+            selectedPath_->rescale(delta.x(), delta.y());
+            // selectedPath_->update();
         }
     }
     

@@ -49,16 +49,96 @@ class path : public QGraphicsItem{
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
 
-    void recalculateBoundariesForPoint(QPointF point);
-    void calculateBoundaries();
-    void applyCurrentTransform();
-    QRectF boundingRect() const override;
+    void calculateBoundaries(); // modify to calculate boundaries based on actualpoints and scale
+
+    //using name convention: point = position; node = object that has more than position
+    QVector<node*> actualNodes_;
+    std::vector<node*> drawnNodes_;
+    
+    QVector<int> highlightedNodes_;
+    QVector<QVector<int>> edges_; //edgest connect indices
 
     void addPoint(QPointF point);
     void addEdge(int start, int end);
+    
+    QRectF boundingRect() const override;
 
-    //using name convention: point = position; node = object that has more than position
+    
+    void rotate(float angle);
+    void rescale(qreal xOffset, qreal yOffset);
+    QPointF getScale();
+    
+    void addHighlightedNode(int index);
+    void removeHighlightedNode(int index);
+    void clearHighlightedNodes();
+    int nodesHighlighted(); //return size; 0 in case of empty
+    bool isHighlighted(int index);
+    int accessHighlightedVector(int index);
+    
+    QRectF ULHandle;
+    QRectF DLHandle; 
+    QRectF URHandle; 
+    QRectF DRHandle; 
+    QRectF UHandle;
+    QRectF DHandle;
+    QRectF RHandle;
+    QRectF LHandle;
+    QRectF URRotationHandle;
+    QRectF ULRotationHandle;
+    QRectF DLRotationHandle;
+    QRectF DRRotationHandle;
+    
+    //attributes
+    QPointF position_;
+    float rotation_ = 0;
+    qreal scaleX_ = 1, scaleY_ = 1;
+    QPointF pivotPoint_ = QPointF(0,0);
+    
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+        QWidget* widget = nullptr) override;
+        
+        
+        int handleD_ = 10; //diameter
+        int selectionGrowth_ = 0;
+        int handleGrowth_ = 10;
+        uint8_t handleStates_ = 0;
 
+        bool firstPointSnapping_ = false;
+        
+        //------------TEMPORARY---------------- until implementing color and width selector
+    int strokeWidth_ = 2.0; 
+    QColor strokeColor_ = Qt::blue;
+    QColor fillColor_ = Qt::red;
+    QPen handlePen_ = QPen(QColor("#000000"));
+    QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
+    
+    QPointF previewPoint_;
+    
+    
+    bool *inPathEditingMode_;
+    bool inPathDrawingMode_;
+    bool inRotationMode_ = false;
+    bool firstPointHighlighted_ = false;
+    bool hasDrawingPreview_ = false;
+    
+    
+    void setSnapping(bool state);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //before overhaul
     QPointF getPoint(int index);
     QPointF getFirstPoint();
     void modifyLastPoint(QPointF point);
@@ -77,18 +157,8 @@ class path : public QGraphicsItem{
     void toggleRotationMode();
     bool inRotationMode();
     void setDrawingMode(bool state);
-    void rotate(float angle);
     QPointF mapToItemRotation(const QPointF& point) const;
-
-    void rescale(qreal xOffset, qreal yOffset);
-    QPointF getScale();
-    
-    void addHighlightedNode(int index);
-    void removeHighlightedNode(int index);
-    void clearHighlightedNodes();
-    int nodesHighlighted(); //return size; 0 in case of empty
-    bool isHighlighted(int index);
-    int accessHighlightedVector(int index);
+    QPointF mapToItemRotation(const QPointF& point, const bool reverse) const;
 
     uint8_t getHandleStates(); 
     //4 bits for each edge resize handle. for corner resize, 2 bits will be set.
@@ -100,63 +170,10 @@ class path : public QGraphicsItem{
     void movePath(QPointF offset);
     void moveNode(QPointF offset, int index);
 
-    QRectF ULHandle;
-    QRectF DLHandle; 
-    QRectF URHandle; 
-    QRectF DRHandle; 
-    QRectF UHandle;
-    QRectF DHandle;
-    QRectF RHandle;
-    QRectF LHandle;
-    QRectF URRotationHandle;
-    QRectF ULRotationHandle;
-    QRectF DLRotationHandle;
-    QRectF DRRotationHandle;
-    
-    qreal originalScaleX, originalScaleY;
-    qreal originalWidth, originalHeight;
-    QPointF scalePivotPoint_ = QPointF();
-    float originalRotation;
     qreal minX_, minY_, maxX_, maxY_;
-    qreal originalMinX_, originalMinY_, originalMaxX_, originalMaxY_;
-
-    //attributes
-    float rotation = 0;
-    QPointF position_ = QPointF(0,0);
     
     private:
-    qreal scaleX = 1, scaleY = 1;
-    QPen handlePen_ = QPen(QColor("#000000"));
-    QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
     
-    int handleD_ = 10; //diameter
-    int selectionGrowth_ = 0;
-    int handleGrowth_ = 10;
-    uint8_t handleStates_ = 0;
-    
-    //------------TEMPORARY---------------- until implementing color and width selector
-    int strokeWidth_ = 2.0; 
-    QColor strokeColor_ = Qt::blue;
-    QColor fillColor_ = Qt::red;
-    
-    
-    QVector<node*> originalNodes_;
-    QVector<QPointF> scaledNodePositions;
-    QVector<QVector<int>> edges_; //edgest connect indices
-    QVector<int> highlightedNodes_;
-
-
-    QPointF previewPoint_;
-
-
-    bool *inPathEditingMode_;
-    bool inPathDrawingMode_;
-    bool inRotationMode_ = false;
-    bool firstPointHighlighted_ = false;
-    bool hasDrawingPreview_ = false;
-
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-               QWidget* widget = nullptr) override;
 };
 
 class viewPort : public QGraphicsView{
@@ -178,6 +195,20 @@ class viewPort : public QGraphicsView{
     QGraphicsScene* scene_;
     int snapMargin_ = 10;
     int nodeSelectMargin_ = 10;
+
+    enum ScaleHandle {
+        None, 
+        Left, 
+        Right, 
+        Top, 
+        Bottom, 
+        TopLeft, 
+        TopRight, 
+        BottomLeft, 
+        BottomRight 
+    };
+
+    ScaleHandle activeScaleHandle_ = None;
     
     bool selectionToolActivated_ = false;
     bool bezierToolActivated_ = false;
