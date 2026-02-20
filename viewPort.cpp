@@ -230,22 +230,30 @@ QPointF path::mapToItemRotation(const QPointF& point, const bool reverse) const 
     return rotated + center;
 }
 
-void path::rescale(qreal xOffset, qreal yOffset)
+void path::rescale(qreal xCenterD, qreal yCenterD)
 {
     prepareGeometryChange();
 
-    qreal scaledHeight = maxY_ - minY_;
-    qreal scaledWidth = maxX_ - minX_;
+    qreal xGlobalPos = xCenterD + position_.x();
+    qreal yGlobalPos = yCenterD + position_.y();
 
-    //assuming scale != 0
-    //assuming original dimentions != 0 (not the same as scale != 0; the object itself could be linear);
-    if(scaleY_ != 0){
-        qreal originalHeight = scaledHeight / scaleY_;
-        if(originalHeight != 0) scaleY_ = (scaledHeight + yOffset) / originalHeight;
+    qreal xOriginalMax = (maxX_ - position_.x()) / scaleX_ + position_.x();
+    qreal yOriginalMax = (maxY_ - position_.y()) / scaleY_ + position_.y();
+    qreal xOriginalMin = (minX_ - position_.x()) / scaleX_ + position_.x();
+    qreal yOriginalMin = (minY_ - position_.y()) / scaleY_ + position_.y();
+    
+    qreal xm = std::min((xGlobalPos - xOriginalMax), (xGlobalPos - xOriginalMin));
+    qreal ym = std::min((yGlobalPos - yOriginalMax), (yGlobalPos - yOriginalMin));
+
+    qreal xOriginalCoord = xCenterD - xm;
+    qreal yOriginalCoord = yCenterD - ym;
+
+
+    if(yOriginalCoord != 0 && yCenterD != 0){
+        scaleY_ = yCenterD / yOriginalCoord;
     }
-    if(scaleX_ != 0){
-        qreal originalWidth = scaledWidth / scaleX_;
-        if(originalWidth != 0) scaleX_ = (scaledWidth + xOffset) / originalWidth;
+    if(xOriginalCoord != 0 && xCenterD != 0){
+        scaleX_ = xCenterD / xOriginalCoord;
     }
 
         
@@ -1168,8 +1176,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             holdStartPosition_ = canvasLocalPos;
         }
         else if(holding_ && scaling_){
-            QPointF delta = canvasLocalPos - holdStartPosition_;
-            holdStartPosition_ = canvasLocalPos;
+            QPointF delta = canvasLocalPos - selectedPath_->position_;
 
             if(shifting_ && (activeScaleHandle_ == TopRight || activeScaleHandle_ == BottomRight || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft)){
                 delta.setX(std::max(abs(delta.x()), abs(delta.y())));
