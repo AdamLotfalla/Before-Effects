@@ -1082,6 +1082,20 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 else if (selectedPath_->DHandle.contains(canvasLocalPos)) activeScaleHandle_ = Bottom;
                 else if (selectedPath_->LHandle.contains(canvasLocalPos)) activeScaleHandle_ = Left;
                 else if (selectedPath_->RHandle.contains(canvasLocalPos)) activeScaleHandle_ = Right;
+
+                if(activeScaleHandle_ == Left || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft){
+                    scalingError_.setX(selectedPath_->minX_ - holdStartPosition_.x());
+                }
+                if(activeScaleHandle_ == Right || activeScaleHandle_ == TopRight || activeScaleHandle_ == BottomRight){
+                    scalingError_.setX(holdStartPosition_.x() - selectedPath_->maxX_);
+                }
+
+                if(activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight){
+                    scalingError_.setY(selectedPath_->minY_ - holdStartPosition_.y());
+                }
+                if(activeScaleHandle_ == Bottom || activeScaleHandle_ ==  BottomLeft || activeScaleHandle_ == BottomRight){
+                    scalingError_.setY(holdStartPosition_.y() - selectedPath_->maxY_);
+                }
     
                 selectedPath_->update();
                 return;
@@ -1189,6 +1203,8 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             if(activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight){
                 delta.setY(delta.y() * -1);
             }
+
+            delta -= scalingError_;
 
             if(activeScaleHandle_ == Right || activeScaleHandle_ == Left){
                 delta.setY(0);

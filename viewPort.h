@@ -135,9 +135,6 @@ class path : public QGraphicsItem{
     
     
     
-    
-    
-    
     //before overhaul
     QPointF getPoint(int index);
     QPointF getFirstPoint();
@@ -233,6 +230,8 @@ class viewPort : public QGraphicsView{
 
 
     path* selectedPath_ = nullptr;
+
+    QPointF scalingError_;
     
 
     QGraphicsItemGroup* canvas_;
