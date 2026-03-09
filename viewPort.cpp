@@ -230,6 +230,11 @@ QPointF path::mapToItemRotation(const QPointF& point, const bool reverse) const 
     return rotated + center;
 }
 
+QPointF path::mapToItemRotation(qreal x, qreal y)
+{
+    return mapToItemRotation(QPointF(x,y));
+}
+
 void path::rescale(qreal xCenterD, qreal yCenterD)
 {
     prepareGeometryChange();
@@ -629,120 +634,122 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->drawEllipse(previewPoint_, 2, 2);
     }
     
-
-
     // Draw selection highlight and handles if selected
     if (isSelected() && inPathEditingMode_ != nullptr && !*inPathEditingMode_) {
         painter->setCompositionMode(QPainter::CompositionMode_Difference);
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
-        qreal padding = strokeWidth_ / 2.0;
-        QRectF scaledBounds(minX_ - padding, minY_ - padding,
-                           maxX_ - minX_ + strokeWidth_, maxY_ - minY_ + strokeWidth_);
-        painter->drawRect(scaledBounds.adjusted(
-            -selectionGrowth_,
-            -selectionGrowth_,
-            selectionGrowth_,
-            selectionGrowth_
-        ));
+        
+        // Draw selection rectangle more concisely
+        qreal padding = strokeWidth_ / 2.0 + selectionGrowth_;
+        QPointF rectPoints[4] = {
+            mapToItemRotation(minX_ - padding, minY_ - padding), // TL
+            mapToItemRotation(maxX_ + padding, minY_ - padding), // TR
+            mapToItemRotation(maxX_ + padding, maxY_ + padding), // BR
+            mapToItemRotation(minX_ - padding, maxY_ + padding)  // BL
+        };
+        for(int i = 0; i < 4; i++)
+            painter->drawLine(rectPoints[i], rectPoints[(i+1)%4]);
         
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-        //remember that coordinates are those of the tope left corner
-        QPointF p;
-
-        // UL
-        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
-                                      minY_ - handleD_/2.0 - handleGrowth_));
-        ULHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        // Calculate common values
+        QPointF center(0.5 * (maxX_ + minX_), 0.5 * (maxY_ + minY_));
+        qreal handleHalf = handleD_ / 2.0;
+        qreal handleOffset = handleHalf + handleGrowth_;
         
-        // UR
-        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
-                                      minY_ - handleD_/2.0 - handleGrowth_));
-        URHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        // Define handle positions in object space
+        QPointF cornerOffsets[4] = {
+            {minX_ - handleOffset, minY_ - handleOffset}, // TL
+            {maxX_ + handleOffset, minY_ - handleOffset}, // TR
+            {maxX_ + handleOffset, maxY_ + handleOffset}, // BR
+            {minX_ - handleOffset, maxY_ + handleOffset}  // BL
+        };
         
-        // DR
-        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
-                                      maxY_ - handleD_/2.0 + handleGrowth_));
-        DRHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        QPointF edgeOffsets[4] = {
+            {center.x(), minY_ - handleOffset}, // Top
+            {maxX_ + handleOffset, center.y()}, // Right
+            {center.x(), maxY_ + handleOffset}, // Bottom
+            {minX_ - handleOffset, center.y()}  // Left
+        };
         
-        // DL
-        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
-                                      maxY_ - handleD_/2.0 + handleGrowth_));
-        DLHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
+        // Transform all positions and create handle rectangles
+        QPointF corners[4], edges[4];
+        QRectF* handlePtrs[8] = {&ULHandle, &URHandle, &DRHandle, &DLHandle, 
+                                &UHandle, &RHandle, &DHandle, &LHandle};
+        QRectF* rotHandlePtrs[4] = {&ULRotationHandle, &URRotationHandle, 
+                                    &DRRotationHandle, &DLRotationHandle};
         
-        // U
-        p = mapToItemRotation(QPointF(0.5 * (maxX_ + minX_) - handleD_/2.0,
-                                      minY_ - handleD_/2.0 - handleGrowth_));
-        UHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-        
-        // D
-        p = mapToItemRotation(QPointF(0.5 * (maxX_ + minX_) - handleD_/2.0,
-                                      maxY_ - handleD_/2.0 + handleGrowth_));
-        DHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-        
-        // R
-        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
-                                      0.5 * (maxY_ + minY_) - handleD_/2.0));
-        RHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-        
-        // L
-        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
-                                      0.5 * (maxY_ + minY_) - handleD_/2.0));
-        LHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-
-        
-        // UL Rotation
-        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
-                                    minY_ - handleD_/2.0 - handleGrowth_));
-        ULRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-
-        // UR Rotation
-        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
-                                    minY_ - handleD_/2.0 - handleGrowth_));
-        URRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-
-        // DR Rotation
-        p = mapToItemRotation(QPointF(maxX_ - handleD_/2.0 + handleGrowth_,
-                                    maxY_ - handleD_/2.0 + handleGrowth_));
-        DRRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-
-        // DL Rotation
-        p = mapToItemRotation(QPointF(minX_ - handleD_/2.0 - handleGrowth_,
-                                    maxY_ - handleD_/2.0 + handleGrowth_));
-        DLRotationHandle = QRectF(p.x(), p.y(), handleD_, handleD_);
-
-
-        
-        QSvgRenderer PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
-        QSvgRenderer NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
-        QSvgRenderer UDArrow(QString(":/Handles/icons/UDArrows.svg"));
-        QSvgRenderer LRArrow(QString(":/Handles/icons/LRArrows.svg"));
-        QSvgRenderer URRotationArrow(QString(":/Handles/icons/URcornerArrow.svg"));
-        QSvgRenderer ULRotationArrow(QString(":/Handles/icons/ULcornerArrow.svg"));
-        QSvgRenderer DRRotationArrow(QString(":/Handles/icons/DRcornerArrow.svg"));
-        QSvgRenderer DLRotationArrow(QString(":/Handles/icons/DLcornerArrow.svg"));
-        
-
-        
-        if(inRotationMode_){
-            URRotationArrow.render(painter, URRotationHandle);
-            ULRotationArrow.render(painter, ULRotationHandle);
-            DRRotationArrow.render(painter, DRRotationHandle);
-            DLRotationArrow.render(painter, DLRotationHandle);
-        }
-        else{
-            PDiagonalArrow.render(painter, URHandle);
-            PDiagonalArrow.render(painter, DLHandle);
-    
-            NDiagonalArrow.render(painter, ULHandle);
-            NDiagonalArrow.render(painter, DRHandle);
-            UDArrow.render(painter, UHandle);
-            UDArrow.render(painter, DHandle);
-            LRArrow.render(painter, RHandle);
-            LRArrow.render(painter, LHandle);
-        }
+        for(int i = 0; i < 4; i++) {
+            corners[i] = mapToItemRotation(cornerOffsets[i]);
+            edges[i] = mapToItemRotation(edgeOffsets[i]);
             
+            // Corner handles
+            *handlePtrs[i] = QRectF(corners[i].x() - handleHalf, 
+                                    corners[i].y() - handleHalf, 
+                                    handleD_, handleD_);
+            
+            // Rotation handles (use same positions as corners)
+            *rotHandlePtrs[i] = QRectF(corners[i].x() - handleHalf, 
+                                    corners[i].y() - handleHalf, 
+                                    handleD_, handleD_);
+        }
+        
+        for(int i = 0; i < 4; i++) {
+            // Edge handles
+            *handlePtrs[i+4] = QRectF(edges[i].x() - handleHalf, 
+                                    edges[i].y() - handleHalf, 
+                                    handleD_, handleD_);
+        }
+
+        // Load SVG renderers (consider making these static class members)
+        static QSvgRenderer  PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
+        static QSvgRenderer  NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
+        static QSvgRenderer         UDArrow(QString(":/Handles/icons/UDArrows.svg"));
+        static QSvgRenderer         LRArrow(QString(":/Handles/icons/LRArrows.svg"));
+        static QSvgRenderer URRotationArrow(QString(":/Handles/icons/URcornerArrow.svg"));
+        static QSvgRenderer ULRotationArrow(QString(":/Handles/icons/ULcornerArrow.svg"));
+        static QSvgRenderer DRRotationArrow(QString(":/Handles/icons/DRcornerArrow.svg"));
+        static QSvgRenderer DLRotationArrow(QString(":/Handles/icons/DLcornerArrow.svg"));
+
+        painter->save();
+        
+        if(inRotationMode_) {
+            // Rotation handles - all use same rotation
+            QSvgRenderer* rotSvgs[4] = {&ULRotationArrow, &URRotationArrow, 
+                                        &DRRotationArrow, &DLRotationArrow};
+            for(int i = 0; i < 4; i++) {
+                painter->save();
+                painter->translate(corners[i]);
+                painter->rotate(rotation_);
+                rotSvgs[i]->render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
+                painter->restore();
+            }
+        }
+        else {
+            // Scale corner handles
+            QSvgRenderer* cornerSvgs[4] = {&NDiagonalArrow, &PDiagonalArrow, 
+                                        &NDiagonalArrow, &PDiagonalArrow};
+            for(int i = 0; i < 4; i++) {
+                painter->save();
+                painter->translate(corners[i]);
+                painter->rotate(rotation_);
+                cornerSvgs[i]->render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
+                painter->restore();
+            }
+            
+            // Edge handles
+            QSvgRenderer* edgeSvgs[4] = {&UDArrow, &LRArrow, &UDArrow, &LRArrow};
+            for(int i = 0; i < 4; i++) {
+                painter->save();
+                painter->translate(edges[i]);
+                painter->rotate(rotation_);
+                edgeSvgs[i]->render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
+                painter->restore();
+            }
+        }
+        
+        painter->restore();
     }
     else if(isSelected() && inPathEditingMode_ != nullptr && *inPathEditingMode_){
 
@@ -805,11 +812,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 break;
             }
         }
-
     }
-    // else{
-    //     painter->restore();
-    // }
 
     // Snapping rectangle to the first point
     if(firstPointHighlighted_){

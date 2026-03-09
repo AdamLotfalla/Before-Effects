@@ -156,6 +156,7 @@ class path : public QGraphicsItem{
     void setDrawingMode(bool state);
     QPointF mapToItemRotation(const QPointF& point) const;
     QPointF mapToItemRotation(const QPointF& point, const bool reverse) const;
+    QPointF mapToItemRotation(qreal x, qreal y);
 
     uint8_t getHandleStates(); 
     //4 bits for each edge resize handle. for corner resize, 2 bits will be set.
