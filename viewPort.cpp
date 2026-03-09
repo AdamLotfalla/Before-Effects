@@ -614,6 +614,12 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
             painter->drawPath(previewPath);
         }
+        else if(drawnNodes_[getLastNodeIndex()]->mode == 'L' && (drawnNodes_[0]->mode == 'S' || drawnNodes_[0]->mode == 'M') && firstPointSnapping_){
+            previewPath.moveTo(drawnNodes_[getLastNodeIndex()]->position_);
+            previewPath.quadTo(drawnNodes_[0]->H1->position_, previewPoint_);
+
+            painter->drawPath(previewPath);
+        }
         else{
             painter->drawLine(drawnNodes_.back()->position_, previewPoint_);
         }
