@@ -47,13 +47,11 @@ path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGr
     position_ = QPointF(0.5 * (minX_ + maxX_), 0.5 * (minY_ + maxY_));
 }
 
-QRectF path::boundingRect() const 
+QRectF path::boundingRect() const
 {
-    if (actualNodes_.isEmpty()) return QRectF();
-
-    qreal padding = strokeWidth_ / 2.0;
-    return QRectF(minX_ - padding, minY_ - padding,
-                  maxX_ - minX_ + strokeWidth_, maxY_ - minY_ + strokeWidth_);
+    return shape().boundingRect().adjusted(
+        -strokeWidth_, -strokeWidth_,
+         strokeWidth_,  strokeWidth_);
 }
 
 void path::addPoint(QPointF point)
@@ -65,7 +63,6 @@ void path::addPoint(QPointF point)
     edges_.push_back(emptyVector);
 
     calculateBoundaries();
-
     update();
 }
 
@@ -155,11 +152,14 @@ void path::moveBezierHandle(QPointF newPosition, int index, int handleIndex)
         }
         break;
     }
+
+    calculateBoundaries();
 }
 
 void path::toggleRotationMode()
 {
     inRotationMode_ = !inRotationMode_;
+    update();
 }
 
 bool path::inRotationMode()
@@ -323,6 +323,8 @@ void path::movePath(QPointF offset)
         if(H2 != nullptr)
             H2->position_ += offset;
     }
+
+    position_ += offset;
     
     calculateBoundaries();
 }
@@ -332,6 +334,8 @@ void path::moveNode(QPointF offset, int index)
     actualNodes_[index]->position_ += (offset);
     if(actualNodes_[index]->H1) actualNodes_[index]->H1->position_ += offset;
     if(actualNodes_[index]->H2) actualNodes_[index]->H2->position_ += offset;
+
+    calculateBoundaries();
 }
 
 void path::setSnapping(bool state)
@@ -339,8 +343,78 @@ void path::setSnapping(bool state)
     firstPointSnapping_ = state;
 }
 
+QPainterPath path::shape() const
+{
+    if (actualNodes_.isEmpty())
+        return QPainterPath();
+
+    QPointF globalPivotPoint = position_ + pivotPoint_;
+
+    float theta = rotation_ * M_PI / 180.0;
+    qreal cosT = std::cos(theta);
+    qreal sinT = std::sin(theta);
+
+    auto transformPoint = [&](QPointF p)
+    {
+        // scale
+        p.setX(p.x() * scaleX_ + globalPivotPoint.x() * (1 - scaleX_));
+        p.setY(p.y() * scaleY_ + globalPivotPoint.y() * (1 - scaleY_));
+
+        // rotate
+        qreal x = p.x();
+        qreal y = p.y();
+
+        return QPointF(
+            x*cosT - y*sinT + globalPivotPoint.x()*(1-cosT) + globalPivotPoint.y()*sinT,
+            x*sinT + y*cosT + globalPivotPoint.y()*(1-cosT) - globalPivotPoint.x()*sinT
+        );
+    };
+
+    QPainterPath p;
+
+    p.moveTo(transformPoint(actualNodes_[0]->position_));
+
+    for (int i = 0; i < actualNodes_.size(); i++)
+    {
+        for (int j : edges_[i])
+        {
+            QPointF P0 = transformPoint(actualNodes_[i]->position_);
+            QPointF P3 = transformPoint(actualNodes_[j]->position_);
+
+            char startMode = actualNodes_[i]->mode;
+            char endMode = actualNodes_[j]->mode;
+
+            if ((endMode == 'S' || endMode == 'M') && startMode == 'L')
+            {
+                QPointF P1 = transformPoint(actualNodes_[j]->H1->position_);
+                p.quadTo(P1, P3);
+            }
+            else if ((endMode == 'S' || endMode == 'M') && (startMode == 'S' || startMode == 'M'))
+            {
+                QPointF P1 = transformPoint(actualNodes_[i]->H2->position_);
+                QPointF P2 = transformPoint(actualNodes_[j]->H1->position_);
+                p.cubicTo(P1, P2, P3);
+            }
+            else if (endMode == 'L' && (startMode == 'S' || startMode == 'M'))
+            {
+                QPointF P1 = transformPoint(actualNodes_[i]->H2->position_);
+                p.quadTo(P1, P3);
+            }
+            else
+            {
+                p.lineTo(P3);
+            }
+        }
+    }
+
+    return p;
+}
+
 void path::calculateBoundaries()
 {
+
+    prepareGeometryChange();
+
     minX_ = std::numeric_limits<qreal>::max();
     minY_ = std::numeric_limits<qreal>::max();
     maxX_ = std::numeric_limits<qreal>::lowest();
@@ -465,6 +539,8 @@ void path::calculateBoundaries()
 
         recalculateBoundariesForPoint(scalePoint(actualNodes_[i]->position_));
     }
+
+    shapeDirty_ = true;
 }
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -474,6 +550,11 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
     // return if the shape has no nodes
     if(actualNodes_.isEmpty()) return;
+
+    for (node* n : drawnNodes_)
+        delete n;
+
+    drawnNodes_.clear();
 
     QPointF globalPivotPoint = position_ + pivotPoint_;
 
@@ -1049,17 +1130,8 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         }
     }
     else if (selectionToolActivated_ && event->button() == Qt::LeftButton) {
-        path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
 
-        if(clickedPath){
-            if(clickedPath != selectedPath_){
-                setSelectedPath(clickedPath, true);
-                holdStartPosition_ = canvasLocalPos;
-                holding_ = true;
-            }
-                
-            return;
-        }
+        path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));    
 
         if(selectedPath_ != nullptr){
             scaling_ =  !selectedPath_->inRotationMode() && event->button() == Qt::LeftButton &&
@@ -1113,13 +1185,16 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 holding_ = true;
                 holdStartPosition_ = canvasLocalPos;
             }
-            else if(!clickedPath){
-                selectedPath_->setSelected(false);
-                selectedPath_->update();
-                selectedPath_ = nullptr;
-            }
         }
 
+        if(clickedPath){
+            setSelectedPath(clickedPath, true);
+            holding_ = true;
+            holdStartPosition_ = canvasLocalPos;
+            return;
+        }
+
+        setSelectedPath(nullptr, false);
         
     }
 }
@@ -1134,14 +1209,15 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         QPointF delta = scenePos - panStartScenePos_;
         canvas_->setPos(panStartCanvasPos_ + delta);
 
-        holdStartPosition_ = canvasLocalPos;
+        holdStartPosition_ = canvasLocalPos; // needs to be removed
 
         canvas_->update();
         return;
     }
 
+    if(!selectedPath_) return;
     
-    if(bezierToolActivated_ && selectedPath_ != nullptr){
+    if(bezierToolActivated_){
         QPointF firstPoint = selectedPath_->getFirstPoint();
         snap_ =  std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
                 std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
@@ -1167,23 +1243,22 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             QGraphicsView::mouseMoveEvent(event);
         }
     }
-    else if(nodeToolActivated_ && selectedPath_ != nullptr){
+    else if(nodeToolActivated_){
         if(selectedPath_ != nullptr && selectedPath_->nodesHighlighted() > 0 && holding_){
             for(int i = 0; i < selectedPath_->nodesHighlighted(); i++){
                 selectedPath_->moveNode(canvasLocalPos - holdStartPosition_, selectedPath_->accessHighlightedVector(i));
             }
-            holdStartPosition_ = canvasLocalPos;
+            holdStartPosition_ = canvasLocalPos; // needs to be removed
 
             selectedPath_->calculateBoundaries();
             selectedPath_->update();
         }
     }
-    else if(selectionToolActivated_ && selectedPath_ != nullptr){
+    else if(selectionToolActivated_){
         if(holding_ && !scaling_ && !rotating_){
-            QPointF offset = canvasLocalPos - holdStartPosition_;
-            selectedPath_->movePath(offset);
-            selectedPath_->position_ += offset;
-            holdStartPosition_ = canvasLocalPos;
+            selectedPath_->movePath(-1 * offset_);
+            offset_ = canvasLocalPos - holdStartPosition_;
+            selectedPath_->movePath(offset_);
         }
         else if(holding_ && rotating_){
         
@@ -1196,7 +1271,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             selectedPath_->rotate(-1 * angleDifference);
             selectedPath_->update();
 
-            holdStartPosition_ = canvasLocalPos;
+            holdStartPosition_ = canvasLocalPos; // needs to be removed
         }
         else if(holding_ && scaling_){
             QPointF delta = canvasLocalPos - selectedPath_->position_;
@@ -1228,9 +1303,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         }
     }
     
-    if(selectedPath_ != nullptr){
-        selectedPath_->update();
-    }
+    selectedPath_->update();
 }
 
 void viewPort::mouseReleaseEvent(QMouseEvent *event)
@@ -1240,34 +1313,31 @@ void viewPort::mouseReleaseEvent(QMouseEvent *event)
         panning_ = false;
     }
 
+    
     QPointF scenePos = mapToScene(event->pos());
     QPointF canvasLocalPos = canvas_->mapFromScene(scenePos);
-
-    holding_ = false;
-    
-    // switch between rotation mode and scale mode if mouse clicked and declicked without moving
-    path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
-    if (clickedPath && selectedPath_ != nullptr && clickedPath == selectedPath_  && holdStartPosition_ == canvasLocalPos){
-        selectedPath_->toggleRotationMode();
-        selectedPath_->update();
-    }
 
     if(rotating_){
         rotating_ = false;
         if(selectedPath_ != nullptr)
             selectedPath_->update();
     }
-    
-        
-    if(scaling_){
+    else if(scaling_){
         scaling_ = false;
         if(selectedPath_ != nullptr){
             selectedPath_->calculateBoundaries();
             selectedPath_->update();
         }
     }
-
-            
+    else if(holdStartPosition_ == canvasLocalPos && selectedPath_){
+        selectedPath_->toggleRotationMode();
+    }
+    
+    offset_ = QPointF(0,0);    
+    holding_ = false;
+    if(selectedPath_){
+        selectedPath_->update();
+    }
 }
 
 void viewPort::keyPressEvent(QKeyEvent *event)

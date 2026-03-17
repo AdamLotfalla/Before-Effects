@@ -105,7 +105,7 @@ class path : public QGraphicsItem{
 
         bool firstPointSnapping_ = false;
         
-        //------------TEMPORARY---------------- until implementing color and width selector
+    //------------TEMPORARY---------------- until implementing color and width selector
     int strokeWidth_ = 2.0; 
     QColor strokeColor_ = Qt::blue;
     QColor fillColor_ = Qt::red;
@@ -124,7 +124,7 @@ class path : public QGraphicsItem{
     
     void setSnapping(bool state);
     
-    
+    QPainterPath shape() const override;
     
     
     
@@ -171,6 +171,9 @@ class path : public QGraphicsItem{
     qreal minX_, minY_, maxX_, maxY_;
     
     private:
+
+    mutable QPainterPath cachedShape_;
+    mutable bool shapeDirty_ = true;
     
 };
 
@@ -221,6 +224,7 @@ class viewPort : public QGraphicsView{
     bool rotating_ = false;
     
     QPointF holdStartPosition_;
+    QPointF offset_ = QPointF(0,0);
     // QPointF rotationStartPosition_;
     float originalRotation_;
     bool snap_ = false;

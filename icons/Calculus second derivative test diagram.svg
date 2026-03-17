@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="Calculus second derivative test diagram.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showborder="false"
+     inkscape:zoom="1.4378367"
+     inkscape:cx="146.74824"
+     inkscape:cy="613.07379"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#cc8b86;fill-opacity:1;stroke:none;stroke-width:1.23551"
+       id="rect1"
+       width="90.167282"
+       height="14.353159"
+       x="-89.431221"
+       y="138.3792"
+       rx="5.4591163e-07"
+       ry="2.6131968" />
+    <rect
+       style="fill:#f9eae1;fill-opacity:1;stroke:none;stroke-width:1.02005"
+       id="rect2"
+       width="61.460976"
+       height="14.353159"
+       x="0.7360636"
+       y="138.3792"
+       rx="3.7211129e-07"
+       ry="2.6131968" />
+    <rect
+       style="fill:#7d4f50;fill-opacity:1;stroke:none;stroke-width:1.74192"
+       id="rect3"
+       width="179.2305"
+       height="14.353159"
+       x="62.197041"
+       y="138.3792"
+       rx="1.0851388e-06"
+       ry="2.6131968" />
+    <g
+       id="g4">
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.746741"
+         d="m 0.7360636,138.3792 v 4.9766"
+         id="path4" />
+      <text
+         xml:space="preserve"
+         style="font-size:7.05556px;line-height:1;font-family:'Showcard Gothic';-inkscape-font-specification:'Showcard Gothic, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2"
+         x="0.96550703"
+         y="136.11374"
+         id="text4"><tspan
+           sodipodi:role="line"
+           id="tspan4"
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;font-family:Serif;-inkscape-font-specification:'Serif Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke:none;stroke-width:2"
+           x="0.96550715"
+           y="136.11374">D=0</tspan></text>
+    </g>
+    <g
+       id="g5"
+       transform="translate(61.460977)">
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.746741"
+         d="m 0.7360636,138.3792 v 4.9766"
+         id="path5" />
+      <text
+         xml:space="preserve"
+         style="font-size:7.05556px;line-height:1;font-family:'Showcard Gothic';-inkscape-font-specification:'Showcard Gothic, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2"
+         x="0.96550703"
+         y="136.11374"
+         id="text5"><tspan
+           sodipodi:role="line"
+           id="tspan5"
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;font-family:Serif;-inkscape-font-specification:'Serif Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke:none;stroke-width:2"
+           x="0.96550715"
+           y="136.11374">D=0</tspan></text>
+    </g>
+  </g>
+</svg>
