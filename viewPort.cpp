@@ -540,7 +540,6 @@ void path::calculateBoundaries()
         recalculateBoundariesForPoint(scalePoint(actualNodes_[i]->position_));
     }
 
-    shapeDirty_ = true;
 }
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -741,16 +740,16 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         
         // Define handle positions in object space
         QPointF cornerOffsets[4] = {
-            {minX_ - handleOffset, minY_ - handleOffset}, // TL
-            {maxX_ + handleOffset, minY_ - handleOffset}, // TR
-            {maxX_ + handleOffset, maxY_ + handleOffset}, // BR
-            {minX_ - handleOffset, maxY_ + handleOffset}  // BL
+            {minX_ - handleOffset, minY_ - handleOffset}, // UL
+            {maxX_ + handleOffset, minY_ - handleOffset}, // UR
+            {maxX_ + handleOffset, maxY_ + handleOffset}, // DR
+            {minX_ - handleOffset, maxY_ + handleOffset}  // DL
         };
         
         QPointF edgeOffsets[4] = {
-            {center.x(), minY_ - handleOffset}, // Top
+            {center.x(), minY_ - handleOffset}, // Up
             {maxX_ + handleOffset, center.y()}, // Right
-            {center.x(), maxY_ + handleOffset}, // Bottom
+            {center.x(), maxY_ + handleOffset}, // Down
             {minX_ - handleOffset, center.y()}  // Left
         };
         
@@ -760,7 +759,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                                 &UHandle, &RHandle, &DHandle, &LHandle};
         QRectF* rotHandlePtrs[4] = {&ULRotationHandle, &URRotationHandle, 
                                     &DRRotationHandle, &DLRotationHandle};
-        
+
         for(int i = 0; i < 4; i++) {
             corners[i] = mapToItemRotation(cornerOffsets[i]);
             edges[i] = mapToItemRotation(edgeOffsets[i]);
@@ -775,7 +774,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                                     corners[i].y() - handleHalf, 
                                     handleD_, handleD_);
         }
-        
+
         for(int i = 0; i < 4; i++) {
             // Edge handles
             *handlePtrs[i+4] = QRectF(edges[i].x() - handleHalf, 
@@ -1021,7 +1020,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
     if(event->button() == Qt::LeftButton){
         holdStartPosition_= canvasLocalPos;
         holding_ = true;
-    } //set holding information
+    }
 
     if (bezierToolActivated_ && event->button() == Qt::LeftButton)
     {
@@ -1080,6 +1079,9 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
             
             if (clickedPath) {
+                if(selectedPath_ != clickedPath)
+                    clickedPath->recentlySelected_ = true;
+
                 setSelectedPath(clickedPath, true);
                 holdStartPosition_ = canvasLocalPos;
                 holding_ = true;
@@ -1184,10 +1186,15 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             else if(rotating_){
                 holding_ = true;
                 holdStartPosition_ = canvasLocalPos;
+
+                return;
             }
         }
 
         if(clickedPath){
+            if(selectedPath_ != clickedPath)
+                clickedPath->recentlySelected_ = true;
+
             setSelectedPath(clickedPath, true);
             holding_ = true;
             holdStartPosition_ = canvasLocalPos;
@@ -1329,8 +1336,11 @@ void viewPort::mouseReleaseEvent(QMouseEvent *event)
             selectedPath_->update();
         }
     }
-    else if(holdStartPosition_ == canvasLocalPos && selectedPath_){
-        selectedPath_->toggleRotationMode();
+    else if(QLineF(holdStartPosition_, canvasLocalPos).length() < 2 && selectedPath_){
+        if(!selectedPath_->recentlySelected_)
+            selectedPath_->toggleRotationMode();
+        else
+            selectedPath_->recentlySelected_ = false;
     }
     
     offset_ = QPointF(0,0);    

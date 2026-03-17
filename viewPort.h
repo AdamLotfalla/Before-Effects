@@ -120,6 +120,7 @@ class path : public QGraphicsItem{
     bool inRotationMode_ = false;
     bool firstPointHighlighted_ = false;
     bool hasDrawingPreview_ = false;
+    bool recentlySelected_ = false;
     
     
     void setSnapping(bool state);
@@ -173,8 +174,6 @@ class path : public QGraphicsItem{
     private:
 
     mutable QPainterPath cachedShape_;
-    mutable bool shapeDirty_ = true;
-    
 };
 
 class viewPort : public QGraphicsView{
