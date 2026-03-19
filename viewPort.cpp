@@ -76,22 +76,9 @@ QPointF path::getPoint(int index)
     return actualNodes_[index]->position_;
 }
 
-void path::modifyLastPoint(QPointF point)
-{
-    actualNodes_[actualNodes_.size() - 1]->position_ = point;
-    calculateBoundaries();
-
-    update();
-}
-
 void path::showSnapMargin(bool state)
 {
     firstPointHighlighted_ = state;
-}
-
-QPointF path::getFirstPoint()
-{
-    return actualNodes_[0]->position_;
 }
 
 void path::setPreviewPoint(QPointF point) {
@@ -103,10 +90,6 @@ void path::setPreviewPoint(QPointF point) {
 void path::clearPreviewPoint() {
     hasDrawingPreview_ = false;
     update();
-}
-
-bool path::hasPreviewPoint() const {
-    return hasDrawingPreview_;
 }
 
 int path::getLastNodeIndex()
@@ -264,11 +247,6 @@ void path::rescale(qreal xCenterD, qreal yCenterD)
         
     calculateBoundaries();
     update();
-}
-
-QPointF path::getScale()
-{
-    return QPointF(scaleX_, scaleY_);
 }
 
 void path::addHighlightedNode(int index)
@@ -1041,7 +1019,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath = objects_.back();
             int lastPointIndex = currentPath->getLastNodeIndex();
             QPointF pointToAdd = canvasLocalPos;
-            QPointF firstPoint = currentPath->getFirstPoint();
+            QPointF firstPoint = currentPath->getPoint(0);
                     
             bool snap =
                 std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
@@ -1225,7 +1203,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
     if(!selectedPath_) return;
     
     if(bezierToolActivated_){
-        QPointF firstPoint = selectedPath_->getFirstPoint();
+        QPointF firstPoint = selectedPath_->getPoint(0);
         snap_ =  std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
                 std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
 
@@ -1236,7 +1214,6 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
     
         if (startedNewPath_ && holding_) {
             selectedPath_->clearPreviewPoint();
-            // selectedPath_->modifyLastPoint(target); //this was added before bezier functionality
             selectedPath_->changeNodeMode('S', selectedPath_->getLastNodeIndex()); // this causes a crash
             selectedPath_->moveBezierHandle(canvasLocalPos, selectedPath_->getNodeCount() - 1, 2); // or maybe this?!
             selectedPath_->update();
