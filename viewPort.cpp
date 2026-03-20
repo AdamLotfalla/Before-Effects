@@ -543,18 +543,6 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
     QPointF globalPivotPoint = position_ + pivotPoint_;
 
-    // calculateBoundaries();
-
-    QPainterPath cross;
-    cross.moveTo(globalPivotPoint + QPointF(-3,-3));
-    cross.lineTo(globalPivotPoint + QPointF( 3, 3));
-    cross.moveTo(globalPivotPoint + QPointF(-3, 3));
-    cross.lineTo(globalPivotPoint + QPointF( 3,-3));
-
-    painter->setBrush(QColor(Qt::transparent));
-    painter->setPen(QPen(QColor("#2ea15e"), 2));
-    painter->drawPath(cross);
-
     //apply scale & rotation
     drawnNodes_.clear();
     for(int i = 0; i<actualNodes_.size(); i++){
