@@ -73,7 +73,7 @@ class path : public QGraphicsItem{
     int accessHighlightedVector(int index);
     
     void rotate(float angle);
-    void rescale(qreal xOffset, qreal yOffset, QPointF error, bool restrictedX = 0, bool restrictedY = 0);
+    void rescale(qreal xOffset, qreal yOffset, QPointF error, bool restrictedX = 0, bool restrictedY = 0, bool flipX = 0, bool flipY = 0);
     void rescale(QPointF offset, QPointF error);
     void movePath(QPointF offset);
     void moveNode(QPointF offset, int index);

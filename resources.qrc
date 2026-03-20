@@ -1,39 +1,39 @@
-<!DOCTYPE RCC>
 <RCC version="1.0">
-  <qresource prefix="/Light">
-    <file>icons/bezierPen_Light.svg</file>
-    <file>icons/goToStart_Light.svg</file>
-    <file>icons/previousFrame_Light.svg</file>
-    <file>icons/goToEnd_Light.svg</file>
-    <file>icons/nextFrame_Light.svg</file>
-    <file>icons/pause_Light.svg</file>
-    <file>icons/zoomOut_Light.svg</file>
-    <file>icons/play_Light.svg</file>
-    <file>icons/nodeTool_Light.svg</file>
-    <file>icons/zoomIn_Light.svg</file>
-    <file>icons/selectionTool_Light.svg</file>
-  </qresource>
-  <qresource prefix="/Dark">
-    <file>icons/nodeTool_Dark.svg</file>
-    <file>icons/bezierPen_Dark.svg</file>
-    <file>icons/nextFrame_Dark.svg</file>
-    <file>icons/goToEnd_Dark.svg</file>
-    <file>icons/pause_Dark.svg</file>
-    <file>icons/play_Dark.svg</file>
-    <file>icons/goToStart_Dark.svg</file>
-    <file>icons/previousFrame_Dark.svg</file>
-    <file>icons/zoomOut_Dark.svg</file>
-    <file>icons/zoomIn_Dark.svg</file>
-    <file>icons/selectionTool_Dark.svg</file>
-  </qresource>
-  <qresource prefix="/Handles">
-    <file>icons/NDiagonalArrows.svg</file>
-    <file>icons/PDiagonalArrows.svg</file>
-    <file>icons/UDArrows.svg</file>
-    <file>icons/LRArrows.svg</file>
-    <file>icons/DLcornerArrow.svg</file>
-    <file>icons/ULcornerArrow.svg</file>
-    <file>icons/DRcornerArrow.svg</file>
-    <file>icons/URcornerArrow.svg</file>
-  </qresource>
+    <qresource prefix="/Light">
+        <file>icons/bezierPen_Light.svg</file>
+        <file>icons/goToStart_Light.svg</file>
+        <file>icons/previousFrame_Light.svg</file>
+        <file>icons/goToEnd_Light.svg</file>
+        <file>icons/nextFrame_Light.svg</file>
+        <file>icons/pause_Light.svg</file>
+        <file>icons/zoomOut_Light.svg</file>
+        <file>icons/play_Light.svg</file>
+        <file>icons/nodeTool_Light.svg</file>
+        <file>icons/zoomIn_Light.svg</file>
+        <file>icons/selectionTool_Light.svg</file>
+    </qresource>
+    <qresource prefix="/Dark">
+        <file>icons/nodeTool_Dark.svg</file>
+        <file>icons/bezierPen_Dark.svg</file>
+        <file>icons/nextFrame_Dark.svg</file>
+        <file>icons/goToEnd_Dark.svg</file>
+        <file>icons/pause_Dark.svg</file>
+        <file>icons/play_Dark.svg</file>
+        <file>icons/goToStart_Dark.svg</file>
+        <file>icons/previousFrame_Dark.svg</file>
+        <file>icons/zoomOut_Dark.svg</file>
+        <file>icons/zoomIn_Dark.svg</file>
+        <file>icons/selectionTool_Dark.svg</file>
+    </qresource>
+    <qresource prefix="/Handles">
+        <file>icons/NDiagonalArrows.svg</file>
+        <file>icons/PDiagonalArrows.svg</file>
+        <file>icons/UDArrows.svg</file>
+        <file>icons/LRArrows.svg</file>
+        <file>icons/DLcornerArrow.svg</file>
+        <file>icons/ULcornerArrow.svg</file>
+        <file>icons/DRcornerArrow.svg</file>
+        <file>icons/URcornerArrow.svg</file>
+        <file>icons/PivotMark.svg</file>
+    </qresource>
 </RCC>

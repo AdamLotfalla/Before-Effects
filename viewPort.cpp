@@ -218,12 +218,15 @@ QPointF path::mapToItemRotation(qreal x, qreal y)
     return mapToItemRotation(QPointF(x,y));
 }
 
-void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error, bool restrictedX, bool restrictedY)
+void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error, bool restrictedX, bool restrictedY, bool flipX, bool flipY)
 {
     prepareGeometryChange();
 
     qreal xRotatedCenterD = yCenterD * sin(rotation_ * M_PI / 180.0) + xCenterD * cos(rotation_ * M_PI / 180.0); //equivalent to canvasLocalPos but in local coordinates
     qreal yRotatedCenterD = yCenterD * cos(rotation_ * M_PI / 180.0) - xCenterD * sin(rotation_ * M_PI / 180.0);
+
+    if(flipX) xRotatedCenterD *= -1;
+    if(flipY) yRotatedCenterD *= -1;
 
     qreal xOriginalMax = (maxX_ - position_.x()) / scaleX_ + position_.x();
     qreal yOriginalMax = (maxY_ - position_.y()) / scaleY_ + position_.y();
@@ -774,6 +777,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         static QSvgRenderer ULRotationArrow(QString(":/Handles/icons/ULcornerArrow.svg"));
         static QSvgRenderer DRRotationArrow(QString(":/Handles/icons/DRcornerArrow.svg"));
         static QSvgRenderer DLRotationArrow(QString(":/Handles/icons/DLcornerArrow.svg"));
+        static QSvgRenderer       PivotMark(QString(":/Handles/icons/PivotMark.svg"));
 
         painter->save();
         
@@ -812,7 +816,12 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             }
         }
         
+        painter->save();
+        painter->translate(position_ + pivotPoint_);
+        painter->rotate(rotation_);
+        PivotMark.render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
         painter->restore();
+
     }
     else if(isSelected() && inPathEditingMode_ != nullptr && *inPathEditingMode_){
 
@@ -1257,7 +1266,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         }
         else if(holding_ && rotating_){
         
-            QPointF rotationCenter = QPointF(0.5 * (selectedPath_->maxX_ + selectedPath_->minX_), 0.5 * (selectedPath_->maxY_ + selectedPath_->minY_));
+            QPointF rotationCenter = selectedPath_->position_ + selectedPath_->pivotPoint_;
             QPointF startVector = holdStartPosition_ - rotationCenter;
             QPointF endVector =  canvasLocalPos - rotationCenter;
             qreal startAngle = std::atan2(startVector.x(), startVector.y());
@@ -1276,19 +1285,14 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 delta.setY(std::max(abs(delta.x()), abs(delta.y())));
             }
 
-            if(activeScaleHandle_ == Left || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft){
-                delta.setX(delta.x() * -1);
-            }
-            if(activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight){
-                delta.setY(delta.y() * -1);
-            }
-
             bool restrictX = (activeScaleHandle_ == Top || activeScaleHandle_ == Bottom);
             bool restrictY = (activeScaleHandle_ == Left || activeScaleHandle_ == Right);
 
+            bool flipX = (activeScaleHandle_ == Left || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft);
+            bool flipY = (activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight);
 
-            selectedPath_->rescale(delta.x(), delta.y(), scalingError_, restrictX, restrictY);
-            // selectedPath_->update();
+
+            selectedPath_->rescale(delta.x(), delta.y(), scalingError_, restrictX, restrictY, flipX, flipY);
         }
     }
     
