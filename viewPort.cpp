@@ -188,6 +188,13 @@ void path::rotate(float angle)
     calculateBoundaries();
 }
 
+void path::setRotation(float angle)
+{
+    rotation_ = angle;
+    update();
+    calculateBoundaries();
+}
+
 QPointF path::mapToItemRotation(const QPointF& point, const bool reverse) const {
     if (qFuzzyCompare(rotation_, 0.0f)) return point;
     
@@ -1253,14 +1260,14 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             selectedPath_->movePath(offset_);
         }
         else if(holding_ && rotating_){
-        
+            //clockwise rotation is positive, measured from positive x
             QPointF rotationCenter = selectedPath_->position_ + selectedPath_->pivotPoint_;
             QPointF startVector = holdStartPosition_ - rotationCenter;
             QPointF endVector =  canvasLocalPos - rotationCenter;
-            qreal startAngle = std::atan2(startVector.x(), startVector.y());
-            qreal endAngle = std::atan2(endVector.x(), endVector.y());
+            qreal startAngle = std::atan2(startVector.y(), startVector.x());
+            qreal endAngle = std::atan2(endVector.y(), endVector.x());
             qreal angleDifference = (endAngle - startAngle) * 180.0 / M_PI;
-            selectedPath_->rotate(-1 * angleDifference);
+            selectedPath_->rotate(angleDifference);
             selectedPath_->update();
 
             holdStartPosition_ = canvasLocalPos; // needs to be removed

@@ -73,6 +73,7 @@ class path : public QGraphicsItem{
     int accessHighlightedVector(int index);
     
     void rotate(float angle);
+    void setRotation(float angle);
     void rescale(qreal xOffset, qreal yOffset, QPointF error, bool restrictedX = 0, bool restrictedY = 0, bool flipX = 0, bool flipY = 0);
     void rescale(QPointF offset, QPointF error);
     void movePath(QPointF offset);
@@ -122,12 +123,12 @@ class path : public QGraphicsItem{
     QPointF previewPoint_;
 
     //visuals 
-    int handleD_ = 10;
-    int selectionGrowth_ = 0;
-    int handleGrowth_ = 10;
-    uint8_t handleStates_ = 0;
-    QPen handlePen_ = QPen(QColor("#000000"));
-    QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
+    const int handleD_ = 10;
+    const int selectionGrowth_ = 0;
+    const int handleGrowth_ = 10;
+    const uint8_t handleStates_ = 0;
+    const QPen handlePen_ = QPen(QColor("#000000"));
+    const QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
 
     //booleans
     bool firstPointSnapping_ = false;
@@ -155,8 +156,9 @@ class viewPort : public QGraphicsView{
     
     private:
     QGraphicsScene* scene_;
-    int snapMargin_ = 10;
-    int nodeSelectMargin_ = 10;
+    const int snapMargin_ = 10;
+    const int nodeSelectMargin_ = 10;
+    const float snappingAngle = 45.0;
 
     enum ScaleHandle {
         None, 
