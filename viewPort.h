@@ -45,7 +45,7 @@ class path : public QGraphicsItem{
     public:
     enum { Type = UserType + 1 };              //Unique ID for path
     int type() const override { return Type; } //Override standard type
-    
+
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
     void calculateBoundaries();
@@ -73,13 +73,17 @@ class path : public QGraphicsItem{
     int accessHighlightedVector(int index);
     
     void rotate(float angle);
-    void rescale(qreal xOffset, qreal yOffset);
+    void rescale(qreal xOffset, qreal yOffset, QPointF error, bool restrictedX = 0, bool restrictedY = 0);
+    void rescale(QPointF offset, QPointF error);
     void movePath(QPointF offset);
     void moveNode(QPointF offset, int index);
     void moveBezierHandle(QPointF newPosition, int index, int handleIndex);
     void addPoint(QPointF point);
     void addEdge(int start, int end);
 
+    QPointF mapToItemRotation(const QPointF& point) const;
+    QPointF mapToItemRotation(const QPointF& point, const bool reverse) const;
+    QPointF mapToItemRotation(qreal x, qreal y);
     
     
     //attributes
@@ -132,10 +136,6 @@ class path : public QGraphicsItem{
     bool inRotationMode_ = false;
     bool firstPointHighlighted_ = false;
     bool hasDrawingPreview_ = false;
-    
-    QPointF mapToItemRotation(const QPointF& point) const;
-    QPointF mapToItemRotation(const QPointF& point, const bool reverse) const;
-    QPointF mapToItemRotation(qreal x, qreal y);
 };
 
 class viewPort : public QGraphicsView{

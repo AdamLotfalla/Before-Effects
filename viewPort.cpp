@@ -200,7 +200,7 @@ QPointF path::mapToItemRotation(const QPointF& point, const bool reverse) const 
     QPointF translated = point - center;
     
     // Apply inverse rotation
-    qreal radians = pow(-1,reverse) * rotation_ * M_PI / 180.0;
+    qreal radians = (reverse ? -rotation_ : rotation_) * M_PI / 180.0;
     qreal cosA = std::cos(radians);
     qreal sinA = std::sin(radians);
     
@@ -218,35 +218,40 @@ QPointF path::mapToItemRotation(qreal x, qreal y)
     return mapToItemRotation(QPointF(x,y));
 }
 
-void path::rescale(qreal xCenterD, qreal yCenterD)
+void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error, bool restrictedX, bool restrictedY)
 {
     prepareGeometryChange();
 
-    qreal xGlobalPos = xCenterD + position_.x();
-    qreal yGlobalPos = yCenterD + position_.y();
+    qreal xRotatedCenterD = yCenterD * sin(rotation_ * M_PI / 180.0) + xCenterD * cos(rotation_ * M_PI / 180.0); //equivalent to canvasLocalPos but in local coordinates
+    qreal yRotatedCenterD = yCenterD * cos(rotation_ * M_PI / 180.0) - xCenterD * sin(rotation_ * M_PI / 180.0);
 
     qreal xOriginalMax = (maxX_ - position_.x()) / scaleX_ + position_.x();
     qreal yOriginalMax = (maxY_ - position_.y()) / scaleY_ + position_.y();
     qreal xOriginalMin = (minX_ - position_.x()) / scaleX_ + position_.x();
     qreal yOriginalMin = (minY_ - position_.y()) / scaleY_ + position_.y();
     
-    qreal xm = std::min((xGlobalPos - xOriginalMax), (xGlobalPos - xOriginalMin));
-    qreal ym = std::min((yGlobalPos - yOriginalMax), (yGlobalPos - yOriginalMin));
+    qreal xm = std::min((xRotatedCenterD - (xOriginalMax - position_.x())), (xRotatedCenterD - (xOriginalMin - position_.x())));
+    qreal ym = std::min((yRotatedCenterD - (yOriginalMax - position_.y())), (yRotatedCenterD - (yOriginalMin - position_.y())));
 
-    qreal xOriginalCoord = xCenterD - xm;
-    qreal yOriginalCoord = yCenterD - ym;
+    qreal xUnscaledCenterD = xRotatedCenterD - xm;
+    qreal yUnscaledCenterD = yRotatedCenterD - ym;
 
 
-    if(yOriginalCoord != 0 && yCenterD != 0){
-        scaleY_ = yCenterD / yOriginalCoord;
+    if(yUnscaledCenterD != 0 && yRotatedCenterD != 0 && !restrictedY){
+        scaleY_ = (yRotatedCenterD - error.y()) / yUnscaledCenterD;
     }
-    if(xOriginalCoord != 0 && xCenterD != 0){
-        scaleX_ = xCenterD / xOriginalCoord;
+    if(xUnscaledCenterD != 0 && xRotatedCenterD != 0 && !restrictedX){
+        scaleX_ = (xRotatedCenterD - error.x()) / xUnscaledCenterD;
     }
 
         
     calculateBoundaries();
     update();
+}
+
+void path::rescale(QPointF offset, QPointF error)
+{
+    rescale(offset.x(), offset.y(), error);
 }
 
 void path::addHighlightedNode(int index)
@@ -1144,18 +1149,24 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 else if (selectedPath_->LHandle.contains(canvasLocalPos)) activeScaleHandle_ = Left;
                 else if (selectedPath_->RHandle.contains(canvasLocalPos)) activeScaleHandle_ = Right;
 
+                
+                qreal rotation_radians = selectedPath_->rotation_ * M_PI / 180.0;
+
+                qreal tangentialD = (holdStartPosition_.y() - selectedPath_->position_.y()) * sin(rotation_radians) + (holdStartPosition_.x() - selectedPath_->position_.x()) * cos(rotation_radians); 
+                qreal radialD     = (holdStartPosition_.y() - selectedPath_->position_.y()) * cos(rotation_radians) - (holdStartPosition_.x() - selectedPath_->position_.x()) * sin(rotation_radians);
+
                 if(activeScaleHandle_ == Left || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft){
-                    scalingError_.setX(selectedPath_->minX_ - holdStartPosition_.x());
+                    scalingError_.setX(- tangentialD - (selectedPath_->position_.x() - selectedPath_->minX_));
                 }
                 if(activeScaleHandle_ == Right || activeScaleHandle_ == TopRight || activeScaleHandle_ == BottomRight){
-                    scalingError_.setX(holdStartPosition_.x() - selectedPath_->maxX_);
+                    scalingError_.setX(tangentialD - (selectedPath_->maxX_ - selectedPath_->position_.x()));
                 }
 
                 if(activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight){
-                    scalingError_.setY(selectedPath_->minY_ - holdStartPosition_.y());
+                    scalingError_.setY(- radialD - (selectedPath_->position_.y() - selectedPath_->minY_));
                 }
                 if(activeScaleHandle_ == Bottom || activeScaleHandle_ ==  BottomLeft || activeScaleHandle_ == BottomRight){
-                    scalingError_.setY(holdStartPosition_.y() - selectedPath_->maxY_);
+                    scalingError_.setY(radialD - (selectedPath_->maxY_ - selectedPath_->position_.y()));
                 }
     
                 selectedPath_->update();
@@ -1272,17 +1283,11 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 delta.setY(delta.y() * -1);
             }
 
-            delta -= scalingError_;
-
-            if(activeScaleHandle_ == Right || activeScaleHandle_ == Left){
-                delta.setY(0);
-            }
-            if(activeScaleHandle_ == Top || activeScaleHandle_ == Bottom){
-                delta.setX(0);
-            }
+            bool restrictX = (activeScaleHandle_ == Top || activeScaleHandle_ == Bottom);
+            bool restrictY = (activeScaleHandle_ == Left || activeScaleHandle_ == Right);
 
 
-            selectedPath_->rescale(delta.x(), delta.y());
+            selectedPath_->rescale(delta.x(), delta.y(), scalingError_, restrictX, restrictY);
             // selectedPath_->update();
         }
     }
