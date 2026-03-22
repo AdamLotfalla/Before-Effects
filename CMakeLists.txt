@@ -24,7 +24,8 @@ qt_add_executable(Before_Effects
 )
 
 target_link_libraries(Before_Effects PRIVATE Qt${QT_VERSION_MAJOR}::Widgets 
-    Qt6::Core      # ADD THIS for qDebug
+    Qt6::Widgets
+    Qt6::Core
     Qt6::Svg
 )
 
@@ -32,7 +33,7 @@ set_target_properties(Before_Effects PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+    # WIN32_EXECUTABLE TRUE
 )
 
 include(GNUInstallDirs)

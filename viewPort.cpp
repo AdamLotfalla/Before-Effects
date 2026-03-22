@@ -1,4 +1,5 @@
 #include "viewPort.h"
+#include <QDebug>
 
 bezierHandle::bezierHandle(QPointF position)
 {
@@ -232,8 +233,8 @@ void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error, bool restricte
     qreal xRotatedCenterD = yCenterD * sin(rotation_ * M_PI / 180.0) + xCenterD * cos(rotation_ * M_PI / 180.0); //equivalent to canvasLocalPos but in local coordinates
     qreal yRotatedCenterD = yCenterD * cos(rotation_ * M_PI / 180.0) - xCenterD * sin(rotation_ * M_PI / 180.0);
 
-    if(flipX) xRotatedCenterD *= -1;
-    if(flipY) yRotatedCenterD *= -1;
+    if((flipX) ^ (scaleX_ < 0)) xRotatedCenterD *= -1;
+    if((flipY) ^ (scaleY_ < 0)) yRotatedCenterD *= -1;
 
     qreal xOriginalMax = (maxX_ - position_.x()) / scaleX_ + position_.x();
     qreal yOriginalMax = (maxY_ - position_.y()) / scaleY_ + position_.y();
@@ -254,6 +255,9 @@ void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error, bool restricte
         scaleX_ = (xRotatedCenterD - error.x()) / xUnscaledCenterD;
     }
 
+    qDebug() << "original coords. x: " << xOriginalMin << "-" << xOriginalMax << ", y: " << yOriginalMin << "-" << yOriginalMax << ".";
+    qDebug() << "rotated center dist. x:" << xRotatedCenterD - error.x() << ", y:" << yRotatedCenterD - error.y() << ".";
+    qDebug() << "scale: (" << scaleX_ << ", " << scaleY_ << ")\n";
         
     calculateBoundaries();
     update();
@@ -533,6 +537,19 @@ void path::calculateBoundaries()
         recalculateBoundariesForPoint(scalePoint(actualNodes_[i]->position_));
     }
 
+
+    qreal temporary;
+    if(scaleX_ < 0){ //switch variables
+        temporary = minX_;
+        minX_ = maxX_;
+        maxX_ = temporary;
+    }
+
+    if(scaleY_ < 0){
+        temporary = minY_;
+        minY_ = maxY_;
+        maxY_ = temporary;
+    }
 }
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -719,19 +736,24 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         qreal handleHalf = handleD_ / 2.0;
         qreal handleOffset = handleHalf + handleGrowth_;
         
+        qreal actualMinX = std::min(minX_, maxX_);
+        qreal actualMaxX = std::max(minX_, maxX_);
+        qreal actualMinY = std::min(minY_, maxY_);
+        qreal actualMaxY = std::max(minY_, maxY_);
+
         // Define handle positions in object space
         QPointF cornerOffsets[4] = {
-            {minX_ - handleOffset, minY_ - handleOffset}, // UL
-            {maxX_ + handleOffset, minY_ - handleOffset}, // UR
-            {maxX_ + handleOffset, maxY_ + handleOffset}, // DR
-            {minX_ - handleOffset, maxY_ + handleOffset}  // DL
+            {actualMinX - handleOffset, actualMinY - handleOffset}, // UL
+            {actualMaxX + handleOffset, actualMinY - handleOffset}, // UR
+            {actualMaxX + handleOffset, actualMaxY + handleOffset}, // DR
+            {actualMinX - handleOffset, actualMaxY + handleOffset}  // DL
         };
         
         QPointF edgeOffsets[4] = {
-            {center.x(), minY_ - handleOffset}, // Up
-            {maxX_ + handleOffset, center.y()}, // Right
-            {center.x(), maxY_ + handleOffset}, // Down
-            {minX_ - handleOffset, center.y()}  // Left
+            {center.x(), actualMinY - handleOffset}, // Up
+            {actualMaxX + handleOffset, center.y()}, // Right
+            {center.x(), actualMaxY + handleOffset}, // Down
+            {actualMinX - handleOffset, center.y()}  // Left
         };
         
         // Transform all positions and create handle rectangles
@@ -810,6 +832,8 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 painter->restore();
             }
         }
+
+        painter->restore();
         
         painter->save();
         painter->translate(position_ + pivotPoint_);
