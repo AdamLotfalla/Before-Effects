@@ -50,13 +50,24 @@ path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGr
 
 QRectF path::boundingRect() const
 {
-    return shape().boundingRect().adjusted(
-        -strokeWidth_, -strokeWidth_,
-         strokeWidth_,  strokeWidth_);
+    qreal actualMinX = std::min(minX_, maxX_);
+    qreal actualMaxX = std::max(minX_, maxX_);
+    qreal actualMinY = std::min(minY_, maxY_);
+    qreal actualMaxY = std::max(minY_, maxY_);
+
+    qreal pad = strokeWidth_ / 2.0 + selectionGrowth_ + handleD_ + 4.0;
+
+    return QRectF(
+        actualMinX - pad,
+        actualMinY - pad,
+        (actualMaxX - actualMinX) + pad * 2,
+        (actualMaxY - actualMinY) + pad * 2
+    );
 }
 
 void path::addPoint(QPointF point)
 {
+    prepareGeometryChange();
     node* newNode = new node(point);
     actualNodes_.push_back(newNode);
 
@@ -184,9 +195,10 @@ QPointF path::mapToItemRotation(const QPointF &point) const
 
 void path::rotate(float angle)
 {
+    prepareGeometryChange();
     rotation_ += angle;
-    update();
     calculateBoundaries();
+    update();
 }
 
 void path::setRotation(float angle)
@@ -226,46 +238,46 @@ QPointF path::mapToItemRotation(qreal x, qreal y)
     return mapToItemRotation(QPointF(x,y));
 }
 
-void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error, bool restrictedX, bool restrictedY, bool flipX, bool flipY)
+void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error,
+                   qreal originalHalfExtentX, qreal originalHalfExtentY,
+                   bool restrictedX, bool restrictedY,
+                   bool flipX, bool flipY)
 {
     prepareGeometryChange();
 
-    qreal xRotatedCenterD = yCenterD * sin(rotation_ * M_PI / 180.0) + xCenterD * cos(rotation_ * M_PI / 180.0); //equivalent to canvasLocalPos but in local coordinates
+    qreal xRotatedCenterD = yCenterD * sin(rotation_ * M_PI / 180.0) + xCenterD * cos(rotation_ * M_PI / 180.0);
     qreal yRotatedCenterD = yCenterD * cos(rotation_ * M_PI / 180.0) - xCenterD * sin(rotation_ * M_PI / 180.0);
 
-    if((flipX) ^ (scaleX_ < 0)) xRotatedCenterD *= -1;
-    if((flipY) ^ (scaleY_ < 0)) yRotatedCenterD *= -1;
+    if(flipX) xRotatedCenterD *= -1;
+    if(flipY) yRotatedCenterD *= -1;
 
-    qreal xOriginalMax = (maxX_ - position_.x()) / scaleX_ + position_.x();
-    qreal yOriginalMax = (maxY_ - position_.y()) / scaleY_ + position_.y();
-    qreal xOriginalMin = (minX_ - position_.x()) / scaleX_ + position_.x();
-    qreal yOriginalMin = (minY_ - position_.y()) / scaleY_ + position_.y();
-    
-    qreal xm = std::min((xRotatedCenterD - (xOriginalMax - position_.x())), (xRotatedCenterD - (xOriginalMin - position_.x())));
-    qreal ym = std::min((yRotatedCenterD - (yOriginalMax - position_.y())), (yRotatedCenterD - (yOriginalMin - position_.y())));
+    // Use frozen press-time extents — never recomputed, numerically stable at zero
+    qreal xOriginalMax = position_.x() + originalHalfExtentX;
+    qreal xOriginalMin = position_.x() - originalHalfExtentX;
+    qreal yOriginalMax = position_.y() + originalHalfExtentY;
+    qreal yOriginalMin = position_.y() - originalHalfExtentY;
+
+    qreal xm = std::min((xRotatedCenterD - (xOriginalMax - position_.x())),
+                        (xRotatedCenterD - (xOriginalMin - position_.x())));
+    qreal ym = std::min((yRotatedCenterD - (yOriginalMax - position_.y())),
+                        (yRotatedCenterD - (yOriginalMin - position_.y())));
 
     qreal xUnscaledCenterD = xRotatedCenterD - xm;
     qreal yUnscaledCenterD = yRotatedCenterD - ym;
 
+    if(std::abs(xRotatedCenterD) < std::abs(error.x())) error.setX(xRotatedCenterD);
+    else if(xRotatedCenterD < error.x()) error.setX(error.x() * -1);
 
-    if(yUnscaledCenterD != 0 && yRotatedCenterD != 0 && !restrictedY){
+    if(std::abs(yRotatedCenterD) < std::abs(error.y())) error.setY(yRotatedCenterD);
+    else if(yRotatedCenterD < error.y()) error.setY(error.y() * -1);
+
+    if(yUnscaledCenterD != 0 && yRotatedCenterD != 0 && !restrictedY)
         scaleY_ = (yRotatedCenterD - error.y()) / yUnscaledCenterD;
-    }
-    if(xUnscaledCenterD != 0 && xRotatedCenterD != 0 && !restrictedX){
+    if(xUnscaledCenterD != 0 && xRotatedCenterD != 0 && !restrictedX)
         scaleX_ = (xRotatedCenterD - error.x()) / xUnscaledCenterD;
-    }
 
-    qDebug() << "original coords. x: " << xOriginalMin << "-" << xOriginalMax << ", y: " << yOriginalMin << "-" << yOriginalMax << ".";
-    qDebug() << "rotated center dist. x:" << xRotatedCenterD - error.x() << ", y:" << yRotatedCenterD - error.y() << ".";
-    qDebug() << "scale: (" << scaleX_ << ", " << scaleY_ << ")\n";
-        
     calculateBoundaries();
     update();
-}
-
-void path::rescale(QPointF offset, QPointF error)
-{
-    rescale(offset.x(), offset.y(), error);
 }
 
 void path::addHighlightedNode(int index)
@@ -328,6 +340,7 @@ void path::movePath(QPointF offset)
 
 void path::moveNode(QPointF offset, int index)
 {
+    prepareGeometryChange();
     actualNodes_[index]->position_ += (offset);
     if(actualNodes_[index]->H1) actualNodes_[index]->H1->position_ += offset;
     if(actualNodes_[index]->H2) actualNodes_[index]->H2->position_ += offset;
@@ -409,9 +422,6 @@ QPainterPath path::shape() const
 
 void path::calculateBoundaries()
 {
-
-    prepareGeometryChange();
-
     minX_ = std::numeric_limits<qreal>::max();
     minY_ = std::numeric_limits<qreal>::max();
     maxX_ = std::numeric_limits<qreal>::lowest();
@@ -556,6 +566,8 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
+
+    painter->setClipping(false);
 
     // return if the shape has no nodes
     if(actualNodes_.isEmpty()) return;
@@ -717,19 +729,6 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setCompositionMode(QPainter::CompositionMode_Difference);
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
-        
-        // Draw selection rectangle more concisely
-        qreal padding = strokeWidth_ / 2.0 + selectionGrowth_;
-        QPointF rectPoints[4] = {
-            mapToItemRotation(minX_ - padding, minY_ - padding), // TL
-            mapToItemRotation(maxX_ + padding, minY_ - padding), // TR
-            mapToItemRotation(maxX_ + padding, maxY_ + padding), // BR
-            mapToItemRotation(minX_ - padding, maxY_ + padding)  // BL
-        };
-        for(int i = 0; i < 4; i++)
-            painter->drawLine(rectPoints[i], rectPoints[(i+1)%4]);
-        
-        painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 
         // Calculate common values
         QPointF center(0.5 * (maxX_ + minX_), 0.5 * (maxY_ + minY_));
@@ -740,20 +739,34 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         qreal actualMaxX = std::max(minX_, maxX_);
         qreal actualMinY = std::min(minY_, maxY_);
         qreal actualMaxY = std::max(minY_, maxY_);
+        
+        // Draw selection rectangle more concisely
+        qreal padding = strokeWidth_ / 2.0 + selectionGrowth_;
+        QPointF rectPoints[4] = {
+            mapToItemRotation(actualMinX - padding, actualMinY - padding), // TL
+            mapToItemRotation(actualMaxX + padding, actualMinY - padding), // TR
+            mapToItemRotation(actualMaxX + padding, actualMaxY + padding), // BR
+            mapToItemRotation(actualMinX - padding, actualMaxY + padding)  // BL
+        };
+        for(int i = 0; i < 4; i++)
+            painter->drawLine(rectPoints[i], rectPoints[(i+1)%4]);
+        
+        painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+
 
         // Define handle positions in object space
         QPointF cornerOffsets[4] = {
-            {actualMinX - handleOffset, actualMinY - handleOffset}, // UL
-            {actualMaxX + handleOffset, actualMinY - handleOffset}, // UR
-            {actualMaxX + handleOffset, actualMaxY + handleOffset}, // DR
-            {actualMinX - handleOffset, actualMaxY + handleOffset}  // DL
+            {actualMinX - handleOffset - strokeWidth_, actualMinY - handleOffset - strokeWidth_}, // UL
+            {actualMaxX + handleOffset + strokeWidth_, actualMinY - handleOffset - strokeWidth_}, // UR
+            {actualMaxX + handleOffset + strokeWidth_, actualMaxY + handleOffset + strokeWidth_}, // DR
+            {actualMinX - handleOffset - strokeWidth_, actualMaxY + handleOffset + strokeWidth_}  // DL
         };
         
         QPointF edgeOffsets[4] = {
-            {center.x(), actualMinY - handleOffset}, // Up
+            {center.x(), actualMinY - handleOffset - strokeWidth_}, // Up
             {actualMaxX + handleOffset, center.y()}, // Right
-            {center.x(), actualMaxY + handleOffset}, // Down
-            {actualMinX - handleOffset, center.y()}  // Left
+            {center.x(), actualMaxY + handleOffset + strokeWidth_}, // Down
+            {actualMinX - handleOffset - strokeWidth_, center.y()}  // Left
         };
         
         // Transform all positions and create handle rectangles
@@ -1180,22 +1193,35 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 
                 qreal rotation_radians = selectedPath_->rotation_ * M_PI / 180.0;
 
+                qreal actualMinX = std::min(selectedPath_->minX_, selectedPath_->maxX_);
+                qreal actualMaxX = std::max(selectedPath_->minX_, selectedPath_->maxX_);
+                qreal actualMinY = std::min(selectedPath_->minY_, selectedPath_->maxY_);
+                qreal actualMaxY = std::max(selectedPath_->minY_, selectedPath_->maxY_);
+
+                qreal absScaleX = std::abs(selectedPath_->scaleX_);
+                qreal absScaleY = std::abs(selectedPath_->scaleY_);
+                originalHalfExtentX_ = (actualMaxX - selectedPath_->position_.x()) / absScaleX;
+                originalHalfExtentY_ = (actualMaxY - selectedPath_->position_.y()) / absScaleY;
+
                 qreal tangentialD = (holdStartPosition_.y() - selectedPath_->position_.y()) * sin(rotation_radians) + (holdStartPosition_.x() - selectedPath_->position_.x()) * cos(rotation_radians); 
                 qreal radialD     = (holdStartPosition_.y() - selectedPath_->position_.y()) * cos(rotation_radians) - (holdStartPosition_.x() - selectedPath_->position_.x()) * sin(rotation_radians);
 
                 if(activeScaleHandle_ == Left || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft){
-                    scalingError_.setX(- tangentialD - (selectedPath_->position_.x() - selectedPath_->minX_));
+                    scalingError_.setX(- tangentialD - (selectedPath_->position_.x() - actualMinX));
                 }
                 if(activeScaleHandle_ == Right || activeScaleHandle_ == TopRight || activeScaleHandle_ == BottomRight){
-                    scalingError_.setX(tangentialD - (selectedPath_->maxX_ - selectedPath_->position_.x()));
+                    scalingError_.setX(tangentialD - (actualMaxX - selectedPath_->position_.x()));
                 }
 
                 if(activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight){
-                    scalingError_.setY(- radialD - (selectedPath_->position_.y() - selectedPath_->minY_));
+                    scalingError_.setY(- radialD - (selectedPath_->position_.y() - actualMinY));
                 }
                 if(activeScaleHandle_ == Bottom || activeScaleHandle_ ==  BottomLeft || activeScaleHandle_ == BottomRight){
-                    scalingError_.setY(radialD - (selectedPath_->maxY_ - selectedPath_->position_.y()));
+                    scalingError_.setY(radialD - (actualMaxY - selectedPath_->position_.y()));
                 }
+
+                scaleDragNegX_ = (selectedPath_->scaleX_ < 0);
+                scaleDragNegY_ = (selectedPath_->scaleY_ < 0);
     
                 selectedPath_->update();
                 return;
@@ -1310,8 +1336,12 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             bool flipX = (activeScaleHandle_ == Left || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft);
             bool flipY = (activeScaleHandle_ == Top || activeScaleHandle_ == TopLeft || activeScaleHandle_ == TopRight);
 
-
-            selectedPath_->rescale(delta.x(), delta.y(), scalingError_, restrictX, restrictY, flipX, flipY);
+            bool effectiveFlipX = flipX ^ scaleDragNegX_;
+            bool effectiveFlipY = flipY ^ scaleDragNegY_;
+            selectedPath_->rescale(delta.x(), delta.y(), scalingError_,
+                       originalHalfExtentX_, originalHalfExtentY_,
+                       restrictX, restrictY,
+                       effectiveFlipX, effectiveFlipY);
         }
     }
     
