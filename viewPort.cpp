@@ -1390,6 +1390,14 @@ void viewPort::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Shift){
         shifting_ = true;
     }
+    else if(event->key() == Qt::Key_Delete){
+        if(selectedPath_ != nullptr){
+            objects_.removeOne(selectedPath_); // remove from the list first
+            delete selectedPath_;
+            selectedPath_ = nullptr;
+        }
+        update();
+    }
 }
 
 void viewPort::keyReleaseEvent(QKeyEvent *event)
