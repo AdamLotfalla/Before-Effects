@@ -17,6 +17,31 @@ namespace Ui {
 }
 QT_END_NAMESPACE
 
+class AttributePanelWidget : public QWidget {
+    Q_OBJECT
+    QVBoxLayout* layout_;
+    QWidget* currentWidget_ = nullptr;
+
+public:
+    AttributePanelWidget(QWidget* parent = nullptr) : QWidget(parent) {
+        layout_ = new QVBoxLayout(this);
+        layout_->setAlignment(Qt::AlignTop);
+    }
+
+public slots:
+    void showObject(AttributePanel* obj) {
+        if (currentWidget_) {
+            layout_->removeWidget(currentWidget_);
+            delete currentWidget_;
+            currentWidget_ = nullptr;
+        }
+        if (obj) {
+            currentWidget_ = obj->createAttributeWidget(this);
+            layout_->addWidget(currentWidget_);
+        }
+    }
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

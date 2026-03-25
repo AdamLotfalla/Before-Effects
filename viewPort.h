@@ -7,6 +7,8 @@
 #include <QWidget>
 #include <QKeyEvent>
 #include <QSvgRenderer>
+#include <QLayout>
+#include <QSpinBox>
 
 #define UMask 0b10000000
 #define RMask 0b01000000
@@ -16,6 +18,12 @@
 #define URMask 0b11000000
 #define DRMask 0b01100000
 #define DLMask 0b00110000
+
+class AttributePanel{
+    public:
+    virtual ~AttributePanel() = default;
+    virtual QWidget* createAttributeWidget(QWidget* parent) = 0;
+};
 
 class bezierHandle{ 
     public:
@@ -41,7 +49,9 @@ class node{
     // void paint (QPaintEvent* event);
 };
 
-class path : public QGraphicsItem{
+class path : public QGraphicsItem, public AttributePanel{
+
+    
     public:
     enum { Type = UserType + 1 };              //Unique ID for path
     int type() const override { return Type; } //Override standard type
@@ -49,6 +59,8 @@ class path : public QGraphicsItem{
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
     void calculateBoundaries();
+
+    QWidget* createAttributeWidget(QWidget* parent) override;
 
 
     QPointF getPoint(int index);
@@ -78,7 +90,10 @@ class path : public QGraphicsItem{
                  qreal originalHalfExtentX, qreal originalHalfExtentY, 
                  bool restrictedX = 0, bool restrictedY = 0, 
                  bool flipX = 0, bool flipY = 0);
+    void setScale(qreal newScaleX, qreal newScaleY);
     void movePath(QPointF offset);
+    void setPosition(QPointF newPos);
+    void setPosition(qreal x, qreal y);
     void moveNode(QPointF offset, int index);
     void moveBezierHandle(QPointF newPosition, int index, int handleIndex);
     void addPoint(QPointF point);
@@ -139,6 +154,11 @@ class path : public QGraphicsItem{
     bool inRotationMode_ = false;
     bool firstPointHighlighted_ = false;
     bool hasDrawingPreview_ = false;
+
+    //signal
+    std::function<void(QPointF)> onPositionChanged;
+    std::function<void(qreal, qreal)> onScaleChanged;
+    std::function<void(qreal)> onRotationChanged;
 };
 
 class viewPort : public QGraphicsView{
@@ -220,4 +240,7 @@ class viewPort : public QGraphicsView{
 
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
+
+    signals:
+    void objectSelected(AttributePanel* obj);
 };

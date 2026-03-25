@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QWidget* centralWidget = new QWidget(this);
     this->setCentralWidget(centralWidget);
     
-    QWidget* LPanel = new QWidget(this);
+    AttributePanelWidget* LPanel = new AttributePanelWidget(this);
     
     QWidget* toolBar = new QWidget(this);
     toolBar->setAutoFillBackground(true);
@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timer_ = new QTimer(this); 
     timer_->setInterval(1000/frameRate_);
     QObject::connect(timer_, &QTimer::timeout, TimelinePanel, &Timeline::step);
+    QObject::connect(ViewPort_, &viewPort::objectSelected, LPanel, &AttributePanelWidget::showObject);
 }
 
 MainWindow::~MainWindow()

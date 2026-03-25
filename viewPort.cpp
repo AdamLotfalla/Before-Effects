@@ -170,11 +170,8 @@ void path::setDrawingMode(bool state)
 QPointF path::mapToItemRotation(const QPointF &point) const
 {
     if (qFuzzyCompare(rotation_, 0.0f)) return point;
-    
-    QPointF center = QPointF(
-        (minX_ + maxX_) * 0.5,
-        (minY_ + maxY_) * 0.5
-    );
+
+    QPointF center = position_ + pivotPoint_;
     
     // Translate to origin
     QPointF translated = point - center;
@@ -197,15 +194,24 @@ void path::rotate(float angle)
 {
     prepareGeometryChange();
     rotation_ += angle;
+
+    if(onRotationChanged)
+        onRotationChanged(rotation_ + angle);
+
     calculateBoundaries();
     update();
 }
 
 void path::setRotation(float angle)
 {
+    prepareGeometryChange();
     rotation_ = angle;
-    update();
+
+    if(onRotationChanged)
+        onRotationChanged(angle);
+
     calculateBoundaries();
+    update();
 }
 
 QPointF path::mapToItemRotation(const QPointF& point, const bool reverse) const {
@@ -276,6 +282,19 @@ void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error,
     if(xUnscaledCenterD != 0 && xRotatedCenterD != 0 && !restrictedX)
         scaleX_ = (xRotatedCenterD - error.x()) / xUnscaledCenterD;
 
+    if(onScaleChanged)
+        onScaleChanged(scaleX_, scaleY_);
+
+    calculateBoundaries();
+    update();
+}
+
+void path::setScale(qreal newScaleX, qreal newScaleY)
+{
+    prepareGeometryChange();
+    scaleX_ = newScaleX;
+    scaleY_ = newScaleY;
+
     calculateBoundaries();
     update();
 }
@@ -334,8 +353,22 @@ void path::movePath(QPointF offset)
     }
 
     position_ += offset;
+    if(onPositionChanged)
+        onPositionChanged(position_);
     
     calculateBoundaries();
+}
+
+void path::setPosition(QPointF newPos)
+{
+    movePath(newPos - position_);
+    if(onPositionChanged)
+        onPositionChanged(position_);
+}
+
+void path::setPosition(qreal x, qreal y)
+{
+    setPosition(QPointF(x,y));
 }
 
 void path::moveNode(QPointF offset, int index)
@@ -560,6 +593,150 @@ void path::calculateBoundaries()
         minY_ = maxY_;
         maxY_ = temporary;
     }
+}
+
+QWidget *path::createAttributeWidget(QWidget *parent)
+{
+    
+    
+    QWidget* background = new QWidget(parent);
+    QVBoxLayout* VLayout = new QVBoxLayout(background);
+    background->setLayout(VLayout);
+    
+    QSpinBox* xPositionBox = new QSpinBox(background);
+    xPositionBox->setMinimum(-5000);
+    xPositionBox->setMaximum(5000);
+    xPositionBox->setValue(position_.x());
+    xPositionBox->update();
+    
+    QSpinBox* yPositionBox = new QSpinBox(background);
+    yPositionBox->setMinimum(-5000);
+    yPositionBox->setMaximum(5000);
+    yPositionBox->setValue(position_.y());
+    yPositionBox->update();
+    
+
+    VLayout->addWidget(xPositionBox);
+    VLayout->addWidget(yPositionBox);
+    
+    onPositionChanged = [xPositionBox, yPositionBox](QPointF pos) {
+        xPositionBox->blockSignals(true);
+        yPositionBox->blockSignals(true);
+        xPositionBox->setValue(pos.x());
+        yPositionBox->setValue(pos.y());
+        xPositionBox->blockSignals(false);
+        yPositionBox->blockSignals(false);
+        
+        xPositionBox->update();
+        yPositionBox->update();
+    };
+
+    xPositionBox->connect(xPositionBox, &QSpinBox::valueChanged, [this](qreal value){
+        setPosition(value, position_.y());
+        update();
+    });
+    
+    yPositionBox->connect(yPositionBox, &QSpinBox::valueChanged, [this](qreal value){
+        setPosition(position_.x(), value);
+        update();
+    });
+
+
+
+    QDoubleSpinBox* xScaleBox = new QDoubleSpinBox(background);
+    xScaleBox->setMinimum(-5000);
+    xScaleBox->setMaximum(5000);
+    xScaleBox->setValue(scaleX_);
+    xScaleBox->update();
+    
+    QDoubleSpinBox* yScaleBox = new QDoubleSpinBox(background);
+    yScaleBox->setMinimum(-5000);
+    yScaleBox->setMaximum(5000);
+    yScaleBox->setValue(scaleY_);
+    yScaleBox->update();
+    
+
+    VLayout->addWidget(xScaleBox);
+    VLayout->addWidget(yScaleBox);
+    
+    onScaleChanged = [xScaleBox, yScaleBox](qreal newScaleX, qreal newScaleY) {
+        xScaleBox->blockSignals(true);
+        yScaleBox->blockSignals(true);
+        xScaleBox->setValue(newScaleX);
+        yScaleBox->setValue(newScaleY);
+        xScaleBox->blockSignals(false);
+        yScaleBox->blockSignals(false);
+        
+        xScaleBox->update();
+        yScaleBox->update();
+    };
+
+    xScaleBox->connect(xScaleBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+        setScale(value, scaleY_);
+        update();
+    });
+    
+    yScaleBox->connect(yScaleBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+        setScale(scaleX_, value);
+        update();
+    });
+
+
+
+    QDoubleSpinBox* rotationBox = new QDoubleSpinBox(background);
+    rotationBox->setMinimum(-5000);
+    rotationBox->setMaximum(5000);
+    rotationBox->setValue(rotation_);
+    rotationBox->update();
+
+    VLayout->addWidget(rotationBox);
+
+    onRotationChanged = [rotationBox](qreal newRotation){
+        rotationBox->blockSignals(true);
+        rotationBox->setValue(newRotation);
+        rotationBox->blockSignals(false);
+
+        rotationBox->update();
+    };
+
+    rotationBox->connect(rotationBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+        setRotation(value);
+        update();
+    });
+
+
+    QDoubleSpinBox* xPivotBox = new QDoubleSpinBox(background);
+    xPivotBox->setMinimum(-5000);
+    xPivotBox->setMaximum(5000);
+    xPivotBox->setValue(pivotPoint_.x());
+    
+    VLayout->addWidget(xPivotBox);
+
+    // no way currently to modify pivot point from the viewport
+
+    xPivotBox->connect(xPivotBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+        pivotPoint_.setX(value);
+        update();
+    });
+    
+
+
+    QDoubleSpinBox* yPivotBox = new QDoubleSpinBox(background);
+    yPivotBox->setMinimum(-5000);
+    yPivotBox->setMaximum(5000);
+    yPivotBox->setValue(pivotPoint_.x());
+    
+    VLayout->addWidget(yPivotBox);
+
+    // no way currently to modify pivot point from the viewport
+
+    yPivotBox->connect(yPivotBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+        pivotPoint_.setY(value);
+        update();
+    });
+
+
+    return background;
 }
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -996,19 +1173,18 @@ void viewPort::enableBezierTool(bool state)
     }
 }
 
-void viewPort::setSelectedPath(path *newSelectedPath, bool state)
+void viewPort::setSelectedPath(path* newSelectedPath, bool state)
 {
-    //If we are deselecting the current path
     if (!state) {
         if (selectedPath_ != nullptr) {
             selectedPath_->setSelected(false);
             selectedPath_->update();
             selectedPath_ = nullptr;
         }
+        emit objectSelected(nullptr); // ← notify panel: nothing selected
         return;
     }
 
-    //If we are selecting a new path
     if (newSelectedPath != nullptr) {
         if (selectedPath_ != nullptr && selectedPath_ != newSelectedPath) {
             selectedPath_->setSelected(false);
@@ -1017,6 +1193,7 @@ void viewPort::setSelectedPath(path *newSelectedPath, bool state)
         selectedPath_ = newSelectedPath;
         selectedPath_->setSelected(true);
         selectedPath_->update();
+        emit objectSelected(selectedPath_);
     }
 }
 
@@ -1395,6 +1572,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
             objects_.removeOne(selectedPath_); // remove from the list first
             delete selectedPath_;
             selectedPath_ = nullptr;
+            emit objectSelected(nullptr);
         }
         update();
     }
