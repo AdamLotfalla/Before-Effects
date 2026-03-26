@@ -9,6 +9,7 @@
 #include <QSvgRenderer>
 #include <QLayout>
 #include <QSpinBox>
+#include <QLabel>
 
 #define UMask 0b10000000
 #define RMask 0b01000000

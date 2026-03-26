@@ -57,12 +57,29 @@ QRectF path::boundingRect() const
 
     qreal pad = strokeWidth_ / 2.0 + selectionGrowth_ + handleD_ + 4.0;
 
-    return QRectF(
-        actualMinX - pad,
-        actualMinY - pad,
-        (actualMaxX - actualMinX) + pad * 2,
-        (actualMaxY - actualMinY) + pad * 2
-    );
+    // The four corners of the padded unrotated box
+    QPointF corners[4] = {
+        {actualMinX - pad, actualMinY - pad},
+        {actualMaxX + pad, actualMinY - pad},
+        {actualMaxX + pad, actualMaxY + pad},
+        {actualMinX - pad, actualMaxY + pad}
+    };
+
+    // Rotate each corner around the pivot
+    qreal minX =  std::numeric_limits<qreal>::max();
+    qreal maxX =  std::numeric_limits<qreal>::lowest();
+    qreal minY =  std::numeric_limits<qreal>::max();
+    qreal maxY =  std::numeric_limits<qreal>::lowest();
+
+    for (const QPointF& c : corners) {
+        QPointF rotated = mapToItemRotation(c);
+        minX = std::min(minX, rotated.x());
+        maxX = std::max(maxX, rotated.x());
+        minY = std::min(minY, rotated.y());
+        maxY = std::max(maxY, rotated.y());
+    }
+
+    return QRectF(minX, minY, maxX - minX, maxY - minY);
 }
 
 void path::addPoint(QPointF point)
@@ -603,6 +620,8 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     QVBoxLayout* VLayout = new QVBoxLayout(background);
     background->setLayout(VLayout);
     
+    QHBoxLayout* PosLayout = new QHBoxLayout(background);
+
     QSpinBox* xPositionBox = new QSpinBox(background);
     xPositionBox->setMinimum(-5000);
     xPositionBox->setMaximum(5000);
@@ -615,9 +634,15 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     yPositionBox->setValue(position_.y());
     yPositionBox->update();
     
+    QLabel* positionLabel = new QLabel(background);
+    positionLabel->setText("Position");
 
-    VLayout->addWidget(xPositionBox);
-    VLayout->addWidget(yPositionBox);
+    PosLayout->addWidget(positionLabel);
+    PosLayout->addWidget(xPositionBox);
+    PosLayout->addWidget(yPositionBox);
+    VLayout->addLayout(PosLayout);
+    
+
     
     onPositionChanged = [xPositionBox, yPositionBox](QPointF pos) {
         xPositionBox->blockSignals(true);
@@ -642,22 +667,31 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     });
 
 
+    QHBoxLayout* scaleLayout = new QHBoxLayout(background);
 
     QDoubleSpinBox* xScaleBox = new QDoubleSpinBox(background);
     xScaleBox->setMinimum(-5000);
     xScaleBox->setMaximum(5000);
     xScaleBox->setValue(scaleX_);
+    xScaleBox->setSingleStep(0.1);
     xScaleBox->update();
     
     QDoubleSpinBox* yScaleBox = new QDoubleSpinBox(background);
     yScaleBox->setMinimum(-5000);
     yScaleBox->setMaximum(5000);
     yScaleBox->setValue(scaleY_);
+    yScaleBox->setSingleStep(0.1);
     yScaleBox->update();
-    
 
-    VLayout->addWidget(xScaleBox);
-    VLayout->addWidget(yScaleBox);
+    QLabel* scaleLabel = new QLabel(background);
+    scaleLabel->setText("Scale");
+    
+    scaleLayout->addWidget(scaleLabel);
+    scaleLayout->addWidget(xScaleBox);
+    scaleLayout->addWidget(yScaleBox);
+
+    VLayout->addLayout(scaleLayout);
+
     
     onScaleChanged = [xScaleBox, yScaleBox](qreal newScaleX, qreal newScaleY) {
         xScaleBox->blockSignals(true);
@@ -682,6 +716,8 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     });
 
 
+    QHBoxLayout* rotationLayout = new QHBoxLayout(background);
+    rotationLayout->setSpacing(3);
 
     QDoubleSpinBox* rotationBox = new QDoubleSpinBox(background);
     rotationBox->setMinimum(-5000);
@@ -689,7 +725,14 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     rotationBox->setValue(rotation_);
     rotationBox->update();
 
-    VLayout->addWidget(rotationBox);
+    QLabel* rotationLabel = new QLabel(background);
+    rotationLabel->setText("rotation");
+
+
+    rotationLayout->addWidget(rotationLabel, 1);
+    rotationLayout->addWidget(rotationBox, 2);
+
+    VLayout->addLayout(rotationLayout);
 
     onRotationChanged = [rotationBox](qreal newRotation){
         rotationBox->blockSignals(true);
@@ -705,30 +748,33 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     });
 
 
+    QHBoxLayout* pivotLayout = new QHBoxLayout(background);
+
     QDoubleSpinBox* xPivotBox = new QDoubleSpinBox(background);
     xPivotBox->setMinimum(-5000);
     xPivotBox->setMaximum(5000);
     xPivotBox->setValue(pivotPoint_.x());
-    
-    VLayout->addWidget(xPivotBox);
-
-    // no way currently to modify pivot point from the viewport
-
-    xPivotBox->connect(xPivotBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
-        pivotPoint_.setX(value);
-        update();
-    });
-    
-
 
     QDoubleSpinBox* yPivotBox = new QDoubleSpinBox(background);
     yPivotBox->setMinimum(-5000);
     yPivotBox->setMaximum(5000);
     yPivotBox->setValue(pivotPoint_.x());
-    
-    VLayout->addWidget(yPivotBox);
 
+    
+    QLabel* pivotLabel = new QLabel(background);
+    pivotLabel->setText("PivotLabel");
+    
+    pivotLayout->addWidget(pivotLabel);
+    pivotLayout->addWidget(xPivotBox);
+    pivotLayout->addWidget(yPivotBox);
+
+    VLayout->addLayout(pivotLayout);
+    
     // no way currently to modify pivot point from the viewport
+    xPivotBox->connect(xPivotBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+        pivotPoint_.setX(value);
+        update();
+    });
 
     yPivotBox->connect(yPivotBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
         pivotPoint_.setY(value);
