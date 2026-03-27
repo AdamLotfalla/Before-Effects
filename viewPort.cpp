@@ -614,23 +614,17 @@ void path::calculateBoundaries()
 
 QWidget *path::createAttributeWidget(QWidget *parent)
 {
-    
-    
     QWidget* background = new QWidget(parent);
     QVBoxLayout* VLayout = new QVBoxLayout(background);
-    background->setLayout(VLayout);
+    background->setLayout(VLayout);    
     
     QHBoxLayout* PosLayout = new QHBoxLayout(background);
 
-    QSpinBox* xPositionBox = new QSpinBox(background);
-    xPositionBox->setMinimum(-5000);
-    xPositionBox->setMaximum(5000);
+    customSpinBox* xPositionBox = new customSpinBox(background, 'X');
     xPositionBox->setValue(position_.x());
     xPositionBox->update();
     
-    QSpinBox* yPositionBox = new QSpinBox(background);
-    yPositionBox->setMinimum(-5000);
-    yPositionBox->setMaximum(5000);
+    customSpinBox* yPositionBox = new customSpinBox(background, 'Y');
     yPositionBox->setValue(position_.y());
     yPositionBox->update();
     
@@ -656,12 +650,12 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         yPositionBox->update();
     };
 
-    xPositionBox->connect(xPositionBox, &QSpinBox::valueChanged, [this](qreal value){
+    xPositionBox->connect(xPositionBox, &customSpinBox::valueChanged, [this](qreal value){
         setPosition(value, position_.y());
         update();
     });
     
-    yPositionBox->connect(yPositionBox, &QSpinBox::valueChanged, [this](qreal value){
+    yPositionBox->connect(yPositionBox, &customSpinBox::valueChanged, [this](qreal value){
         setPosition(position_.x(), value);
         update();
     });

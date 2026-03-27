@@ -85,4 +85,22 @@ inline QString toolBarButtonStyle =
     "    border-radius: 3px;"
     "}";
 
+inline QString spinBoxStyle =
+    "QLineEdit {"
+    "    background-color: transparent;"
+    "    border: none;"
+    "    color: #FFFFFF;"
+    "    padding: 0px;"
+    "    margin: 0px;"
+    "    selection-background-color: #7BC7B0;"
+    "    selection-color: #000000;"
+    "}"
+    "QLineEdit:focus {"
+    "    border: none;"
+    "    background-color: rgba(123, 199, 176, 0.1);"
+    "}"
+    "QLineEdit:hover {"
+    "    background-color: rgba(255, 255, 255, 0.05);"
+    "}";
+
 #endif
