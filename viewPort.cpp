@@ -616,9 +616,16 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 {
     QWidget* background = new QWidget(parent);
     QVBoxLayout* VLayout = new QVBoxLayout(background);
-    background->setLayout(VLayout);    
+    background->setLayout(VLayout);   
     
-    QHBoxLayout* PosLayout = new QHBoxLayout(background);
+    QLabel* transformTitle = new QLabel("Transformation");
+    QPalette palette = transformTitle->palette();
+    palette.setColor(QPalette::WindowText, QColor("#888888"));
+    transformTitle->setPalette(palette);
+    VLayout->addWidget(transformTitle);
+
+    
+    QHBoxLayout* PosLayout = new QHBoxLayout();
 
     customSpinBox* xPositionBox = new customSpinBox(background, 'X');
     xPositionBox->setValue(position_.x());
@@ -630,6 +637,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     
     QLabel* positionLabel = new QLabel(background);
     positionLabel->setText("Position");
+    positionLabel->setMinimumWidth(20);
 
     PosLayout->addWidget(positionLabel);
     PosLayout->addWidget(xPositionBox);
@@ -661,24 +669,21 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     });
 
 
-    QHBoxLayout* scaleLayout = new QHBoxLayout(background);
+    QHBoxLayout* scaleLayout = new QHBoxLayout();
 
-    QDoubleSpinBox* xScaleBox = new QDoubleSpinBox(background);
-    xScaleBox->setMinimum(-5000);
-    xScaleBox->setMaximum(5000);
+    customSpinBox* xScaleBox = new customSpinBox(background, 'X');
     xScaleBox->setValue(scaleX_);
-    xScaleBox->setSingleStep(0.1);
+    xScaleBox->setPrecision(2);
     xScaleBox->update();
     
-    QDoubleSpinBox* yScaleBox = new QDoubleSpinBox(background);
-    yScaleBox->setMinimum(-5000);
-    yScaleBox->setMaximum(5000);
+    customSpinBox* yScaleBox = new customSpinBox(background, 'Y');
     yScaleBox->setValue(scaleY_);
-    yScaleBox->setSingleStep(0.1);
+    yScaleBox->setPrecision(2);
     yScaleBox->update();
 
     QLabel* scaleLabel = new QLabel(background);
     scaleLabel->setText("Scale");
+    scaleLabel->setMinimumWidth(20);
     
     scaleLayout->addWidget(scaleLabel);
     scaleLayout->addWidget(xScaleBox);
@@ -699,29 +704,28 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         yScaleBox->update();
     };
 
-    xScaleBox->connect(xScaleBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+    xScaleBox->connect(xScaleBox, &customSpinBox::valueChanged, [this](qreal value){
         setScale(value, scaleY_);
         update();
     });
     
-    yScaleBox->connect(yScaleBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+    yScaleBox->connect(yScaleBox, &customSpinBox::valueChanged, [this](qreal value){
         setScale(scaleX_, value);
         update();
     });
 
 
-    QHBoxLayout* rotationLayout = new QHBoxLayout(background);
+    QHBoxLayout* rotationLayout = new QHBoxLayout();
     rotationLayout->setSpacing(3);
 
-    QDoubleSpinBox* rotationBox = new QDoubleSpinBox(background);
-    rotationBox->setMinimum(-5000);
-    rotationBox->setMaximum(5000);
+    customSpinBox* rotationBox = new customSpinBox(background, 'Z');
     rotationBox->setValue(rotation_);
+    rotationBox->setPrecision(2);
     rotationBox->update();
 
     QLabel* rotationLabel = new QLabel(background);
     rotationLabel->setText("rotation");
-
+    rotationLabel->setMinimumWidth(20);
 
     rotationLayout->addWidget(rotationLabel, 1);
     rotationLayout->addWidget(rotationBox, 2);
@@ -736,27 +740,24 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         rotationBox->update();
     };
 
-    rotationBox->connect(rotationBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+    rotationBox->connect(rotationBox, &customSpinBox::valueChanged, [this](qreal value){
         setRotation(value);
         update();
     });
 
 
-    QHBoxLayout* pivotLayout = new QHBoxLayout(background);
+    QHBoxLayout* pivotLayout = new QHBoxLayout();
 
-    QDoubleSpinBox* xPivotBox = new QDoubleSpinBox(background);
-    xPivotBox->setMinimum(-5000);
-    xPivotBox->setMaximum(5000);
+    customSpinBox* xPivotBox = new customSpinBox(background, 'X');
     xPivotBox->setValue(pivotPoint_.x());
 
-    QDoubleSpinBox* yPivotBox = new QDoubleSpinBox(background);
-    yPivotBox->setMinimum(-5000);
-    yPivotBox->setMaximum(5000);
-    yPivotBox->setValue(pivotPoint_.x());
+    customSpinBox* yPivotBox = new customSpinBox(background, 'Y');
+    yPivotBox->setValue(pivotPoint_.y());  // Fixed: was pivotPoint_.x()
 
     
     QLabel* pivotLabel = new QLabel(background);
-    pivotLabel->setText("PivotLabel");
+    pivotLabel->setText("Pivot");
+    pivotLabel->setMinimumWidth(20);
     
     pivotLayout->addWidget(pivotLabel);
     pivotLayout->addWidget(xPivotBox);
@@ -764,17 +765,277 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     VLayout->addLayout(pivotLayout);
     
-    // no way currently to modify pivot point from the viewport
-    xPivotBox->connect(xPivotBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+    xPivotBox->connect(xPivotBox, &customSpinBox::valueChanged, [this](qreal value){
         pivotPoint_.setX(value);
         update();
     });
 
-    yPivotBox->connect(yPivotBox, &QDoubleSpinBox::valueChanged, [this](qreal value){
+    yPivotBox->connect(yPivotBox, &customSpinBox::valueChanged, [this](qreal value){
         pivotPoint_.setY(value);
         update();
     });
 
+
+    VLayout->addSpacing(10);
+    QLabel* ColorTitle = new QLabel("Color");
+    ColorTitle->setPalette(palette);
+    VLayout->addWidget(ColorTitle);
+
+    // ── Fill ──────────────────────────────────────────────────────────────
+    QCheckBox* fillEnable = new QCheckBox(background);
+
+    QHBoxLayout* fillLayout = new QHBoxLayout();
+    QLabel* fillLabel = new QLabel();
+    fillLabel->setText("Fill");
+
+    QVBoxLayout* fillColumnsLayout = new QVBoxLayout();
+    QHBoxLayout* fillRow1Layout = new QHBoxLayout();
+    QHBoxLayout* fillRow2Layout = new QHBoxLayout();
+
+    VLayout->addLayout(fillLayout);
+    fillLayout->addWidget(fillEnable, 0);
+    fillLayout->addWidget(fillLabel, 1);
+    fillLayout->addLayout(fillColumnsLayout, 4);
+    fillColumnsLayout->addLayout(fillRow1Layout);
+    fillColumnsLayout->addLayout(fillRow2Layout);
+
+    ColorSelector* fillPreview = new ColorSelector(background);
+    fillPreview->setColor(fillColor_);
+    fillPreview->setDisplayMode(color_widgets::ColorPreview::DisplayMode::SplitAlpha);
+
+    QString fillHexString = QString("%1%2%3%4")
+        .arg(fillColor_.red(),   2, 16, QChar('0'))
+        .arg(fillColor_.green(), 2, 16, QChar('0'))
+        .arg(fillColor_.blue(),  2, 16, QChar('0'))
+        .arg(fillColor_.alpha(), 2, 16, QChar('0'))
+        .toUpper();
+
+    customSpinBox* fillHexSpinBox   = new customSpinBox(background, '#');
+    customSpinBox* fillAlphaSpinBox = new customSpinBox(background, 'A');
+    customSpinBox* fillRSpinBox     = new customSpinBox(background, 'R');
+    customSpinBox* fillGSpinBox     = new customSpinBox(background, 'G');
+    customSpinBox* fillBSpinBox     = new customSpinBox(background, 'B');
+
+    fillHexSpinBox->setStringInput(true);
+    fillHexSpinBox->setValue(fillHexString);
+
+    fillAlphaSpinBox->setMinimum(0); fillAlphaSpinBox->setMaximum(255);
+    fillRSpinBox->setMinimum(0);     fillRSpinBox->setMaximum(255);
+    fillGSpinBox->setMinimum(0);     fillGSpinBox->setMaximum(255);
+    fillBSpinBox->setMinimum(0);     fillBSpinBox->setMaximum(255);
+
+    fillAlphaSpinBox->setValue(fillColor_.alpha());
+    fillRSpinBox->setValue(fillColor_.red());
+    fillGSpinBox->setValue(fillColor_.green());
+    fillBSpinBox->setValue(fillColor_.blue());
+
+    fillRow1Layout->addWidget(fillPreview,   1);
+    fillRow1Layout->addWidget(fillHexSpinBox,1);
+    fillRow1Layout->addWidget(fillAlphaSpinBox, 1);
+    fillRow2Layout->addWidget(fillRSpinBox);
+    fillRow2Layout->addWidget(fillGSpinBox);
+    fillRow2Layout->addWidget(fillBSpinBox);
+
+    auto updateFillControls = [this, fillPreview, fillRSpinBox, fillGSpinBox, fillBSpinBox, fillAlphaSpinBox, fillHexSpinBox]() {
+        fillRSpinBox->blockSignals(true);
+        fillGSpinBox->blockSignals(true);
+        fillBSpinBox->blockSignals(true);
+        fillAlphaSpinBox->blockSignals(true);
+        fillHexSpinBox->blockSignals(true);
+
+        fillRSpinBox->setValue(fillColor_.red());
+        fillGSpinBox->setValue(fillColor_.green());
+        fillBSpinBox->setValue(fillColor_.blue());
+        fillAlphaSpinBox->setValue(fillColor_.alpha());
+        fillHexSpinBox->setValue(QString("%1%2%3%4")
+            .arg(fillColor_.red(),   2, 16, QChar('0'))
+            .arg(fillColor_.green(), 2, 16, QChar('0'))
+            .arg(fillColor_.blue(),  2, 16, QChar('0'))
+            .arg(fillColor_.alpha(), 2, 16, QChar('0'))
+            .toUpper());
+        fillPreview->setColor(fillColor_);
+
+        fillRSpinBox->blockSignals(false);
+        fillGSpinBox->blockSignals(false);
+        fillBSpinBox->blockSignals(false);
+        fillAlphaSpinBox->blockSignals(false);
+        fillHexSpinBox->blockSignals(false);
+    };
+
+    fillHexSpinBox->connect(fillHexSpinBox, &customSpinBox::stringValueChanged, [this, updateFillControls](QString value){
+        if(value[0] == '#') value.remove(0, 1);
+        bool ok; int r, g, b, a = fillColor_.alpha();
+        if(value.length() >= 6){
+            r = value.mid(0,2).toInt(&ok,16); g = value.mid(2,2).toInt(&ok,16); b = value.mid(4,2).toInt(&ok,16);
+            if(value.length() >= 8) a = value.mid(6,2).toInt(&ok,16);
+            fillColor_ = QColor(r,g,b,a); updateFillControls(); update();
+        }
+    });
+    fillRSpinBox->connect(fillRSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setRed(v);   updateFillControls(); update(); });
+    fillGSpinBox->connect(fillGSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setGreen(v); updateFillControls(); update(); });
+    fillBSpinBox->connect(fillBSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setBlue(v);  updateFillControls(); update(); });
+    fillAlphaSpinBox->connect(fillAlphaSpinBox,&customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setAlpha(v); updateFillControls(); update(); });
+    fillPreview->connect(fillPreview, &ColorSelector::colorSelected, [this, updateFillControls](QColor c){ fillColor_ = c; updateFillControls(); update(); });
+
+    fillEnable->connect(fillEnable, &QCheckBox::toggled, [this, fillPreview, fillHexSpinBox, fillAlphaSpinBox, fillRSpinBox, fillGSpinBox, fillBSpinBox](bool state){
+        fill_ = state;
+        fillPreview->setDisabled(!state);
+        fillHexSpinBox->setDisabled(!state);
+        fillAlphaSpinBox->setDisabled(!state);
+        fillRSpinBox->setDisabled(!state);
+        fillGSpinBox->setDisabled(!state);
+        fillBSpinBox->setDisabled(!state);
+        update();
+    });
+
+
+    // ── Stroke ────────────────────────────────────────────────────────────
+    QCheckBox* strokeEnable = new QCheckBox(background);
+    strokeEnable->setChecked(stroke_);
+
+    QHBoxLayout* strokeLayout = new QHBoxLayout();
+    QLabel* strokeLabel = new QLabel();
+    strokeLabel->setText("Stroke");
+
+    QVBoxLayout* strokeColumnsLayout = new QVBoxLayout();
+    QHBoxLayout* strokeRow1Layout = new QHBoxLayout();
+    QHBoxLayout* strokeRow2Layout = new QHBoxLayout();
+
+    VLayout->addSpacing(10);
+    VLayout->addLayout(strokeLayout);
+    strokeLayout->addWidget(strokeEnable, 0);
+    strokeLayout->addWidget(strokeLabel, 1);
+    strokeLayout->addLayout(strokeColumnsLayout, 4);
+    strokeColumnsLayout->addLayout(strokeRow1Layout);
+    strokeColumnsLayout->addLayout(strokeRow2Layout);
+
+    ColorSelector* strokePreview = new ColorSelector(background);
+    strokePreview->setColor(strokeColor_);
+    strokePreview->setDisplayMode(color_widgets::ColorPreview::DisplayMode::SplitAlpha);
+
+    customSpinBox* strokeHexSpinBox   = new customSpinBox(background, '#');
+    customSpinBox* strokeAlphaSpinBox = new customSpinBox(background, 'A');
+    customSpinBox* strokeRSpinBox     = new customSpinBox(background, 'R');
+    customSpinBox* strokeGSpinBox     = new customSpinBox(background, 'G');
+    customSpinBox* strokeBSpinBox     = new customSpinBox(background, 'B');
+
+    strokeHexSpinBox->setStringInput(true);
+    strokeHexSpinBox->setValue(QString("%1%2%3%4")
+        .arg(strokeColor_.red(),   2, 16, QChar('0'))
+        .arg(strokeColor_.green(), 2, 16, QChar('0'))
+        .arg(strokeColor_.blue(),  2, 16, QChar('0'))
+        .arg(strokeColor_.alpha(), 2, 16, QChar('0'))
+        .toUpper());
+
+    strokeAlphaSpinBox->setMinimum(0); strokeAlphaSpinBox->setMaximum(255);
+    strokeRSpinBox->setMinimum(0);     strokeRSpinBox->setMaximum(255);
+    strokeGSpinBox->setMinimum(0);     strokeGSpinBox->setMaximum(255);
+    strokeBSpinBox->setMinimum(0);     strokeBSpinBox->setMaximum(255);
+
+    strokeAlphaSpinBox->setValue(strokeColor_.alpha());
+    strokeRSpinBox->setValue(strokeColor_.red());
+    strokeGSpinBox->setValue(strokeColor_.green());
+    strokeBSpinBox->setValue(strokeColor_.blue());
+
+    strokeRow1Layout->addWidget(strokePreview,    1);
+    strokeRow1Layout->addWidget(strokeHexSpinBox, 1);
+    strokeRow1Layout->addWidget(strokeAlphaSpinBox, 1);
+    strokeRow2Layout->addWidget(strokeRSpinBox);
+    strokeRow2Layout->addWidget(strokeGSpinBox);
+    strokeRow2Layout->addWidget(strokeBSpinBox);
+
+    auto updateStrokeControls = [this, strokePreview, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox, strokeAlphaSpinBox, strokeHexSpinBox]() {
+        strokeRSpinBox->blockSignals(true);
+        strokeGSpinBox->blockSignals(true);
+        strokeBSpinBox->blockSignals(true);
+        strokeAlphaSpinBox->blockSignals(true);
+        strokeHexSpinBox->blockSignals(true);
+
+        strokeRSpinBox->setValue(strokeColor_.red());
+        strokeGSpinBox->setValue(strokeColor_.green());
+        strokeBSpinBox->setValue(strokeColor_.blue());
+        strokeAlphaSpinBox->setValue(strokeColor_.alpha());
+        strokeHexSpinBox->setValue(QString("%1%2%3%4")
+            .arg(strokeColor_.red(),   2, 16, QChar('0'))
+            .arg(strokeColor_.green(), 2, 16, QChar('0'))
+            .arg(strokeColor_.blue(),  2, 16, QChar('0'))
+            .arg(strokeColor_.alpha(), 2, 16, QChar('0'))
+            .toUpper());
+        strokePreview->setColor(strokeColor_);
+
+        strokeRSpinBox->blockSignals(false);
+        strokeGSpinBox->blockSignals(false);
+        strokeBSpinBox->blockSignals(false);
+        strokeAlphaSpinBox->blockSignals(false);
+        strokeHexSpinBox->blockSignals(false);
+    };
+
+    strokeHexSpinBox->connect(strokeHexSpinBox, &customSpinBox::stringValueChanged, [this, updateStrokeControls](QString value){
+        if(value[0] == '#') value.remove(0, 1);
+        bool ok; int r, g, b, a = strokeColor_.alpha();
+        if(value.length() >= 6){
+            r = value.mid(0,2).toInt(&ok,16); g = value.mid(2,2).toInt(&ok,16); b = value.mid(4,2).toInt(&ok,16);
+            if(value.length() >= 8) a = value.mid(6,2).toInt(&ok,16);
+            strokeColor_ = QColor(r,g,b,a); updateStrokeControls(); update();
+        }
+    });
+    strokeRSpinBox->connect(strokeRSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setRed(v);   updateStrokeControls(); update(); });
+    strokeGSpinBox->connect(strokeGSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setGreen(v); updateStrokeControls(); update(); });
+    strokeBSpinBox->connect(strokeBSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setBlue(v);  updateStrokeControls(); update(); });
+    strokeAlphaSpinBox->connect(strokeAlphaSpinBox,&customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setAlpha(v); updateStrokeControls(); update(); });
+    strokePreview->connect(strokePreview, &ColorSelector::colorSelected, [this, updateStrokeControls](QColor c){ strokeColor_ = c; updateStrokeControls(); update(); });
+
+    strokeEnable->connect(strokeEnable, &QCheckBox::toggled, [this, strokePreview, strokeHexSpinBox, strokeAlphaSpinBox, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox](bool state){
+        stroke_ = state;
+        strokePreview->setDisabled(!state);
+        strokeHexSpinBox->setDisabled(!state);
+        strokeAlphaSpinBox->setDisabled(!state);
+        strokeRSpinBox->setDisabled(!state);
+        strokeGSpinBox->setDisabled(!state);
+        strokeBSpinBox->setDisabled(!state);
+        // if(!state){ strokeColor_ = Qt::transparent; update(); }
+
+        update();
+    });
+
+
+    fillEnable->setChecked(fill_);
+    if(!fill_){
+        fillPreview->setDisabled(!fill_);
+        fillHexSpinBox->setDisabled(!fill_);
+        fillAlphaSpinBox->setDisabled(!fill_);
+        fillRSpinBox->setDisabled(!fill_);
+        fillGSpinBox->setDisabled(!fill_);
+        fillBSpinBox->setDisabled(!fill_);
+    }
+
+    strokeEnable->setChecked(stroke_);
+    if(!stroke_){
+        strokePreview->setDisabled(!stroke_);
+        strokeHexSpinBox->setDisabled(!stroke_);
+        strokeAlphaSpinBox->setDisabled(!stroke_);
+        strokeRSpinBox->setDisabled(!stroke_);
+        strokeGSpinBox->setDisabled(!stroke_);
+        strokeBSpinBox->setDisabled(!stroke_);
+    }
+
+    customSpinBox* strokeWidthSpinBox = new customSpinBox(background, 'W');
+    QLabel* strokeWidthLabel = new QLabel(background);
+    strokeWidthLabel->setText("Stroke width");
+    strokeWidthLabel->setMinimumWidth(20);
+    strokeWidthSpinBox->setValue(strokeWidth_);
+
+    QHBoxLayout* strokeWidthLayout = new QHBoxLayout();
+
+    VLayout->addSpacing(10);
+    VLayout->addLayout(strokeWidthLayout);
+    strokeWidthLayout->addWidget(strokeWidthLabel, 1);
+    strokeWidthLayout->addWidget(strokeWidthSpinBox, 2);
+
+    strokeWidthSpinBox->connect(strokeWidthSpinBox, &customSpinBox::valueChanged, [this](qreal value){
+        strokeWidth_ = value;
+        update();
+    });
 
     return background;
 }
@@ -891,7 +1152,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
     
     // Fill
-    if (!inPathDrawingMode_) {
+    if (!inPathDrawingMode_ && fill_) {
         painter->fillPath(path, QBrush(fillColor_));
     }
     else{
@@ -899,10 +1160,13 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     }
     
     // Stroke
-    if(!inPathDrawingMode_){
+    if(!inPathDrawingMode_ && stroke_){
         painter->setPen(QPen(strokeColor_, strokeWidth_));
     }
-    else{
+    else if(!inPathDrawingMode_ && !stroke_){
+        painter->setPen(QPen(Qt::NoPen));
+    }
+    else if(inPathDrawingMode_){
         painter->setPen(QPen(QColor("#4C7FD1"), 1));
     }
     painter->drawPath(path);
@@ -1230,10 +1494,15 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state)
             selectedPath_->setSelected(false);
             selectedPath_->update();
         }
+
+        if(selectedPath_ != newSelectedPath){
+            emit objectSelected(newSelectedPath);
+        }
+
         selectedPath_ = newSelectedPath;
         selectedPath_->setSelected(true);
         selectedPath_->update();
-        emit objectSelected(selectedPath_);
+        
     }
 }
 
@@ -1534,6 +1803,12 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             qreal startAngle = std::atan2(startVector.y(), startVector.x());
             qreal endAngle = std::atan2(endVector.y(), endVector.x());
             qreal angleDifference = (endAngle - startAngle) * 180.0 / M_PI;
+
+            if (angleDifference > 180)  angleDifference -= 360;
+            if (angleDifference < -180) angleDifference += 360;
+
+            // selectedPath_->rotation_ += angleDifference;
+
             selectedPath_->rotate(angleDifference);
             selectedPath_->update();
 

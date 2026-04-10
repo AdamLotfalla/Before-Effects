@@ -11,6 +11,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets Svg)
 
 qt_standard_project_setup()
 
+add_subdirectory(external/Qt-Color-Widgets)
+
 qt_add_executable(Before_Effects
     main.cpp
     mainwindow.cpp
@@ -23,10 +25,13 @@ qt_add_executable(Before_Effects
     viewPort.cpp
 )
 
+
 target_link_libraries(Before_Effects PRIVATE Qt${QT_VERSION_MAJOR}::Widgets 
+    PUBLIC
     Qt6::Widgets
     Qt6::Core
     Qt6::Svg
+    QtColorWidgets
 )
 
 set_target_properties(Before_Effects PROPERTIES

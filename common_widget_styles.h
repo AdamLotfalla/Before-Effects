@@ -103,4 +103,52 @@ inline QString spinBoxStyle =
     "    background-color: rgba(255, 255, 255, 0.05);"
     "}";
 
+
+// inline QString checkBoxStyle =
+//     // "QCheckBox::indicator:checked {"
+//     // "    background-color: #7BC7B0;"
+//     // "    border-color: #7BC7B0;"
+//     // "}"
+//     "QCheckBox::indicator:checked {"
+//     // "   background-color: blue;"
+//     "   image: url(:/images/checkbox_checked.png);"
+//     "}";
+
+inline QString enabledLineEditStyle = 
+    "QLineEdit {"
+    "    background-color: transparent;"
+    "    border: none;"
+    "    color: #FFFFFF;"
+    "    padding: 0px;"
+    "    margin: 0px;"
+    "    selection-background-color: #7BC7B0;"
+    "    selection-color: #000000;"
+    "}"
+    "QLineEdit:focus {"
+    "    border: none;"
+    "    background-color: rgba(123, 199, 176, 0.1);"
+    "}"
+    "QLineEdit:hover {"
+    "    background-color: rgba(255, 255, 255, 0.05);"
+    "}";
+
+
+inline QString disabledLineEditStyle = 
+    "QLineEdit {"
+    "    background-color: transparent;"
+    "    border: none;"
+    "    color: #9c9c9c;"
+    "    padding: 0px;"
+    "    margin: 0px;"
+    "    selection-background-color: #7BC7B0;"
+    "    selection-color: #000000;"
+    "}"
+    "QLineEdit:focus {"
+    "    border: none;"
+    "    background-color: rgba(123, 199, 176, 0.1);"
+    "}"
+    "QLineEdit:hover {"
+    "    background-color: rgba(255, 255, 255, 0.05);"
+    "}";
+
 #endif

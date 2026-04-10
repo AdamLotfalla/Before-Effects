@@ -8,6 +8,7 @@
 #include <QPalette>
 #include <QSplitter>
 #include <QTimer>
+#include <QApplication>
 #include "viewPort.h"
 #include "timeline.h"
 

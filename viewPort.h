@@ -11,16 +11,13 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QCheckBox>
+#include <QtColorWidgets/color_2d_slider.hpp>
+#include <QtColorWidgets/ColorPreview>
+#include <QtColorWidgets/ColorSelector>
 #include "common_widget_styles.h"
 
-#define UMask 0b10000000
-#define RMask 0b01000000
-#define DMask 0b00100000
-#define LMask 0b00010000
-#define ULMask 0b10010000
-#define URMask 0b11000000
-#define DRMask 0b01100000
-#define DLMask 0b00110000
+using namespace color_widgets;
 
 class AttributePanel{
     public:
@@ -113,8 +110,10 @@ class path : public QGraphicsItem, public AttributePanel{
     qreal scaleX_ = 1, scaleY_ = 1;
     QPointF pivotPoint_ = QPointF(0,0);
     int strokeWidth_ = 2.0; 
-    QColor strokeColor_ = Qt::blue;
-    QColor fillColor_ = Qt::red;
+    QColor strokeColor_ = QColor("#D1495B");
+    QColor fillColor_ = QColor("#EDAE49");
+    bool fill_ = true;
+    bool stroke_ = true;
 
     
     QRectF ULHandle, DLHandle, URHandle, DRHandle; //corner scale
@@ -259,11 +258,14 @@ class customSpinBox: public QWidget{
         bool keyFramed = false;
         double value_ = 0.0;
         unsigned int precision_ = 0;
+        bool stringInput = false;
+        QString stringValue = "";
+        
+        qreal maximum_ = +5000.0;
+        qreal minimum_ = -5000.0;
         
         QRect rhombusBox;
         QLineEdit* textEdit_;
-
-        
 
         void paintEvent(QPaintEvent* event) override {
             QPainter painter(this);
@@ -318,19 +320,26 @@ class customSpinBox: public QWidget{
             painter.setPen(QPen("#7BC7B0"));
             painter.drawText(0,0, symbolWidth_, height_, Qt::AlignHCenter | Qt::AlignVCenter, QString(symbol_));
 
-            // value_ = (textEdit_->text()).toDouble();
-            textEdit_->setGeometry(symbolWidth_, 0, this->width() - 2.0 * symbolWidth_, height_);
+            if(!isEnabled()){
+                painter.setCompositionMode(QPainter::CompositionMode_Darken);
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(QBrush(QColor("#1E1E1E")));
+                painter.setOpacity(0.5);
+                painter.drawRect(0,0, this->width(), this->height());
 
-            
-            // painter.setPen(QPen("#FFFFFF"));
-            // painter.drawText(symbolWidth_,0, this->width() - 2.0 * symbolWidth_, height_, Qt::AlignVCenter, QString::number(value_, 'f', precision_));
-
+                textEdit_->setStyleSheet(disabledLineEditStyle);
+            }
+            else{
+                textEdit_->setStyleSheet(enabledLineEditStyle);
+            }
         }
 
-        void mouseReleaseEvent(QMouseEvent* event){
-            if(event->button() == Qt::LeftButton){
-                emit onMouseClick(event->position());
-            }
+
+        void resizeEvent(QResizeEvent*) override
+        {
+            textEdit_->setGeometry(symbolWidth_, 0,
+                                   width() - 2*symbolWidth_,
+                                   height_);
         }
     
         public:
@@ -347,17 +356,42 @@ class customSpinBox: public QWidget{
         void setValue(qreal value){
             value_ = value;
             textEdit_->setText(QString::number(value_, 'f', precision_));
-            emit valueChanged(value);
+            // emit valueChanged(value);
             update();
+        }
+
+        void setValue(QString value){
+            stringValue = value;
+            textEdit_->setText(value);
+            update();
+        }
+
+        void setMaximum(qreal value){
+            maximum_ = value;
+            delete textEdit_->validator();
+            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
+        }
+
+        void setMinimum(qreal value){
+            minimum_ = value;
+            delete textEdit_->validator();
+            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
         }
 
         void setPrecision(unsigned int value){
             precision_ = value;
 
             delete textEdit_->validator();
-            textEdit_->setValidator(new QDoubleValidator(-5000.0, 5000.0, precision_, this));
+            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
 
-            textEdit_->update();
+            textEdit_->setText(QString::number(value_, 'f', precision_)); // reformat
+        }
+
+        void setStringInput(bool state){
+            if(state){
+                stringInput = state;
+                textEdit_->setValidator(new QRegularExpressionValidator(QRegularExpression("#??[0-9a-fA-F]{6}?[0-9a-fA-F]{,2}?")));
+            }
         }
         
         customSpinBox(QWidget* parent, char symbol): QWidget(parent){
@@ -365,20 +399,32 @@ class customSpinBox: public QWidget{
             this->setFixedHeight(height_);
             this->setMinimumWidth(50);
             this->setAutoFillBackground(false);
-            this->connect(this, &onMouseClick, this, &onClick);
+            this->connect(this, &customSpinBox::onMouseClick, this, &customSpinBox::onClick);
 
             
             textEdit_ = new QLineEdit(QString::number(value_, 'f', precision_), this);
             textEdit_->setAlignment(Qt::AlignVCenter);
             textEdit_->setAutoFillBackground(false);
-            textEdit_->setValidator(new QDoubleValidator(-5000.0, 5000.0, precision_, this));
+            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
             textEdit_->setGeometry(symbolWidth_, 0, this->width() - 2.0 * symbolWidth_, height_);
             textEdit_->setStyleSheet(spinBoxStyle);
 
-            connect(textEdit_, &QLineEdit::textChanged, this, &customSpinBox::onTextChanged);
+
+            // connect(textEdit_, &QLineEdit::textChanged, this, &customSpinBox::onTextChanged);
             connect(textEdit_, &QLineEdit::editingFinished, this, &customSpinBox::onEditingFinished);
             textEdit_->update();
         }
+
+        void mousePressEvent(QMouseEvent* event) override {
+            emit onMouseClick(event->pos());
+        }
+
+        void setDisabled(bool state){
+            textEdit_->setDisabled(state);
+            QWidget::setDisabled(state);
+            update();
+        }
+        
 
         private slots:
 
@@ -398,12 +444,27 @@ class customSpinBox: public QWidget{
             }
         }
 
-        void onEditingFinished() {
+        void onEditingFinished()
+        {
+            if(stringInput){
+                stringValue = textEdit_->text();
+                emit stringValueChanged(stringValue);
+                return;
+            }
+
+            bool ok;
+            double newValue = textEdit_->text().toDouble(&ok);
+        
+            if (ok) {
+                value_ = newValue;
+                emit valueChanged(value_);
+            }
+        
             textEdit_->setText(QString::number(value_, 'f', precision_));
-            textEdit_->clearFocus();
         }
 
         signals:
         void onMouseClick(QPointF position);
         void valueChanged(qreal newValue);
+        void stringValueChanged(QString newValue);
     };
