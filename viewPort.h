@@ -202,7 +202,7 @@ class viewPort : public QGraphicsView{
     void enableNodeTool(bool state);
     void enableBezierTool(bool state);
 
-    void setSelectedPath(path* newSelectedPath = nullptr, bool state = true);
+    void setSelectedPath(path* newSelectedPath = nullptr, bool state = true, bool hideAttributePanel = false);
     void setPathEditingMode(bool state);
 
     

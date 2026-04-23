@@ -1664,7 +1664,7 @@ void viewPort::enableBezierTool(bool state)
     }
 }
 
-void viewPort::setSelectedPath(path* newSelectedPath, bool state)
+void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttributePanel)
 {
     if (!state) {
         if (selectedPath_ != nullptr) {
@@ -1682,7 +1682,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state)
             selectedPath_->update();
         }
 
-        if(selectedPath_ != newSelectedPath){
+        if(selectedPath_ != newSelectedPath && !hideAttributePanel){
             emit objectSelected(newSelectedPath);
         }
 
@@ -1724,15 +1724,13 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         path* currentPath;
 
         if(!startedNewPath_){
-            if(!objects_.empty()){
-                setSelectedPath(objects_.back(), false);
-            }
             startedNewPath_ = true;
             currentPath = new path(canvasLocalPos, canvas_, &inPathEditingMode_);
             currentPath->setDrawingMode(true);
-            setSelectedPath(currentPath);
+            setSelectedPath(currentPath, true, true);
             
             objects_.push_back(currentPath);
+            return; //early return when having just one node
         }
         else{
             currentPath = objects_.back();
@@ -1756,6 +1754,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
 
                 currentPath->calculateBoundaries();
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
+                emit objectSelected(currentPath);
             }
             else{
                 currentPath->addPoint(pointToAdd);

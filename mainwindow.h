@@ -78,6 +78,9 @@ private:
     void nodeTool(bool checked);
     void bezierTool(bool checked);
 
+    QWidget* templateAttributeWidget_ = nullptr;
+    void preCreateAttributeWidgets();
+
 private slots:
     void startTimer(bool playing);
 };

@@ -5,6 +5,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    preCreateAttributeWidgets();
 
     QString theme = "Dark";
     QWidget* centralWidget = new QWidget(this);
@@ -134,6 +135,14 @@ void MainWindow::bezierTool(bool checked)
     
     
     ViewPort_->setPathEditingMode(checked);
+}
+
+void MainWindow::preCreateAttributeWidgets()
+{
+    path* tempPath = new path(QPointF(0, 0), nullptr, nullptr);
+    templateAttributeWidget_ = tempPath->createAttributeWidget(nullptr);
+    templateAttributeWidget_->hide();
+    delete tempPath;
 }
 
 void MainWindow::selectionTool(bool checked)
