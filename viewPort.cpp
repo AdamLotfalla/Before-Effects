@@ -365,6 +365,17 @@ int path::nodesHighlighted()
     return highlightedNodes_.size();
 }
 
+bool path::getHandleExistance(int index, short int handleIndex)
+{
+    if(handleIndex == 0){
+        return actualNodes_[index]->H1 != nullptr;
+    }
+    else if(handleIndex == 1){
+        return actualNodes_[index]->H2 != nullptr;
+    }
+    return false;
+}
+
 bool path::isHighlighted(int index)
 {
     return actualNodes_[index]->isHighlighted();
@@ -444,6 +455,34 @@ void path::setNodePosition(QPointF newPos, int index)
     if(actualNodes_[index]->H2) actualNodes_[index]->H2->position_ += offset;
 
     calculateBoundaries();
+}
+
+QPointF path::getHandlePosition(int index, short int HandleIndex)
+{
+    if(HandleIndex == 0){
+        return actualNodes_[index]->H1->position_;
+    }
+    else if(HandleIndex == 1){
+        return actualNodes_[index]->H2->position_;
+    }
+
+    return QPointF(0,0);
+}
+
+void path::setHandlePosition(QPointF newPosition, int index, short int HandleIndex)
+{
+    if(HandleIndex == 0){
+        actualNodes_[index]->H1->position_ = newPosition;
+        if(actualNodes_[index]->mode == handleMode::symmetric){
+            actualNodes_[index]->H2->position_ = 2.0 * actualNodes_[index]->position_ - newPosition;
+        }
+    }
+    else if(HandleIndex == 1){
+        actualNodes_[index]->H2->position_ = newPosition;
+        if(actualNodes_[index]->mode == handleMode::symmetric){
+            actualNodes_[index]->H1->position_ = 2.0 * actualNodes_[index]->position_ - newPosition;
+        }
+    }
 }
 
 void path::setSnapping(bool state)
@@ -1831,6 +1870,25 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 }
                 clickedOnNode = true;
             }
+            else if(selectedPath_->getHandleExistance(i, 0) && searchRect.contains(canvas_->mapToScene(selectedPath_->getHandlePosition(i, 0)))){
+                selectedPath_->clearHighlightedNodes();
+                selectedPath_->addHighlightedNode(i);
+                selectedPath_->selectedHandle_ = 0;
+                clickedOnNode = true;
+                holdStartPosition_ = canvasLocalPos;
+                holding_ = true;
+                break;
+            }
+            else if(selectedPath_->getHandleExistance(i, 1) && searchRect.contains(canvas_->mapToScene(selectedPath_->getHandlePosition(i, 1)))){
+                selectedPath_->clearHighlightedNodes();
+                selectedPath_->addHighlightedNode(i);
+                selectedPath_->selectedHandle_ = 1;
+                clickedOnNode = true;
+                holdStartPosition_ = canvasLocalPos;
+                holding_ = true;
+                break;
+            }
+            
         }
         selectedPath_->update();
 
@@ -1990,7 +2048,13 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 newPos.setX(newPos.x()/selectedPath_->scaleX_ - 1.0/selectedPath_->scaleX_ * (selectedPath_->position_.x() + selectedPath_->pivotPoint_.x()) * (1-selectedPath_->scaleX_));
                 newPos.setY(newPos.y()/selectedPath_->scaleY_ - 1.0/selectedPath_->scaleY_ * (selectedPath_->position_.y() + selectedPath_->pivotPoint_.y()) * (1-selectedPath_->scaleY_));
 
-                selectedPath_->setNodePosition(newPos, selectedPath_->accessHighlightedVector(i));
+                if(selectedPath_->selectedHandle_ == -1)
+                    selectedPath_->setNodePosition(newPos, selectedPath_->accessHighlightedVector(i));
+                else if(selectedPath_->selectedHandle_ == 0)
+                    selectedPath_->setHandlePosition(newPos, selectedPath_->accessHighlightedVector(i), 0);
+                else if(selectedPath_->selectedHandle_ == 1)
+                    selectedPath_->setHandlePosition(newPos, selectedPath_->accessHighlightedVector(i), 1);
+                
             }
 
             selectedPath_->makeDirty();
@@ -2082,6 +2146,7 @@ void viewPort::mouseReleaseEvent(QMouseEvent *event)
     offset_ = QPointF(0,0);    
     holding_ = false;
     if(selectedPath_){
+        selectedPath_->selectedHandle_ = -1;
         selectedPath_->update();
     }
 }

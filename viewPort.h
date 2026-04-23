@@ -19,8 +19,8 @@
 #include "common_widget_styles.h"
 
 enum class handleMode{
-    linear,   //rhombus(L)
     smooth,   //circle(M)
+    linear,   //rhombus(L)
     symmetric //square(S)
 };
 
@@ -91,9 +91,11 @@ class path : public QGraphicsItem, public AttributePanel{
     void addHighlightedNode(int index);
     void removeHighlightedNode(int index);
     void clearHighlightedNodes();
-    int nodesHighlighted(); //return size; 0 in case of empty
     bool isHighlighted(int index);
     int accessHighlightedVector(int index);
+    int nodesHighlighted(); //return size; 0 in case of empty
+    short int selectedHandle_ = -1; // -1 for none, 0 for H1, 1 for H2 
+    bool getHandleExistance(int index, short int handleIndex);
     
     void rotate(float angle);
     void setRotation(float angle);
@@ -107,6 +109,8 @@ class path : public QGraphicsItem, public AttributePanel{
     void setPosition(qreal x, qreal y);
     void moveNode(QPointF offset, int index);
     void setNodePosition(QPointF newPos, int index);
+    QPointF getHandlePosition(int index, short int HandleIndex /*0 for H1, 1 for H2*/);
+    void setHandlePosition(QPointF newPosition, int index, short int HandleIndex /*0 for H1, 1 for H2*/);
     void moveBezierHandle(QPointF newPosition, int index, int handleIndex);
     void addPoint(QPointF point);
     void addEdge(int start, int end);
