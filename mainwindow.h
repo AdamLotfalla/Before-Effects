@@ -22,6 +22,7 @@ class AttributePanelWidget : public QWidget {
     Q_OBJECT
     QVBoxLayout* layout_;
     QWidget* currentWidget_ = nullptr;
+    AttributePanel* currentObject_ = nullptr;
 
 public:
     AttributePanelWidget(QWidget* parent = nullptr) : QWidget(parent) {
@@ -31,6 +32,13 @@ public:
 
 public slots:
     void showObject(AttributePanel* obj) {
+
+        if (currentObject_ == obj) {
+            return;
+        }
+
+        currentObject_ = obj;
+
         if (currentWidget_) {
             layout_->removeWidget(currentWidget_);
             delete currentWidget_;

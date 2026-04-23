@@ -15,7 +15,14 @@
 #include <QtColorWidgets/color_2d_slider.hpp>
 #include <QtColorWidgets/ColorPreview>
 #include <QtColorWidgets/ColorSelector>
+#include <QToolButton>
 #include "common_widget_styles.h"
+
+enum class handleMode{
+    linear,   //rhombus(L)
+    smooth,   //circle(M)
+    symmetric //square(S)
+};
 
 using namespace color_widgets;
 
@@ -36,7 +43,8 @@ class node{
     bool isHighlighted();
     node (QPointF position);
     QPointF position_;
-    char mode = 'L'; // L: linear (rhombus), M: smooth (circle),  S: symmetric (square)
+
+    handleMode mode = handleMode::linear; 
 
     bezierHandle* H1;
     bezierHandle* H2;
@@ -59,11 +67,13 @@ class path : public QGraphicsItem, public AttributePanel{
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
     void calculateBoundaries();
+    void makeDirty();
 
     QWidget* createAttributeWidget(QWidget* parent) override;
 
 
-    QPointF getPoint(int index);
+    QPointF getActualPoint(int index);
+    QPointF getDrawnPoint(int index);
     int getLastNodeIndex();
     int getNodeCount();
     
@@ -72,7 +82,8 @@ class path : public QGraphicsItem, public AttributePanel{
 
     void showSnapMargin(bool state);
     void setSnapping(bool state);
-    void changeNodeMode(char newMode, int index);
+    void changeNodeMode(handleMode newMode, int index);
+    void incrementNodeMode(int index);
     
     
     void setDrawingMode(bool state);
@@ -95,6 +106,7 @@ class path : public QGraphicsItem, public AttributePanel{
     void setPosition(QPointF newPos);
     void setPosition(qreal x, qreal y);
     void moveNode(QPointF offset, int index);
+    void setNodePosition(QPointF newPos, int index);
     void moveBezierHandle(QPointF newPosition, int index, int handleIndex);
     void addPoint(QPointF point);
     void addEdge(int start, int end);
@@ -114,6 +126,7 @@ class path : public QGraphicsItem, public AttributePanel{
     QColor fillColor_ = QColor("#EDAE49");
     bool fill_ = true;
     bool stroke_ = true;
+    Qt::PenJoinStyle pathJointStyle = Qt::MiterJoin;
 
     
     QRectF ULHandle, DLHandle, URHandle, DRHandle; //corner scale
@@ -133,13 +146,28 @@ class path : public QGraphicsItem, public AttributePanel{
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
         
-        
+    //optimization
+    QWidget* cachedAttributeWidget_ = nullptr;
+    bool needTransformUpdate_ = true;
+    void updateTransformedNodes();
+
     //using name convention: point = position; node = object that has more than position
     QVector<node*> actualNodes_;
     std::vector<node*> drawnNodes_;
     QVector<int> highlightedNodes_;
     QVector<QVector<int>> edges_;
     QPointF previewPoint_;
+
+    //svgs for handles
+    static QSvgRenderer PDiagonalArrow;
+    static QSvgRenderer NDiagonalArrow;
+    static QSvgRenderer UDArrow;
+    static QSvgRenderer LRArrow;
+    static QSvgRenderer URRotationArrow;
+    static QSvgRenderer ULRotationArrow;
+    static QSvgRenderer DRRotationArrow;
+    static QSvgRenderer DLRotationArrow;
+    static QSvgRenderer PivotMark;
 
     //visuals 
     const int handleD_ = 10;
@@ -154,7 +182,7 @@ class path : public QGraphicsItem, public AttributePanel{
     bool *inPathEditingMode_;
     bool inPathDrawingMode_;
     bool inRotationMode_ = false;
-    bool firstPointHighlighted_ = false;
+    bool firstNodeHighlighted_ = false;
     bool hasDrawingPreview_ = false;
 
     //signal
@@ -205,7 +233,8 @@ class viewPort : public QGraphicsView{
     bool startedNewPath_ = false;
     
     bool holding_ = false;
-    bool shifting_ = false;
+    bool shiftPressed_ = false;
+    bool controlPressed_ = false;
     bool panning_ = false;
     bool scaling_ = false;
     bool rotating_ = false;

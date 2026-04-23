@@ -1,6 +1,17 @@
 #include "viewPort.h"
 #include <QDebug>
 
+QSvgRenderer path::PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
+QSvgRenderer path::NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
+QSvgRenderer path::UDArrow(QString(":/Handles/icons/UDArrows.svg"));
+QSvgRenderer path::LRArrow(QString(":/Handles/icons/LRArrows.svg"));
+QSvgRenderer path::URRotationArrow(QString(":/Handles/icons/URcornerArrow.svg"));
+QSvgRenderer path::ULRotationArrow(QString(":/Handles/icons/ULcornerArrow.svg"));
+QSvgRenderer path::DRRotationArrow(QString(":/Handles/icons/DRcornerArrow.svg"));
+QSvgRenderer path::DLRotationArrow(QString(":/Handles/icons/DLcornerArrow.svg"));
+QSvgRenderer path::PivotMark(QString(":/Handles/icons/PivotMark.svg"));
+
+
 bezierHandle::bezierHandle(QPointF position)
 {
     position_ = position;
@@ -85,6 +96,7 @@ QRectF path::boundingRect() const
 void path::addPoint(QPointF point)
 {
     prepareGeometryChange();
+    needTransformUpdate_ = true;
     node* newNode = new node(point);
     actualNodes_.push_back(newNode);
 
@@ -100,14 +112,20 @@ void path::addEdge(int start, int end)
     edges_[start].push_back(end);
 }
 
-QPointF path::getPoint(int index)
+QPointF path::getActualPoint(int index)
 {
     return actualNodes_[index]->position_;
 }
 
+QPointF path::getDrawnPoint(int index)
+{
+    updateTransformedNodes();
+    return drawnNodes_[index]->position_;
+}
+
 void path::showSnapMargin(bool state)
 {
-    firstPointHighlighted_ = state;
+    firstNodeHighlighted_ = state;
 }
 
 void path::setPreviewPoint(QPointF point) {
@@ -131,20 +149,32 @@ int path::getNodeCount()
     return actualNodes_.size();
 }
 
-void path::changeNodeMode(char newMode, int index)
+void path::changeNodeMode(handleMode newMode, int index)
 {
+    needTransformUpdate_ = true;
     actualNodes_[index]->mode = newMode;
+    if(newMode == handleMode::smooth || newMode == handleMode::symmetric){
+        if(!actualNodes_[index]->H1) actualNodes_[index]->H1 = new bezierHandle(getActualPoint(index) - QPointF(10,10));
+        if(!actualNodes_[index]->H2) actualNodes_[index]->H2 = new bezierHandle(getActualPoint(index) + QPointF(10,10));
+    }
+}
+
+void path::incrementNodeMode(int index)
+{
+    actualNodes_[index]->mode = static_cast<handleMode>((static_cast<int>(actualNodes_[index]->mode) + 1) % 3);
+    updateTransformedNodes();
 }
 
 void path::moveBezierHandle(QPointF newPosition, int index, int handleIndex)
 {
+    needTransformUpdate_ = true;
     node* currentNode = actualNodes_[index];
 
-    if (currentNode->H1 == nullptr){
+    if (currentNode->H1 == nullptr && handleIndex == 1){
         currentNode->H1 = new bezierHandle(currentNode->position_ - (newPosition - currentNode->position_));
     }
 
-    if(currentNode->H2 == nullptr){
+    if(currentNode->H2 == nullptr && handleIndex == 2){
         currentNode->H2 = new bezierHandle(newPosition);
     }
     
@@ -153,13 +183,13 @@ void path::moveBezierHandle(QPointF newPosition, int index, int handleIndex)
     {
     case 1:
         currentNode->H1->position_ = newPosition;
-        if(currentNode->mode == 'S'){
+        if(currentNode->mode == handleMode::symmetric){
             currentNode->H2->position_ = currentNode->position_ - (newPosition - currentNode->position_);
         }
         break;
     case 2:
         currentNode->H2->position_ = newPosition;
-        if(currentNode->mode == 'S'){
+        if(currentNode->mode == handleMode::symmetric){
             currentNode->H1->position_ = currentNode->position_ - (newPosition - currentNode->position_);
         }
         break;
@@ -210,6 +240,7 @@ QPointF path::mapToItemRotation(const QPointF &point) const
 void path::rotate(float angle)
 {
     prepareGeometryChange();
+    needTransformUpdate_ = true;
     rotation_ += angle;
 
     if(onRotationChanged)
@@ -234,10 +265,7 @@ void path::setRotation(float angle)
 QPointF path::mapToItemRotation(const QPointF& point, const bool reverse) const {
     if (qFuzzyCompare(rotation_, 0.0f)) return point;
     
-    QPointF center = QPointF(
-        (minX_ + maxX_) * 0.5,
-        (minY_ + maxY_) * 0.5
-    );
+    QPointF center = position_ + pivotPoint_;
     
     // Translate to origin
     QPointF translated = point - center;
@@ -267,6 +295,7 @@ void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error,
                    bool flipX, bool flipY)
 {
     prepareGeometryChange();
+    needTransformUpdate_ = true;
 
     qreal xRotatedCenterD = yCenterD * sin(rotation_ * M_PI / 180.0) + xCenterD * cos(rotation_ * M_PI / 180.0);
     qreal yRotatedCenterD = yCenterD * cos(rotation_ * M_PI / 180.0) - xCenterD * sin(rotation_ * M_PI / 180.0);
@@ -309,6 +338,7 @@ void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error,
 void path::setScale(qreal newScaleX, qreal newScaleY)
 {
     prepareGeometryChange();
+    needTransformUpdate_ = true;
     scaleX_ = newScaleX;
     scaleY_ = newScaleY;
 
@@ -358,6 +388,7 @@ void path::clearHighlightedNodes()
 void path::movePath(QPointF offset)
 {
     prepareGeometryChange(); // Notify Qt BEFORE changing data
+    needTransformUpdate_ = true;
     
     for(int i = 0; i < actualNodes_.size(); i++){
         actualNodes_[i]->position_ += offset;
@@ -391,7 +422,24 @@ void path::setPosition(qreal x, qreal y)
 void path::moveNode(QPointF offset, int index)
 {
     prepareGeometryChange();
+    needTransformUpdate_ = true;
+
     actualNodes_[index]->position_ += (offset);
+    if(actualNodes_[index]->H1) actualNodes_[index]->H1->position_ += offset;
+    if(actualNodes_[index]->H2) actualNodes_[index]->H2->position_ += offset;
+
+    calculateBoundaries();
+}
+
+void path::setNodePosition(QPointF newPos, int index)
+{
+    prepareGeometryChange();
+    needTransformUpdate_ = true;
+
+    QPointF oldPos = actualNodes_[index]->position_;
+    actualNodes_[index]->position_ = newPos;
+
+    QPointF offset = newPos - oldPos;
     if(actualNodes_[index]->H1) actualNodes_[index]->H1->position_ += offset;
     if(actualNodes_[index]->H2) actualNodes_[index]->H2->position_ += offset;
 
@@ -441,21 +489,21 @@ QPainterPath path::shape() const
             QPointF P0 = transformPoint(actualNodes_[i]->position_);
             QPointF P3 = transformPoint(actualNodes_[j]->position_);
 
-            char startMode = actualNodes_[i]->mode;
-            char endMode = actualNodes_[j]->mode;
+            handleMode startMode = actualNodes_[i]->mode;
+            handleMode endMode = actualNodes_[j]->mode;
 
-            if ((endMode == 'S' || endMode == 'M') && startMode == 'L')
+            if ((endMode == handleMode::symmetric || endMode == handleMode::smooth) && startMode == handleMode::linear)
             {
                 QPointF P1 = transformPoint(actualNodes_[j]->H1->position_);
                 p.quadTo(P1, P3);
             }
-            else if ((endMode == 'S' || endMode == 'M') && (startMode == 'S' || startMode == 'M'))
+            else if ((endMode == handleMode::symmetric || endMode == handleMode::smooth) && (startMode == handleMode::symmetric || startMode == handleMode::smooth))
             {
                 QPointF P1 = transformPoint(actualNodes_[i]->H2->position_);
                 QPointF P2 = transformPoint(actualNodes_[j]->H1->position_);
                 p.cubicTo(P1, P2, P3);
             }
-            else if (endMode == 'L' && (startMode == 'S' || startMode == 'M'))
+            else if (endMode == handleMode::linear && (startMode == handleMode::symmetric || startMode == handleMode::smooth))
             {
                 QPointF P1 = transformPoint(actualNodes_[i]->H2->position_);
                 p.quadTo(P1, P3);
@@ -468,6 +516,84 @@ QPainterPath path::shape() const
     }
 
     return p;
+}
+
+void path::updateTransformedNodes()
+{
+    if (!needTransformUpdate_) return;
+    
+    for (node* n : drawnNodes_)
+        delete n;
+    drawnNodes_.clear();
+
+    
+    QPointF globalPivotPoint = position_ + pivotPoint_;
+
+    for(int i = 0; i<actualNodes_.size(); i++){
+
+        //scale
+        QPointF scaledPoint;
+        qreal x = actualNodes_[i]->position_.x();
+        qreal y = actualNodes_[i]->position_.y();
+
+        scaledPoint.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
+        scaledPoint.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
+
+        //rotation
+        QPointF rotatedPoint;
+        x = scaledPoint.x();
+        y = scaledPoint.y();
+
+        float theta_rad = rotation_ * M_PI / 180.0;
+
+        rotatedPoint.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
+        rotatedPoint.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
+
+        node* transformedNode = new node(rotatedPoint);
+        if(actualNodes_[i]->H1){
+            QPointF H1_pos = actualNodes_[i]->H1->position_;
+            x = H1_pos.x();
+            y = H1_pos.y();
+            
+            //scale
+            H1_pos.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
+            H1_pos.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
+            
+            x = H1_pos.x();
+            y = H1_pos.y();
+
+            //rotation
+            H1_pos.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
+            H1_pos.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
+
+            transformedNode->H1 = new bezierHandle(H1_pos);
+        }
+
+        if(actualNodes_[i]->H2){
+            QPointF H2_pos = actualNodes_[i]->H2->position_;
+            x = H2_pos.x();
+            y = H2_pos.y();
+            
+            //scale
+            H2_pos.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
+            H2_pos.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
+            
+            x = H2_pos.x();
+            y = H2_pos.y();
+
+            //rotation
+            H2_pos.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
+            H2_pos.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
+
+            transformedNode->H2 = new bezierHandle(H2_pos);
+        }
+        
+        transformedNode->mode = actualNodes_[i]->mode;
+
+        drawnNodes_.push_back(transformedNode);
+    }
+
+    needTransformUpdate_ = false;
 }
 
 void path::calculateBoundaries()
@@ -492,73 +618,99 @@ void path::calculateBoundaries()
     };
 
     for (int i = 0; i < actualNodes_.size(); i++){
-        // int nextNodeIndex = (i+1) % getNodeCount();
+
+        QPointF P0 = scalePoint(actualNodes_[i]->position_), P1;
+
+        //quadratic
+        //B(t) = (1-t)^2 P0 + 2(1-t)t P1 + t^2 P2
+        //B'(0) = -2P0 + 2P1
+        //B'(1) = -2P1 + 2P2
+        //stationary point when t = (p0 - p1)/(p0 - 2p1 + p2)
+
+        //cubic
+        //B(t) = (1-t)^3 P0 + 3t(1-t)^2 P1 + 3(1-t)t^2 P2 + t^3 P3
+        //B'(0) = -3P0 + 3P1
+        //B'(1) = -3P2 + 3P3
+        // B' = dB/dt
+        // slope: dy/dx = dy/dt ÷ dx/dt
+        // this is the same as the slope equation for the line connecting the point and its control point. depends only on the point (for smooth nodes)
+
+
+        //correction for miter joints with thick stroke: Smooth nodes
+        if(actualNodes_[i]->mode == handleMode::smooth){
+            P1 = scalePoint(actualNodes_[i]->H2->position_);
+
+            qreal initialSlopeAngle = atan2((P0 - scalePoint(actualNodes_[i]->H1->position_)).y(), (P0 - scalePoint(actualNodes_[i]->H1->position_)).x());
+            qreal terminalSlopeAngle = atan2((P1 - P0).y(), (P1 - P0).x());
+
+            if(sin(initialSlopeAngle * 0.5 + terminalSlopeAngle * 0.5) == 0) return; //this will happen if the two lines meet at 180°
+            qreal d = std::min(strokeWidth_ * 0.5 / sin(initialSlopeAngle * 0.5 + terminalSlopeAngle * 0.5), 10.0); //10 is the default miter limit
+
+            qreal theta = (abs(initialSlopeAngle) + abs(terminalSlopeAngle))/2.0 + std::min(initialSlopeAngle, terminalSlopeAngle);
+            QPointF miterPoint = P0 + QPointF(d*cos(theta), d*sin(theta));
+
+            recalculateBoundariesForPoint(miterPoint);
+        }
+
+
         for(int nextNodeIndex : edges_[i]){
 
             qreal x = actualNodes_[i]->position_.x();
             qreal y = actualNodes_[i]->position_.y();
 
 
-
-            QPointF P0 = scalePoint(actualNodes_[i]->position_);
-            QPointF P1,P2;
-            QPointF P3 = scalePoint(actualNodes_[nextNodeIndex]->position_);
+            QPointF P2, P3 = scalePoint(actualNodes_[nextNodeIndex]->position_);
             
             qreal tx,ty;
             qreal stationaryPx, stationaryPy;
             
-            char startMode = actualNodes_[i]->mode;
-            char endMode = actualNodes_[nextNodeIndex]->mode;
+            handleMode startMode = actualNodes_[i]->mode;
+            handleMode endMode = actualNodes_[nextNodeIndex]->mode;
 
-            
-            if((endMode == 'S' || endMode == 'M') && (startMode == 'S' || startMode == 'M')){
+
+            if((endMode == handleMode::symmetric || endMode == handleMode::smooth) && (startMode == handleMode::symmetric || startMode == handleMode::smooth)){
                 P1 = scalePoint(actualNodes_[i]->H2->position_);
                 P2 = scalePoint(actualNodes_[nextNodeIndex]->H1->position_);
 
-                //calculate t using the derivative
+
                 
+                //calculate t using the derivative
                 QPointF a = -3.0 * P0 + 9.0 * P1 - 9.0 * P2 + 3.0 * P3;
                 QPointF b = 6.0 * P0 - 12.0 * P1 + 6.0 * P2;
                 QPointF c = -3.0 * P0 + 3.0 * P1;
                 
-                // if((a.x() > 1e-10 && a.y() > 1e-10)){
-
-                    //first root (positive):
-                    if(b.x() * b.x() - 4.0 * a.x() * c.x() < 0) 
-                        tx = 0;
-                    else
-                        tx = (-1.0 * b.x() + sqrt(pow(b.x(),2) - 4.0 * a.x() * c.x())) / (2.0 * a.x());
-                    if(b.y() * b.y() - 4.0 * a.y() * c.y() < 0)
-                        ty = 0;
-                    else
-                        ty = (-1.0 * b.y() + sqrt(pow(b.y(),2) - 4.0 * a.y() * c.y())) / (2.0 * a.y());
-                    if(tx < 0 || tx > 1) tx=0;
-                    if(ty < 0 || ty > 1) ty=0;
-
-                    stationaryPx = pow(1.0-tx,3) * P0.x() + 3.0 * pow(1.0-tx,2) * tx * P1.x() + 3.0 * (1.0-tx) * pow(tx,2) * P2.x() + pow(tx,3) * P3.x() ;
-                    stationaryPy = pow(1.0-ty,3) * P0.y() + 3.0 * pow(1.0-ty,2) * ty * P1.y() + 3.0 * (1.0-ty) * pow(ty,2) * P2.y() + pow(ty,3) * P3.y() ;
-                    recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
-                    
-                    //second root (negative):
-                    if(b.x() * b.x() - 4.0 * a.x() * c.x() < 0) 
-                        tx = 0;
-                    else
-                        tx = (-1.0 * b.x() - sqrt(pow(b.x(),2) - 4.0 * a.x() * c.x())) / (2.0 * a.x());
-                    if(b.y() * b.y() - 4.0 * a.y() * c.y() < 0)
-                        ty = 0;
-                    else
-                        ty = (-1.0 * b.y() - sqrt(pow(b.y(),2) - 4.0 * a.y() * c.y())) / (2.0 * a.y());
-                    if(tx < 0 || tx > 1) tx=0;
-                    if(ty < 0 || ty > 1) ty=0;
-                    
-                    stationaryPx = pow(1.0-tx,3) * P0.x() + 3.0 * pow(1.0-tx,2) * tx * P1.x() + 3.0 * (1.0-tx) * pow(tx,2) * P2.x() + pow(tx,3) * P3.x() ;
-                    stationaryPy = pow(1.0-ty,3) * P0.y() + 3.0 * pow(1.0-ty,2) * ty * P1.y() + 3.0 * (1.0-ty) * pow(ty,2) * P2.y() + pow(ty,3) * P3.y() ;
-                    recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
-                // }
+                //first root (positive):
+                if(b.x() * b.x() - 4.0 * a.x() * c.x() < 0) 
+                tx = 0;
+                else
+                tx = (-1.0 * b.x() + sqrt(pow(b.x(),2) - 4.0 * a.x() * c.x())) / (2.0 * a.x());
+                if(b.y() * b.y() - 4.0 * a.y() * c.y() < 0)
+                ty = 0;
+                else
+                ty = (-1.0 * b.y() + sqrt(pow(b.y(),2) - 4.0 * a.y() * c.y())) / (2.0 * a.y());
+                if(tx < 0 || tx > 1) tx=0;
+                if(ty < 0 || ty > 1) ty=0;
+                stationaryPx = pow(1.0-tx,3) * P0.x() + 3.0 * pow(1.0-tx,2) * tx * P1.x() + 3.0 * (1.0-tx) * pow(tx,2) * P2.x() + pow(tx,3) * P3.x() ;
+                stationaryPy = pow(1.0-ty,3) * P0.y() + 3.0 * pow(1.0-ty,2) * ty * P1.y() + 3.0 * (1.0-ty) * pow(ty,2) * P2.y() + pow(ty,3) * P3.y() ;
+                recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
+                
+                //second root (negative):
+                if(b.x() * b.x() - 4.0 * a.x() * c.x() < 0) 
+                tx = 0;
+                else
+                tx = (-1.0 * b.x() - sqrt(pow(b.x(),2) - 4.0 * a.x() * c.x())) / (2.0 * a.x());
+                if(b.y() * b.y() - 4.0 * a.y() * c.y() < 0)
+                ty = 0;
+                else
+                ty = (-1.0 * b.y() - sqrt(pow(b.y(),2) - 4.0 * a.y() * c.y())) / (2.0 * a.y());
+                if(tx < 0 || tx > 1) tx=0;
+                if(ty < 0 || ty > 1) ty=0;
+                
+                stationaryPx = pow(1.0-tx,3) * P0.x() + 3.0 * pow(1.0-tx,2) * tx * P1.x() + 3.0 * (1.0-tx) * pow(tx,2) * P2.x() + pow(tx,3) * P3.x() ;
+                stationaryPy = pow(1.0-ty,3) * P0.y() + 3.0 * pow(1.0-ty,2) * ty * P1.y() + 3.0 * (1.0-ty) * pow(ty,2) * P2.y() + pow(ty,3) * P3.y() ;
+                recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
             }
-            //quadratic bezier curve: B(t) = (1-t)^2 P0 + 2(1-t)t P1 + t^2 P2
-            //stationary point when t = (p0 - p1)/(p0 - 2p1 + p2)
-            else if(endMode == 'L' && (startMode == 'S' || startMode == 'M')){
+            else if(endMode == handleMode::linear && (startMode == handleMode::symmetric || startMode == handleMode::smooth)){
                 P1 = scalePoint(actualNodes_[i]->H2->position_);
                 P2 = P3;
 
@@ -574,8 +726,22 @@ void path::calculateBoundaries()
                 stationaryPy = pow(1.0 - ty,2) * P0.y() + 2.0 * (1.0 - ty) * ty * P1.y() + pow(ty,2) * P2.y();
 
                 recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
+
+                //correction for miter joint for the end (linear) node 
+                qreal initialSlopeAngle = atan2((P2-P1).y(), (P2-P1).x());
+                for(int k : edges_[nextNodeIndex]){
+                    qreal terminalSlopeAngle = atan2((P2 - scalePoint(getActualPoint(k))).y(), (P2 - scalePoint(getActualPoint(k))).x());
+
+                    if(sin(initialSlopeAngle * 0.5 + terminalSlopeAngle * 0.5) == 0) return; //this will happen if the two lines meet at 180°
+                    qreal d = std::min(strokeWidth_ * 0.5 / sin(initialSlopeAngle * 0.5 + terminalSlopeAngle * 0.5), 10.0); //10 is the default miter limit
+
+                    qreal theta = (abs(initialSlopeAngle) + abs(terminalSlopeAngle))/2.0 + std::min(initialSlopeAngle, terminalSlopeAngle);
+                    QPointF miterPoint = P0 + QPointF(d*cos(theta), d*sin(theta));
+
+                    recalculateBoundariesForPoint(miterPoint);
+                }
             }
-            else if((endMode == 'S' || endMode == 'M') && startMode == 'L'){
+            else if((endMode == handleMode::symmetric || endMode == handleMode::smooth) && startMode == handleMode::linear){
                 P1 = scalePoint(actualNodes_[nextNodeIndex]->H1->position_);
                 P2 = P3;
 
@@ -591,10 +757,33 @@ void path::calculateBoundaries()
                 stationaryPy = pow(1.0 - ty,2) * P0.y() + 2.0 * (1.0 - ty) * ty * P1.y() + pow(ty,2) * P2.y();
 
                 recalculateBoundariesForPoint(QPointF(stationaryPx, stationaryPy));
+
+
+                //correction for miter joint for the start (linear) node 
+                    //MISSING (I think it is unnecessary because I already implemented it once in the previous if())
+            }
+            else if(endMode == handleMode::linear && startMode == handleMode::linear){
+                //correction for miter joint (linear -- linear)
+                P1 = P3;
+                qreal initialSlopeAngle = atan2((P1 - P0).y(), (P1-P0).x());
+                for(auto k : edges_[nextNodeIndex]){
+                    if(actualNodes_[k]->mode == handleMode::linear){
+                        qreal terminalSlopeAngle = atan2((scalePoint(getActualPoint(k)) - P1).y(),(scalePoint(getActualPoint(k)) - P1).x());
+                        if(sin(initialSlopeAngle * 0.5 + terminalSlopeAngle * 0.5) == 0) return; //this will happen if the two lines meet at 180°
+                        qreal d = std::min(strokeWidth_ * 0.5 / sin(initialSlopeAngle * 0.5 + terminalSlopeAngle * 0.5), 10.0); //10 is the default miter limit
+
+                        qreal theta = (abs(initialSlopeAngle) + abs(terminalSlopeAngle))/2.0 + std::min(initialSlopeAngle, terminalSlopeAngle);
+                        QPointF miterPoint = P0 + QPointF(d*cos(theta), d*sin(theta));
+
+                        recalculateBoundariesForPoint(miterPoint);
+                    }
+                }
             }
         }
 
+
         recalculateBoundariesForPoint(scalePoint(actualNodes_[i]->position_));
+
     }
 
 
@@ -612,8 +801,22 @@ void path::calculateBoundaries()
     }
 }
 
+void path::makeDirty()
+{
+    needTransformUpdate_ = true;
+}
+
 QWidget *path::createAttributeWidget(QWidget *parent)
 {
+    if (cachedAttributeWidget_ && cachedAttributeWidget_->parent() == parent) {
+        return cachedAttributeWidget_;
+    }
+    
+    if (cachedAttributeWidget_) {
+        delete cachedAttributeWidget_;
+        cachedAttributeWidget_ = nullptr;
+    }
+
     QWidget* background = new QWidget(parent);
     QVBoxLayout* VLayout = new QVBoxLayout(background);
     background->setLayout(VLayout);   
@@ -1037,6 +1240,75 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         update();
     });
 
+    QHBoxLayout* jointLayout = new QHBoxLayout();
+    QLabel* JointLabel = new QLabel(background);
+    JointLabel->setText("Joint type");
+
+
+    VLayout->addLayout(jointLayout);
+
+
+    QToolButton* miterJointButton = new QToolButton(background);
+    miterJointButton->setStyleSheet(toolBarButtonStyle);
+    miterJointButton->setIcon(QIcon(":/JointTypes/icons/MiterJoint.svg"));
+    miterJointButton->setIconSize(QSize(25,25));
+    miterJointButton->setFixedSize(QSize(28,28));
+    miterJointButton->setCheckable(true);
+    miterJointButton->setChecked(true);
+    miterJointButton->setToolTip("Miter Joint");
+    
+    
+    QToolButton* bevelJointButton = new QToolButton(background);
+    bevelJointButton->setStyleSheet(toolBarButtonStyle);
+    bevelJointButton->setIcon(QIcon(":/JointTypes/icons/BevelJoint.svg"));
+    bevelJointButton->setIconSize(QSize(25,25));
+    bevelJointButton->setFixedSize(QSize(28,28));
+    bevelJointButton->setCheckable(true);
+    bevelJointButton->setChecked(false);
+    bevelJointButton->setToolTip("Bevel Joint");
+    
+    QToolButton* roundJointButton = new QToolButton(background);
+    roundJointButton->setStyleSheet(toolBarButtonStyle);
+    roundJointButton->setIcon(QIcon(":/JointTypes/icons/RoundJoint.svg"));
+    roundJointButton->setIconSize(QSize(25,25));
+    roundJointButton->setFixedSize(QSize(28,28));
+    roundJointButton->setCheckable(true);
+    roundJointButton->setChecked(false);
+    roundJointButton->setToolTip("Round Joint");
+    
+    
+    jointLayout->addWidget(JointLabel);
+    jointLayout->addWidget(miterJointButton);
+    jointLayout->addWidget(bevelJointButton);
+    jointLayout->addWidget(roundJointButton);
+
+    miterJointButton->connect(miterJointButton, &QToolButton::toggled, [this, bevelJointButton, roundJointButton](bool state){
+        if(state && pathJointStyle != Qt::PenJoinStyle::MiterJoin){
+            pathJointStyle = Qt::PenJoinStyle::MiterJoin;
+            bevelJointButton->setChecked(false);
+            roundJointButton->setChecked(false);
+            update();
+        }
+    });
+    bevelJointButton->connect(bevelJointButton, &QToolButton::toggled, [this, miterJointButton, roundJointButton](bool state){
+        if(state && pathJointStyle != Qt::PenJoinStyle::BevelJoin){
+            pathJointStyle = Qt::PenJoinStyle::BevelJoin;
+            miterJointButton->setChecked(false);
+            roundJointButton->setChecked(false);
+            update();
+        }
+    });
+    roundJointButton->connect(roundJointButton, &QToolButton::toggled, [this, bevelJointButton, miterJointButton](bool state){
+        if(state && pathJointStyle != Qt::PenJoinStyle::RoundJoin){
+            pathJointStyle = Qt::PenJoinStyle::RoundJoin;
+            miterJointButton->setChecked(false);
+            bevelJointButton->setChecked(false);
+            update();
+        }
+    });
+
+
+    cachedAttributeWidget_ = background;
     return background;
 }
 
@@ -1050,79 +1322,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     // return if the shape has no nodes
     if(actualNodes_.isEmpty()) return;
 
-    for (node* n : drawnNodes_)
-        delete n;
-
-    drawnNodes_.clear();
-
-    QPointF globalPivotPoint = position_ + pivotPoint_;
-
-    //apply scale & rotation
-    drawnNodes_.clear();
-    for(int i = 0; i<actualNodes_.size(); i++){
-
-        //scale
-        QPointF scaledPoint;
-        qreal x = actualNodes_[i]->position_.x();
-        qreal y = actualNodes_[i]->position_.y();
-
-        scaledPoint.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
-        scaledPoint.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
-
-        //rotation
-        QPointF rotatedPoint;
-        x = scaledPoint.x();
-        y = scaledPoint.y();
-
-        float theta_rad = rotation_ * M_PI / 180.0;
-
-        rotatedPoint.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
-        rotatedPoint.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
-
-        node* transformedNode = new node(rotatedPoint);
-        if(actualNodes_[i]->H1){
-            QPointF H1_pos = actualNodes_[i]->H1->position_;
-            x = H1_pos.x();
-            y = H1_pos.y();
-            
-            //scale
-            H1_pos.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
-            H1_pos.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
-            
-            x = H1_pos.x();
-            y = H1_pos.y();
-
-            //rotation
-            H1_pos.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
-            H1_pos.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
-
-            transformedNode->H1 = new bezierHandle(H1_pos);
-        }
-
-        if(actualNodes_[i]->H2){
-            QPointF H2_pos = actualNodes_[i]->H2->position_;
-            x = H2_pos.x();
-            y = H2_pos.y();
-            
-            //scale
-            H2_pos.setX(x*scaleX_ + globalPivotPoint.x() * (1-scaleX_));
-            H2_pos.setY(y*scaleY_ + globalPivotPoint.y() * (1-scaleY_));
-            
-            x = H2_pos.x();
-            y = H2_pos.y();
-
-            //rotation
-            H2_pos.setX(x*cos(theta_rad) - y*sin(theta_rad) + globalPivotPoint.x()*(1-cos(theta_rad)) + globalPivotPoint.y()*sin(theta_rad));
-            H2_pos.setY(x*sin(theta_rad) + y*cos(theta_rad) + globalPivotPoint.y()*(1-cos(theta_rad)) - globalPivotPoint.x()*sin(theta_rad));
-
-            transformedNode->H2 = new bezierHandle(H2_pos);
-        }
-        
-        transformedNode->mode = actualNodes_[i]->mode;
-
-        drawnNodes_.push_back(transformedNode);
-    }
-
+    updateTransformedNodes();
 
     // Draw Edges
     QPainterPath path;
@@ -1130,19 +1330,19 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     path.moveTo(drawnNodes_[0]->position_);
     for (int i = 0; i < drawnNodes_.size(); i++) {
         for(auto j : edges_[i]){
-            char initialMode = drawnNodes_[i]->mode;
-            char FinalMode = drawnNodes_[j]->mode;
+            handleMode initialMode = drawnNodes_[i]->mode;
+            handleMode FinalMode = drawnNodes_[j]->mode;
 
-            if((FinalMode == 'S' || FinalMode == 'M') && initialMode == 'L'){
+            if((FinalMode == handleMode::symmetric || FinalMode == handleMode::smooth) && initialMode == handleMode::linear){
                 path.quadTo(drawnNodes_[j]->H1->position_, drawnNodes_[j]->position_);
             }
-            else if((FinalMode == 'S' || FinalMode == 'M') && (initialMode == 'S' || initialMode == 'M')){
+            else if((FinalMode == handleMode::symmetric || FinalMode == handleMode::smooth) && (initialMode == handleMode::symmetric || initialMode == handleMode::smooth)){
                 path.cubicTo(drawnNodes_[i]->H2->position_, drawnNodes_[j]->H1->position_, drawnNodes_[j]->position_);
             }
-            else if(FinalMode == 'L' && (initialMode == 'S' || initialMode == 'M')){
+            else if(FinalMode == handleMode::linear && (initialMode == handleMode::symmetric || initialMode == handleMode::smooth)){
                 path.quadTo(drawnNodes_[i]->H2->position_, drawnNodes_[j]->position_);
             }
-            else if(FinalMode == 'L' && initialMode == 'L'){
+            else if(FinalMode == handleMode::linear && initialMode == handleMode::linear){
                 path.lineTo(drawnNodes_[j]->position_);
             }
         }
@@ -1161,7 +1361,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     
     // Stroke
     if(!inPathDrawingMode_ && stroke_){
-        painter->setPen(QPen(strokeColor_, strokeWidth_));
+        painter->setPen(QPen(strokeColor_, strokeWidth_, Qt::SolidLine, Qt::SquareCap, pathJointStyle));
     }
     else if(!inPathDrawingMode_ && !stroke_){
         painter->setPen(QPen(Qt::NoPen));
@@ -1170,7 +1370,6 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setPen(QPen(QColor("#4C7FD1"), 1));
     }
     painter->drawPath(path);
-    
 
     // Preview for next point to draw when using bezier pen
     if (hasDrawingPreview_) {
@@ -1178,19 +1377,19 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setBrush(Qt::NoBrush);
         
         QPainterPath previewPath;
-        if((drawnNodes_[getLastNodeIndex()]->mode == 'S' || drawnNodes_[getLastNodeIndex()]->mode == 'M') && (drawnNodes_[0]->mode == 'S' || drawnNodes_[0]->mode == 'M') && firstPointSnapping_){
+        if((drawnNodes_[getLastNodeIndex()]->mode == handleMode::symmetric || drawnNodes_[getLastNodeIndex()]->mode == handleMode::smooth) && (drawnNodes_[0]->mode == handleMode::symmetric || drawnNodes_[0]->mode == handleMode::smooth) && firstPointSnapping_){
             previewPath.moveTo(drawnNodes_[getLastNodeIndex()]->position_);
             previewPath.cubicTo(drawnNodes_[getLastNodeIndex()]->H2->position_, drawnNodes_[0]->H1->position_, previewPoint_);
             
             painter->drawPath(previewPath);
         }
-        else if((drawnNodes_[getLastNodeIndex()]->mode == 'S' || drawnNodes_[getLastNodeIndex()]->mode == 'M')){
+        else if((drawnNodes_[getLastNodeIndex()]->mode == handleMode::symmetric || drawnNodes_[getLastNodeIndex()]->mode == handleMode::smooth)){
             previewPath.moveTo(drawnNodes_[getLastNodeIndex()]->position_);
             previewPath.quadTo(drawnNodes_[getLastNodeIndex()]->H2->position_, previewPoint_);
 
             painter->drawPath(previewPath);
         }
-        else if(drawnNodes_[getLastNodeIndex()]->mode == 'L' && (drawnNodes_[0]->mode == 'S' || drawnNodes_[0]->mode == 'M') && firstPointSnapping_){
+        else if(drawnNodes_[getLastNodeIndex()]->mode == handleMode::linear && (drawnNodes_[0]->mode == handleMode::symmetric || drawnNodes_[0]->mode == handleMode::smooth) && firstPointSnapping_){
             previewPath.moveTo(drawnNodes_[getLastNodeIndex()]->position_);
             previewPath.quadTo(drawnNodes_[0]->H1->position_, previewPoint_);
 
@@ -1279,17 +1478,6 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                                     handleD_, handleD_);
         }
 
-        // Load SVG renderers (consider making these static class members)
-        static QSvgRenderer  PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
-        static QSvgRenderer  NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
-        static QSvgRenderer         UDArrow(QString(":/Handles/icons/UDArrows.svg"));
-        static QSvgRenderer         LRArrow(QString(":/Handles/icons/LRArrows.svg"));
-        static QSvgRenderer URRotationArrow(QString(":/Handles/icons/URcornerArrow.svg"));
-        static QSvgRenderer ULRotationArrow(QString(":/Handles/icons/ULcornerArrow.svg"));
-        static QSvgRenderer DRRotationArrow(QString(":/Handles/icons/DRcornerArrow.svg"));
-        static QSvgRenderer DLRotationArrow(QString(":/Handles/icons/DLcornerArrow.svg"));
-        static QSvgRenderer       PivotMark(QString(":/Handles/icons/PivotMark.svg"));
-
         painter->save();
         
         if(inRotationMode_) {
@@ -1354,7 +1542,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         for(int i = 0; i<drawnNodes_.size(); i++){
             
             // draw bezier handles for current node if they exist
-            if((drawnNodes_[i]->mode == 'S' || drawnNodes_[i]->mode == 'M') && drawnNodes_[i]->H1 != nullptr && drawnNodes_[i]->H2 != nullptr){
+            if((drawnNodes_[i]->mode == handleMode::symmetric || drawnNodes_[i]->mode == handleMode::smooth) && drawnNodes_[i]->H1 != nullptr && drawnNodes_[i]->H2 != nullptr){
                 painter->setPen(QPen(Qt::gray, 1, Qt::DashLine));
                 painter->setBrush(Qt::NoBrush);
 
@@ -1367,14 +1555,13 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 painter->drawEllipse(drawnNodes_[i]->H2->position_, handleD_/2, handleD_/2);
             }
 
-            if(drawnNodes_[i]->isHighlighted())
+            if(actualNodes_[i]->isHighlighted())
                 painter->setBrush(QBrush(QColor("#2A7FFF")));
             else
                 painter->setBrush(handleBrush_);
 
-            switch (drawnNodes_[i]->mode) // L: linear (rhombus), M: smooth (circle),  S: symmetric (square)
-            {
-            case 'L':
+            switch (drawnNodes_[i]->mode){
+            case handleMode::linear:
                 Rhombus.translate(drawnNodes_[i]->position_ - QPoint(5,5));
                 painter->drawPath(Rhombus);
                 
@@ -1382,16 +1569,16 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
                 Rhombus.translate(-1 * drawnNodes_[i]->position_ + QPoint(5,5)); //reset the rohumbus to the original position to be moved in the next iteration (next node)
                 break;
-            case 'M':
+            case handleMode::smooth:
                 painter->drawEllipse(
-                    drawnNodes_[i]->position_ - QPointF(handleD_/2, handleD_/2),
-                    handleD_, 
-                    handleD_);
+                    drawnNodes_[i]->position_,
+                    handleD_/2.0, 
+                    handleD_/2.0);
                 break;
-            case 'S':
+            case handleMode::symmetric:
                 painter->drawRect(
-                    drawnNodes_[i]->position_.x() - handleD_/2,
-                    drawnNodes_[i]->position_.y() - handleD_/2,
+                    drawnNodes_[i]->position_.x() - handleD_/2.0,
+                    drawnNodes_[i]->position_.y() - handleD_/2.0,
                     handleD_,
                     handleD_);
                 break;
@@ -1400,7 +1587,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     }
 
     // Snapping rectangle to the first point
-    if(firstPointHighlighted_){
+    if(firstNodeHighlighted_){
         painter->setCompositionMode(QPainter::CompositionMode_Difference);
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
@@ -1551,7 +1738,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath = objects_.back();
             int lastPointIndex = currentPath->getLastNodeIndex();
             QPointF pointToAdd = canvasLocalPos;
-            QPointF firstPoint = currentPath->getPoint(0);
+            QPointF firstPoint = currentPath->getActualPoint(0);
                     
             bool snap =
                 std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
@@ -1608,9 +1795,17 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 nodeSelectMargin_ * 2
             );
         for (int i = 0; i < selectedPath_->getNodeCount(); i++) {
-            QPointF nodePos = canvas_->mapToScene(selectedPath_->getPoint(i)); //converted to scene coordincates
+            QPointF nodePos = canvas_->mapToScene(selectedPath_->getDrawnPoint(i)); //converted to scene coordincates, scale, then rotate to follow the object transformation
+
             if (searchRect.contains(nodePos)) {
-                if(shifting_){
+
+                if(controlPressed_){
+                    selectedPath_->incrementNodeMode(i);
+                    selectedPath_->makeDirty();
+                    update();
+                }
+
+                if(shiftPressed_){
                     if(selectedPath_->isHighlighted(i))
                         selectedPath_->removeHighlightedNode(i);
                     else{
@@ -1618,12 +1813,20 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                         holdStartPosition_ = canvasLocalPos;
                         holding_ = true;
                     }  
+
+                    update();
                 }
                 else{
                     if(selectedPath_->isHighlighted(i) && selectedPath_->nodesHighlighted() > 1)
                         return;
-                    selectedPath_->clearHighlightedNodes();
-                    selectedPath_->addHighlightedNode(i);
+                    
+                    if(selectedPath_->isHighlighted(i)){
+                        selectedPath_->clearHighlightedNodes();
+                    }
+                    else{
+                        selectedPath_->clearHighlightedNodes();
+                        selectedPath_->addHighlightedNode(i);
+                    }
                     holdStartPosition_ = canvasLocalPos;
                     holding_ = true;
                 }
@@ -1754,7 +1957,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
     if(!selectedPath_) return;
     
     if(bezierToolActivated_){
-        QPointF firstPoint = selectedPath_->getPoint(0);
+        QPointF firstPoint = selectedPath_->getActualPoint(0);
         snap_ =  std::abs(canvasLocalPos.x() - firstPoint.x()) <= snapMargin_ &&
                 std::abs(canvasLocalPos.y() - firstPoint.y()) <= snapMargin_;
 
@@ -1765,10 +1968,10 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
     
         if (startedNewPath_ && holding_) {
             selectedPath_->clearPreviewPoint();
-            selectedPath_->changeNodeMode('S', selectedPath_->getLastNodeIndex()); // this causes a crash
-            selectedPath_->moveBezierHandle(canvasLocalPos, selectedPath_->getNodeCount() - 1, 2); // or maybe this?!
-            selectedPath_->update();
-        } else if(startedNewPath_) {
+            selectedPath_->changeNodeMode(handleMode::symmetric, selectedPath_->getLastNodeIndex()); // this causes a crash
+            selectedPath_->moveBezierHandle(canvasLocalPos, selectedPath_->getLastNodeIndex(), 2); // or maybe this?!
+        }
+        else if(startedNewPath_ && !holding_) {
             selectedPath_->setPreviewPoint(target);
         }
         else{
@@ -1781,10 +1984,17 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
     else if(nodeToolActivated_){
         if(selectedPath_ != nullptr && selectedPath_->nodesHighlighted() > 0 && holding_){
             for(int i = 0; i < selectedPath_->nodesHighlighted(); i++){
-                selectedPath_->moveNode(canvasLocalPos - holdStartPosition_, selectedPath_->accessHighlightedVector(i));
-            }
-            holdStartPosition_ = canvasLocalPos; // needs to be removed
+                QPointF newPos = canvasLocalPos;
 
+                newPos = selectedPath_->mapToItemRotation(newPos, true);
+
+                newPos.setX(newPos.x()/selectedPath_->scaleX_ - 1.0/selectedPath_->scaleX_ * (selectedPath_->position_.x() + selectedPath_->pivotPoint_.x()) * (1-selectedPath_->scaleX_));
+                newPos.setY(newPos.y()/selectedPath_->scaleY_ - 1.0/selectedPath_->scaleY_ * (selectedPath_->position_.y() + selectedPath_->pivotPoint_.y()) * (1-selectedPath_->scaleY_));
+
+                selectedPath_->setNodePosition(newPos, selectedPath_->accessHighlightedVector(i));
+            }
+
+            selectedPath_->makeDirty();
             selectedPath_->calculateBoundaries();
             selectedPath_->update();
         }
@@ -1817,7 +2027,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
         else if(holding_ && scaling_){
             QPointF delta = canvasLocalPos - selectedPath_->position_;
 
-            if(shifting_ && (activeScaleHandle_ == TopRight || activeScaleHandle_ == BottomRight || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft)){
+            if(shiftPressed_ && (activeScaleHandle_ == TopRight || activeScaleHandle_ == BottomRight || activeScaleHandle_ == TopLeft || activeScaleHandle_ == BottomLeft)){
                 delta.setX(std::max(abs(delta.x()), abs(delta.y())));
                 delta.setY(std::max(abs(delta.x()), abs(delta.y())));
             }
@@ -1880,7 +2090,7 @@ void viewPort::mouseReleaseEvent(QMouseEvent *event)
 void viewPort::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Shift){
-        shifting_ = true;
+        shiftPressed_ = true;
     }
     else if(event->key() == Qt::Key_Delete){
         if(selectedPath_ != nullptr){
@@ -1891,11 +2101,17 @@ void viewPort::keyPressEvent(QKeyEvent *event)
         }
         update();
     }
+    else if(event->key() == Qt::Key_Control){
+        controlPressed_ = true;
+    }
 }
 
 void viewPort::keyReleaseEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Shift){
-        shifting_ = false;
+        shiftPressed_ = false;
+    }
+    else if(event->key() == Qt::Key_Control){
+        controlPressed_ = false;
     }
 }

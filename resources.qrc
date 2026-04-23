@@ -36,4 +36,9 @@
         <file>icons/URcornerArrow.svg</file>
         <file>icons/PivotMark.svg</file>
     </qresource>
+    <qresource prefix="/JointTypes">
+        <file>icons/RoundJoint.svg</file>
+        <file>icons/BevelJoint.svg</file>
+        <file>icons/MiterJoint.svg</file>
+    </qresource>
 </RCC>
