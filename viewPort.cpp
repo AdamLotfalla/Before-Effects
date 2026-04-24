@@ -457,13 +457,25 @@ void path::setNodePosition(QPointF newPos, int index)
     calculateBoundaries();
 }
 
-QPointF path::getHandlePosition(int index, short int HandleIndex)
+QPointF path::getActualHandlePosition(int index, short int HandleIndex)
 {
     if(HandleIndex == 0){
         return actualNodes_[index]->H1->position_;
     }
     else if(HandleIndex == 1){
         return actualNodes_[index]->H2->position_;
+    }
+
+    return QPointF(0,0);
+}
+
+QPointF path::getDrawnHandlePosition(int index, short int HandleIndex)
+{
+    if(HandleIndex == 0){
+        return drawnNodes_[index]->H1->position_;
+    }
+    else if(HandleIndex == 1){
+        return drawnNodes_[index]->H2->position_;
     }
 
     return QPointF(0,0);
@@ -1594,7 +1606,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 painter->drawEllipse(drawnNodes_[i]->H2->position_, handleD_/2, handleD_/2);
             }
 
-            if(actualNodes_[i]->isHighlighted())
+            if(actualNodes_[i]->isHighlighted() && selectedHandle_ == -1)
                 painter->setBrush(QBrush(QColor("#2A7FFF")));
             else
                 painter->setBrush(handleBrush_);
@@ -1870,7 +1882,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 }
                 clickedOnNode = true;
             }
-            else if(selectedPath_->getHandleExistance(i, 0) && searchRect.contains(canvas_->mapToScene(selectedPath_->getHandlePosition(i, 0)))){
+            else if(selectedPath_->getHandleExistance(i, 0) && searchRect.contains(canvas_->mapToScene(selectedPath_->getDrawnHandlePosition(i, 0)))){
                 selectedPath_->clearHighlightedNodes();
                 selectedPath_->addHighlightedNode(i);
                 selectedPath_->selectedHandle_ = 0;
@@ -1879,7 +1891,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 holding_ = true;
                 break;
             }
-            else if(selectedPath_->getHandleExistance(i, 1) && searchRect.contains(canvas_->mapToScene(selectedPath_->getHandlePosition(i, 1)))){
+            else if(selectedPath_->getHandleExistance(i, 1) && searchRect.contains(canvas_->mapToScene(selectedPath_->getDrawnHandlePosition(i, 1)))){
                 selectedPath_->clearHighlightedNodes();
                 selectedPath_->addHighlightedNode(i);
                 selectedPath_->selectedHandle_ = 1;

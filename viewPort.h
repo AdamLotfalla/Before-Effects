@@ -109,7 +109,8 @@ class path : public QGraphicsItem, public AttributePanel{
     void setPosition(qreal x, qreal y);
     void moveNode(QPointF offset, int index);
     void setNodePosition(QPointF newPos, int index);
-    QPointF getHandlePosition(int index, short int HandleIndex /*0 for H1, 1 for H2*/);
+    QPointF getActualHandlePosition(int index, short int HandleIndex /*0 for H1, 1 for H2*/);
+    QPointF getDrawnHandlePosition(int index, short int HandleIndex /*0 for H1, 1 for H2*/);
     void setHandlePosition(QPointF newPosition, int index, short int HandleIndex /*0 for H1, 1 for H2*/);
     void moveBezierHandle(QPointF newPosition, int index, int handleIndex);
     void addPoint(QPointF point);
