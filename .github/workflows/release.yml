@@ -16,22 +16,32 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.7.0'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 17 2022" -A x64
       - name: Build
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          cmake --build build --config Release --parallel
       - name: Deploy
         run: |
           mkdir release
           copy build\Release\Before_Effects.exe release\
-          windeployqt release\Before_Effects.exe
+          cd release
+          windeployqt --compiler-runtime Before_Effects.exe
+          cd ..
       - name: Zip Windows build
-        run: powershell Compress-Archive -Path release/* -DestinationPath Before_Effects-windows.zip
+        shell: pwsh
+        run: |
+          Compress-Archive -Path release/* -DestinationPath Before_Effects-windows.zip -Force
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: windows-release
           path: Before_Effects-windows.zip
+          if-no-files-found: error
 
   build-macos:
     runs-on: macos-latest
@@ -43,68 +53,147 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.7.0'
+          host: 'mac'
+          target: 'desktop'
+          arch: 'clang_64'
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.QT_ROOT_DIR }}/lib/cmake"
       - name: Build
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          cmake --build build --config Release --parallel
       - name: Deploy
         run: |
-          macdeployqt build/Before_Effects.app
+          # Find the app bundle
+          if [ -d "build/Before_Effects.app" ]; then
+            macdeployqt build/Before_Effects.app -verbose=2 -dmg
+          else
+            echo "App bundle not found at build/Before_Effects.app"
+            ls -la build/
+            exit 1
+          fi
       - name: Zip macOS build
         run: |
-          ditto -c -k --sequesterRsrc --keepParent build/Before_Effects.app Before_Effects-macos.zip
+          if [ -f "build/Before_Effects.dmg" ]; then
+            cp build/Before_Effects.dmg Before_Effects-macos.dmg
+            ditto -c -k --sequesterRsrc --keepParent build/Before_Effects.app Before_Effects-macos.zip
+          elif [ -d "build/Before_Effects.app" ]; then
+            ditto -c -k --sequesterRsrc --keepParent build/Before_Effects.app Before_Effects-macos.zip
+          else
+            echo "No app bundle or DMG found"
+            exit 1
+          fi
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: macos-release
-          path: Before_Effects-macos.zip
+          path: |
+            Before_Effects-macos.zip
+            Before_Effects-macos.dmg
+          if-no-files-found: error
 
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Install Qt and dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libxcb-*
+          sudo apt-get install -y \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libxcb-util1 \
+            libxcb-util-dev \
+            libxcb-icccm4-dev \
+            libxcb-keysyms1-dev \
+            libxcb-image0-dev \
+            libxcb-shm0-dev \
+            libxcb-randr0-dev \
+            libxcb-render-util0-dev \
+            libxcb-xinerama0-dev \
+            libxcb-xfixes0-dev \
+            libegl1-mesa-dev \
+            libxkbfile-dev \
+            libx11-xcb-dev \
+            libxcb-cursor-dev \
+            libxcb-shape0-dev \
+            file
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.7.0'
+          host: 'linux'
+          target: 'desktop'
+          arch: 'gcc_64'
+          modules: 'qt5compat'
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.QT_ROOT_DIR }}/lib/cmake"
       - name: Build
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
-      - name: Deploy
+          cmake --build build --config Release --parallel
+      - name: Prepare AppImage
         run: |
+          # Create AppDir structure
+          mkdir -p AppDir/usr/bin
+          mkdir -p AppDir/usr/lib
+          
+          # Copy the built executable
+          cp build/Before_Effects AppDir/usr/bin/
+          
+          # Download linuxdeployqt
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod +x linuxdeployqt-continuous-x86_64.AppImage
-          cp build/Before_Effects .
-          ./linuxdeployqt-continuous-x86_64.AppImage Before_Effects -appimage
+          
+          # Run linuxdeployqt
+          ./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/share/applications/*.desktop -appimage 2>/dev/null || \
+          ./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/bin/Before_Effects -appimage
       - name: Zip Linux build
         run: |
-          zip Before_Effects-linux.zip *.AppImage
-
+          # Find the AppImage file
+          APPIMAGE=$(ls *.AppImage 2>/dev/null || echo "")
+          if [ -n "$APPIMAGE" ]; then
+            zip Before_Effects-linux.zip $APPIMAGE
+          else
+            echo "No AppImage found, zipping the build directory"
+            zip -r Before_Effects-linux.zip build/Before_Effects
+          fi
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: linux-release
           path: Before_Effects-linux.zip
+          if-no-files-found: error
+
   create-release:
     needs: [build-windows, build-macos, build-linux]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Download artifacts
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
-
+        with:
+          path: artifacts
+          
+      - name: List downloaded artifacts
+        run: |
+          ls -la artifacts/
+          ls -la artifacts/windows-release/ || echo "No windows artifacts"
+          ls -la artifacts/macos-release/ || echo "No macos artifacts"
+          ls -la artifacts/linux-release/ || echo "No linux artifacts"
+          
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-              windows-release/Before_Effects-windows.zip
-              macos-release/Before_Effects-macos.zip
-              linux-release/Before_Effects-linux.zip
+            artifacts/windows-release/Before_Effects-windows.zip
+            artifacts/macos-release/Before_Effects-macos.zip
+            artifacts/linux-release/Before_Effects-linux.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
