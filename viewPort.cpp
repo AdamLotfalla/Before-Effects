@@ -162,6 +162,11 @@ void path::changeNodeMode(handleMode newMode, int index)
 void path::incrementNodeMode(int index)
 {
     actualNodes_[index]->mode = static_cast<handleMode>((static_cast<int>(actualNodes_[index]->mode) + 1) % 3);
+    
+    if(actualNodes_[index]->mode == handleMode::smooth || actualNodes_[index]->mode == handleMode::symmetric){
+        if(!actualNodes_[index]->H1) actualNodes_[index]->H1 = new bezierHandle(getActualPoint(index) - QPointF(10,10));
+        if(!actualNodes_[index]->H2) actualNodes_[index]->H2 = new bezierHandle(getActualPoint(index) + QPointF(10,10));
+    }
     updateTransformedNodes();
 }
 
@@ -479,6 +484,11 @@ QPointF path::getDrawnHandlePosition(int index, short int HandleIndex)
     }
 
     return QPointF(0,0);
+}
+
+handleMode path::getNodeMode(int index)
+{
+    return actualNodes_[index]->mode;
 }
 
 void path::setHandlePosition(QPointF newPosition, int index, short int HandleIndex)
@@ -1882,7 +1892,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 }
                 clickedOnNode = true;
             }
-            else if(selectedPath_->getHandleExistance(i, 0) && searchRect.contains(canvas_->mapToScene(selectedPath_->getDrawnHandlePosition(i, 0)))){
+            else if(selectedPath_->getHandleExistance(i, 0) && searchRect.contains(canvas_->mapToScene(selectedPath_->getDrawnHandlePosition(i, 0))) && selectedPath_->getNodeMode(i) != handleMode::linear){
                 selectedPath_->clearHighlightedNodes();
                 selectedPath_->addHighlightedNode(i);
                 selectedPath_->selectedHandle_ = 0;
@@ -1891,7 +1901,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 holding_ = true;
                 break;
             }
-            else if(selectedPath_->getHandleExistance(i, 1) && searchRect.contains(canvas_->mapToScene(selectedPath_->getDrawnHandlePosition(i, 1)))){
+            else if(selectedPath_->getHandleExistance(i, 1) && searchRect.contains(canvas_->mapToScene(selectedPath_->getDrawnHandlePosition(i, 1))) && selectedPath_->getNodeMode(i) != handleMode::linear){
                 selectedPath_->clearHighlightedNodes();
                 selectedPath_->addHighlightedNode(i);
                 selectedPath_->selectedHandle_ = 1;
@@ -1900,7 +1910,9 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 holding_ = true;
                 break;
             }
-            
+            else{
+                selectedPath_->selectedHandle_ = -1;
+            }
         }
         selectedPath_->update();
 
@@ -2062,9 +2074,9 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
 
                 if(selectedPath_->selectedHandle_ == -1)
                     selectedPath_->setNodePosition(newPos, selectedPath_->accessHighlightedVector(i));
-                else if(selectedPath_->selectedHandle_ == 0)
+                else if(selectedPath_->getHandleExistance(selectedPath_->accessHighlightedVector(i), 0) && selectedPath_->selectedHandle_ == 0)
                     selectedPath_->setHandlePosition(newPos, selectedPath_->accessHighlightedVector(i), 0);
-                else if(selectedPath_->selectedHandle_ == 1)
+                else if(selectedPath_->getHandleExistance(selectedPath_->accessHighlightedVector(i), 1) && selectedPath_->selectedHandle_ == 1)
                     selectedPath_->setHandlePosition(newPos, selectedPath_->accessHighlightedVector(i), 1);
                 
             }
