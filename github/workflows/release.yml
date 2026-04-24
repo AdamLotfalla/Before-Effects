@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+      - name: Deploy
+        run: |
+          mkdir release
+          copy build\Release\Before_Effects.exe release\
+          windeployqt release\Before_Effects.exe
+      - name: Zip Windows build
+        run: powershell Compress-Archive -Path release/* -DestinationPath Before_Effects-windows.zip
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release
+          path: Before_Effects-windows.zip
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+      - name: Deploy
+        run: |
+          macdeployqt build/Before_Effects.app
+      - name: Zip macOS build
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent build/Before_Effects.app Before_Effects-macos.zip
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-release
+          path: Before_Effects-macos.zip
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Qt and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libxcb-*
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Deploy
+        run: |
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+          chmod +x linuxdeployqt-continuous-x86_64.AppImage
+          cp build/Before_Effects .
+          ./linuxdeployqt-continuous-x86_64.AppImage Before_Effects -appimage
+      - name: Zip Linux build
+        run: |
+          zip Before_Effects-linux.zip *.AppImage
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-release
+          path: Before_Effects-linux.zip
+  create-release:
+    needs: [build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+              windows-release/Before_Effects-windows.zip
+              macos-release/Before_Effects-macos.zip
+              linux-release/Before_Effects-linux.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
