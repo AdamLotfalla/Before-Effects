@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:  # Allow manual triggering for debugging
 
 jobs:
   build-windows:
@@ -16,32 +17,44 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.7.0'
-          host: 'windows'
-          target: 'desktop'
-          arch: 'win64_msvc2019_64'
+      - name: Debug - List directory contents
+        run: |
+          dir
+          if (Test-Path "CMakeLists.txt") { echo "CMakeLists.txt found" } else { echo "CMakeLists.txt NOT found" }
       - name: Configure CMake
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 17 2022" -A x64
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+        continue-on-error: false
       - name: Build
         run: |
-          cmake --build build --config Release --parallel
+          cmake --build build --config Release --verbose
+        continue-on-error: false
+      - name: Check build output
+        run: |
+          if (Test-Path "build\Release\Before_Effects.exe") { 
+            echo "Build successful - executable found"
+            dir build\Release\
+          } else {
+            echo "Build failed - executable not found"
+            dir build\
+            dir build\Release\
+            exit 1
+          }
       - name: Deploy
         run: |
-          mkdir release
+          mkdir release -Force
           copy build\Release\Before_Effects.exe release\
           cd release
-          windeployqt --compiler-runtime Before_Effects.exe
+          windeployqt Before_Effects.exe
           cd ..
       - name: Zip Windows build
-        shell: pwsh
-        run: |
-          Compress-Archive -Path release/* -DestinationPath Before_Effects-windows.zip -Force
+        run: powershell Compress-Archive -Path release/* -DestinationPath Before_Effects-windows.zip -Force
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: windows-release
           path: Before_Effects-windows.zip
-          if-no-files-found: error
+        if: success()
 
   build-macos:
     runs-on: macos-latest
@@ -53,57 +66,63 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.7.0'
-          host: 'mac'
-          target: 'desktop'
-          arch: 'clang_64'
+      - name: Debug - List directory contents
+        run: |
+          ls -la
+          if [ -f "CMakeLists.txt" ]; then echo "CMakeLists.txt found"; else echo "CMakeLists.txt NOT found"; fi
       - name: Configure CMake
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.QT_ROOT_DIR }}/lib/cmake"
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
-          cmake --build build --config Release --parallel
+          cmake --build build --config Release --verbose
+      - name: Check build output
+        run: |
+          if [ -d "build/Before_Effects.app" ]; then
+            echo "Build successful - app bundle found"
+            ls -la build/
+          else
+            echo "Build failed - app bundle not found"
+            ls -la build/
+            # Try to find any executable
+            find build -name "Before_Effects" -type f 2>/dev/null || echo "No executable found"
+            exit 1
+          fi
       - name: Deploy
         run: |
-          # Find the app bundle
           if [ -d "build/Before_Effects.app" ]; then
-            macdeployqt build/Before_Effects.app -verbose=2 -dmg
+            macdeployqt build/Before_Effects.app
           else
-            echo "App bundle not found at build/Before_Effects.app"
-            ls -la build/
+            echo "Cannot deploy - app bundle not found"
             exit 1
           fi
       - name: Zip macOS build
         run: |
-          if [ -f "build/Before_Effects.dmg" ]; then
-            cp build/Before_Effects.dmg Before_Effects-macos.dmg
-            ditto -c -k --sequesterRsrc --keepParent build/Before_Effects.app Before_Effects-macos.zip
-          elif [ -d "build/Before_Effects.app" ]; then
+          if [ -d "build/Before_Effects.app" ]; then
             ditto -c -k --sequesterRsrc --keepParent build/Before_Effects.app Before_Effects-macos.zip
           else
-            echo "No app bundle or DMG found"
+            echo "Cannot zip - app bundle not found"
             exit 1
           fi
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: macos-release
-          path: |
-            Before_Effects-macos.zip
-            Before_Effects-macos.dmg
-          if-no-files-found: error
+          path: Before_Effects-macos.zip
+        if: success()
 
   build-linux:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Install system dependencies
+      - name: Install Qt dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            build-essential \
             libgl1-mesa-dev \
-            libglu1-mesa-dev \
             libxcb-util1 \
             libxcb-util-dev \
             libxcb-icccm4-dev \
@@ -114,86 +133,66 @@ jobs:
             libxcb-render-util0-dev \
             libxcb-xinerama0-dev \
             libxcb-xfixes0-dev \
-            libegl1-mesa-dev \
-            libxkbfile-dev \
-            libx11-xcb-dev \
-            libxcb-cursor-dev \
-            libxcb-shape0-dev \
-            file
+            libegl1-mesa-dev
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.7.0'
-          host: 'linux'
-          target: 'desktop'
-          arch: 'gcc_64'
-          modules: 'qt5compat'
+      - name: Debug - List directory contents
+        run: |
+          ls -la
+          if [ -f "CMakeLists.txt" ]; then echo "CMakeLists.txt found"; else echo "CMakeLists.txt NOT found"; fi
       - name: Configure CMake
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.QT_ROOT_DIR }}/lib/cmake"
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON
       - name: Build
         run: |
-          cmake --build build --config Release --parallel
-      - name: Prepare AppImage
+          cmake --build build --config Release --verbose
+      - name: Check build output
         run: |
-          # Create AppDir structure
-          mkdir -p AppDir/usr/bin
-          mkdir -p AppDir/usr/lib
-          
-          # Copy the built executable
-          cp build/Before_Effects AppDir/usr/bin/
-          
-          # Download linuxdeployqt
-          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-          chmod +x linuxdeployqt-continuous-x86_64.AppImage
-          
-          # Run linuxdeployqt
-          ./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/share/applications/*.desktop -appimage 2>/dev/null || \
-          ./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/bin/Before_Effects -appimage
-      - name: Zip Linux build
-        run: |
-          # Find the AppImage file
-          APPIMAGE=$(ls *.AppImage 2>/dev/null || echo "")
-          if [ -n "$APPIMAGE" ]; then
-            zip Before_Effects-linux.zip $APPIMAGE
+          if [ -f "build/Before_Effects" ]; then
+            echo "Build successful - executable found"
+            ls -la build/Before_Effects
+            file build/Before_Effects
           else
-            echo "No AppImage found, zipping the build directory"
-            zip -r Before_Effects-linux.zip build/Before_Effects
+            echo "Build failed - executable not found"
+            ls -la build/
+            exit 1
           fi
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: linux-release
-          path: Before_Effects-linux.zip
-          if-no-files-found: error
+          path: build/Before_Effects
+        if: success()
 
   create-release:
     needs: [build-windows, build-macos, build-linux]
     runs-on: ubuntu-latest
+    if: always()  # This will run even if some builds fail, to show what succeeded
     permissions:
       contents: write
     steps:
-      - name: Download all artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-          
-      - name: List downloaded artifacts
+      - name: List what we have
         run: |
+          echo "=== Artifacts contents ==="
           ls -la artifacts/
-          ls -la artifacts/windows-release/ || echo "No windows artifacts"
-          ls -la artifacts/macos-release/ || echo "No macos artifacts"
-          ls -la artifacts/linux-release/ || echo "No linux artifacts"
-          
-      - name: Create Release
+          for dir in artifacts/*/; do
+            echo "=== $dir ==="
+            ls -la "$dir" || echo "Empty or missing"
+          done
+      - name: Create Release (only if all succeeded)
+        if: needs.build-windows.result == 'success' && needs.build-macos.result == 'success' && needs.build-linux.result == 'success'
         uses: softprops/action-gh-release@v2
         with:
           files: |
             artifacts/windows-release/Before_Effects-windows.zip
             artifacts/macos-release/Before_Effects-macos.zip
-            artifacts/linux-release/Before_Effects-linux.zip
+            artifacts/linux-release/Before_Effects
           generate_release_notes: true
-          draft: false
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
