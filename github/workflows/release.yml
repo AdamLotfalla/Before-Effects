@@ -103,8 +103,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            windows-release/**
-            macos-release/**
-            linux-release/**
+              windows-release/Before_Effects-windows.zip
+              macos-release/Before_Effects-macos.zip
+              linux-release/Before_Effects-linux.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
