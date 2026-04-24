@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+      - name: Deploy
+        run: |
+          mkdir release
+          copy build\Release\Before_Effects.exe release\
+          windeployqt release\Before_Effects.exe
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-release
+          path: release/
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+      - name: Deploy
+        run: |
+          macdeployqt build/Before_Effects.app -dmg
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-release
+          path: build/Before_Effects.dmg
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Install Qt and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libxcb-*
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Deploy
+        run: |
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+          chmod +x linuxdeployqt-continuous-x86_64.AppImage
+          cp build/Before_Effects .
+          ./linuxdeployqt-continuous-x86_64.AppImage Before_Effects -appimage
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-release
+          path: '*.AppImage'
