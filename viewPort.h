@@ -316,7 +316,7 @@ class customSpinBox: public QWidget{
             painter.setBrush(QBrush("#272727"));
             painter.drawRoundedRect(0,0, this->width(), height_, 5,5);
 
-            painter.setBrush("#474747");
+            painter.setBrush(QBrush("#474747"));
             painter.drawRect(this->width() - symbolWidth_, 0, symbolWidth_, height_);
 
             QPainterPath Rhombus;
@@ -336,7 +336,7 @@ class customSpinBox: public QWidget{
             Rhombus.translate(rhombusBox.topLeft());
             
             if(keyFramed){
-                painter.setBrush("#7BC7B0"); 
+                painter.setBrush(QBrush("#7BC7B0")); 
                 painter.setPen(Qt::NoPen);
                 painter.drawPath(Rhombus);
             }
