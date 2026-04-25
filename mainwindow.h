@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QMainWindow>
-#include <QPushButton.h>
-#include <QLabel.h>
+#include <QPushButton>
+#include <QLabel>
 #include <QBoxLayout>
 #include <QWidget>
 #include <QPalette>
