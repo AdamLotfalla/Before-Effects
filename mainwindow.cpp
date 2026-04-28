@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     toolBarLayout->addStretch();
     
 
-    ViewPort_ = new viewPort(this);
+    viewPort_ = new viewPort(this);
     
     Timeline* TimelinePanel = new Timeline(this, &frameRate_);
     TimelinePanel->setAutoFillBackground(true);
@@ -70,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     
     QSplitter* timelineSplitter = new QSplitter(Qt::Vertical, centralWidget);
-    timelineSplitter->addWidget(ViewPort_);
+    timelineSplitter->addWidget(viewPort_);
     timelineSplitter->addWidget(TimelinePanel);
 
     QVBoxLayout* verticalLayout = new QVBoxLayout(centralWidget);
@@ -114,19 +114,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timer_ = new QTimer(this); 
     timer_->setInterval(1000/frameRate_);
     QObject::connect(timer_, &QTimer::timeout, TimelinePanel, &Timeline::step);
-    QObject::connect(ViewPort_, &viewPort::objectSelected, LPanel, &AttributePanelWidget::showObject);
+    QObject::connect(viewPort_, &viewPort::objectSelected, LPanel, &AttributePanelWidget::showObject);
+    QObject::connect(viewPort_, &viewPort::pathCreated, TimelinePanel, &Timeline::addLayer);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete templateAttributeWidget_;
+    delete tempPath;
 }
 
 void MainWindow::bezierTool(bool checked)
 {
     bezierPen_->setChecked(checked);    
     enableBezier_ = checked;
-    ViewPort_->enableBezierTool(checked);
+    viewPort_->enableBezierTool(checked);
     
     if(enableNodeTool_ && checked)
         nodeTool(!checked);
@@ -134,7 +137,7 @@ void MainWindow::bezierTool(bool checked)
         selectionTool(!checked);
     
     
-    ViewPort_->setPathEditingMode(checked);
+    viewPort_->setPathEditingMode(checked);
 }
 
 void MainWindow::preCreateAttributeWidgets()
@@ -142,35 +145,34 @@ void MainWindow::preCreateAttributeWidgets()
     path* tempPath = new path(QPointF(0, 0), nullptr, nullptr);
     templateAttributeWidget_ = tempPath->createAttributeWidget(nullptr);
     templateAttributeWidget_->hide();
-    delete tempPath;
 }
 
 void MainWindow::selectionTool(bool checked)
 {
     selectionTool_->setChecked(checked);
     enableSelectionTool_ = checked;
-    ViewPort_->enableSelectionTool(checked);
+    viewPort_->enableSelectionTool(checked);
 
     if(enableBezier_ && checked)
         bezierTool(!checked);
     if(enableNodeTool_ && checked)
         nodeTool(!checked);
 
-    ViewPort_->setPathEditingMode(false);
+    viewPort_->setPathEditingMode(false);
 }
 
 void MainWindow::nodeTool(bool checked)
 {
     nodeTool_->setChecked(checked);
     enableNodeTool_ = checked;
-    ViewPort_->enableNodeTool(checked);
+    viewPort_->enableNodeTool(checked);
     
     if(enableBezier_ && checked)
         bezierTool(!checked);
     if(enableSelectionTool_ && checked)
         selectionTool(!checked);
     
-    ViewPort_->setPathEditingMode(checked);
+    viewPort_->setPathEditingMode(checked);
 }
 
 void MainWindow::startTimer(bool playing){

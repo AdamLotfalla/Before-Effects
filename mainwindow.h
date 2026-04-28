@@ -63,7 +63,7 @@ private:
     Ui::MainWindow *ui;
     int frameRate_ = 24;
     QTimer* timer_;
-    viewPort* ViewPort_;
+    viewPort* viewPort_;
 
     
     QToolButton* selectionTool_;
@@ -79,6 +79,8 @@ private:
     void bezierTool(bool checked);
 
     QWidget* templateAttributeWidget_ = nullptr;
+    path* tempPath = nullptr;
+    
     void preCreateAttributeWidgets();
 
 private slots:

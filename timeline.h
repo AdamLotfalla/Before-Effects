@@ -17,8 +17,18 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QMouseEvent>
+#include "viewPort.h"
 #include "common_widget_styles.h"
 
+
+class Layer : public QWidget{
+public:
+    path* relatedPath_ = nullptr;
+    Layer(path* p, int height);
+private:
+    void paintEvent(QPaintEvent* event) override;
+    int height_;
+};
 
 class TimeIndicator : public QWidget{
     Q_OBJECT
@@ -43,6 +53,10 @@ public:
     void paintEvent(QPaintEvent* event);
     int getRBound();
     int getLBound();
+    void addLayer(path* p);
+    Layer* accessLayer(int index);
+    int getLayerCount();
+    int getTopBarHeight();
 
 private:
     int* frameWidth_; 
@@ -60,6 +74,10 @@ private:
     bool barClicked_ = false;
     bool LBoundClicked_ = false;
     bool RBoundClicked_ = false;
+
+    QVector<Layer*> layers_;
+    Layer* activeLayer_ = nullptr;
+    int layerHeight_ = 35;
 
     int RBoundFrame_;
     int LBoundFrame_;
@@ -87,7 +105,7 @@ signals:
     void LBoundClickedSignal(QPoint position);
     void LBoundUnClickedSignal();
 
-
+    void LayerClickedSignal(int layer);
 };
 
 class Timeline : public QWidget{
@@ -101,6 +119,8 @@ public:
 
     void step();
     void setTheme(QString theme = "Dark");
+    void addLayer(path* p);
+    void updateLayers();
     // void clickTimeIndicatorBar(QEvent* event);
     
 private:
@@ -108,6 +128,9 @@ private:
     int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
     int layerHeight_ = 50;
+    QWidget* layerPanel_;
+    QHBoxLayout* timelineSplitterLayout_;
+    QVBoxLayout* layersLayout_;
     QString theme_;
     QScrollArea* scroller;
     QToolButton* playButton;

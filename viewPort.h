@@ -16,6 +16,7 @@
 #include <QtColorWidgets/ColorPreview>
 #include <QtColorWidgets/ColorSelector>
 #include <QToolButton>
+#include <QDebug>
 #include "common_widget_styles.h"
 
 enum class handleMode{
@@ -116,6 +117,8 @@ class path : public QGraphicsItem, public AttributePanel{
     void moveBezierHandle(QPointF newPosition, int index, int handleIndex);
     void addPoint(QPointF point);
     void addEdge(int start, int end);
+    QString getName();
+    void setName(QString newName);
 
     QPointF mapToItemRotation(const QPointF& point) const;
     QPointF mapToItemRotation(const QPointF& point, const bool reverse) const;
@@ -123,6 +126,7 @@ class path : public QGraphicsItem, public AttributePanel{
     
     
     //attributes
+    QString name_ = "New Path";
     QPointF position_;
     float rotation_ = 0;
     qreal scaleX_ = 1, scaleY_ = 1;
@@ -143,7 +147,6 @@ class path : public QGraphicsItem, public AttributePanel{
     bool recentlySelected_ = false;
     void toggleRotationMode();
     bool inRotationMode();
-
 
     private:
 
@@ -280,6 +283,7 @@ class viewPort : public QGraphicsView{
 
     signals:
     void objectSelected(AttributePanel* obj);
+    void pathCreated(path* p);
 };
 
 class customSpinBox: public QWidget{

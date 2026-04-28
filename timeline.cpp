@@ -201,6 +201,30 @@ int TimeIndicatorBar::getLBound()
     return LBoundFrame_;
 }
 
+void TimeIndicatorBar::addLayer(path* p)
+{
+    Layer* addedLayer = new Layer(p, layerHeight_);
+    layers_.push_back(addedLayer);
+}
+
+Layer* TimeIndicatorBar::accessLayer(int index)
+{
+    if(index < layers_.size())
+        return layers_[index];
+    else
+        return nullptr;
+}
+
+int TimeIndicatorBar::getLayerCount()
+{
+    return layers_.size();
+}
+
+int TimeIndicatorBar::getTopBarHeight()
+{
+    return tickLayerHeight_ + boundLayerHeight_;
+}
+
 void TimeIndicatorBar::onTickBarClick(QPoint pos)
 {
     barClicked_ = true;
@@ -443,6 +467,12 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     toolBarLayout->addWidget(zoomSlider, 0, Qt::AlignVCenter);
     toolBarLayout->addWidget(zoomInButton);
 
+    timelineSplitterLayout_ = new QHBoxLayout();
+    layerPanel_ = new QWidget(this);
+    layerPanel_->setMinimumWidth(175);
+    layersLayout_ = new QVBoxLayout(layerPanel_);
+    layersLayout_->setContentsMargins(0,0,0,0);
+    layerPanel_->setLayout(layersLayout_);
 
     scroller = new QScrollArea(this);
 
@@ -450,7 +480,10 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     verticalLayout->setContentsMargins(0,0,0,0);
     verticalLayout->setSpacing(0);
     verticalLayout->addWidget(toolbar);
-    verticalLayout->addWidget(scroller);
+    verticalLayout->addLayout(timelineSplitterLayout_);
+
+    timelineSplitterLayout_->addWidget(layerPanel_);
+    timelineSplitterLayout_->addWidget(scroller);
 
     frameWidth_ = 5 * zoomSlider->value();
     timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), &currentFrame_);
@@ -474,6 +507,36 @@ void Timeline::step()
 void Timeline::setTheme(QString theme)
 {
     theme_ = theme;
+}
+
+void Timeline::addLayer(path* p)
+{
+    timeIndicatorBar->addLayer(p);
+    updateLayers();
+}
+
+void clearLayout(QLayout* layout){
+    if (!layout) return;
+    QLayoutItem *item;
+    while ((item = layout->takeAt(0)) != nullptr) {
+        if (QWidget *widget = item->widget()) {
+            widget->deleteLater(); // Safer than 'delete' if called from a signal
+        } else if (QLayout *subLayout = item->layout()) {
+            clearLayout(subLayout); // Recursive call for nested layouts
+        }
+        delete item;
+    }
+}
+
+void Timeline::updateLayers()
+{
+    clearLayout(layersLayout_);
+    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
+    for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
+        layersLayout_->addWidget(timeIndicatorBar->accessLayer(i));
+    }
+
+    layerPanel_->update();
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -545,4 +608,26 @@ void Timeline::playButtonClickEvent()
     }
 
     emit playSignal(playing_);
+}
+
+Layer::Layer(path *p, int height)
+{
+    height_ = height;
+    relatedPath_ = p;
+
+    setAutoFillBackground(false);
+}
+
+void Layer::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
+
+    painter.setBrush(QColor("#444444"));
+    painter.setPen(Qt::NoPen);
+
+    painter.drawRoundedRect(0,0, this->width(), height_, 2, 2);
+    painter.setPen(QPen("#FFFFFF"));
+    painter.drawText(20,0, this->width(), height_, Qt::AlignVCenter, relatedPath_->name_);
 }

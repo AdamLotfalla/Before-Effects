@@ -1,5 +1,5 @@
 #include "viewPort.h"
-#include <QDebug>
+
 
 QSvgRenderer path::PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
 QSvgRenderer path::NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
@@ -110,6 +110,16 @@ void path::addPoint(QPointF point)
 void path::addEdge(int start, int end)
 {
     edges_[start].push_back(end);
+}
+
+QString path::getName()
+{
+    return name_;
+}
+
+void path::setName(QString newName)
+{
+    name_ = newName;
 }
 
 QPointF path::getActualPoint(int index)
@@ -874,14 +884,35 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     }
     
     if (cachedAttributeWidget_) {
-        delete cachedAttributeWidget_;
+        cachedAttributeWidget_->deleteLater();
         cachedAttributeWidget_ = nullptr;
     }
 
     QWidget* background = new QWidget(parent);
     QVBoxLayout* VLayout = new QVBoxLayout(background);
     background->setLayout(VLayout);   
+
+    QHBoxLayout* nameLayout = new QHBoxLayout(background);
+    QLabel* nameLabel = new QLabel(background);
+    nameLabel->setText("Name");
+    QLineEdit* nameEdit = new QLineEdit(background);
+    // nameEdit->setStyleSheet(enabledLineEditStyle);
+    QSignalBlocker blocker(nameEdit);
+    nameEdit->setText(name_);
+
+    nameEdit->connect(nameEdit, &QLineEdit::editingFinished, [this, nameEdit](){
+        name_ = nameEdit->text();
+        update();
+    });
+    // nameEdit->connect(nameEdit, &QLineEdit::editingFinished, &Timeline::updateLayers);
+
+
+    nameLayout->addWidget(nameLabel,1);
+    nameLayout->addWidget(nameEdit,2);
+
+    VLayout->addLayout(nameLayout);
     
+    VLayout->addSpacing(10);
     QLabel* transformTitle = new QLabel("Transformation");
     QPalette palette = transformTitle->palette();
     palette.setColor(QPalette::WindowText, QColor("#888888"));
@@ -1815,6 +1846,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
 
                 currentPath->calculateBoundaries();
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
+                emit pathCreated(currentPath);
                 emit objectSelected(currentPath);
             }
             else{
