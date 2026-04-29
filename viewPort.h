@@ -304,9 +304,10 @@ class viewPort : public QGraphicsView{
     void keyReleaseEvent(QKeyEvent* event) override;
 
     signals:
-    void objectSelected(AttributePanel* obj);
+    void attributePanelUpdateNeeded(AttributePanel* obj);
     void pathCreated(path* p);
     void layerInfoUpdated();
+    void layerSelected(path* p);
 };
 
 class customSpinBox: public QWidget{

@@ -28,6 +28,7 @@ public:
         relatedPath_ = nullptr;
     };
 
+    bool isSelected_ = false;
     bool isValid() const {return relatedPath_ != nullptr;}
     path* relatedPath_ = nullptr;
 
@@ -61,8 +62,11 @@ public:
     int getLBound();
     void addLayer(path* p, QWidget* parent);
     Layer* accessLayer(int index);
+    Layer* getActiveLayer();
     int getLayerCount();
     int getTopBarHeight();
+
+    void setActiveLayer(Layer* l);
 
 private:
     int* frameWidth_; 
@@ -145,6 +149,7 @@ private:
     
 public slots:
     void updateLayers();
+    void updateSelectedLayer(path* p);
 
 private slots:
     void zoomSliderChanged(int value);

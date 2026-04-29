@@ -15,7 +15,10 @@ void Layer::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
 
-    painter.setBrush(QColor("#444444"));
+    if(isSelected_)
+        painter.setBrush(QColor("#55504a"));
+    else
+        painter.setBrush(QColor("#444444"));
     painter.setPen(Qt::NoPen);
 
     painter.drawRoundedRect(0,0, this->width(), height_, 2, 2);
@@ -237,6 +240,11 @@ Layer* TimeIndicatorBar::accessLayer(int index)
         return nullptr;
 }
 
+Layer *TimeIndicatorBar::getActiveLayer()
+{
+    return activeLayer_;
+}
+
 int TimeIndicatorBar::getLayerCount()
 {
     return layers_.size();
@@ -245,6 +253,18 @@ int TimeIndicatorBar::getLayerCount()
 int TimeIndicatorBar::getTopBarHeight()
 {
     return tickLayerHeight_ + boundLayerHeight_;
+}
+
+void TimeIndicatorBar::setActiveLayer(Layer *l)
+{
+    if(activeLayer_ != nullptr){
+        activeLayer_->isSelected_ = false;
+    }
+    activeLayer_ = l;
+
+    if(activeLayer_ != nullptr){
+        activeLayer_->isSelected_ = true;
+    }
 }
 
 void TimeIndicatorBar::onTickBarClick(QPoint pos)
@@ -492,8 +512,12 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     timelineSplitterLayout_ = new QHBoxLayout();
     layerPanel_ = new QWidget(this);
     layerPanel_->setMinimumWidth(175);
+
     layersLayout_ = new QVBoxLayout(layerPanel_);
     layersLayout_->setContentsMargins(0,0,0,0);
+    layersLayout_->setSpacing(1);
+    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
+    layersLayout_->addStretch();
     layerPanel_->setLayout(layersLayout_);
 
     scroller = new QScrollArea(this);
@@ -535,7 +559,9 @@ void Timeline::addLayer(path* p)
 {
     if(p != nullptr){
         timeIndicatorBar->addLayer(p, layerPanel_);
-        updateLayers();
+        Layer* newLayer = timeIndicatorBar->accessLayer(timeIndicatorBar->getLayerCount() - 1);
+        layersLayout_->insertWidget(1, newLayer);
+        newLayer->show();
     }
 }
 
@@ -561,6 +587,9 @@ void Timeline::updateLayers()
     for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
         Layer* temporaryLayer = timeIndicatorBar->accessLayer(i);
         if(temporaryLayer){
+            if(temporaryLayer == timeIndicatorBar->getActiveLayer()){
+                temporaryLayer->isSelected_ = true;
+            }
             layersLayout_->addWidget(temporaryLayer);
             temporaryLayer->show();
         }
@@ -639,4 +668,22 @@ void Timeline::playButtonClickEvent()
     }
 
     emit playSignal(playing_);
+}
+
+void Timeline::updateSelectedLayer(path *p)
+{
+    if(p == nullptr){
+        timeIndicatorBar->setActiveLayer(nullptr);
+        updateLayers();
+        return;
+    }
+
+    for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
+        if(timeIndicatorBar->accessLayer(i)->relatedPath_ == p){
+            timeIndicatorBar->setActiveLayer(timeIndicatorBar->accessLayer(i));
+            break;
+        }
+    }
+
+    updateLayers();
 }

@@ -1766,7 +1766,8 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
             selectedPath_->update();
             selectedPath_ = nullptr;
         }
-        emit objectSelected(nullptr); // ← notify panel: nothing selected
+        emit attributePanelUpdateNeeded(nullptr); // ← notify panel: nothing selected
+        emit layerSelected(nullptr);
         return;
     }
 
@@ -1777,17 +1778,21 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         }
 
         if(selectedPath_ != newSelectedPath){
-            emit layerInfoUpdated();
+            emit layerInfoUpdated(); //for highlighting
         }
 
         if(selectedPath_ != newSelectedPath && !hideAttributePanel){
-            emit objectSelected(newSelectedPath);
+            emit attributePanelUpdateNeeded(newSelectedPath);
         }
 
         selectedPath_ = newSelectedPath;
         selectedPath_->setSelected(true);
         selectedPath_->update();
-        
+
+        emit layerSelected(selectedPath_);
+    }
+    else{
+        emit layerSelected(nullptr);
     }
 }
 
@@ -1857,7 +1862,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 currentPath->calculateBoundaries();
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
-                emit objectSelected(currentPath);
+                emit attributePanelUpdateNeeded(currentPath);
             }
             else{
                 currentPath->addPoint(pointToAdd);
@@ -2227,7 +2232,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
             objects_.removeOne(selectedPath_); // remove from the list first
             delete selectedPath_;
             selectedPath_ = nullptr;
-            emit objectSelected(nullptr);
+            emit attributePanelUpdateNeeded(nullptr);
         }
         update();
     }
