@@ -59,7 +59,7 @@ public:
     void paintEvent(QPaintEvent* event);
     int getRBound();
     int getLBound();
-    void addLayer(QWidget* parent, path* p);
+    void addLayer(path* p, QWidget* parent = nullptr);
     Layer* accessLayer(int index);
     int getLayerCount();
     int getTopBarHeight();

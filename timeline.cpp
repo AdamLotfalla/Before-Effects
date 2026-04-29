@@ -223,7 +223,7 @@ int TimeIndicatorBar::getLBound()
     return LBoundFrame_;
 }
 
-void TimeIndicatorBar::addLayer(QWidget* parent, path* p)
+void TimeIndicatorBar::addLayer(path* p, QWidget* parent)
 {
     Layer* addedLayer = new Layer(parent, p, layerHeight_);
     layers_.push_back(addedLayer);
@@ -534,27 +534,28 @@ void Timeline::setTheme(QString theme)
 void Timeline::addLayer(path* p)
 {
     if(p != nullptr){
-        timeIndicatorBar->addLayer(layerPanel_, p);
+        timeIndicatorBar->addLayer(p, layerPanel_);
         updateLayers();
-    }
-}
-
-void clearLayout(QLayout* layout){
-    if (!layout) return;
-    QLayoutItem *item;
-    while ((item = layout->takeAt(0)) != nullptr) {
-        if (QWidget *widget = item->widget()) {
-            widget->deleteLater(); // Safer than 'delete' if called from a signal
-        } else if (QLayout *subLayout = item->layout()) {
-            clearLayout(subLayout); // Recursive call for nested layouts
-        }
-        delete item;
     }
 }
 
 void Timeline::updateLayers()
 {
-    clearLayout(layersLayout_);
+    if (layersLayout_) {
+       QLayoutItem *item;
+        while ((item = layersLayout_->takeAt(0)) != nullptr) {
+            if (QWidget *widget = item->widget()) {
+                widget->setParent(nullptr); // Just reparent, don't delete
+            }
+            delete item;
+        }
+        delete layersLayout_;
+    }
+    
+    // Create new layout
+    layersLayout_ = new QVBoxLayout(layerPanel_);
+    layersLayout_->setContentsMargins(0,0,0,0);
+
     layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
     for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
         Layer* temporaryLayer = timeIndicatorBar->accessLayer(i);
