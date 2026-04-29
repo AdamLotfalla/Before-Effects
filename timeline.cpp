@@ -545,24 +545,28 @@ void Timeline::updateLayers()
        QLayoutItem *item;
         while ((item = layersLayout_->takeAt(0)) != nullptr) {
             if (QWidget *widget = item->widget()) {
-                widget->setParent(nullptr); // Just reparent, don't delete
+                widget->hide();
             }
             delete item;
         }
-        delete layersLayout_;
+        // delete layersLayout_;
     }
-    
-    // Create new layout
-    layersLayout_ = new QVBoxLayout(layerPanel_);
-    layersLayout_->setContentsMargins(0,0,0,0);
+    else{
+        layersLayout_ = new QVBoxLayout(layerPanel_);
+        layersLayout_->setContentsMargins(0,0,0,0);
+        layersLayout_->setSpacing(0);
+    }
 
     layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
     for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
         Layer* temporaryLayer = timeIndicatorBar->accessLayer(i);
-        temporaryLayer->show();
-        layersLayout_->addWidget(temporaryLayer);
+        if(temporaryLayer){
+            layersLayout_->addWidget(temporaryLayer);
+            temporaryLayer->show();
+        }
     }
 
+    layersLayout_->addStretch();
     layerPanel_->update();
 }
 

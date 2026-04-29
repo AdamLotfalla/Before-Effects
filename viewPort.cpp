@@ -881,12 +881,12 @@ void path::makeDirty()
 QWidget *path::createAttributeWidget(QWidget *parent)
 {
     if (cachedAttributeWidget_ && cachedAttributeWidget_->parent() == parent) {
+        // Ensure data in the cached widget is up to date before returning
+        if(onPositionChanged) onPositionChanged(position_);
+        if(onScaleChanged) onScaleChanged(scaleX_, scaleY_);
+        if(onRotationChanged) onRotationChanged(rotation_);
+        
         return cachedAttributeWidget_;
-    }
-    
-    if (cachedAttributeWidget_) {
-        cachedAttributeWidget_->deleteLater();
-        cachedAttributeWidget_ = nullptr;
     }
 
     QWidget* background = new QWidget(parent);
@@ -1781,7 +1781,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         }
 
         if(selectedPath_ != newSelectedPath && !hideAttributePanel){
-            emit objectSelected(selectedPath_);
+            emit objectSelected(newSelectedPath);
         }
 
         selectedPath_ = newSelectedPath;
