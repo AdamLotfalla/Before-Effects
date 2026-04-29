@@ -58,15 +58,35 @@ class node{
     // void paint (QPaintEvent* event);
 };
 
-class path : public QGraphicsItem, public AttributePanel{
+class path : public QObject, public QGraphicsItem, public AttributePanel{
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
 
-    
     public:
     enum { Type = UserType + 1 };              //Unique ID for path
     int type() const override { return Type; } //Override standard type
 
     path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
     path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
+    ~path(){
+        for(node* n : actualNodes_) {
+            delete n->H1;
+            delete n->H2;
+            delete n;
+        }
+        actualNodes_.clear();
+        
+        // Remove from scene if still there
+        if(scene()) {
+            scene()->removeItem(this);
+        }
+        
+        // Clean up cached widget
+        if(cachedAttributeWidget_) {
+            cachedAttributeWidget_->deleteLater();
+        }
+    };
+    
     void calculateBoundaries();
     void makeDirty();
 
@@ -198,6 +218,8 @@ class path : public QGraphicsItem, public AttributePanel{
     std::function<void(QPointF)> onPositionChanged;
     std::function<void(qreal, qreal)> onScaleChanged;
     std::function<void(qreal)> onRotationChanged;
+    signals:
+    void layerInfoUpdated();
 };
 
 class viewPort : public QGraphicsView{
@@ -284,6 +306,7 @@ class viewPort : public QGraphicsView{
     signals:
     void objectSelected(AttributePanel* obj);
     void pathCreated(path* p);
+    void layerInfoUpdated();
 };
 
 class customSpinBox: public QWidget{

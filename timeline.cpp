@@ -1,5 +1,27 @@
 #include "timeline.h"
 
+Layer::Layer(QWidget* parent, path *p, int height) : QWidget(parent)
+{
+    height_ = height;
+    relatedPath_ = p;
+    this->setFixedHeight(height_);
+
+    setAutoFillBackground(false);
+}
+
+void Layer::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
+
+    painter.setBrush(QColor("#444444"));
+    painter.setPen(Qt::NoPen);
+
+    painter.drawRoundedRect(0,0, this->width(), height_, 2, 2);
+    painter.setPen(QPen("#FFFFFF"));
+    painter.drawText(20,0, this->width(), height_, Qt::AlignVCenter, relatedPath_->name_);
+}
 
 TimeIndicator::TimeIndicator(QWidget *parent) : QWidget(parent)
 {
@@ -201,9 +223,9 @@ int TimeIndicatorBar::getLBound()
     return LBoundFrame_;
 }
 
-void TimeIndicatorBar::addLayer(path* p)
+void TimeIndicatorBar::addLayer(QWidget* parent, path* p)
 {
-    Layer* addedLayer = new Layer(p, layerHeight_);
+    Layer* addedLayer = new Layer(parent, p, layerHeight_);
     layers_.push_back(addedLayer);
 }
 
@@ -511,8 +533,10 @@ void Timeline::setTheme(QString theme)
 
 void Timeline::addLayer(path* p)
 {
-    timeIndicatorBar->addLayer(p);
-    updateLayers();
+    if(p != nullptr){
+        timeIndicatorBar->addLayer(layerPanel_, p);
+        updateLayers();
+    }
 }
 
 void clearLayout(QLayout* layout){
@@ -533,7 +557,9 @@ void Timeline::updateLayers()
     clearLayout(layersLayout_);
     layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
     for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
-        layersLayout_->addWidget(timeIndicatorBar->accessLayer(i));
+        Layer* temporaryLayer = timeIndicatorBar->accessLayer(i);
+        temporaryLayer->show();
+        layersLayout_->addWidget(temporaryLayer);
     }
 
     layerPanel_->update();
@@ -608,26 +634,4 @@ void Timeline::playButtonClickEvent()
     }
 
     emit playSignal(playing_);
-}
-
-Layer::Layer(path *p, int height)
-{
-    height_ = height;
-    relatedPath_ = p;
-
-    setAutoFillBackground(false);
-}
-
-void Layer::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
-
-    painter.setBrush(QColor("#444444"));
-    painter.setPen(Qt::NoPen);
-
-    painter.drawRoundedRect(0,0, this->width(), height_, 2, 2);
-    painter.setPen(QPen("#FFFFFF"));
-    painter.drawText(20,0, this->width(), height_, Qt::AlignVCenter, relatedPath_->name_);
 }

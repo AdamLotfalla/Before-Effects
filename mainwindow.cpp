@@ -116,6 +116,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QObject::connect(timer_, &QTimer::timeout, TimelinePanel, &Timeline::step);
     QObject::connect(viewPort_, &viewPort::objectSelected, LPanel, &AttributePanelWidget::showObject);
     QObject::connect(viewPort_, &viewPort::pathCreated, TimelinePanel, &Timeline::addLayer);
+    // QObject::connect(viewPort_, &viewPort::layerInfoUpdated, TimelinePanel, &Timeline::updateLayers);
 }
 
 MainWindow::~MainWindow()

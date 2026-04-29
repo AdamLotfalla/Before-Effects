@@ -23,11 +23,17 @@
 
 class Layer : public QWidget{
 public:
+    Layer(QWidget* parent, path* p, int height);
+    ~Layer(){
+        relatedPath_ = nullptr;
+    };
+
+    bool isValid() const {return relatedPath_ != nullptr;}
     path* relatedPath_ = nullptr;
-    Layer(path* p, int height);
+
 private:
-    void paintEvent(QPaintEvent* event) override;
     int height_;
+    void paintEvent(QPaintEvent* event) override;
 };
 
 class TimeIndicator : public QWidget{
@@ -53,7 +59,7 @@ public:
     void paintEvent(QPaintEvent* event);
     int getRBound();
     int getLBound();
-    void addLayer(path* p);
+    void addLayer(QWidget* parent, path* p);
     Layer* accessLayer(int index);
     int getLayerCount();
     int getTopBarHeight();
@@ -120,7 +126,6 @@ public:
     void step();
     void setTheme(QString theme = "Dark");
     void addLayer(path* p);
-    void updateLayers();
     // void clickTimeIndicatorBar(QEvent* event);
     
 private:
@@ -138,6 +143,9 @@ private:
     void resizeEvent(QResizeEvent *event) override;
     void playButtonClickEvent();
     
+public slots:
+    void updateLayers();
+
 private slots:
     void zoomSliderChanged(int value);
 

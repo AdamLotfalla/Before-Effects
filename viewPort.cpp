@@ -40,6 +40,7 @@ path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* p
 {
     actualNodes_ = nodes;
     edges_ = edges;
+
     inPathEditingMode_ = pathEditing;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -903,6 +904,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     nameEdit->connect(nameEdit, &QLineEdit::editingFinished, [this, nameEdit](){
         name_ = nameEdit->text();
         update();
+        emit layerInfoUpdated();
     });
     // nameEdit->connect(nameEdit, &QLineEdit::editingFinished, &Timeline::updateLayers);
 
@@ -1774,6 +1776,10 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
             selectedPath_->update();
         }
 
+        if(selectedPath_ != newSelectedPath){
+            emit layerInfoUpdated();
+        }
+
         if(selectedPath_ != newSelectedPath && !hideAttributePanel){
             emit objectSelected(newSelectedPath);
         }
@@ -1820,6 +1826,10 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath = new path(canvasLocalPos, canvas_, &inPathEditingMode_);
             currentPath->setDrawingMode(true);
             setSelectedPath(currentPath, true, true);
+
+            currentPath->connect(currentPath, &path::layerInfoUpdated, [this](){
+                emit layerInfoUpdated();
+            });
             
             objects_.push_back(currentPath);
             return; //early return when having just one node
