@@ -33,7 +33,7 @@ public:
 public slots:
     void showObject(AttributePanel* obj) {
 
-        if(obj == nullptr || currentObject_ == obj) {
+        if(/*obj == nullptr || */currentObject_ == obj) {
             return;
         }
 
@@ -41,11 +41,13 @@ public slots:
 
         if (currentWidget_) {
             layout_->removeWidget(currentWidget_);
-            // delete currentWidget_;
+            delete currentWidget_;
+            // currentWidget_->hide();
             currentWidget_ = nullptr;
         }
         if (obj) {
             currentWidget_ = obj->createAttributeWidget(this);
+            // currentWidget_->show();
             layout_->addWidget(currentWidget_);
         }
     }

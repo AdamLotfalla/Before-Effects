@@ -1781,7 +1781,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         }
 
         if(selectedPath_ != newSelectedPath && !hideAttributePanel){
-            emit objectSelected(newSelectedPath);
+            emit objectSelected(selectedPath_);
         }
 
         selectedPath_ = newSelectedPath;
