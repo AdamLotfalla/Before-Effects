@@ -27,6 +27,230 @@ enum class handleMode{
 
 using namespace color_widgets;
 
+class customSpinBox: public QWidget{
+
+    Q_OBJECT
+    
+    private:
+    int height_ = 22;
+    int symbolWidth_ = 20;
+    char symbol_;
+    bool keyFramed = false;
+    double value_ = 0.0;
+    unsigned int precision_ = 0;
+    bool stringInput = false;
+    QString stringValue = "";
+    
+    qreal maximum_ = +5000.0;
+    qreal minimum_ = -5000.0;
+    
+    QRect rhombusBox;
+    QLineEdit* textEdit_;
+
+    void paintEvent(QPaintEvent* event) override {
+        QPainter painter(this);
+        
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(Qt::NoPen);
+
+        QPainterPath path;
+        path.addRoundedRect(0, 0, this->width(), height_, 5, 5);
+
+        painter.setClipPath(path);
+
+        painter.setBrush(QBrush("#272727"));
+        painter.drawRoundedRect(0,0, this->width(), height_, 5,5);
+
+        painter.setBrush(QBrush("#474747"));
+        painter.drawRect(this->width() - symbolWidth_, 0, symbolWidth_, height_);
+
+        QPainterPath Rhombus;
+        Rhombus.moveTo(4,0);
+        Rhombus.lineTo(8,4);
+        Rhombus.lineTo(4,8);
+        Rhombus.lineTo(0,4);
+        Rhombus.closeSubpath();
+
+        rhombusBox = {
+        this->width() - symbolWidth_ + static_cast<int>((symbolWidth_ - 8) * 0.5), 
+        static_cast<int>((height_ - 8) * 0.5),
+        8,
+        8
+        };
+
+        Rhombus.translate(rhombusBox.topLeft());
+        
+        if(keyFramed){
+            painter.setBrush(QBrush("#7BC7B0")); 
+            painter.setPen(Qt::NoPen);
+            painter.drawPath(Rhombus);
+        }
+        else{
+            QPainterPathStroker RhombusStroke;
+            RhombusStroke.setWidth(2.5);
+            RhombusStroke.setJoinStyle(Qt::RoundJoin);
+
+            QPainterPath strokePath = RhombusStroke.createStroke(Rhombus);
+            QPainterPath insideStroke = strokePath.intersected(Rhombus);
+
+            painter.fillPath(insideStroke, QColor("#cecece"));
+        }
+
+        
+        painter.setPen(QPen("#7BC7B0"));
+        painter.drawText(0,0, symbolWidth_, height_, Qt::AlignHCenter | Qt::AlignVCenter, QString(symbol_));
+
+        if(!isEnabled()){
+            painter.setCompositionMode(QPainter::CompositionMode_Darken);
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QBrush(QColor("#1E1E1E")));
+            painter.setOpacity(0.5);
+            painter.drawRect(0,0, this->width(), this->height());
+
+            textEdit_->setStyleSheet(disabledLineEditStyle);
+        }
+        else{
+            textEdit_->setStyleSheet(enabledLineEditStyle);
+        }
+    }
+
+
+    void resizeEvent(QResizeEvent*) override
+    {
+        textEdit_->setGeometry(symbolWidth_, 0,
+                                width() - 2*symbolWidth_,
+                                height_);
+    }
+
+    public:
+
+    void setKeyframe(bool state = true){
+        keyFramed = state;
+    }
+
+    double getValue(){
+        value_ = (textEdit_->text()).toDouble();
+        return value_;
+    }
+
+    void setValue(qreal value){
+        value_ = value;
+        textEdit_->setText(QString::number(value_, 'f', precision_));
+        // emit valueChanged(value);
+        update();
+    }
+
+    void setValue(QString value){
+        stringValue = value;
+        textEdit_->setText(value);
+        update();
+    }
+
+    void setMaximum(qreal value){
+        maximum_ = value;
+        delete textEdit_->validator();
+        textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
+    }
+
+    void setMinimum(qreal value){
+        minimum_ = value;
+        delete textEdit_->validator();
+        textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
+    }
+
+    void setPrecision(unsigned int value){
+        precision_ = value;
+
+        delete textEdit_->validator();
+        textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
+
+        textEdit_->setText(QString::number(value_, 'f', precision_)); // reformat
+    }
+
+    void setStringInput(bool state){
+        if(state){
+            stringInput = state;
+            textEdit_->setValidator(new QRegularExpressionValidator(QRegularExpression("#??[0-9a-fA-F]{6}?[0-9a-fA-F]{,2}?")));
+        }
+    }
+    
+    customSpinBox(QWidget* parent, char symbol): QWidget(parent){
+        symbol_ = symbol;
+        this->setFixedHeight(height_);
+        this->setMinimumWidth(50);
+        this->setAutoFillBackground(false);
+        this->connect(this, &customSpinBox::onMouseClick, this, &customSpinBox::onClick);
+
+        
+        textEdit_ = new QLineEdit(QString::number(value_, 'f', precision_), this);
+        textEdit_->setAlignment(Qt::AlignVCenter);
+        textEdit_->setAutoFillBackground(false);
+        textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
+        textEdit_->setGeometry(symbolWidth_, 0, this->width() - 2.0 * symbolWidth_, height_);
+        textEdit_->setStyleSheet(spinBoxStyle);
+
+
+        // connect(textEdit_, &QLineEdit::textChanged, this, &customSpinBox::onTextChanged);
+        connect(textEdit_, &QLineEdit::editingFinished, this, &customSpinBox::onEditingFinished);
+        textEdit_->update();
+    }
+
+    void mousePressEvent(QMouseEvent* event) override {
+        emit onMouseClick(event->pos());
+    }
+
+    void setDisabled(bool state){
+        textEdit_->setDisabled(state);
+        QWidget::setDisabled(state);
+        update();
+    }
+    
+
+    private slots:
+
+    void onClick(QPointF position){
+        if(rhombusBox.contains(position.x(), position.y())){
+            keyFramed = !keyFramed;
+            emit toggledKeyframe(keyFramed, value_);
+            update();
+        };
+    };
+
+    void onTextChanged(const QString& text) {
+        bool ok;
+        double newValue = text.toDouble(&ok);
+        if (ok) {
+            value_ = newValue;
+            emit valueChanged(value_);
+        }
+    }
+
+    void onEditingFinished()
+    {
+        if(stringInput){
+            stringValue = textEdit_->text();
+            emit stringValueChanged(stringValue);
+            return;
+        }
+
+        bool ok;
+        double newValue = textEdit_->text().toDouble(&ok);
+    
+        if (ok) {
+            value_ = newValue;
+            emit valueChanged(value_);
+        }
+    
+        textEdit_->setText(QString::number(value_, 'f', precision_));
+    }
+
+    signals:
+    void onMouseClick(QPointF position);
+    void valueChanged(qreal newValue);
+    void stringValueChanged(QString newValue);
+    void toggledKeyframe(bool state, qreal value);
+};
+
 class AttributePanel{
     public:
     virtual ~AttributePanel() = default;
@@ -171,10 +395,6 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::map<int, QColor> fillColoroFrames;
     std::map<int, QColor> strokeColoroFrames;
     
-
-
-    
-
     
     QRectF ULHandle, DLHandle, URHandle, DRHandle; //corner scale
     QRectF UHandle, DHandle, RHandle, LHandle;     //edge scale
@@ -237,6 +457,15 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::function<void(qreal)> onRotationChanged;
     signals:
     void layerInfoUpdated();
+    void updateSpinBoxes(bool xposF, bool yposF, bool xpivotF, bool ypivotF, 
+                         bool rotationF, bool xscaleF, bool yscaleF, 
+                         bool RfillF, bool GfillF, bool BfillF, bool AfillF,
+                         bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, 
+                         bool strokeWF,
+                         qreal xpos, qreal ypos, qreal xpivot, qreal ypivot, 
+                         qreal rotation, qreal xscale, qreal yscale,
+                         int strokeWidth,
+                         QColor fillColorF, QColor strokeColorF);
 };
 
 class viewPort : public QGraphicsView{
@@ -311,7 +540,7 @@ class viewPort : public QGraphicsView{
 
     QGraphicsItemGroup* canvas_;
     
-    QVector<path*> objects_;
+    QVector<path*> paths_;
     
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -320,233 +549,13 @@ class viewPort : public QGraphicsView{
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
 
-    signals:
+public slots:
+    void onFrameChanged();
+
+signals:
     void attributePanelUpdateNeeded(AttributePanel* obj);
     void pathCreated(path* p);
     void layerInfoUpdated();
     void layerSelected(path* p);
+    void frameChanged();
 };
-
-class customSpinBox: public QWidget{
-
-        Q_OBJECT
-        
-        private:
-        int height_ = 22;
-        int symbolWidth_ = 20;
-        char symbol_;
-        bool keyFramed = false;
-        double value_ = 0.0;
-        unsigned int precision_ = 0;
-        bool stringInput = false;
-        QString stringValue = "";
-        
-        qreal maximum_ = +5000.0;
-        qreal minimum_ = -5000.0;
-        
-        QRect rhombusBox;
-        QLineEdit* textEdit_;
-
-        void paintEvent(QPaintEvent* event) override {
-            QPainter painter(this);
-            
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setPen(Qt::NoPen);
-
-            QPainterPath path;
-            path.addRoundedRect(0, 0, this->width(), height_, 5, 5);
-
-            painter.setClipPath(path);
-
-            painter.setBrush(QBrush("#272727"));
-            painter.drawRoundedRect(0,0, this->width(), height_, 5,5);
-
-            painter.setBrush(QBrush("#474747"));
-            painter.drawRect(this->width() - symbolWidth_, 0, symbolWidth_, height_);
-
-            QPainterPath Rhombus;
-            Rhombus.moveTo(4,0);
-            Rhombus.lineTo(8,4);
-            Rhombus.lineTo(4,8);
-            Rhombus.lineTo(0,4);
-            Rhombus.closeSubpath();
-
-            rhombusBox = {
-            this->width() - symbolWidth_ + static_cast<int>((symbolWidth_ - 8) * 0.5), 
-            static_cast<int>((height_ - 8) * 0.5),
-            8,
-            8
-            };
-
-            Rhombus.translate(rhombusBox.topLeft());
-            
-            if(keyFramed){
-                painter.setBrush(QBrush("#7BC7B0")); 
-                painter.setPen(Qt::NoPen);
-                painter.drawPath(Rhombus);
-            }
-            else{
-                QPainterPathStroker RhombusStroke;
-                RhombusStroke.setWidth(2.5);
-                RhombusStroke.setJoinStyle(Qt::RoundJoin);
-
-                QPainterPath strokePath = RhombusStroke.createStroke(Rhombus);
-                QPainterPath insideStroke = strokePath.intersected(Rhombus);
-
-                painter.fillPath(insideStroke, QColor("#cecece"));
-            }
-
-            
-            painter.setPen(QPen("#7BC7B0"));
-            painter.drawText(0,0, symbolWidth_, height_, Qt::AlignHCenter | Qt::AlignVCenter, QString(symbol_));
-
-            if(!isEnabled()){
-                painter.setCompositionMode(QPainter::CompositionMode_Darken);
-                painter.setPen(Qt::NoPen);
-                painter.setBrush(QBrush(QColor("#1E1E1E")));
-                painter.setOpacity(0.5);
-                painter.drawRect(0,0, this->width(), this->height());
-
-                textEdit_->setStyleSheet(disabledLineEditStyle);
-            }
-            else{
-                textEdit_->setStyleSheet(enabledLineEditStyle);
-            }
-        }
-
-
-        void resizeEvent(QResizeEvent*) override
-        {
-            textEdit_->setGeometry(symbolWidth_, 0,
-                                   width() - 2*symbolWidth_,
-                                   height_);
-        }
-    
-        public:
-
-        void setKeyframe(bool state = true){
-            keyFramed = state;
-        }
-
-        double getValue(){
-            value_ = (textEdit_->text()).toDouble();
-            return value_;
-        }
-
-        void setValue(qreal value){
-            value_ = value;
-            textEdit_->setText(QString::number(value_, 'f', precision_));
-            // emit valueChanged(value);
-            update();
-        }
-
-        void setValue(QString value){
-            stringValue = value;
-            textEdit_->setText(value);
-            update();
-        }
-
-        void setMaximum(qreal value){
-            maximum_ = value;
-            delete textEdit_->validator();
-            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
-        }
-
-        void setMinimum(qreal value){
-            minimum_ = value;
-            delete textEdit_->validator();
-            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
-        }
-
-        void setPrecision(unsigned int value){
-            precision_ = value;
-
-            delete textEdit_->validator();
-            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
-
-            textEdit_->setText(QString::number(value_, 'f', precision_)); // reformat
-        }
-
-        void setStringInput(bool state){
-            if(state){
-                stringInput = state;
-                textEdit_->setValidator(new QRegularExpressionValidator(QRegularExpression("#??[0-9a-fA-F]{6}?[0-9a-fA-F]{,2}?")));
-            }
-        }
-        
-        customSpinBox(QWidget* parent, char symbol): QWidget(parent){
-            symbol_ = symbol;
-            this->setFixedHeight(height_);
-            this->setMinimumWidth(50);
-            this->setAutoFillBackground(false);
-            this->connect(this, &customSpinBox::onMouseClick, this, &customSpinBox::onClick);
-
-            
-            textEdit_ = new QLineEdit(QString::number(value_, 'f', precision_), this);
-            textEdit_->setAlignment(Qt::AlignVCenter);
-            textEdit_->setAutoFillBackground(false);
-            textEdit_->setValidator(new QDoubleValidator(minimum_, maximum_, precision_, this));
-            textEdit_->setGeometry(symbolWidth_, 0, this->width() - 2.0 * symbolWidth_, height_);
-            textEdit_->setStyleSheet(spinBoxStyle);
-
-
-            // connect(textEdit_, &QLineEdit::textChanged, this, &customSpinBox::onTextChanged);
-            connect(textEdit_, &QLineEdit::editingFinished, this, &customSpinBox::onEditingFinished);
-            textEdit_->update();
-        }
-
-        void mousePressEvent(QMouseEvent* event) override {
-            emit onMouseClick(event->pos());
-        }
-
-        void setDisabled(bool state){
-            textEdit_->setDisabled(state);
-            QWidget::setDisabled(state);
-            update();
-        }
-        
-
-        private slots:
-
-        void onClick(QPointF position){
-            if(rhombusBox.contains(position.x(), position.y())){
-                keyFramed = !keyFramed;
-                emit toggledKeyframe(keyFramed, value_);
-                update();
-            };
-        };
-
-        void onTextChanged(const QString& text) {
-            bool ok;
-            double newValue = text.toDouble(&ok);
-            if (ok) {
-                value_ = newValue;
-                emit valueChanged(value_);
-            }
-        }
-
-        void onEditingFinished()
-        {
-            if(stringInput){
-                stringValue = textEdit_->text();
-                emit stringValueChanged(stringValue);
-                return;
-            }
-
-            bool ok;
-            double newValue = textEdit_->text().toDouble(&ok);
-        
-            if (ok) {
-                value_ = newValue;
-                emit valueChanged(value_);
-            }
-        
-            textEdit_->setText(QString::number(value_, 'f', precision_));
-        }
-
-        signals:
-        void onMouseClick(QPointF position);
-        void valueChanged(qreal newValue);
-        void stringValueChanged(QString newValue);
-        void toggledKeyframe(bool state, qreal value);
-    };

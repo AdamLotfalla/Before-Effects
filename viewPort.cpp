@@ -882,12 +882,13 @@ void path::makeDirty()
 
 QWidget *path::createAttributeWidget(QWidget *parent)
 {
+    //use cached panel everytime except for the first time
     if (cachedAttributeWidget_ && cachedAttributeWidget_->parent() == parent) {
         // Ensure data in the cached widget is up to date before returning
         if(onPositionChanged) onPositionChanged(position_);
         if(onScaleChanged) onScaleChanged(scaleX_, scaleY_);
         if(onRotationChanged) onRotationChanged(rotation_);
-        
+
         return cachedAttributeWidget_;
     }
 
@@ -910,7 +911,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     });
     // nameEdit->connect(nameEdit, &QLineEdit::editingFinished, &Timeline::updateLayers);
 
-
     nameLayout->addWidget(nameLabel,1);
     nameLayout->addWidget(nameEdit,2);
 
@@ -928,16 +928,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     customSpinBox* xPositionBox = new customSpinBox(background, 'X');
     xPositionBox->setValue(position_.x());
-    xPositionBox->connect(xPositionBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
-        if(currentFrame_ == nullptr) return;
-
-        if(state){
-            xPositionFrames[*currentFrame_] = value;
-        }
-        else{
-            xPositionFrames.erase(*currentFrame_);
-        }
-    });
     xPositionBox->update();
     
     customSpinBox* yPositionBox = new customSpinBox(background, 'Y');
@@ -971,7 +961,31 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         setPosition(value, position_.y());
         update();
     });
-    
+    xPositionBox->connect(xPositionBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
+        if(currentFrame_ == nullptr) return;
+
+        if(state){
+            xPositionFrames[*currentFrame_] = value;
+        }
+        else{
+            xPositionFrames.erase(*currentFrame_);
+        }
+    });
+    xPositionBox->connect(this, &path::updateSpinBoxes, xPositionBox, [xPositionBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, 
+                                                                                     bool rotationF, bool xscaleF, bool yscaleF, 
+                                                                                     bool RfillF, bool GfillF, bool BfillF, bool AfillF,
+                                                                                     bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, 
+                                                                                     bool strokeWF,
+                                                                                     qreal xpos, qreal ypos, qreal xpivot, qreal ypivot, 
+                                                                                     qreal rotation, qreal xscale, qreal yscale,
+                                                                                     int strokeWidth,
+                                                                                     QColor fillColorF, QColor strokeColorF){
+        xPositionBox->setKeyframe(xposF);
+        if(xposF)
+            xPositionBox->setValue(xpos);
+        xPositionBox->update();
+    });
+
     yPositionBox->connect(yPositionBox, &customSpinBox::valueChanged, [this](qreal value){
         setPosition(position_.x(), value);
         update();
@@ -1766,8 +1780,8 @@ void viewPort::enableBezierTool(bool state)
     bezierToolActivated_ = state;
     startedNewPath_ = false;
     
-    if(!objects_.empty()){
-        objects_.back()->clearPreviewPoint();
+    if(!paths_.empty()){
+        paths_.back()->clearPreviewPoint();
     }
 }
 
@@ -1849,11 +1863,11 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 emit layerInfoUpdated();
             });
             
-            objects_.push_back(currentPath);
+            paths_.push_back(currentPath);
             return; //early return when having just one node
         }
         else{
-            currentPath = objects_.back();
+            currentPath = paths_.back();
             int lastPointIndex = currentPath->getLastNodeIndex();
             QPointF pointToAdd = canvasLocalPos;
             QPointF firstPoint = currentPath->getActualPoint(0);
@@ -2117,8 +2131,8 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
             selectedPath_->setPreviewPoint(target);
         }
         else{
-            if(!objects_.empty() && holding_){
-                setSelectedPath(objects_.back(), false);
+            if(!paths_.empty() && holding_){
+                setSelectedPath(paths_.back(), false);
             }
             QGraphicsView::mouseMoveEvent(event);
         }
@@ -2243,7 +2257,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Delete){
         if(selectedPath_ != nullptr){
-            objects_.removeOne(selectedPath_); // remove from the list first
+            paths_.removeOne(selectedPath_); // remove from the list first
             delete selectedPath_;
             selectedPath_ = nullptr;
             emit attributePanelUpdateNeeded(nullptr);
@@ -2262,5 +2276,111 @@ void viewPort::keyReleaseEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Control){
         controlPressed_ = false;
+    }
+}
+
+void viewPort::onFrameChanged(){
+    /*
+    for every object
+        for every path.framemap (has different types)
+            check framemap.contains(current frame) (store in booleans)
+        emit path::update spin box signal (needs to be connected) maybe one update signal that takes many bool parameters and updates every spinbox 
+
+    
+    */
+
+    for(auto p : paths_){
+        bool xposF = false, yposF = false, xpivotF = false, ypivotF = false, 
+        rotationF = false, xscaleF = false, yscaleF = false, 
+        RfillF = false, GfillF = false, BfillF = false, AfillF = false,
+        RstrokeF = false, GstrokeF = false, BstrokeF = false, AstrokeF = false, strokeWF = false;
+
+        qreal xpos, ypos, xpivot, ypivot, rotation, xscale, yscale;
+        int strokeWidth;
+        QColor fillColorF;
+        QColor strokeColorF;
+
+        // Position
+        if(p->xPositionFrames.find(*currentFrame_) != p->xPositionFrames.end()){
+            xposF = true;
+            xpos = p->xPositionFrames[*currentFrame_];
+        }
+
+        if(p->yPositionFrames.find(*currentFrame_) != p->yPositionFrames.end()){
+            yposF = true;
+            ypos = p->yPositionFrames[*currentFrame_];
+        }
+
+        // Pivot
+        if(p->xPivotFrames.find(*currentFrame_) != p->xPivotFrames.end()){
+            xpivotF = true;
+            xpivot = p->xPivotFrames[*currentFrame_];
+        }
+
+        if(p->yPivotFrames.find(*currentFrame_) != p->yPivotFrames.end()){
+            ypivotF = true;
+            ypivot = p->yPivotFrames[*currentFrame_];
+        }
+
+        // Scale
+        if(p->xScaleFrames.find(*currentFrame_) != p->xScaleFrames.end()){
+            xscaleF = true;
+            xscale = p->xScaleFrames[*currentFrame_];
+        }
+
+        if(p->yScaleFrames.find(*currentFrame_) != p->yScaleFrames.end()){
+            yscaleF = true;
+            yscale = p->yScaleFrames[*currentFrame_];
+        }
+
+        // Rotation
+        if(p->rotationFrames.find(*currentFrame_) != p->rotationFrames.end()){
+            rotationF = true;
+            rotation = p->rotationFrames[*currentFrame_];
+        }
+
+        // Stroke Width
+        if(p->strokeWidthFrames.find(*currentFrame_) != p->strokeWidthFrames.end()){
+            strokeWF = true;
+            strokeWidth = p->strokeWidthFrames[*currentFrame_];
+        }
+
+        // Fill Color
+        if(p->fillColoroFrames.find(*currentFrame_) != p->fillColoroFrames.end()){
+            fillColorF = p->fillColoroFrames[*currentFrame_];
+            RfillF = true;
+            GfillF = true;
+            BfillF = true;
+            AfillF = true;
+            RfillF = fillColorF.red();
+            GfillF = fillColorF.green();
+            BfillF = fillColorF.blue();
+            AfillF = fillColorF.alpha();
+        }
+        
+
+        // Stroke Color
+        if(p->fillColoroFrames.find(*currentFrame_) != p->fillColoroFrames.end()){
+            strokeColorF = p->fillColoroFrames[*currentFrame_];
+            RstrokeF = true;
+            GstrokeF = true;
+            BstrokeF = true;
+            AstrokeF = true;
+            RstrokeF = strokeColorF.red();
+            GstrokeF = strokeColorF.green();
+            BstrokeF = strokeColorF.blue();
+            AstrokeF = strokeColorF.alpha();
+        }
+        
+
+        emit p->updateSpinBoxes(xposF, yposF, xpivotF, ypivotF, 
+                                rotationF, xscaleF, yscaleF, 
+                                RfillF, GfillF, BfillF, AfillF,
+                                RstrokeF, GstrokeF, BstrokeF, AstrokeF, 
+                                strokeWF,
+                                xpos, ypos, xpivot, ypivot, 
+                                rotation, xscale, yscale,
+                                strokeWidth,
+                                fillColorF, strokeColorF);
     }
 }

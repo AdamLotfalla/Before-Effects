@@ -116,6 +116,7 @@ signals:
     void LBoundUnClickedSignal();
 
     void LayerClickedSignal(int layer);
+    void frameChanged();
 };
 
 class Timeline : public QWidget{
@@ -156,4 +157,5 @@ private slots:
 
 signals:
     void playSignal(bool playing);
+    void frameChanged();
 };

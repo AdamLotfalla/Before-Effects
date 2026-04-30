@@ -117,7 +117,7 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
             this, &TimeIndicatorBar::onRBoundClick);
     connect(this, &TimeIndicatorBar::RBoundUnClickedSignal,
             this, &TimeIndicatorBar::onRBoundUnClick);
-    
+
     
     update();
 }
@@ -324,6 +324,7 @@ void TimeIndicatorBar::onTickBarClick(QPoint pos)
     }
         
     timeIndicator_->MoveCenter(*currentFrame_ * (*frameWidth_));
+    emit frameChanged();
 }
 
 void TimeIndicatorBar::mousePressEvent(QMouseEvent *event)
@@ -378,6 +379,8 @@ void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
             RBoundFrame_ = frame;
         }
     }
+    
+    emit frameChanged();
     update();
 }
 
@@ -516,11 +519,13 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     QObject::connect(goToStartButton, &QToolButton::pressed, [this](){
         *currentFrame_ = timeIndicatorBar->getLBound();
         timeIndicatorBar->update();
+        emit frameChanged();
     });
 
     QObject::connect(goToEndButton, &QToolButton::pressed, [this](){
         *currentFrame_ = timeIndicatorBar->getRBound();
         timeIndicatorBar->update();
+        emit frameChanged();
     });
 
     QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
@@ -576,6 +581,11 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     layersLayout_->addStretch();
 
     scroller->setWidget(timeIndicatorBar);
+
+    connect(timeIndicatorBar, &TimeIndicatorBar::frameChanged, this, [this](){
+        emit frameChanged();
+    });
+
     // scroller->setWidgetResizable(true);
 }
 
@@ -587,6 +597,8 @@ void Timeline::step()
         *currentFrame_ ++;
     else
         *currentFrame_ = timeIndicatorBar->getRBound();
+
+    emit frameChanged();
     update();
 }
 
