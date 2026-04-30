@@ -392,8 +392,8 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::map<int, qreal> yScaleFrames;
     std::map<int, qreal> rotationFrames;
     std::map<int, int> strokeWidthFrames;
-    std::map<int, QColor> fillColoroFrames;
-    std::map<int, QColor> strokeColoroFrames;
+    std::map<int, QColor> fillColorFrames;
+    std::map<int, QColor> strokeColorFrames;
     
     
     QRectF ULHandle, DLHandle, URHandle, DRHandle; //corner scale

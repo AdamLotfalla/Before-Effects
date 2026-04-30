@@ -361,6 +361,7 @@ void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
     frame = qBound(0, frame, *frameCount_);
     if(barClicked_){
         *currentFrame_ = frame;
+        emit frameChanged();
         // The paint event does the movement for me
     }
     else if(LBoundClicked_){
@@ -380,7 +381,6 @@ void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
         }
     }
     
-    emit frameChanged();
     update();
 }
 
@@ -532,12 +532,14 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
         if(*currentFrame_ < timeIndicatorBar->getRBound())
             *currentFrame_ ++;
         timeIndicatorBar->update();
+        emit frameChanged();
     });
 
     QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
         if(*currentFrame_ > timeIndicatorBar->getLBound())
             *currentFrame_ --;
         timeIndicatorBar->update();
+        emit frameChanged();
     });
 
     QHBoxLayout* toolBarLayout = new QHBoxLayout(toolbar);
@@ -599,6 +601,8 @@ void Timeline::step()
         *currentFrame_ = timeIndicatorBar->getRBound();
 
     emit frameChanged();
+    qDebug() << "framechanged from inside step(). Current frame: " << *currentFrame_;
+    timeIndicatorBar->update();
     update();
 }
 

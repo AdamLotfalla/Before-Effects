@@ -2279,99 +2279,81 @@ void viewPort::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-void viewPort::onFrameChanged(){
-    /*
-    for every object
-        for every path.framemap (has different types)
-            check framemap.contains(current frame) (store in booleans)
-        emit path::update spin box signal (needs to be connected) maybe one update signal that takes many bool parameters and updates every spinbox 
-
-    
-    */
-
-    for(auto p : paths_){
+void viewPort::onFrameChanged() {
+    for(auto p : paths_) {
         bool xposF = false, yposF = false, xpivotF = false, ypivotF = false, 
-        rotationF = false, xscaleF = false, yscaleF = false, 
-        RfillF = false, GfillF = false, BfillF = false, AfillF = false,
-        RstrokeF = false, GstrokeF = false, BstrokeF = false, AstrokeF = false, strokeWF = false;
+             rotationF = false, xscaleF = false, yscaleF = false, 
+             RfillF = false, GfillF = false, BfillF = false, AfillF = false,
+             RstrokeF = false, GstrokeF = false, BstrokeF = false, AstrokeF = false, 
+             strokeWF = false;
 
-        qreal xpos, ypos, xpivot, ypivot, rotation, xscale, yscale;
-        int strokeWidth;
-        QColor fillColorF;
-        QColor strokeColorF;
+        qreal xpos = p->position_.x(), ypos = p->position_.y();
+        qreal xpivot = p->pivotPoint_.x(), ypivot = p->pivotPoint_.y();
+        qreal rotation = p->rotation_;
+        qreal xscale = p->scaleX_, yscale = p->scaleY_;
+        int strokeWidth = p->strokeWidth_;
+        QColor fillColorF = p->fillColor_;
+        QColor strokeColorF = p->strokeColor_;
 
-        // Position
-        if(p->xPositionFrames.find(*currentFrame_) != p->xPositionFrames.end()){
+        // --- Position ---
+        if(p->xPositionFrames.count(*currentFrame_)) {
             xposF = true;
             xpos = p->xPositionFrames[*currentFrame_];
+            p->setPosition(xpos, p->position_.y()); 
         }
-
-        if(p->yPositionFrames.find(*currentFrame_) != p->yPositionFrames.end()){
+        if(p->yPositionFrames.count(*currentFrame_)) {
             yposF = true;
             ypos = p->yPositionFrames[*currentFrame_];
+            p->setPosition(p->position_.x(), ypos); 
         }
 
-        // Pivot
-        if(p->xPivotFrames.find(*currentFrame_) != p->xPivotFrames.end()){
-            xpivotF = true;
-            xpivot = p->xPivotFrames[*currentFrame_];
-        }
-
-        if(p->yPivotFrames.find(*currentFrame_) != p->yPivotFrames.end()){
-            ypivotF = true;
-            ypivot = p->yPivotFrames[*currentFrame_];
-        }
-
-        // Scale
-        if(p->xScaleFrames.find(*currentFrame_) != p->xScaleFrames.end()){
-            xscaleF = true;
-            xscale = p->xScaleFrames[*currentFrame_];
-        }
-
-        if(p->yScaleFrames.find(*currentFrame_) != p->yScaleFrames.end()){
-            yscaleF = true;
-            yscale = p->yScaleFrames[*currentFrame_];
-        }
-
-        // Rotation
-        if(p->rotationFrames.find(*currentFrame_) != p->rotationFrames.end()){
+        // --- Rotation ---
+        if(p->rotationFrames.count(*currentFrame_)) {
             rotationF = true;
             rotation = p->rotationFrames[*currentFrame_];
+            p->setRotation(rotation);               
         }
 
-        // Stroke Width
-        if(p->strokeWidthFrames.find(*currentFrame_) != p->strokeWidthFrames.end()){
+        // --- Scale ---
+        if(p->xScaleFrames.count(*currentFrame_)) {
+            xscaleF = true;
+            xscale = p->xScaleFrames[*currentFrame_];
+            p->setScale(xscale, p->scaleY_);        
+        }
+        if(p->yScaleFrames.count(*currentFrame_)) {
+            yscaleF = true;
+            yscale = p->yScaleFrames[*currentFrame_];
+            p->setScale(p->scaleX_, yscale);        
+        }
+
+        // --- Stroke Width ---
+        if(p->strokeWidthFrames.count(*currentFrame_)) {
             strokeWF = true;
             strokeWidth = p->strokeWidthFrames[*currentFrame_];
+            p->strokeWidth_ = strokeWidth;          
         }
 
-        // Fill Color
-        if(p->fillColoroFrames.find(*currentFrame_) != p->fillColoroFrames.end()){
-            fillColorF = p->fillColoroFrames[*currentFrame_];
-            RfillF = true;
-            GfillF = true;
-            BfillF = true;
-            AfillF = true;
-            RfillF = fillColorF.red();
-            GfillF = fillColorF.green();
-            BfillF = fillColorF.blue();
-            AfillF = fillColorF.alpha();
+        // --- Fill Color ---
+        if(p->fillColorFrames.count(*currentFrame_)) {
+            fillColorF = p->fillColorFrames[*currentFrame_];
+            RfillF = GfillF = BfillF = AfillF = true;
+            p->fillColor_ = fillColorF;             
         }
-        
 
-        // Stroke Color
-        if(p->fillColoroFrames.find(*currentFrame_) != p->fillColoroFrames.end()){
-            strokeColorF = p->fillColoroFrames[*currentFrame_];
-            RstrokeF = true;
-            GstrokeF = true;
-            BstrokeF = true;
-            AstrokeF = true;
-            RstrokeF = strokeColorF.red();
-            GstrokeF = strokeColorF.green();
-            BstrokeF = strokeColorF.blue();
-            AstrokeF = strokeColorF.alpha();
+        // --- Stroke Color ---
+        if(p->strokeColorFrames.count(*currentFrame_)) {
+            strokeColorF = p->strokeColorFrames[*currentFrame_];
+            RstrokeF = GstrokeF = BstrokeF = AstrokeF = true;
+            p->strokeColor_ = strokeColorF;         
         }
-        
+
+        bool anyKeyframe = xposF || yposF || xpivotF || ypivotF || 
+                           rotationF || xscaleF || yscaleF || 
+                           RfillF || GfillF || BfillF || AfillF ||
+                           RstrokeF || GstrokeF || BstrokeF || AstrokeF || 
+                           strokeWF;
+
+        if(!anyKeyframe) continue;
 
         emit p->updateSpinBoxes(xposF, yposF, xpivotF, ypivotF, 
                                 rotationF, xscaleF, yscaleF, 
@@ -2382,5 +2364,7 @@ void viewPort::onFrameChanged(){
                                 rotation, xscale, yscale,
                                 strokeWidth,
                                 fillColorF, strokeColorF);
+
+        p->update();
     }
 }
