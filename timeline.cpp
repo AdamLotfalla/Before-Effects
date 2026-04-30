@@ -230,7 +230,6 @@ void TimeIndicatorBar::addLayer(path* p, QWidget* parent)
 {
     setActiveLayer(nullptr);
     Layer* addedLayer = new Layer(parent, p, layerHeight_);
-    addedLayer->isSelected_ = true;
     layers_.push_back(addedLayer);
     setActiveLayer(addedLayer);
 }
@@ -537,7 +536,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     layersLayout_->setContentsMargins(0,0,0,0);
     layersLayout_->setSpacing(1);
-    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight()); //causes the program not to launch !?
+    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
     layersLayout_->addStretch();
 
     scroller->setWidget(timeIndicatorBar);
@@ -595,6 +594,7 @@ void Timeline::updateLayers()
             if(temporaryLayer == timeIndicatorBar->getActiveLayer()){
                 temporaryLayer->isSelected_ = true;
             }
+            temporaryLayer->update();
             layersLayout_->addWidget(temporaryLayer);
         }
     }
