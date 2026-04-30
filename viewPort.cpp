@@ -1,15 +1,15 @@
 #include "viewPort.h"
 
 
-QSvgRenderer path::PDiagonalArrow(QString(":/Handles/icons/PDiagonalArrows.svg"));
-QSvgRenderer path::NDiagonalArrow(QString(":/Handles/icons/NDiagonalArrows.svg"));
-QSvgRenderer path::UDArrow(QString(":/Handles/icons/UDArrows.svg"));
-QSvgRenderer path::LRArrow(QString(":/Handles/icons/LRArrows.svg"));
-QSvgRenderer path::URRotationArrow(QString(":/Handles/icons/URcornerArrow.svg"));
-QSvgRenderer path::ULRotationArrow(QString(":/Handles/icons/ULcornerArrow.svg"));
-QSvgRenderer path::DRRotationArrow(QString(":/Handles/icons/DRcornerArrow.svg"));
-QSvgRenderer path::DLRotationArrow(QString(":/Handles/icons/DLcornerArrow.svg"));
-QSvgRenderer path::PivotMark(QString(":/Handles/icons/PivotMark.svg"));
+QSvgRenderer* path::PDiagonalArrow  = nullptr;
+QSvgRenderer* path::NDiagonalArrow  = nullptr;
+QSvgRenderer* path::UDArrow         = nullptr;
+QSvgRenderer* path::LRArrow         = nullptr;
+QSvgRenderer* path::URRotationArrow = nullptr;
+QSvgRenderer* path::ULRotationArrow = nullptr;
+QSvgRenderer* path::DRRotationArrow = nullptr;
+QSvgRenderer* path::DLRotationArrow = nullptr;
+QSvgRenderer* path::PivotMark       = nullptr;
 
 
 bezierHandle::bezierHandle(QPointF position)
@@ -677,6 +677,20 @@ void path::updateTransformedNodes()
     }
 
     needTransformUpdate_ = false;
+}
+
+void path::initSvgRenderers()
+{
+    if (PDiagonalArrow) return; // already initialized
+    PDiagonalArrow  = new QSvgRenderer(QString(":/Handles/icons/PDiagonalArrows.svg"));
+    NDiagonalArrow  = new QSvgRenderer(QString(":/Handles/icons/NDiagonalArrows.svg"));
+    UDArrow         = new QSvgRenderer(QString(":/Handles/icons/UDArrows.svg"));
+    LRArrow         = new QSvgRenderer(QString(":/Handles/icons/LRArrows.svg"));
+    URRotationArrow = new QSvgRenderer(QString(":/Handles/icons/URcornerArrow.svg"));
+    ULRotationArrow = new QSvgRenderer(QString(":/Handles/icons/ULcornerArrow.svg"));
+    DRRotationArrow = new QSvgRenderer(QString(":/Handles/icons/DRcornerArrow.svg"));
+    DLRotationArrow = new QSvgRenderer(QString(":/Handles/icons/DLcornerArrow.svg"));
+    PivotMark       = new QSvgRenderer(QString(":/Handles/icons/PivotMark.svg"));
 }
 
 void path::optimize(bool state)
@@ -1623,6 +1637,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(widget);
+    initSvgRenderers();
 
     painter->setClipping(false);
 
@@ -1795,8 +1810,8 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         
         if(inRotationMode_) {
             // Rotation handles - all use same rotation
-            QSvgRenderer* rotSvgs[4] = {&ULRotationArrow, &URRotationArrow, 
-                                        &DRRotationArrow, &DLRotationArrow};
+            QSvgRenderer* rotSvgs[4] = {ULRotationArrow, URRotationArrow, 
+                                        DRRotationArrow, DLRotationArrow};
             for(int i = 0; i < 4; i++) {
                 painter->save();
                 painter->translate(corners[i]);
@@ -1807,8 +1822,8 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         }
         else {
             // Scale corner handles
-            QSvgRenderer* cornerSvgs[4] = {&NDiagonalArrow, &PDiagonalArrow, 
-                                        &NDiagonalArrow, &PDiagonalArrow};
+            QSvgRenderer* cornerSvgs[4] = {NDiagonalArrow, PDiagonalArrow, 
+                                           NDiagonalArrow, PDiagonalArrow};
             for(int i = 0; i < 4; i++) {
                 painter->save();
                 painter->translate(corners[i]);
@@ -1818,7 +1833,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             }
             
             // Edge handles
-            QSvgRenderer* edgeSvgs[4] = {&UDArrow, &LRArrow, &UDArrow, &LRArrow};
+            QSvgRenderer* edgeSvgs[4] = {UDArrow, LRArrow, UDArrow, LRArrow};
             for(int i = 0; i < 4; i++) {
                 painter->save();
                 painter->translate(edges[i]);
@@ -1833,7 +1848,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->save();
         painter->translate(position_ + pivotPoint_);
         painter->rotate(rotation_);
-        PivotMark.render(painter, QRectF(-hHalf, -hHalf, hd, hd));
+        PivotMark->render(painter, QRectF(-hHalf, -hHalf, hd, hd));
         painter->restore();
 
     }

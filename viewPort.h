@@ -427,15 +427,17 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     QPointF previewPoint_;
     
     //svgs for handles
-    static QSvgRenderer PDiagonalArrow;
-    static QSvgRenderer NDiagonalArrow;
-    static QSvgRenderer UDArrow;
-    static QSvgRenderer LRArrow;
-    static QSvgRenderer URRotationArrow;
-    static QSvgRenderer ULRotationArrow;
-    static QSvgRenderer DRRotationArrow;
-    static QSvgRenderer DLRotationArrow;
-    static QSvgRenderer PivotMark;
+    static QSvgRenderer* PDiagonalArrow;
+    static QSvgRenderer* NDiagonalArrow;
+    static QSvgRenderer* UDArrow;
+    static QSvgRenderer* LRArrow;
+    static QSvgRenderer* URRotationArrow;
+    static QSvgRenderer* ULRotationArrow;
+    static QSvgRenderer* DRRotationArrow;
+    static QSvgRenderer* DLRotationArrow;
+    static QSvgRenderer* PivotMark;
+
+    static void initSvgRenderers();
     
     //visuals 
     const qreal handleD_ = 10;
