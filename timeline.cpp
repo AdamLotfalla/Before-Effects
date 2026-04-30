@@ -232,27 +232,17 @@ void TimeIndicatorBar::addLayer(path* p, QWidget* parent)
     layers_.push_back(addedLayer);
 }
 
+Layer *TimeIndicatorBar::getActiveLayer()
+{
+    return activeLayer_;
+}
+
 Layer* TimeIndicatorBar::accessLayer(int index)
 {
     if(index < layers_.size())
         return layers_[index];
     else
         return nullptr;
-}
-
-Layer *TimeIndicatorBar::getActiveLayer()
-{
-    return activeLayer_;
-}
-
-int TimeIndicatorBar::getLayerCount()
-{
-    return layers_.size();
-}
-
-int TimeIndicatorBar::getTopBarHeight()
-{
-    return tickLayerHeight_ + boundLayerHeight_;
 }
 
 void TimeIndicatorBar::setActiveLayer(Layer *l)
@@ -265,6 +255,16 @@ void TimeIndicatorBar::setActiveLayer(Layer *l)
     if(activeLayer_ != nullptr){
         activeLayer_->isSelected_ = true;
     }
+}
+
+int TimeIndicatorBar::getLayerCount()
+{
+    return layers_.size();
+}
+
+int TimeIndicatorBar::getTopBarHeight()
+{
+    return tickLayerHeight_ + boundLayerHeight_;
 }
 
 void TimeIndicatorBar::onTickBarClick(QPoint pos)
@@ -512,12 +512,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     timelineSplitterLayout_ = new QHBoxLayout();
     layerPanel_ = new QWidget(this);
     layerPanel_->setMinimumWidth(175);
-
     layersLayout_ = new QVBoxLayout(layerPanel_);
-    layersLayout_->setContentsMargins(0,0,0,0);
-    layersLayout_->setSpacing(1);
-    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
-    layersLayout_->addStretch();
     layerPanel_->setLayout(layersLayout_);
 
     scroller = new QScrollArea(this);
@@ -534,6 +529,11 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     frameWidth_ = 5 * zoomSlider->value();
     timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), &currentFrame_);
     timeIndicatorBar->show();
+
+    layersLayout_->setContentsMargins(0,0,0,0);
+    layersLayout_->setSpacing(1);
+    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight()); //causes the program not to launch !?
+    layersLayout_->addStretch();
 
     scroller->setWidget(timeIndicatorBar);
     // scroller->setWidgetResizable(true);
@@ -591,11 +591,14 @@ void Timeline::updateLayers()
                 temporaryLayer->isSelected_ = true;
             }
             layersLayout_->addWidget(temporaryLayer);
-            temporaryLayer->show();
         }
     }
 
+    
     layersLayout_->addStretch();
+    for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
+        timeIndicatorBar->accessLayer(i)->show();
+    }
     layerPanel_->update();
 }
 
