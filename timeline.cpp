@@ -530,7 +530,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
         if(*currentFrame_ < timeIndicatorBar->getRBound())
-            *currentFrame_ ++;
+            (*currentFrame_) ++;
         timeIndicatorBar->update();
         emit frameChanged();
     });
@@ -596,7 +596,7 @@ void Timeline::step()
     if(*currentFrame_ < timeIndicatorBar->getLBound() || *currentFrame_ == timeIndicatorBar->getRBound())
         *currentFrame_ = timeIndicatorBar->getLBound();
     else if(*currentFrame_ < timeIndicatorBar->getRBound()) 
-        *currentFrame_ ++;
+        (*currentFrame_) ++;
     else
         *currentFrame_ = timeIndicatorBar->getRBound();
 
