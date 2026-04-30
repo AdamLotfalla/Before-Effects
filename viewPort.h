@@ -462,11 +462,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
                          bool rotationF, bool xscaleF, bool yscaleF, 
                          bool RfillF, bool GfillF, bool BfillF, bool AfillF,
                          bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, 
-                         bool strokeWF,
-                         qreal xpos, qreal ypos, qreal xpivot, qreal ypivot, 
-                         qreal rotation, qreal xscale, qreal yscale,
-                         int strokeWidth,
-                         QColor fillColorF, QColor strokeColorF);
+                         bool strokeWF);
 };
 
 class viewPort : public QGraphicsView{

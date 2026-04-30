@@ -984,14 +984,8 @@ QWidget *path::createAttributeWidget(QWidget *parent)
                                                                                      bool rotationF, bool xscaleF, bool yscaleF, 
                                                                                      bool RfillF, bool GfillF, bool BfillF, bool AfillF,
                                                                                      bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, 
-                                                                                     bool strokeWF,
-                                                                                     qreal xpos, qreal ypos, qreal xpivot, qreal ypivot, 
-                                                                                     qreal rotation, qreal xscale, qreal yscale,
-                                                                                     int strokeWidth,
-                                                                                     QColor fillColorF, QColor strokeColorF){
+                                                                                     bool strokeWF){
         xPositionBox->setKeyframe(xposF);
-        if(xposF)
-            xPositionBox->setValue(xpos);
         xPositionBox->update();
     });
 
@@ -2303,64 +2297,40 @@ void viewPort::onFrameChanged() {
              RstrokeF = false, GstrokeF = false, BstrokeF = false, AstrokeF = false, 
              strokeWF = false;
 
-        qreal xpos = p->position_.x(), ypos = p->position_.y();
-        qreal xpivot = p->pivotPoint_.x(), ypivot = p->pivotPoint_.y();
-        qreal rotation = p->rotation_;
-        qreal xscale = p->scaleX_, yscale = p->scaleY_;
-        int strokeWidth = p->strokeWidth_;
-        QColor fillColorF = p->fillColor_;
-        QColor strokeColorF = p->strokeColor_;
-
         // --- Position ---
         if(p->xPositionFrames.find(*currentFrame_) != p->xPositionFrames.end()) {
             xposF = true;
-            xpos = p->xPositionFrames[*currentFrame_];
-            p->setPosition(xpos, p->position_.y()); 
         }
         if(p->yPositionFrames.find(*currentFrame_) != p->yPositionFrames.end()) {
             yposF = true;
-            ypos = p->yPositionFrames[*currentFrame_];
-            p->setPosition(p->position_.x(), ypos); 
         }
 
         // --- Rotation ---
         if(p->rotationFrames.find(*currentFrame_) != p->rotationFrames.end()) {
-            rotationF = true;
-            rotation = p->rotationFrames[*currentFrame_];
-            p->setRotation(rotation);               
+            rotationF = true;            
         }
 
         // --- Scale ---
         if(p->xScaleFrames.find(*currentFrame_) != p->xScaleFrames.end()) {
-            xscaleF = true;
-            xscale = p->xScaleFrames[*currentFrame_];
-            p->setScale(xscale, p->scaleY_);        
+            xscaleF = true;   
         }
         if(p->yScaleFrames.find(*currentFrame_) != p->yScaleFrames.end()) {
-            yscaleF = true;
-            yscale = p->yScaleFrames[*currentFrame_];
-            p->setScale(p->scaleX_, yscale);        
+            yscaleF = true;       
         }
 
         // --- Stroke Width ---
         if(p->strokeWidthFrames.find(*currentFrame_) != p->strokeWidthFrames.end()) {
-            strokeWF = true;
-            strokeWidth = p->strokeWidthFrames[*currentFrame_];
-            p->strokeWidth_ = strokeWidth;          
+            strokeWF = true;      
         }
 
         // --- Fill Color ---
         if(p->fillColorFrames.find(*currentFrame_) != p->fillColorFrames.end()) {
-            fillColorF = p->fillColorFrames[*currentFrame_];
-            RfillF = GfillF = BfillF = AfillF = true;
-            p->fillColor_ = fillColorF;             
+            RfillF = GfillF = BfillF = AfillF = true;           
         }
 
         // --- Stroke Color ---
         if(p->strokeColorFrames.find(*currentFrame_) != p->strokeColorFrames.end()) {
-            strokeColorF = p->strokeColorFrames[*currentFrame_];
-            RstrokeF = GstrokeF = BstrokeF = AstrokeF = true;
-            p->strokeColor_ = strokeColorF;         
+            RstrokeF = GstrokeF = BstrokeF = AstrokeF = true;         
         }
 
         
@@ -2368,12 +2338,64 @@ void viewPort::onFrameChanged() {
             rotationF, xscaleF, yscaleF, 
             RfillF, GfillF, BfillF, AfillF,
             RstrokeF, GstrokeF, BstrokeF, AstrokeF, 
-            strokeWF,
-            xpos, ypos, xpivot, ypivot, 
-            rotation, xscale, yscale,
-            strokeWidth,
-            fillColorF, strokeColorF);
-            
+            strokeWF);
+        
+
+        auto linearInterpolation = [](std::map<int, qreal> framemap, qreal defaultValue, int F_curr, int F_min, int F_max) -> qreal {
+
+            auto it = framemap.find(F_curr);
+            if(it != framemap.end()) {
+                return it->second;
+            }
+
+            if(framemap.size() == 1) {
+                return framemap.begin()->second;
+            }
+
+            if(!framemap.empty()) {
+                auto upper = framemap.lower_bound(F_curr);
+                auto lower = upper;
+
+                if(lower != framemap.begin()) {
+                    --lower;
+                }
+
+                qreal prevFrame, nextFrame;
+                qreal prevValue, nextValue;
+
+                if(lower != framemap.end()) {
+                    prevFrame = lower->first;
+                    prevValue = lower->second;
+                } else {
+                    prevFrame = F_min;
+                    prevValue = framemap.begin()->second;
+                }
+
+                if(upper != framemap.end()) {
+                    nextFrame = upper->first;
+                    nextValue = upper->second;
+                } else {
+                    nextFrame = F_max;
+                    nextValue = framemap.rbegin()->second;
+                }
+
+                if(prevFrame == nextFrame) {
+                    return prevValue;
+                }
+
+                float t = float(F_curr - prevFrame) / float(nextFrame - prevFrame);
+                return prevValue + (nextValue - prevValue) * t;
+            }
+
+            return defaultValue;
+        };
+
+        selectedPath_->setPosition(
+            linearInterpolation(p->xPositionFrames, p->position_.x(), *currentFrame_, 0, 244), //0 and 244 need to change
+            linearInterpolation(p->yPositionFrames, p->position_.y(), *currentFrame_, 0, 244)
+        );
+
+
         // bool anyKeyframe = xposF || yposF || xpivotF || ypivotF || 
         //                     rotationF || xscaleF || yscaleF || 
         //                     RfillF || GfillF || BfillF || AfillF ||
