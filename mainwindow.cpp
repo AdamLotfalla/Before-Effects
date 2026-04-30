@@ -212,8 +212,8 @@ void MainWindow::exportAnimation()
     progressDialog->setMinimumDuration(0);
     progressDialog->setValue(0);
 
-    const QSize  outputSize(1280, 720);
-    QRectF canvasRect = viewPort_->scene()->sceneRect();
+    const QSize  outputSize(1920, 1080);
+    QRectF canvasRect = viewPort_->canvasSceneRect();
     if (canvasRect.isEmpty()) canvasRect = QRectF(0, 0, 1280, 720);
 
     bool cancelled = false;

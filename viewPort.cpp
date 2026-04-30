@@ -1622,13 +1622,20 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    Q_UNUSED(option);
     Q_UNUSED(widget);
 
     painter->setClipping(false);
 
     // return if the shape has no nodes
     if(actualNodes_.isEmpty()) return;
+
+    // Compute canvas-space handle size that stays constant in screen pixels
+    qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
+    qreal hd       = handleD_      / lod;   // handle square size
+    qreal hHalf    = hd / 2.0;
+    qreal hGrowth  = handleGrowth_ / lod;
+    qreal hOffset  = hHalf + hGrowth;
+    qreal strokeW  = strokeWidth_;          // stroke stays in canvas coords (intentional)
 
     updateTransformedNodes();
 
@@ -1675,13 +1682,13 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setPen(QPen(Qt::NoPen));
     }
     else if(inPathDrawingMode_){
-        painter->setPen(QPen(QColor("#4C7FD1"), 1));
+        painter->setPen(QPen(QColor("#4C7FD1"), 2));
     }
     painter->drawPath(path);
 
     // Preview for next point to draw when using bezier pen
     if (hasDrawingPreview_) {
-        painter->setPen(QPen(QColor("#B84343"), 1));
+        painter->setPen(QPen(QColor("#B84343"), 2));
         painter->setBrush(Qt::NoBrush);
         
         QPainterPath previewPath;
@@ -1720,8 +1727,6 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
         // Calculate common values
         QPointF center(0.5 * (maxX_ + minX_), 0.5 * (maxY_ + minY_));
-        qreal handleHalf = handleD_ / 2.0;
-        qreal handleOffset = handleHalf + handleGrowth_;
         
         qreal actualMinX = std::min(minX_, maxX_);
         qreal actualMaxX = std::max(minX_, maxX_);
@@ -1744,17 +1749,17 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
         // Define handle positions in object space
         QPointF cornerOffsets[4] = {
-            {actualMinX - handleOffset - strokeWidth_, actualMinY - handleOffset - strokeWidth_}, // UL
-            {actualMaxX + handleOffset + strokeWidth_, actualMinY - handleOffset - strokeWidth_}, // UR
-            {actualMaxX + handleOffset + strokeWidth_, actualMaxY + handleOffset + strokeWidth_}, // DR
-            {actualMinX - handleOffset - strokeWidth_, actualMaxY + handleOffset + strokeWidth_}  // DL
+            {actualMinX - hOffset - strokeWidth_, actualMinY - hOffset - strokeWidth_}, // UL
+            {actualMaxX + hOffset + strokeWidth_, actualMinY - hOffset - strokeWidth_}, // UR
+            {actualMaxX + hOffset + strokeWidth_, actualMaxY + hOffset + strokeWidth_}, // DR
+            {actualMinX - hOffset - strokeWidth_, actualMaxY + hOffset + strokeWidth_}  // DL
         };
         
         QPointF edgeOffsets[4] = {
-            {center.x(), actualMinY - handleOffset - strokeWidth_}, // Up
-            {actualMaxX + handleOffset, center.y()}, // Right
-            {center.x(), actualMaxY + handleOffset + strokeWidth_}, // Down
-            {actualMinX - handleOffset - strokeWidth_, center.y()}  // Left
+            {center.x(), actualMinY - hOffset - strokeWidth_}, // Up
+            {actualMaxX + hOffset, center.y()}, // Right
+            {center.x(), actualMaxY + hOffset + strokeWidth_}, // Down
+            {actualMinX - hOffset - strokeWidth_, center.y()}  // Left
         };
         
         // Transform all positions and create handle rectangles
@@ -1769,21 +1774,21 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             edges[i] = mapToItemRotation(edgeOffsets[i]);
             
             // Corner handles
-            *handlePtrs[i] = QRectF(corners[i].x() - handleHalf, 
-                                    corners[i].y() - handleHalf, 
-                                    handleD_, handleD_);
+            *handlePtrs[i] = QRectF(corners[i].x() - hHalf, 
+                                    corners[i].y() - hHalf, 
+                                    hd, hd);
             
             // Rotation handles (use same positions as corners)
-            *rotHandlePtrs[i] = QRectF(corners[i].x() - handleHalf, 
-                                    corners[i].y() - handleHalf, 
-                                    handleD_, handleD_);
+            *rotHandlePtrs[i] = QRectF(corners[i].x() - hHalf, 
+                                       corners[i].y() - hHalf, 
+                                       hd, hd);
         }
 
         for(int i = 0; i < 4; i++) {
             // Edge handles
-            *handlePtrs[i+4] = QRectF(edges[i].x() - handleHalf, 
-                                    edges[i].y() - handleHalf, 
-                                    handleD_, handleD_);
+            *handlePtrs[i+4] = QRectF(edges[i].x() - hHalf, 
+                                      edges[i].y() - hHalf, 
+                                      hd, hd);
         }
 
         painter->save();
@@ -1796,7 +1801,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 painter->save();
                 painter->translate(corners[i]);
                 painter->rotate(rotation_);
-                rotSvgs[i]->render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
+                rotSvgs[i]->render(painter, QRectF(-hHalf, -hHalf, hd, hd));
                 painter->restore();
             }
         }
@@ -1808,7 +1813,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 painter->save();
                 painter->translate(corners[i]);
                 painter->rotate(rotation_);
-                cornerSvgs[i]->render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
+                cornerSvgs[i]->render(painter, QRectF(-hHalf, -hHalf, hd, hd));
                 painter->restore();
             }
             
@@ -1818,7 +1823,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 painter->save();
                 painter->translate(edges[i]);
                 painter->rotate(rotation_);
-                edgeSvgs[i]->render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
+                edgeSvgs[i]->render(painter, QRectF(-hHalf, -hHalf, hd, hd));
                 painter->restore();
             }
         }
@@ -1828,7 +1833,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->save();
         painter->translate(position_ + pivotPoint_);
         painter->rotate(rotation_);
-        PivotMark.render(painter, QRectF(-handleHalf, -handleHalf, handleD_, handleD_));
+        PivotMark.render(painter, QRectF(-hHalf, -hHalf, hd, hd));
         painter->restore();
 
     }
@@ -1859,8 +1864,8 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
                 painter->setBrush(QBrush(Qt::white));
                 painter->setPen(QPen(Qt::black, 1));
-                painter->drawEllipse(drawnNodes_[i]->H1->position_, handleD_/2, handleD_/2);
-                painter->drawEllipse(drawnNodes_[i]->H2->position_, handleD_/2, handleD_/2);
+                painter->drawEllipse(drawnNodes_[i]->H1->position_, hHalf, hHalf);
+                painter->drawEllipse(drawnNodes_[i]->H2->position_, hHalf, hHalf);
             }
 
             if(actualNodes_[i]->isHighlighted() && selectedHandle_ == -1)
@@ -1870,25 +1875,25 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
             switch (drawnNodes_[i]->mode){
             case handleMode::linear:
-                Rhombus.translate(drawnNodes_[i]->position_ - QPoint(5,5));
+                painter->save();
+                painter->translate(drawnNodes_[i]->position_);
+                painter->scale(1.0 / lod, 1.0 / lod);
+                painter->translate(-5, -5); //translate back to original position so it is translated correctly the next time
                 painter->drawPath(Rhombus);
-                
-                // painter->drawText(originalNodes_[i]->position_, QString("(%1,%2)").arg(originalNodes_[i]->position_.x()).arg(originalNodes_[i]->position_.y())); //debug point positions
-
-                Rhombus.translate(-1 * drawnNodes_[i]->position_ + QPoint(5,5)); //reset the rhoumbus to the original position to be moved in the next iteration (next node)
+                painter->restore();
                 break;
             case handleMode::smooth:
                 painter->drawEllipse(
                     drawnNodes_[i]->position_,
-                    handleD_/2.0, 
-                    handleD_/2.0);
+                    hHalf, 
+                    hHalf);
                 break;
             case handleMode::symmetric:
                 painter->drawRect(
-                    drawnNodes_[i]->position_.x() - handleD_/2.0,
-                    drawnNodes_[i]->position_.y() - handleD_/2.0,
-                    handleD_,
-                    handleD_);
+                    drawnNodes_[i]->position_.x() - hHalf,
+                    drawnNodes_[i]->position_.y() - hHalf,
+                    hd,
+                    hd);
                 break;
             }
         }
@@ -1901,7 +1906,8 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         painter->setBrush(Qt::NoBrush);
 
         QPointF p = actualNodes_[0]->position_;
-        painter->drawRect(QRectF(p - QPointF(6,6), QSizeF(12,12)));
+        qreal snapR = 6.0 / lod;
+        painter->drawRect(QRectF(p - QPointF(snapR, snapR), QSizeF(snapR*2, snapR*2)));
     }
 }
 
@@ -1910,7 +1916,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 viewPort::viewPort(QWidget* parent, int* frame): QGraphicsView(parent)
 {    
     currentFrame_ = frame;
-    scene_ = new QGraphicsScene(0,0, 800, 600, this);
+    scene_ = new QGraphicsScene(0,0, 2560, 1600, this);
     this->setScene(scene_);
     scene_->setBackgroundBrush(QBrush(QColor("#1E1E1E")));
 
@@ -1927,8 +1933,8 @@ viewPort::viewPort(QWidget* parent, int* frame): QGraphicsView(parent)
     verticalScrollBar()->setEnabled(false);
 
     // Create 16:9 canvas rectangle
-    const int canvasWidth = 16 * 50;
-    const int canvasHeight = 9 * 50; //(16:9 aspect ratio)
+    const int canvasWidth = 16 * 120; //1920 * 1080
+    const int canvasHeight = 9 * 120; //(16:9 aspect ratio)
     
     canvas_ = new QGraphicsItemGroup();
     
@@ -2471,6 +2477,16 @@ void viewPort::keyReleaseEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Control){
         controlPressed_ = false;
+    }
+}
+
+void viewPort::resizeEvent(QResizeEvent* event)
+{
+    QGraphicsView::resizeEvent(event);
+    if (canvas_) {
+        // Add padding around the canvas so it doesn't touch the edges
+        QRectF paddedRect = canvas_->sceneBoundingRect().adjusted(-80, -80, 80, 80);
+        fitInView(paddedRect, Qt::KeepAspectRatio);
     }
 }
 

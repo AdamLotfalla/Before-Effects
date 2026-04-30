@@ -17,6 +17,7 @@
 #include <QtColorWidgets/ColorSelector>
 #include <QToolButton>
 #include <QDebug>
+#include <QStyleOptionGraphicsItem>
 #include "common_widget_styles.h"
 
 enum class handleMode{
@@ -376,7 +377,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     float rotation_ = 0;
     qreal scaleX_ = 1, scaleY_ = 1;
     QPointF pivotPoint_ = QPointF(0,0);
-    qreal strokeWidth_ = 2.0; 
+    qreal strokeWidth_ = 3.0; 
     QColor strokeColor_ = QColor("#D1495B");
     QColor fillColor_ = QColor("#EDAE49");
     bool fill_ = true;
@@ -437,9 +438,9 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     static QSvgRenderer PivotMark;
     
     //visuals 
-    const int handleD_ = 10;
-    const int selectionGrowth_ = 0;
-    const int handleGrowth_ = 10;
+    const qreal handleD_ = 10;
+    const qreal selectionGrowth_ = 0;
+    const qreal handleGrowth_ = 10;
     const uint8_t handleStates_ = 0;
     const QPen handlePen_ = QPen(QColor("#000000"));
     const QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
@@ -481,6 +482,7 @@ class viewPort : public QGraphicsView{
     void setPathEditingMode(bool state);
 
     void optimize(bool state);
+    QRectF canvasSceneRect() const { return canvas_->sceneBoundingRect(); }
 
     
     private:
@@ -548,6 +550,7 @@ class viewPort : public QGraphicsView{
 
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
+    void resizeEvent(QResizeEvent* event) override;
 
 public slots:
     void onFrameChanged();
