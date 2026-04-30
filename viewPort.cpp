@@ -2272,6 +2272,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Delete){
         if(selectedPath_ != nullptr){
+            emit pathDeleted(selectedPath_);
             paths_.removeOne(selectedPath_); // remove from the list first
             delete selectedPath_;
             selectedPath_ = nullptr;

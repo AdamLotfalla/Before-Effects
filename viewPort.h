@@ -558,6 +558,7 @@ public slots:
 signals:
     void attributePanelUpdateNeeded(AttributePanel* obj);
     void pathCreated(path* p);
+    void pathDeleted(path* p);
     void layerInfoUpdated();
     void layerSelected(path* p);
     void frameChanged();

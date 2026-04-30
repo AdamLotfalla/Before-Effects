@@ -61,6 +61,7 @@ public:
     int getRBound();
     int getLBound();
     void addLayer(path* p, QWidget* parent);
+    void removeLayer(path* p);
     Layer* accessLayer(int index);
     Layer* getActiveLayer();
     int getLayerCount();
@@ -131,6 +132,7 @@ public:
     void step();
     void setTheme(QString theme = "Dark");
     void addLayer(path* p);
+    void removeLayer(path* p);
     // void clickTimeIndicatorBar(QEvent* event);
     
 private:

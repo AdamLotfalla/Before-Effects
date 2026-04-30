@@ -270,6 +270,19 @@ void TimeIndicatorBar::addLayer(path* p, QWidget* parent)
     setActiveLayer(addedLayer);
 }
 
+void TimeIndicatorBar::removeLayer(path *p)
+{
+    setActiveLayer(nullptr);
+    for(auto i = 0; i < layers_.size(); i++){
+        if(layers_[i]->relatedPath_ == p){
+            Layer* layerToRemove = layers_[i];
+            layers_.remove(i);
+            delete layerToRemove;
+            break;
+        }
+    }
+}
+
 Layer *TimeIndicatorBar::getActiveLayer()
 {
     return activeLayer_;
@@ -619,6 +632,14 @@ void Timeline::addLayer(path* p)
         newLayer->show();
 
         timeIndicatorBar->update();
+    }
+}
+
+void Timeline::removeLayer(path *p)
+{
+    if(p != nullptr){
+        timeIndicatorBar->removeLayer(p);
+        updateLayers();
     }
 }
 
