@@ -214,6 +214,21 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
     painter.drawRoundedRect(LBound->x(), LBound->y(), boundHandleThickness, boundLayerHeight_, 1, 1);
     
     timeIndicator_->MoveCenter(offset_ + *currentFrame_ * *frameWidth_);
+
+
+    // draw layers
+    painter.setPen(Qt::NoPen);
+    
+    for(int i = layers_.size() - 1; i>= 0; i--){
+        if(i % 2 == 0){
+            painter.setBrush(QColor("#292929"));
+        }
+        else{
+            painter.setBrush(QColor("#313131"));
+        }
+        painter.drawRoundedRect(LBound->x() + boundHandleThickness, getTopBarHeight() + i * layerHeight_, RBound->x() - LBound->x() - boundHandleThickness, layerHeight_, 2, 2); 
+    }
+
 }
 
 int TimeIndicatorBar::getRBound()
@@ -566,6 +581,8 @@ void Timeline::addLayer(path* p)
         Layer* newLayer = timeIndicatorBar->accessLayer(timeIndicatorBar->getLayerCount() - 1);
         layersLayout_->insertWidget(1, newLayer);
         newLayer->show();
+
+        timeIndicatorBar->update();
     }
 }
 
