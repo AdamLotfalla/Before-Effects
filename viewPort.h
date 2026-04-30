@@ -352,6 +352,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     void movePath(QPointF offset);
     void setPosition(QPointF newPos);
     void setPosition(qreal x, qreal y);
+    void setPivotPoint(qreal x, qreal y);
     void moveNode(QPointF offset, int index);
     void setNodePosition(QPointF newPos, int index);
     QPointF getActualHandlePosition(int index, short int HandleIndex /*0 for H1, 1 for H2*/);
@@ -375,7 +376,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     float rotation_ = 0;
     qreal scaleX_ = 1, scaleY_ = 1;
     QPointF pivotPoint_ = QPointF(0,0);
-    int strokeWidth_ = 2.0; 
+    qreal strokeWidth_ = 2.0; 
     QColor strokeColor_ = QColor("#D1495B");
     QColor fillColor_ = QColor("#EDAE49");
     bool fill_ = true;
@@ -391,7 +392,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::map<int, qreal> xScaleFrames;
     std::map<int, qreal> yScaleFrames;
     std::map<int, qreal> rotationFrames;
-    std::map<int, int> strokeWidthFrames;
+    std::map<int, qreal> strokeWidthFrames;
     std::map<int, QColor> fillColorFrames;
     std::map<int, QColor> strokeColorFrames;
     
