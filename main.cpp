@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.setWindowTitle("Before Effects");
     w.showMaximized();
+    w.setWindowIcon(QIcon(":/Program/icons/Program_icon.svg"));
 
     return a.exec();
 }

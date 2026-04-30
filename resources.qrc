@@ -41,4 +41,7 @@
         <file>icons/BevelJoint.svg</file>
         <file>icons/MiterJoint.svg</file>
     </qresource>
+    <qresource prefix="/Program">
+        <file>icons/Program_icon.svg</file>
+    </qresource>
 </RCC>
