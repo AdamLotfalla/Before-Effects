@@ -1634,8 +1634,8 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
         QPainterPath Rhombus;
         Rhombus.moveTo(5,0);
-        Rhombus.lineTo(9,5);
-        Rhombus.lineTo(5,9);
+        Rhombus.lineTo(10,5);
+        Rhombus.lineTo(5,10);
         Rhombus.lineTo(0,5);
         Rhombus.closeSubpath();
 
@@ -1673,7 +1673,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
                 
                 // painter->drawText(originalNodes_[i]->position_, QString("(%1,%2)").arg(originalNodes_[i]->position_.x()).arg(originalNodes_[i]->position_.y())); //debug point positions
 
-                Rhombus.translate(-1 * drawnNodes_[i]->position_ + QPoint(5,5)); //reset the rohumbus to the original position to be moved in the next iteration (next node)
+                Rhombus.translate(-1 * drawnNodes_[i]->position_ + QPoint(5,5)); //reset the rhoumbus to the original position to be moved in the next iteration (next node)
                 break;
             case handleMode::smooth:
                 painter->drawEllipse(

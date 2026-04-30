@@ -218,19 +218,36 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 
     // draw layers
     painter.setPen(Qt::NoPen);
+
+    QPainterPath Rhombus;
+    Rhombus.moveTo(5,0);
+    Rhombus.lineTo(10,5);
+    Rhombus.lineTo(5,10);
+    Rhombus.lineTo(0,5);
+    Rhombus.closeSubpath();
     
-    for(int i = layers_.size() - 1; i>= 0; i--){
-        if(i % 2 == 0){
+    for(int i = 0; i < layers_.size(); i++){
+
+        int visualRow = layers_.size() - 1 - i;
+
+        if(visualRow % 2 == 0){
             painter.setBrush(QColor("#292929"));
         }
         else{
             painter.setBrush(QColor("#313131"));
         }
-        painter.drawRoundedRect(LBound->x() + boundHandleThickness, getTopBarHeight() + i * layerHeight_, RBound->x() - LBound->x() - boundHandleThickness, layerHeight_, 2, 2); 
+        
+        painter.drawRoundedRect(LBound->x() + boundHandleThickness, getTopBarHeight() + visualRow * layerHeight_, RBound->x() - LBound->x() - boundHandleThickness, layerHeight_, 2, 2); 
+
+        // draw keyframes
+        painter.setBrush(QBrush("#7BC7B0"));
+        for(auto j : layers_[i]->relatedPath_->xPositionFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
     }
 
-
-    // draw keyframes
 
 
 }

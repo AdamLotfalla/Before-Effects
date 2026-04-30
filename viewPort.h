@@ -511,6 +511,7 @@ class customSpinBox: public QWidget{
         void onClick(QPointF position){
             if(rhombusBox.contains(position.x(), position.y())){
                 keyFramed = !keyFramed;
+                emit toggledKeyframe(keyFramed, value_);
                 update();
             };
         };
