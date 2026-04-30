@@ -1863,6 +1863,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
                 emit attributePanelUpdateNeeded(currentPath);
+                emit layerInfoUpdated();
             }
             else{
                 currentPath->addPoint(pointToAdd);

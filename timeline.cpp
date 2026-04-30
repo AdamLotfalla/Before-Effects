@@ -228,8 +228,11 @@ int TimeIndicatorBar::getLBound()
 
 void TimeIndicatorBar::addLayer(path* p, QWidget* parent)
 {
+    setActiveLayer(nullptr);
     Layer* addedLayer = new Layer(parent, p, layerHeight_);
+    addedLayer->isSelected_ = true;
     layers_.push_back(addedLayer);
+    setActiveLayer(addedLayer);
 }
 
 Layer *TimeIndicatorBar::getActiveLayer()
@@ -249,11 +252,13 @@ void TimeIndicatorBar::setActiveLayer(Layer *l)
 {
     if(activeLayer_ != nullptr){
         activeLayer_->isSelected_ = false;
+        activeLayer_->update();
     }
     activeLayer_ = l;
 
     if(activeLayer_ != nullptr){
         activeLayer_->isSelected_ = true;
+        activeLayer_->update();
     }
 }
 
