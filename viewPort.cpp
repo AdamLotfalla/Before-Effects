@@ -2013,6 +2013,12 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         emit layerSelected(selectedPath_);
     }
     else{
+        if(selectedPath_ != nullptr){
+            selectedPath_->setSelected(false);
+            selectedPath_->update();
+            selectedPath_ = nullptr;
+        }
+        emit attributePanelUpdateNeeded(nullptr);
         emit layerSelected(nullptr);
     }
 }
@@ -2655,22 +2661,22 @@ void viewPort::onFrameChanged() {
         };
         
 
-        selectedPath_->rotation_ = linearInterpolation(p->rotationFrames, p->rotation_, *currentFrame_, 0, 244); //0 and 244 need to change
-        selectedPath_->pivotPoint_ = QPointF(
+        p->rotation_ = linearInterpolation(p->rotationFrames, p->rotation_, *currentFrame_, 0, 244); //0 and 244 need to change
+        p->pivotPoint_ = QPointF(
             linearInterpolation(p->xPivotFrames, p->pivotPoint_.x(), *currentFrame_, 0, 244),
             linearInterpolation(p->yPivotFrames, p->pivotPoint_.y(), *currentFrame_, 0, 244)
         );
         
-        selectedPath_->scaleX_ = linearInterpolation(p->xScaleFrames, p->scaleX_, *currentFrame_, 0, 244);
-        selectedPath_->scaleY_ = linearInterpolation(p->yScaleFrames, p->scaleY_, *currentFrame_, 0, 244);
+        p->scaleX_ = linearInterpolation(p->xScaleFrames, p->scaleX_, *currentFrame_, 0, 244);
+        p->scaleY_ = linearInterpolation(p->yScaleFrames, p->scaleY_, *currentFrame_, 0, 244);
         
         
-        selectedPath_->strokeWidth_ = linearInterpolation(p->strokeWidthFrames, p->strokeWidth_, *currentFrame_, 0, 244);
+        p->strokeWidth_ = linearInterpolation(p->strokeWidthFrames, p->strokeWidth_, *currentFrame_, 0, 244);
         
-        selectedPath_->strokeColor_ = linearColorInterpolation(p->strokeColorFrames, p->strokeColor_, *currentFrame_, 0, 244);
-        selectedPath_->fillColor_ = linearColorInterpolation(p->fillColorFrames, p->fillColor_, *currentFrame_, 0, 244);
+        p->strokeColor_ = linearColorInterpolation(p->strokeColorFrames, p->strokeColor_, *currentFrame_, 0, 244);
+        p->fillColor_ = linearColorInterpolation(p->fillColorFrames, p->fillColor_, *currentFrame_, 0, 244);
         
-        selectedPath_->setPosition(
+        p->setPosition(
             linearInterpolation(p->xPositionFrames, p->position_.x(), *currentFrame_, 0, 244), 
             linearInterpolation(p->yPositionFrames, p->position_.y(), *currentFrame_, 0, 244)
         ); //inside setPosition it updates geometry and redraws.

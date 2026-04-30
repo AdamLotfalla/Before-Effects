@@ -173,6 +173,8 @@ void MainWindow::preCreateAttributeWidgets()
 
 void MainWindow::exportAnimation()
 {
+    viewPort_->setSelectedPath(nullptr);
+    
     QString ffmpegPath = QStandardPaths::findExecutable("ffmpeg");
     if (ffmpegPath.isEmpty()) { 
         QMessageBox::critical(this, "Error", "FFmpeg not found."); 
