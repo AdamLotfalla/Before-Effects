@@ -670,8 +670,15 @@ void path::updateTransformedNodes()
     needTransformUpdate_ = false;
 }
 
+void path::optimize(bool state)
+{
+    optimized_ = state;
+}
+
 void path::calculateBoundaries()
 {
+    if(optimized_) return;
+
     minX_ = std::numeric_limits<qreal>::max();
     minY_ = std::numeric_limits<qreal>::max();
     maxX_ = std::numeric_limits<qreal>::lowest();
@@ -894,7 +901,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     QWidget* background = new QWidget(parent);
     QVBoxLayout* VLayout = new QVBoxLayout(background);
-    background->setLayout(VLayout);   
+    // if(!background->layout()){
+        background->setLayout(VLayout);   
+    // }
 
     QHBoxLayout* nameLayout = new QHBoxLayout(background);
     QLabel* nameLabel = new QLabel(background);
@@ -1828,6 +1837,11 @@ void viewPort::setPathEditingMode(bool state)
     inPathEditingMode_ = state;
 }
 
+void viewPort::optimize(bool state)
+{
+    emit optimizeSignal(state);
+}
+
 void viewPort::mousePressEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -1862,6 +1876,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath->connect(currentPath, &path::layerInfoUpdated, [this](){
                 emit layerInfoUpdated();
             });
+            connect(this, &viewPort::optimizeSignal, currentPath, &path::optimize);
             
             paths_.push_back(currentPath);
             return; //early return when having just one node
@@ -2296,75 +2311,76 @@ void viewPort::onFrameChanged() {
         QColor strokeColorF = p->strokeColor_;
 
         // --- Position ---
-        if(p->xPositionFrames.count(*currentFrame_)) {
+        if(p->xPositionFrames.find(*currentFrame_) != p->xPositionFrames.end()) {
             xposF = true;
             xpos = p->xPositionFrames[*currentFrame_];
             p->setPosition(xpos, p->position_.y()); 
         }
-        if(p->yPositionFrames.count(*currentFrame_)) {
+        if(p->yPositionFrames.find(*currentFrame_) != p->yPositionFrames.end()) {
             yposF = true;
             ypos = p->yPositionFrames[*currentFrame_];
             p->setPosition(p->position_.x(), ypos); 
         }
 
         // --- Rotation ---
-        if(p->rotationFrames.count(*currentFrame_)) {
+        if(p->rotationFrames.find(*currentFrame_) != p->rotationFrames.end()) {
             rotationF = true;
             rotation = p->rotationFrames[*currentFrame_];
             p->setRotation(rotation);               
         }
 
         // --- Scale ---
-        if(p->xScaleFrames.count(*currentFrame_)) {
+        if(p->xScaleFrames.find(*currentFrame_) != p->xScaleFrames.end()) {
             xscaleF = true;
             xscale = p->xScaleFrames[*currentFrame_];
             p->setScale(xscale, p->scaleY_);        
         }
-        if(p->yScaleFrames.count(*currentFrame_)) {
+        if(p->yScaleFrames.find(*currentFrame_) != p->yScaleFrames.end()) {
             yscaleF = true;
             yscale = p->yScaleFrames[*currentFrame_];
             p->setScale(p->scaleX_, yscale);        
         }
 
         // --- Stroke Width ---
-        if(p->strokeWidthFrames.count(*currentFrame_)) {
+        if(p->strokeWidthFrames.find(*currentFrame_) != p->strokeWidthFrames.end()) {
             strokeWF = true;
             strokeWidth = p->strokeWidthFrames[*currentFrame_];
             p->strokeWidth_ = strokeWidth;          
         }
 
         // --- Fill Color ---
-        if(p->fillColorFrames.count(*currentFrame_)) {
+        if(p->fillColorFrames.find(*currentFrame_) != p->fillColorFrames.end()) {
             fillColorF = p->fillColorFrames[*currentFrame_];
             RfillF = GfillF = BfillF = AfillF = true;
             p->fillColor_ = fillColorF;             
         }
 
         // --- Stroke Color ---
-        if(p->strokeColorFrames.count(*currentFrame_)) {
+        if(p->strokeColorFrames.find(*currentFrame_) != p->strokeColorFrames.end()) {
             strokeColorF = p->strokeColorFrames[*currentFrame_];
             RstrokeF = GstrokeF = BstrokeF = AstrokeF = true;
             p->strokeColor_ = strokeColorF;         
         }
 
-        bool anyKeyframe = xposF || yposF || xpivotF || ypivotF || 
-                           rotationF || xscaleF || yscaleF || 
-                           RfillF || GfillF || BfillF || AfillF ||
-                           RstrokeF || GstrokeF || BstrokeF || AstrokeF || 
-                           strokeWF;
-
-        if(!anyKeyframe) continue;
-
+        
         emit p->updateSpinBoxes(xposF, yposF, xpivotF, ypivotF, 
-                                rotationF, xscaleF, yscaleF, 
-                                RfillF, GfillF, BfillF, AfillF,
-                                RstrokeF, GstrokeF, BstrokeF, AstrokeF, 
-                                strokeWF,
-                                xpos, ypos, xpivot, ypivot, 
-                                rotation, xscale, yscale,
-                                strokeWidth,
-                                fillColorF, strokeColorF);
+            rotationF, xscaleF, yscaleF, 
+            RfillF, GfillF, BfillF, AfillF,
+            RstrokeF, GstrokeF, BstrokeF, AstrokeF, 
+            strokeWF,
+            xpos, ypos, xpivot, ypivot, 
+            rotation, xscale, yscale,
+            strokeWidth,
+            fillColorF, strokeColorF);
+            
+        // bool anyKeyframe = xposF || yposF || xpivotF || ypivotF || 
+        //                     rotationF || xscaleF || yscaleF || 
+        //                     RfillF || GfillF || BfillF || AfillF ||
+        //                     RstrokeF || GstrokeF || BstrokeF || AstrokeF || 
+        //                     strokeWF;
 
-        p->update();
+        // if(!anyKeyframe) continue;
+
+        // p->update();
     }
 }

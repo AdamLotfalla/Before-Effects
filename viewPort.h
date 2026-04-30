@@ -402,28 +402,28 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     qreal minX_, minY_, maxX_, maxY_;
     
     bool recentlySelected_ = false;
+    void optimize(bool state);
     void toggleRotationMode();
     bool inRotationMode();
-
+    
     private:
-
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, 
-        QWidget* widget = nullptr) override;
+    
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
-        
+    
     //optimization
     QWidget* cachedAttributeWidget_ = nullptr;
     bool needTransformUpdate_ = true;
     void updateTransformedNodes();
-
+    
     //using name convention: point = position; node = object that has more than position
     QVector<node*> actualNodes_;
     std::vector<node*> drawnNodes_;
     QVector<int> highlightedNodes_;
     QVector<QVector<int>> edges_;
     QPointF previewPoint_;
-
+    
     //svgs for handles
     static QSvgRenderer PDiagonalArrow;
     static QSvgRenderer NDiagonalArrow;
@@ -434,7 +434,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     static QSvgRenderer DRRotationArrow;
     static QSvgRenderer DLRotationArrow;
     static QSvgRenderer PivotMark;
-
+    
     //visuals 
     const int handleD_ = 10;
     const int selectionGrowth_ = 0;
@@ -442,7 +442,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     const uint8_t handleStates_ = 0;
     const QPen handlePen_ = QPen(QColor("#000000"));
     const QBrush handleBrush_ = QBrush(QColor("#FFFFFF"));
-
+    
     //booleans
     bool firstPointSnapping_ = false;
     bool *inPathEditingMode_;
@@ -450,6 +450,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     bool inRotationMode_ = false;
     bool firstNodeHighlighted_ = false;
     bool hasDrawingPreview_ = false;
+    bool optimized_ = false;
 
     //signal
     std::function<void(QPointF)> onPositionChanged;
@@ -481,6 +482,8 @@ class viewPort : public QGraphicsView{
 
     void setSelectedPath(path* newSelectedPath = nullptr, bool state = true, bool hideAttributePanel = false);
     void setPathEditingMode(bool state);
+
+    void optimize(bool state);
 
     
     private:
@@ -558,4 +561,5 @@ signals:
     void layerInfoUpdated();
     void layerSelected(path* p);
     void frameChanged();
+    void optimizeSignal(bool state);
 };

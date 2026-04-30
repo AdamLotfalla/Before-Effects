@@ -158,4 +158,5 @@ private slots:
 signals:
     void playSignal(bool playing);
     void frameChanged();
+    void optimize(bool state);
 };

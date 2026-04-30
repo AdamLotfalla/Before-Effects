@@ -601,7 +601,6 @@ void Timeline::step()
         *currentFrame_ = timeIndicatorBar->getRBound();
 
     emit frameChanged();
-    qDebug() << "framechanged from inside step(). Current frame: " << *currentFrame_;
     timeIndicatorBar->update();
     update();
 }
