@@ -1009,7 +1009,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
     });
     yPositionBox->connect(this, &path::updateSpinBoxes, yPositionBox, [yPositionBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        yPositionBox->setKeyframe(xposF);
+        yPositionBox->setKeyframe(yposF);
         yPositionBox->update();
     });
 
