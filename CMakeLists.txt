@@ -32,7 +32,7 @@ target_link_libraries(Before_Effects PRIVATE
 
 set_target_properties(Before_Effects PROPERTIES
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE          # hides the console window on Windows, comment to enable qDebug()
+    # WIN32_EXECUTABLE TRUE          # hides the console window on Windows, comment to enable qDebug()
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )

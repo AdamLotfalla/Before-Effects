@@ -4,6 +4,12 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    ffmpegProcess = nullptr;
+    tempDir = nullptr;
+    progressDialog = nullptr;
+    tempPath = nullptr; 
+
+
     ui->setupUi(this);
     preCreateAttributeWidgets();
 
@@ -44,6 +50,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     selectionTool_->setFixedSize(QSize(28,28));
     selectionTool_->setCheckable(true);
     selectionTool_->setChecked(false);
+
+    QToolButton* exportButton = new QToolButton(toolBar);
+    exportButton->setStyleSheet(toolBarButtonStyle);
+    exportButton->setIcon(QIcon(QString(":/%1/icons/Export_%1.svg").arg(theme)));
+    exportButton->setIconSize(QSize(15,15));
+    exportButton->setFixedSize(QSize(28,28));
+    exportButton->setToolTip("Export Animation to MP4");
+
+
+    connect(exportButton, &QToolButton::clicked, this, &MainWindow::exportAnimation);
     
     connect(selectionTool_, &QToolButton::toggled,
             this, &MainWindow::selectionTool);
@@ -60,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     toolBarLayout->addWidget(nodeTool_, 0, Qt::AlignVCenter); 
     toolBarLayout->addWidget(bezierPen_, 0, Qt::AlignVCenter);
     toolBarLayout->addStretch();
+    toolBarLayout->addWidget(exportButton);
+    toolBarLayout->addSpacing(8);
     
 
     
@@ -148,9 +166,140 @@ void MainWindow::bezierTool(bool checked)
 
 void MainWindow::preCreateAttributeWidgets()
 {
-    path* tempPath = new path(QPointF(0, 0), nullptr, nullptr, nullptr);
+    tempPath = new path(QPointF(0, 0), nullptr, nullptr, nullptr);
     templateAttributeWidget_ = tempPath->createAttributeWidget(nullptr);
     templateAttributeWidget_->hide();
+}
+
+void MainWindow::exportAnimation()
+{
+    QString ffmpegPath = QStandardPaths::findExecutable("ffmpeg");
+    if (ffmpegPath.isEmpty()) { 
+        QMessageBox::critical(this, "Error", "FFmpeg not found."); 
+        return; 
+    }
+
+    QString savePath = QFileDialog::getSaveFileName(this,
+        "Export Animation", QDir::homePath(), "MP4 Video (*.mp4)");
+    if (savePath.isEmpty()) return;
+
+    if (!TimelinePanel_ || !TimelinePanel_->timeIndicatorBar || !viewPort_) {
+        QMessageBox::critical(this, "Error", "Timeline or Viewport not initialized.");
+        return;
+    }
+
+    int startFrame  = TimelinePanel_->timeIndicatorBar->getLBound();
+    int endFrame    = TimelinePanel_->timeIndicatorBar->getRBound();
+    int totalFrames = (endFrame - startFrame) + 1;
+
+    if (totalFrames <= 0) {
+        QMessageBox::warning(this, "Export", "No frames to export.");
+        return;
+    }
+
+    originalFrame = *TimelinePanel_->currentFrame_;
+
+    if (tempDir) { delete tempDir; tempDir = nullptr; }
+    tempDir = new QTemporaryDir();
+    if (!tempDir->isValid()) {
+        QMessageBox::critical(this, "Error", "Could not create temp dir.");
+        return;
+    }
+
+    if (progressDialog) { delete progressDialog; progressDialog = nullptr; }
+    progressDialog = new QProgressDialog("Rendering frames...", "Cancel", 0, totalFrames, this);
+    progressDialog->setWindowModality(Qt::WindowModal);
+    progressDialog->setMinimumDuration(0);
+    progressDialog->setValue(0);
+
+    const QSize  outputSize(1280, 720);
+    QRectF canvasRect = viewPort_->scene()->sceneRect();
+    if (canvasRect.isEmpty()) canvasRect = QRectF(0, 0, 1280, 720);
+
+    bool cancelled = false;
+    for (int i = 0; i < totalFrames; ++i) {
+        if (progressDialog->wasCanceled()) { cancelled = true; break; }
+
+        *TimelinePanel_->currentFrame_ = startFrame + i;
+        viewPort_->onFrameChanged();
+
+        QImage image(outputSize, QImage::Format_RGB32);
+        image.fill(QColor("#1E1E1E"));
+
+        QPainter painter(&image);
+        painter.setRenderHint(QPainter::Antialiasing);
+        viewPort_->scene()->render(&painter, image.rect(), canvasRect);
+        painter.end();
+
+        QString fileName = QString("%1/frame_%2.png")
+                            .arg(tempDir->path())
+                            .arg(i, 6, 10, QChar('0'));
+        if (!image.save(fileName)) {
+            QMessageBox::critical(this, "Error", QString("Failed to save frame %1.").arg(i));
+            cancelled = true;
+            break;
+        }
+
+        progressDialog->setValue(i + 1);
+        QCoreApplication::processEvents();
+    }    
+
+    if (cancelled) {
+        progressDialog->close();
+        delete tempDir; tempDir = nullptr;
+        // Restore frame
+        *TimelinePanel_->currentFrame_ = originalFrame;
+        viewPort_->onFrameChanged();
+        return;
+    }
+
+    // 8. Encode with FFmpeg
+    progressDialog->setLabelText("Encoding with FFmpeg...");
+    progressDialog->setRange(0, 0); // Indeterminate
+
+    if (ffmpegProcess) { ffmpegProcess->deleteLater(); ffmpegProcess = nullptr; }
+    ffmpegProcess = new QProcess(this);
+
+    QStringList args;
+    args << "-y"
+         << "-framerate" << QString::number(frameRate_)
+         << "-i"         << (tempDir->path() + "/frame_%06d.png")
+         << "-c:v"       << "libx264"
+         << "-pix_fmt"   << "yuv420p"
+         << "-crf"       << "18"
+         << savePath;
+
+    connect(ffmpegProcess,
+            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this, &MainWindow::onExportFinished);
+
+    ffmpegProcess->start("ffmpeg", args);
+
+    if (!ffmpegProcess->waitForStarted(3000)) {
+        QMessageBox::critical(this, "Error", "Failed to start FFmpeg.");
+        onExportFinished(-1, QProcess::CrashExit);
+    }
+}
+
+void MainWindow::onExportFinished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
+{
+    if (progressDialog) { progressDialog->close(); delete progressDialog; progressDialog = nullptr; }
+
+    if (exitCode == 0) {
+        QMessageBox::information(this, "Export Complete", "Video exported successfully!");
+    } else {
+        QString errorOutput;
+        if (ffmpegProcess) errorOutput = ffmpegProcess->readAllStandardError();
+        QMessageBox::warning(this, "Export Failed",
+            "FFmpeg failed to encode the video.\n\nDetails:\n" + errorOutput);
+    }
+
+    if (tempDir) { delete tempDir; tempDir = nullptr; }
+
+    *TimelinePanel_->currentFrame_ = originalFrame;
+    viewPort_->onFrameChanged();
+
+    if (ffmpegProcess) { ffmpegProcess->deleteLater(); ffmpegProcess = nullptr; }
 }
 
 void MainWindow::selectionTool(bool checked)

@@ -24,6 +24,7 @@
         <file>icons/zoomOut_Dark.svg</file>
         <file>icons/zoomIn_Dark.svg</file>
         <file>icons/selectionTool_Dark.svg</file>
+        <file>icons/Export_Dark.svg</file>
     </qresource>
     <qresource prefix="/Handles">
         <file>icons/NDiagonalArrows.svg</file>

@@ -9,6 +9,13 @@
 #include <QSplitter>
 #include <QTimer>
 #include <QApplication>
+#include <QFileDialog>
+#include <QProcess>
+#include <QTemporaryDir>
+#include <QMessageBox>
+#include <QProgressDialog>
+#include <QTemporaryDir>
+#include <QStandardPaths>
 #include "viewPort.h"
 #include "timeline.h"
 
@@ -70,6 +77,14 @@ private:
     QTimer* timer_;
     viewPort* viewPort_;
 
+    QProcess* ffmpegProcess = nullptr;
+    QTemporaryDir* tempDir = nullptr;
+    int originalFrame = 0;
+    QProgressDialog* progressDialog = nullptr;
+    path* tempPath = nullptr;
+
+    void exportAnimation();
+    void onExportFinished(int exitCode, QProcess::ExitStatus exitStatus);
     
     QToolButton* selectionTool_;
     QToolButton* nodeTool_;
@@ -85,7 +100,6 @@ private:
 
     QWidget* templateAttributeWidget_ = nullptr;
     Timeline* TimelinePanel_;
-    path* tempPath = nullptr;
     
     void preCreateAttributeWidgets();
 
