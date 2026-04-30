@@ -124,7 +124,7 @@ public:
     Timeline(QWidget *parent, int *frameRate);
 
     TimeIndicatorBar* timeIndicatorBar;
-    int currentFrame_ = 0;
+    int* currentFrame_ = new int(0);
     bool playing_ = false;
 
     void step();

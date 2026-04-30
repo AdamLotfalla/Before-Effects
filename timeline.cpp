@@ -229,6 +229,10 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
         painter.drawRoundedRect(LBound->x() + boundHandleThickness, getTopBarHeight() + i * layerHeight_, RBound->x() - LBound->x() - boundHandleThickness, layerHeight_, 2, 2); 
     }
 
+
+    // draw keyframes
+
+
 }
 
 int TimeIndicatorBar::getRBound()
@@ -493,24 +497,24 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
                      this, &Timeline::playButtonClickEvent);
 
     QObject::connect(goToStartButton, &QToolButton::pressed, [this](){
-        currentFrame_ = timeIndicatorBar->getLBound();
+        *currentFrame_ = timeIndicatorBar->getLBound();
         timeIndicatorBar->update();
     });
 
     QObject::connect(goToEndButton, &QToolButton::pressed, [this](){
-        currentFrame_ = timeIndicatorBar->getRBound();
+        *currentFrame_ = timeIndicatorBar->getRBound();
         timeIndicatorBar->update();
     });
 
     QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
-        if(currentFrame_ < timeIndicatorBar->getRBound())
-            currentFrame_ ++;
+        if(*currentFrame_ < timeIndicatorBar->getRBound())
+            *currentFrame_ ++;
         timeIndicatorBar->update();
     });
 
     QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
-        if(currentFrame_ > timeIndicatorBar->getLBound())
-            currentFrame_ --;
+        if(*currentFrame_ > timeIndicatorBar->getLBound())
+            *currentFrame_ --;
         timeIndicatorBar->update();
     });
 
@@ -546,7 +550,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     timelineSplitterLayout_->addWidget(scroller);
 
     frameWidth_ = 5 * zoomSlider->value();
-    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), &currentFrame_);
+    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), currentFrame_);
     timeIndicatorBar->show();
 
     layersLayout_->setContentsMargins(0,0,0,0);
@@ -560,12 +564,12 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
 void Timeline::step()
 {   
-    if(currentFrame_ < timeIndicatorBar->getLBound() || currentFrame_ == timeIndicatorBar->getRBound())
-        currentFrame_ = timeIndicatorBar->getLBound();
-    else if(currentFrame_ < timeIndicatorBar->getRBound()) 
-        currentFrame_ ++;
+    if(*currentFrame_ < timeIndicatorBar->getLBound() || *currentFrame_ == timeIndicatorBar->getRBound())
+        *currentFrame_ = timeIndicatorBar->getLBound();
+    else if(*currentFrame_ < timeIndicatorBar->getRBound()) 
+        *currentFrame_ ++;
     else
-        currentFrame_ = timeIndicatorBar->getRBound();
+        *currentFrame_ = timeIndicatorBar->getRBound();
     update();
 }
 
@@ -635,7 +639,7 @@ void Timeline::zoomSliderChanged(int value)
         (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
 
     int oldContentX =
-        oldOffset + currentFrame_ * frameWidth_;
+        oldOffset + *currentFrame_ * frameWidth_;
 
     int oldScroll =
         scroller->horizontalScrollBar()->value();
@@ -656,7 +660,7 @@ void Timeline::zoomSliderChanged(int value)
         (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
 
     int newContentX =
-        newOffset + currentFrame_ * frameWidth_;
+        newOffset + *currentFrame_ * frameWidth_;
 
     // --- restore viewport position ---
     int newScroll =

@@ -84,6 +84,7 @@ private:
     void bezierTool(bool checked);
 
     QWidget* templateAttributeWidget_ = nullptr;
+    Timeline* TimelinePanel_;
     path* tempPath = nullptr;
     
     void preCreateAttributeWidgets();

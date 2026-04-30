@@ -62,16 +62,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     toolBarLayout->addStretch();
     
 
-    viewPort_ = new viewPort(this);
     
-    Timeline* TimelinePanel = new Timeline(this, &frameRate_);
-    TimelinePanel->setAutoFillBackground(true);
-    // TimelinePanel->setPalette(QPalette(QColor(100,100,200)));
+    TimelinePanel_ = new Timeline(this, &frameRate_);
+    TimelinePanel_->setAutoFillBackground(true);
+    // TimelinePanel_->setPalette(QPalette(QColor(100,100,200)));
+
+    viewPort_ = new viewPort(this, TimelinePanel_->currentFrame_);
 
     
     QSplitter* timelineSplitter = new QSplitter(Qt::Vertical, centralWidget);
     timelineSplitter->addWidget(viewPort_);
-    timelineSplitter->addWidget(TimelinePanel);
+    timelineSplitter->addWidget(TimelinePanel_);
 
     QVBoxLayout* verticalLayout = new QVBoxLayout(centralWidget);
     verticalLayout->addWidget(toolBar);
@@ -94,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     
     LPanel->setMinimumWidth(50); 
     RPanel->setMinimumWidth(100);
-    TimelinePanel->setMinimumHeight(200);
+    TimelinePanel_->setMinimumHeight(200);
 
     timelineSplitter->setHandleWidth(1);
     sideSplitter->setHandleWidth(1); 
@@ -108,16 +109,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     mainLayout->setContentsMargins(0, 0, 0, 0); 
 
 
-    QObject::connect(TimelinePanel, &Timeline::playSignal,
+    QObject::connect(TimelinePanel_, &Timeline::playSignal,
                      this, &MainWindow::startTimer);
     
     timer_ = new QTimer(this); 
     timer_->setInterval(1000/frameRate_);
-    QObject::connect(timer_, &QTimer::timeout, TimelinePanel, &Timeline::step);
+    QObject::connect(timer_, &QTimer::timeout, TimelinePanel_, &Timeline::step);
     QObject::connect(viewPort_, &viewPort::attributePanelUpdateNeeded, LPanel, &AttributePanelWidget::showObject);
-    QObject::connect(viewPort_, &viewPort::pathCreated, TimelinePanel, &Timeline::addLayer);
-    QObject::connect(viewPort_, &viewPort::layerInfoUpdated, TimelinePanel, &Timeline::updateLayers);
-    QObject::connect(viewPort_, &viewPort::layerSelected, TimelinePanel, &Timeline::updateSelectedLayer);
+    QObject::connect(viewPort_, &viewPort::pathCreated, TimelinePanel_, &Timeline::addLayer);
+    QObject::connect(viewPort_, &viewPort::layerInfoUpdated, TimelinePanel_, &Timeline::updateLayers);
+    QObject::connect(viewPort_, &viewPort::layerSelected, TimelinePanel_, &Timeline::updateSelectedLayer);
 }
 
 MainWindow::~MainWindow()
@@ -144,7 +145,7 @@ void MainWindow::bezierTool(bool checked)
 
 void MainWindow::preCreateAttributeWidgets()
 {
-    path* tempPath = new path(QPointF(0, 0), nullptr, nullptr);
+    path* tempPath = new path(QPointF(0, 0), nullptr, nullptr, nullptr);
     templateAttributeWidget_ = tempPath->createAttributeWidget(nullptr);
     templateAttributeWidget_->hide();
 }

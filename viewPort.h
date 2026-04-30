@@ -66,8 +66,8 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     enum { Type = UserType + 1 };              //Unique ID for path
     int type() const override { return Type; } //Override standard type
 
-    path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing);
-    path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing);
+    path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing, int* frame);
+    path(QPointF initialPoint, QGraphicsItem* parent, bool *pathEditing, int* frame);
     ~path(){
         for(node* n : actualNodes_) {
             delete n->H1;
@@ -158,6 +158,23 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     bool stroke_ = true;
     Qt::PenJoinStyle pathJointStyle = Qt::MiterJoin;
 
+    //keyframing
+    int* currentFrame_;
+    std::map<int, qreal> xPositionFrames;
+    std::map<int, qreal> yPositionFrames;
+    std::map<int, qreal> xPivotFrames;
+    std::map<int, qreal> yPivotFrames;
+    std::map<int, qreal> xScaleFrames;
+    std::map<int, qreal> yScaleFrames;
+    std::map<int, qreal> rotationFrames;
+    std::map<int, int> strokeWidthFrames;
+    std::map<int, QColor> fillColoroFrames;
+    std::map<int, QColor> strokeColoroFrames;
+    
+
+
+    
+
     
     QRectF ULHandle, DLHandle, URHandle, DRHandle; //corner scale
     QRectF UHandle, DHandle, RHandle, LHandle;     //edge scale
@@ -227,7 +244,7 @@ class viewPort : public QGraphicsView{
     Q_OBJECT
 
     public:
-    viewPort(QWidget* parent);
+    viewPort(QWidget* parent, int* frame);
 
     void enableSelectionTool(bool state);
     void enableNodeTool(bool state);
@@ -290,7 +307,7 @@ class viewPort : public QGraphicsView{
     path* selectedPath_ = nullptr;
 
     QPointF scalingError_;
-    
+    int* currentFrame_;
 
     QGraphicsItemGroup* canvas_;
     
@@ -530,4 +547,5 @@ class customSpinBox: public QWidget{
         void onMouseClick(QPointF position);
         void valueChanged(qreal newValue);
         void stringValueChanged(QString newValue);
+        void toggledKeyframe(bool state, qreal value);
     };

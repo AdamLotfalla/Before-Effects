@@ -36,10 +36,11 @@ void node::setHighlighted(bool state)
 
 
 
-path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing) : QGraphicsItem(parent)
+path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* parent, bool *pathEditing, int*frame) : QGraphicsItem(parent)
 {
     actualNodes_ = nodes;
     edges_ = edges;
+    currentFrame_ = frame;
 
     inPathEditingMode_ = pathEditing;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -49,8 +50,9 @@ path::path(QVector<node*>& nodes, QVector<QVector<int>>& edges, QGraphicsItem* p
     position_ = QPointF(0.5 * (minX_ + maxX_), 0.5 * (minY_ + maxY_));
 }
 
-path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing) : QGraphicsItem(parent)
+path::path(QPointF initialPoint, QGraphicsItem *parent, bool *pathEditing, int*frame) : QGraphicsItem(parent)
 {
+    currentFrame_ = frame;
     inPathEditingMode_ = pathEditing;
     addPoint(initialPoint);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -926,6 +928,16 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     customSpinBox* xPositionBox = new customSpinBox(background, 'X');
     xPositionBox->setValue(position_.x());
+    xPositionBox->connect(xPositionBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
+        if(currentFrame_ == nullptr) return;
+
+        if(state){
+            xPositionFrames[*currentFrame_] = value;
+        }
+        else{
+            xPositionFrames.erase(*currentFrame_);
+        }
+    });
     xPositionBox->update();
     
     customSpinBox* yPositionBox = new customSpinBox(background, 'Y');
@@ -1693,8 +1705,9 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
 
 
-viewPort::viewPort(QWidget* parent): QGraphicsView(parent)
+viewPort::viewPort(QWidget* parent, int* frame): QGraphicsView(parent)
 {    
+    currentFrame_ = frame;
     scene_ = new QGraphicsScene(0,0, 800, 600, this);
     this->setScene(scene_);
     scene_->setBackgroundBrush(QBrush(QColor("#1E1E1E")));
@@ -1828,7 +1841,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
 
         if(!startedNewPath_){
             startedNewPath_ = true;
-            currentPath = new path(canvasLocalPos, canvas_, &inPathEditingMode_);
+            currentPath = new path(canvasLocalPos, canvas_, &inPathEditingMode_, currentFrame_);
             currentPath->setDrawingMode(true);
             setSelectedPath(currentPath, true, true);
 
