@@ -537,7 +537,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
         if(*currentFrame_ > timeIndicatorBar->getLBound())
-            *currentFrame_ --;
+            (*currentFrame_) --;
         timeIndicatorBar->update();
         emit frameChanged();
     });
