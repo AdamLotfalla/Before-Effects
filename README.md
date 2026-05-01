@@ -13,8 +13,23 @@ A cross-platform motion graphics desktop software supporting basic vector drawin
 9. **Attribute panel:** position, scale, pivot point, rotation, fill color, stroke color, stroke width, joint types
 10. exporting into .mp4 (requires ffmpeg in your environment variables)
 
+## Planned features
+- viewport controls
+- importing SVGs
+- exporting to a file
+- exporting to an mp4
+- Ctrl + C, V, Z, Y
+- keyframe interpolation and graph editor
+- Text object
+- Text object properties
+- Image object
+- Image object properties
+- importing other formats
+- complex SVG shapes
+- path manipulation and masking
+
 ## Download
-Download the zip file from the [release page](https://github.com/AdamLotfalla/Before-Effects/releases/tag/v1.0.0)
+Download the zip file from the [release page](https://github.com/AdamLotfalla/Before-Effects/releases/tag/v1.0.0). Just un-zip it and run.
 ### ffmpeg (for exporting)
 - For Windows
 ```
