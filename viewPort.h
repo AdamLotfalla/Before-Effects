@@ -62,8 +62,7 @@ class customSpinBox: public QWidget{
         painter.setBrush(QBrush("#272727"));
         painter.drawRoundedRect(0,0, this->width(), height_, 5,5);
 
-        painter.setBrush(QBrush("#474747"));
-        painter.drawRect(this->width() - symbolWidth_, 0, symbolWidth_, height_);
+
 
         QPainterPath Rhombus;
         Rhombus.moveTo(4,0);
@@ -81,20 +80,25 @@ class customSpinBox: public QWidget{
 
         Rhombus.translate(rhombusBox.topLeft());
         
-        if(keyFramed){
-            painter.setBrush(QBrush("#7BC7B0")); 
-            painter.setPen(Qt::NoPen);
-            painter.drawPath(Rhombus);
-        }
-        else{
-            QPainterPathStroker RhombusStroke;
-            RhombusStroke.setWidth(2.5);
-            RhombusStroke.setJoinStyle(Qt::RoundJoin);
-
-            QPainterPath strokePath = RhombusStroke.createStroke(Rhombus);
-            QPainterPath insideStroke = strokePath.intersected(Rhombus);
-
-            painter.fillPath(insideStroke, QColor("#cecece"));
+        if(!stringInput){
+            painter.setBrush(QBrush("#474747"));
+            painter.drawRect(this->width() - symbolWidth_, 0, symbolWidth_, height_);
+            
+            if(keyFramed){
+                painter.setBrush(QBrush("#7BC7B0")); 
+                painter.setPen(Qt::NoPen);
+                painter.drawPath(Rhombus);
+            }
+            else{
+                QPainterPathStroker RhombusStroke;
+                RhombusStroke.setWidth(2.5);
+                RhombusStroke.setJoinStyle(Qt::RoundJoin);
+                
+                QPainterPath strokePath = RhombusStroke.createStroke(Rhombus);
+                QPainterPath insideStroke = strokePath.intersected(Rhombus);
+                
+                painter.fillPath(insideStroke, QColor("#cecece"));
+            }
         }
 
         

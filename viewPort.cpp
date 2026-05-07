@@ -1333,6 +1333,10 @@ QWidget *path::createAttributeWidget(QWidget *parent)
             if(value.length() >= 8) a = value.mid(6,2).toInt(&ok,16);
             fillColor_ = QColor(r,g,b,a); updateFillControls(); update();
         }
+
+        if(!fillColorFrames.empty()){
+            fillColorFrames[*currentFrame_] = fillColor_;
+        }
     });
     fillRSpinBox->connect(fillRSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){
         fillColor_.setRed(v);   
@@ -1522,6 +1526,10 @@ QWidget *path::createAttributeWidget(QWidget *parent)
             r = value.mid(0,2).toInt(&ok,16); g = value.mid(2,2).toInt(&ok,16); b = value.mid(4,2).toInt(&ok,16);
             if(value.length() >= 8) a = value.mid(6,2).toInt(&ok,16);
             strokeColor_ = QColor(r,g,b,a); updateStrokeControls(); update();
+        }
+
+        if(!strokeColorFrames.empty()){
+            strokeColorFrames[*currentFrame_] = fillColor_;
         }
     });
     strokeRSpinBox->connect(strokeRSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
