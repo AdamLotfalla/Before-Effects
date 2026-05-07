@@ -2099,8 +2099,10 @@ void viewPort::enableNodeTool(bool state)
 {
     nodeToolActivated_ = state;
     
-    if(selectedPath_ != nullptr)
+    if(selectedPath_ != nullptr){
+        selectedPath_->clearHighlightedNodes();
         selectedPath_->update();
+    }
 }
 
 void viewPort::enableBezierTool(bool state)
@@ -2492,7 +2494,7 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 localHoldStart = selectedPath_->mapToItemRotation(localHoldStart, true);
                 localHoldStart.setX(localHoldStart.x()/selectedPath_->scaleX_ - 1.0/selectedPath_->scaleX_ * (selectedPath_->position_.x() + selectedPath_->pivotPoint_.x()) * (1-selectedPath_->scaleX_));
                 localHoldStart.setY(localHoldStart.y()/selectedPath_->scaleY_ - 1.0/selectedPath_->scaleY_ * (selectedPath_->position_.y() + selectedPath_->pivotPoint_.y()) * (1-selectedPath_->scaleY_));
-                            
+
                 QPointF offset = newPos - localHoldStart;
 
                 if(selectedPath_->selectedHandle_ == -1)
@@ -2594,7 +2596,10 @@ void viewPort::mouseReleaseEvent(QMouseEvent *event)
     offset_ = QPointF(0,0);    
     holding_ = false;
     if(selectedPath_){
-        selectedPath_->selectedHandle_ = -1;
+        if(selectedPath_->selectedHandle_ != -1){
+            selectedPath_->clearHighlightedNodes();
+            selectedPath_->selectedHandle_ = -1;
+        }
         selectedPath_->update();
     }
 }
