@@ -246,6 +246,51 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
             painter.drawPath(Rhombus);
             Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
         }
+        for(auto j : layers_[i]->relatedPath_->yPositionFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->xPivotFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->yPivotFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->xScaleFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->yScaleFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->rotationFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->strokeWidthFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->fillColorFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : layers_[i]->relatedPath_->strokeColorFrames){
+            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+        }
     }
 
 

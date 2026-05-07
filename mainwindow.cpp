@@ -129,7 +129,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     QObject::connect(TimelinePanel_, &Timeline::playSignal,
                      this, &MainWindow::startTimer);
-    
+    QObject::connect(TimelinePanel_, &Timeline::playSignal,
+                     viewPort_, &viewPort::supressKeyframesSlot);
     timer_ = new QTimer(this); 
     timer_->setInterval(1000/frameRate_);
     QObject::connect(timer_, &QTimer::timeout, TimelinePanel_, &Timeline::step);

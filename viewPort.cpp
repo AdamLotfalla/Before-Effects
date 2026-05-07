@@ -227,6 +227,11 @@ bool path::inRotationMode()
     return inRotationMode_;
 }
 
+void path::supressKeyframeWrite(bool state)
+{
+    supressKeyframeWrite_ = state;
+}
+
 void path::setDrawingMode(bool state)
 {
     inPathDrawingMode_ = state;
@@ -430,7 +435,7 @@ void path::movePath(QPointF offset)
     }
 
     position_ += offset;
-    if(onPositionChanged)
+    if(onPositionChanged && (offset.x() != 0 || offset.y() != 0))
         onPositionChanged(position_);
     
     calculateBoundaries();
@@ -439,8 +444,6 @@ void path::movePath(QPointF offset)
 void path::setPosition(QPointF newPos)
 {
     movePath(newPos - position_);
-    if(onPositionChanged)
-        onPositionChanged(position_);
 }
 
 void path::setPosition(qreal x, qreal y)
@@ -977,9 +980,17 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     
     
     
-    onPositionChanged = [xPositionBox, yPositionBox](QPointF pos) {
+    onPositionChanged = [this, xPositionBox, yPositionBox](QPointF pos) {
         xPositionBox->blockSignals(true);
         yPositionBox->blockSignals(true);
+        if(!supressKeyframeWrite_){
+            if(!xPositionFrames.empty()){
+                xPositionFrames[*currentFrame_] = pos.x();
+            }
+            if(!yPositionFrames.empty()){
+                yPositionFrames[*currentFrame_] = pos.y();
+            }
+        }
         xPositionBox->setValue(pos.x());
         yPositionBox->setValue(pos.y());
         xPositionBox->blockSignals(false);
@@ -1056,9 +1067,17 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     VLayout->addLayout(scaleLayout);
 
     
-    onScaleChanged = [xScaleBox, yScaleBox](qreal newScaleX, qreal newScaleY) {
+    onScaleChanged = [this, xScaleBox, yScaleBox](qreal newScaleX, qreal newScaleY) {
         xScaleBox->blockSignals(true);
         yScaleBox->blockSignals(true);
+        if(!supressKeyframeWrite_){
+            if(!xScaleFrames.empty()){
+                xScaleFrames[*currentFrame_] = newScaleX;
+            }
+            if(!yScaleFrames.empty()){
+                yScaleFrames[*currentFrame_] = newScaleY;
+            }
+        }
         xScaleBox->setValue(newScaleX);
         yScaleBox->setValue(newScaleY);
         xScaleBox->blockSignals(false);
@@ -1127,8 +1146,13 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     VLayout->addLayout(rotationLayout);
 
-    onRotationChanged = [rotationBox](qreal newRotation){
+    onRotationChanged = [this, rotationBox](qreal newRotation){
         rotationBox->blockSignals(true);
+        if(!supressKeyframeWrite_){
+            if(!rotationFrames.empty()){
+                rotationFrames[*currentFrame_] = newRotation;
+            }
+        }
         rotationBox->setValue(newRotation);
         rotationBox->blockSignals(false);
 
@@ -2002,13 +2026,13 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     }
 
     // Snapping rectangle to the first point
-    if(firstNodeHighlighted_){
+    if(firstNodeHighlighted_ && inPathDrawingMode_){
         painter->setCompositionMode(QPainter::CompositionMode_Difference);
         painter->setPen(QPen(QColor("#BEBEBE"), 1, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
 
         QPointF p = actualNodes_[0]->position_;
-        qreal snapR = 6.0 / lod;
+        qreal snapR = 10.0 / lod;
         painter->drawRect(QRectF(p - QPointF(snapR, snapR), QSizeF(snapR*2, snapR*2)));
     }
 }
@@ -2169,6 +2193,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath->connect(currentPath, &path::layerInfoUpdated, [this](){
                 emit layerInfoUpdated();
             });
+            currentPath->connect(this, &viewPort::supressKeyframesSignal, currentPath, &path::supressKeyframeWrite);
             connect(this, &viewPort::optimizeSignal, currentPath, &path::optimize);
             
             paths_.push_back(currentPath);
@@ -2598,7 +2623,13 @@ void viewPort::resizeEvent(QResizeEvent* event)
     }
 }
 
+void viewPort::supressKeyframesSlot(bool state)
+{
+    emit supressKeyframesSignal(state);
+}
+
 void viewPort::onFrameChanged() {
+    emit supressKeyframesSignal(true);
     for(auto p : paths_) {
         bool xposF = false, yposF = false, xpivotF = false, ypivotF = false, 
              rotationF = false, xscaleF = false, yscaleF = false, 
@@ -2784,4 +2815,5 @@ void viewPort::onFrameChanged() {
         ); //inside setPosition it updates geometry and redraws.
 
     }
+    emit supressKeyframesSignal(false);
 }

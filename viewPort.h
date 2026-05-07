@@ -407,6 +407,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     void optimize(bool state);
     void toggleRotationMode();
     bool inRotationMode();
+    void supressKeyframeWrite(bool state);
     
     private:
     
@@ -455,6 +456,8 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     bool firstNodeHighlighted_ = false;
     bool hasDrawingPreview_ = false;
     bool optimized_ = false;
+    bool supressKeyframeWrite_ = false;
+
 
     //signal
     std::function<void(QPointF)> onPositionChanged;
@@ -556,6 +559,7 @@ class viewPort : public QGraphicsView{
 
 public slots:
     void onFrameChanged();
+    void supressKeyframesSlot(bool state);
 
 signals:
     void attributePanelUpdateNeeded(AttributePanel* obj);
@@ -565,4 +569,5 @@ signals:
     void layerSelected(path* p);
     void frameChanged();
     void optimizeSignal(bool state);
+    void supressKeyframesSignal(bool state);
 };
