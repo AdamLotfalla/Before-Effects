@@ -277,6 +277,7 @@ void path::setRotation(float angle)
 {
     prepareGeometryChange();
     rotation_ = angle;
+    needTransformUpdate_ = true;
 
     if(onRotationChanged)
         onRotationChanged(angle);
