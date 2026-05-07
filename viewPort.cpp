@@ -313,6 +313,7 @@ QPointF path::mapToItemRotation(qreal x, qreal y)
     return mapToItemRotation(QPointF(x,y));
 }
 
+
 void path::rescale(qreal xCenterD, qreal yCenterD, QPointF error,
                    qreal originalHalfExtentX, qreal originalHalfExtentY,
                    bool restrictedX, bool restrictedY,
