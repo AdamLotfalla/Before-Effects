@@ -104,7 +104,7 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
     offset_ = (this->width() - *frameCount_ * *frameWidth_) / 2;
 
 
-    
+
     connect(this, &TimeIndicatorBar::tickBarClickedSignal,
             this, &TimeIndicatorBar::onTickBarClick);
     connect(this, &TimeIndicatorBar::tickBarUnClickedSignal,
@@ -352,18 +352,17 @@ void TimeIndicatorBar::mousePressEvent(QMouseEvent *event)
         int minRBound = offset_ + RBoundFrame_ * *frameWidth_;
         int maxRBound = offset_ + RBoundFrame_ * *frameWidth_ + boundHandleThickness;
 
-        if(y < tickLayerHeight_){
-            emit tickBarClickedSignal(event->pos());
-        }
-        else if(y < tickLayerHeight_ + boundLayerHeight_){
+        if(y < tickLayerHeight_ + boundLayerHeight_){
             if(minLBound < x && x < maxLBound){
                 emit LBoundClickedSignal(event->pos());
             }
             else if(minRBound < x && x < maxRBound){
                 emit RBoundClickedSignal(event->pos());
             }
-        }
-            
+            else{
+                emit tickBarClickedSignal(event->pos());
+            }
+        }            
     } 
     QWidget::mousePressEvent(event);
 }
