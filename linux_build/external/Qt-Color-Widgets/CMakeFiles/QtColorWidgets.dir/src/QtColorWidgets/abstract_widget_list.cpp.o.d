@@ -1,8 +1,8 @@
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/src/QtColorWidgets/abstract_widget_list.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/abstract_widget_list.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/abstract_widget_list.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qglobal.h \
  /usr/include/c++/15/type_traits \

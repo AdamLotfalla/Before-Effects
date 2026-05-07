@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/Code/Flavortown/Before_Effects
+CMAKE_SOURCE_DIR = /mnt/d/Code/flavortown/Before_Effects
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/Code/Flavortown/Before_Effects/linux_build
+CMAKE_BINARY_DIR = /mnt/d/Code/flavortown/Before_Effects/linux_build
 
 # Utility rule file for Before_Effects_autogen.
 
@@ -71,9 +71,9 @@ CMakeFiles/Before_Effects_autogen: Before_Effects_autogen/timestamp
 Before_Effects_autogen/timestamp: /usr/lib/qt6/libexec/moc
 Before_Effects_autogen/timestamp: /usr/lib/qt6/libexec/uic
 Before_Effects_autogen/timestamp: CMakeFiles/Before_Effects_autogen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target Before_Effects"
-	/usr/bin/cmake -E cmake_autogen /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen.dir/AutogenInfo.json ""
-	/usr/bin/cmake -E touch /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/timestamp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target Before_Effects"
+	/usr/bin/cmake -E cmake_autogen /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen.dir/AutogenInfo.json ""
+	/usr/bin/cmake -E touch /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/timestamp
 
 CMakeFiles/Before_Effects_autogen.dir/codegen:
 .PHONY : CMakeFiles/Before_Effects_autogen.dir/codegen
@@ -92,6 +92,6 @@ CMakeFiles/Before_Effects_autogen.dir/clean:
 .PHONY : CMakeFiles/Before_Effects_autogen.dir/clean
 
 CMakeFiles/Before_Effects_autogen.dir/depend:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen.dir/DependInfo.cmake "--color=$(COLOR)" Before_Effects_autogen
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen.dir/DependInfo.cmake "--color=$(COLOR)" Before_Effects_autogen
 .PHONY : CMakeFiles/Before_Effects_autogen.dir/depend
 

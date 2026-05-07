@@ -1,9 +1,9 @@
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/src/QtColorWidgets/color_list_widget.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/color_list_widget.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/color_list_widget.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_list_widget.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_list_widget.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qglobal.h \
  /usr/include/c++/15/type_traits \
@@ -425,8 +425,8 @@ external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/src/QtColorWidgets/color
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtabbar.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtabwidget.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qrubberband.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QWidget \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp

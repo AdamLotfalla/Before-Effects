@@ -1,7 +1,7 @@
 CMakeFiles/Before_Effects.dir/timeline.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/timeline.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/timeline.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Code/Flavortown/Before_Effects/timeline.h \
+ /mnt/d/Code/flavortown/Before_Effects/timeline.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QWidget \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtwidgetsglobal.h \
@@ -499,7 +499,7 @@ CMakeFiles/Before_Effects.dir/timeline.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QScrollBar \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qscrollbar.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QMouseEvent \
- /mnt/d/Code/Flavortown/Before_Effects/viewPort.h \
+ /mnt/d/Code/flavortown/Before_Effects/viewPort.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QGraphicsView \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qgraphicsview.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qpainter.h \
@@ -525,15 +525,15 @@ CMakeFiles/Before_Effects.dir/timeline.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qtextformat.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QCheckBox \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qcheckbox.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qglobal.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QStyleOptionGraphicsItem \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qstyleoption.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qslider.h \
@@ -542,6 +542,6 @@ CMakeFiles/Before_Effects.dir/timeline.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtabwidget.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qrubberband.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qabstractitemmodel.h \
- /mnt/d/Code/Flavortown/Before_Effects/common_widget_styles.h \
+ /mnt/d/Code/flavortown/Before_Effects/common_widget_styles.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QString \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qstring.h

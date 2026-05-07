@@ -1,7 +1,7 @@
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/src/QtColorWidgets/color_palette.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/color_palette.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/color_palette.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_palette.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_palette.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QColor \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qcolor.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qtguiglobal.h \
@@ -375,7 +375,7 @@ external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/src/QtColorWidgets/color
  /usr/include/c++/15/cassert \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/q20iterator.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qline.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qglobal.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QFile \

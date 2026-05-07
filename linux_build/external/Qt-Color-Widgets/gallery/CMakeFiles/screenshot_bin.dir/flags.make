@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DQTCOLORWIDGETS_STATICALLY_LINKED -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_FROM_BYTEARRAY -DQT_NO_CAST_TO_ASCII -DQT_NO_DEBUG -DQT_NO_FOREACH -DQT_NO_KEYWORDS -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT -DQT_NO_URL_CAST_FROM_STRING -DQT_STRICT_ITERATORS -DQT_USE_QSTRINGBUILDER -DQT_WIDGETS_LIB
 
-CXX_INCLUDES = -I/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include -I/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets -isystem /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/include -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui
+CXX_INCLUDES = -I/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include -I/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets -isystem /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/include -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui
 
 CXX_FLAGS = -std=gnu++17
 

@@ -1,9 +1,9 @@
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/src/QtColorWidgets/color_selector.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/color_selector.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/src/QtColorWidgets/color_selector.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qglobal.h \
  /usr/include/c++/15/type_traits \
@@ -404,8 +404,8 @@ external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/src/QtColorWidgets/color
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qsizepolicy.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qcursor.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qbitmap.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_dialog.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_dialog.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QDialog \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qdialog.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h \

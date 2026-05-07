@@ -1,8 +1,8 @@
 CMakeFiles/Before_Effects.dir/Before_Effects_autogen/mocs_compilation.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/mocs_compilation.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/mocs_compilation.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_mainwindow.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../mainwindow.h \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_mainwindow.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../mainwindow.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QMainWindow \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qmainwindow.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtwidgetsglobal.h \
@@ -484,7 +484,7 @@ CMakeFiles/Before_Effects.dir/Before_Effects_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qprogressdialog.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QStandardPaths \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qstandardpaths.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../viewPort.h \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../viewPort.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QGraphicsView \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qgraphicsview.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qpainter.h \
@@ -539,15 +539,15 @@ CMakeFiles/Before_Effects.dir/Before_Effects_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qtextformat.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QCheckBox \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qcheckbox.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qglobal.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QToolButton \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtoolbutton.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QDebug \
@@ -559,10 +559,10 @@ CMakeFiles/Before_Effects.dir/Before_Effects_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtabbar.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qrubberband.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qabstractitemmodel.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../common_widget_styles.h \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../common_widget_styles.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QString \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qstring.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../timeline.h \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/../../../timeline.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QScrollArea \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qscrollarea.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QResizeEvent \
@@ -583,5 +583,5 @@ CMakeFiles/Before_Effects.dir/Before_Effects_autogen/mocs_compilation.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qtmochelpers.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qtmocconstants.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/q20algorithm.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_timeline.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_viewPort.cpp
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_timeline.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_viewPort.cpp

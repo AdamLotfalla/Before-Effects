@@ -52,7 +52,7 @@ add_library(QtColorWidgets STATIC IMPORTED)
 set_target_properties(QtColorWidgets PROPERTIES
   COMPATIBLE_INTERFACE_STRING "QtColorWidgets_MAJOR_VERSION"
   INTERFACE_COMPILE_DEFINITIONS "QTCOLORWIDGETS_STATICALLY_LINKED"
-  INTERFACE_INCLUDE_DIRECTORIES "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include;/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets"
+  INTERFACE_INCLUDE_DIRECTORIES "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include;/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets"
   INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:Qt6::Widgets>"
   INTERFACE_QtColorWidgets_MAJOR_VERSION "2"
 )
@@ -61,7 +61,7 @@ set_target_properties(QtColorWidgets PROPERTIES
 set_property(TARGET QtColorWidgets APPEND PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
 set_target_properties(QtColorWidgets PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_NOCONFIG "CXX"
-  IMPORTED_LOCATION_NOCONFIG "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/libQtColorWidgets.a"
+  IMPORTED_LOCATION_NOCONFIG "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/libQtColorWidgets.a"
   )
 
 # This file does not depend on other imported targets which have

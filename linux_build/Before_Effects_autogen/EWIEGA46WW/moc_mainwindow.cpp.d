@@ -1,15 +1,15 @@
-/mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_mainwindow.cpp: /mnt/d/Code/Flavortown/Before_Effects/mainwindow.h \
-  /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects_autogen/moc_predefs.h \
-  /mnt/d/Code/Flavortown/Before_Effects/common_widget_styles.h \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/timeline.h \
-  /mnt/d/Code/Flavortown/Before_Effects/viewPort.h \
+/mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/EWIEGA46WW/moc_mainwindow.cpp: /mnt/d/Code/flavortown/Before_Effects/mainwindow.h \
+  /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/moc_predefs.h \
+  /mnt/d/Code/flavortown/Before_Effects/common_widget_styles.h \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/timeline.h \
+  /mnt/d/Code/flavortown/Before_Effects/viewPort.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \

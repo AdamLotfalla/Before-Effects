@@ -1,8 +1,8 @@
-/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_list_widget.cpp: /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_list_widget.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/moc_predefs.h \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
-  /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_list_widget.cpp: /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_list_widget.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/moc_predefs.h \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+  /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \

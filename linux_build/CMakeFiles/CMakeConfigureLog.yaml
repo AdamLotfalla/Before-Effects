@@ -20,6 +20,9 @@ events:
     names:
       - "uname"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -43,11 +46,16 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/uname"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/uname"
+      - "C:/Qt/6.x.x/msvc2019_64/uname"
       - "/usr/local/sbin/uname"
       - "/usr/local/bin/uname"
       - "/usr/sbin/uname"
     found: "/usr/bin/uname"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -100,6 +108,9 @@ events:
       - "make"
       - "smake"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -123,11 +134,16 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/gmake"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/gmake"
+      - "C:/Qt/6.x.x/msvc2019_64/gmake"
       - "/usr/local/sbin/gmake"
       - "/usr/local/bin/gmake"
       - "/usr/sbin/gmake"
     found: "/usr/bin/gmake"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -181,6 +197,9 @@ events:
       - "icx"
       - "clang++"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -204,228 +223,16 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/c++"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/c++"
+      - "C:/Qt/6.x.x/msvc2019_64/c++"
       - "/usr/local/sbin/c++"
       - "/usr/local/bin/c++"
       - "/usr/sbin/c++"
-      - "/usr/bin/c++"
-      - "/sbin/c++"
-      - "/bin/c++"
-      - "/usr/games/c++"
-      - "/usr/local/games/c++"
-      - "/usr/lib/wsl/lib/c++"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/c++"
-      - "/mnt/c/WINDOWS/system32/c++"
-      - "/mnt/c/WINDOWS/c++"
-      - "/mnt/c/WINDOWS/System32/Wbem/c++"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/c++"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/c++"
-      - "/mnt/d/mingw64/bin/c++"
-      - "/mnt/c/Program Files/Git/cmd/c++"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/c++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/c++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/c++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/c++"
-      - "/snap/bin/c++"
-      - "/usr/local/sbin/CC"
-      - "/usr/local/bin/CC"
-      - "/usr/sbin/CC"
-      - "/usr/bin/CC"
-      - "/sbin/CC"
-      - "/bin/CC"
-      - "/usr/games/CC"
-      - "/usr/local/games/CC"
-      - "/usr/lib/wsl/lib/CC"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/CC"
-      - "/mnt/c/WINDOWS/system32/CC"
-      - "/mnt/c/WINDOWS/CC"
-      - "/mnt/c/WINDOWS/System32/Wbem/CC"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/CC"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/CC"
-      - "/mnt/d/mingw64/bin/CC"
-      - "/mnt/c/Program Files/Git/cmd/CC"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/CC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/CC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/CC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/CC"
-      - "/snap/bin/CC"
-      - "/usr/local/sbin/g++"
-      - "/usr/local/bin/g++"
-      - "/usr/sbin/g++"
-      - "/usr/bin/g++"
-      - "/sbin/g++"
-      - "/bin/g++"
-      - "/usr/games/g++"
-      - "/usr/local/games/g++"
-      - "/usr/lib/wsl/lib/g++"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/g++"
-      - "/mnt/c/WINDOWS/system32/g++"
-      - "/mnt/c/WINDOWS/g++"
-      - "/mnt/c/WINDOWS/System32/Wbem/g++"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/g++"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/g++"
-      - "/mnt/d/mingw64/bin/g++"
-      - "/mnt/c/Program Files/Git/cmd/g++"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/g++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/g++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/g++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/g++"
-      - "/snap/bin/g++"
-      - "/usr/local/sbin/aCC"
-      - "/usr/local/bin/aCC"
-      - "/usr/sbin/aCC"
-      - "/usr/bin/aCC"
-      - "/sbin/aCC"
-      - "/bin/aCC"
-      - "/usr/games/aCC"
-      - "/usr/local/games/aCC"
-      - "/usr/lib/wsl/lib/aCC"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/aCC"
-      - "/mnt/c/WINDOWS/system32/aCC"
-      - "/mnt/c/WINDOWS/aCC"
-      - "/mnt/c/WINDOWS/System32/Wbem/aCC"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/aCC"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/aCC"
-      - "/mnt/d/mingw64/bin/aCC"
-      - "/mnt/c/Program Files/Git/cmd/aCC"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/aCC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/aCC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/aCC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/aCC"
-      - "/snap/bin/aCC"
-      - "/usr/local/sbin/cl"
-      - "/usr/local/bin/cl"
-      - "/usr/sbin/cl"
-      - "/usr/bin/cl"
-      - "/sbin/cl"
-      - "/bin/cl"
-      - "/usr/games/cl"
-      - "/usr/local/games/cl"
-      - "/usr/lib/wsl/lib/cl"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/cl"
-      - "/mnt/c/WINDOWS/system32/cl"
-      - "/mnt/c/WINDOWS/cl"
-      - "/mnt/c/WINDOWS/System32/Wbem/cl"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/cl"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/cl"
-      - "/mnt/d/mingw64/bin/cl"
-      - "/mnt/c/Program Files/Git/cmd/cl"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/cl"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/cl"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/cl"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/cl"
-      - "/snap/bin/cl"
-      - "/usr/local/sbin/bcc"
-      - "/usr/local/bin/bcc"
-      - "/usr/sbin/bcc"
-      - "/usr/bin/bcc"
-      - "/sbin/bcc"
-      - "/bin/bcc"
-      - "/usr/games/bcc"
-      - "/usr/local/games/bcc"
-      - "/usr/lib/wsl/lib/bcc"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/bcc"
-      - "/mnt/c/WINDOWS/system32/bcc"
-      - "/mnt/c/WINDOWS/bcc"
-      - "/mnt/c/WINDOWS/System32/Wbem/bcc"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/bcc"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/bcc"
-      - "/mnt/d/mingw64/bin/bcc"
-      - "/mnt/c/Program Files/Git/cmd/bcc"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/bcc"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/bcc"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/bcc"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/bcc"
-      - "/snap/bin/bcc"
-      - "/usr/local/sbin/xlC"
-      - "/usr/local/bin/xlC"
-      - "/usr/sbin/xlC"
-      - "/usr/bin/xlC"
-      - "/sbin/xlC"
-      - "/bin/xlC"
-      - "/usr/games/xlC"
-      - "/usr/local/games/xlC"
-      - "/usr/lib/wsl/lib/xlC"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/xlC"
-      - "/mnt/c/WINDOWS/system32/xlC"
-      - "/mnt/c/WINDOWS/xlC"
-      - "/mnt/c/WINDOWS/System32/Wbem/xlC"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/xlC"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/xlC"
-      - "/mnt/d/mingw64/bin/xlC"
-      - "/mnt/c/Program Files/Git/cmd/xlC"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/xlC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/xlC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/xlC"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/xlC"
-      - "/snap/bin/xlC"
-      - "/usr/local/sbin/icpx"
-      - "/usr/local/bin/icpx"
-      - "/usr/sbin/icpx"
-      - "/usr/bin/icpx"
-      - "/sbin/icpx"
-      - "/bin/icpx"
-      - "/usr/games/icpx"
-      - "/usr/local/games/icpx"
-      - "/usr/lib/wsl/lib/icpx"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/icpx"
-      - "/mnt/c/WINDOWS/system32/icpx"
-      - "/mnt/c/WINDOWS/icpx"
-      - "/mnt/c/WINDOWS/System32/Wbem/icpx"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/icpx"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/icpx"
-      - "/mnt/d/mingw64/bin/icpx"
-      - "/mnt/c/Program Files/Git/cmd/icpx"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/icpx"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/icpx"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/icpx"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/icpx"
-      - "/snap/bin/icpx"
-      - "/usr/local/sbin/icx"
-      - "/usr/local/bin/icx"
-      - "/usr/sbin/icx"
-      - "/usr/bin/icx"
-      - "/sbin/icx"
-      - "/bin/icx"
-      - "/usr/games/icx"
-      - "/usr/local/games/icx"
-      - "/usr/lib/wsl/lib/icx"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/icx"
-      - "/mnt/c/WINDOWS/system32/icx"
-      - "/mnt/c/WINDOWS/icx"
-      - "/mnt/c/WINDOWS/System32/Wbem/icx"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/icx"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/icx"
-      - "/mnt/d/mingw64/bin/icx"
-      - "/mnt/c/Program Files/Git/cmd/icx"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/icx"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/icx"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/icx"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/icx"
-      - "/snap/bin/icx"
-      - "/usr/local/sbin/clang++"
-      - "/usr/local/bin/clang++"
-      - "/usr/sbin/clang++"
-      - "/usr/bin/clang++"
-      - "/sbin/clang++"
-      - "/bin/clang++"
-      - "/usr/games/clang++"
-      - "/usr/local/games/clang++"
-      - "/usr/lib/wsl/lib/clang++"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/clang++"
-      - "/mnt/c/WINDOWS/system32/clang++"
-      - "/mnt/c/WINDOWS/clang++"
-      - "/mnt/c/WINDOWS/System32/Wbem/clang++"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/clang++"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/clang++"
-      - "/mnt/d/mingw64/bin/clang++"
-      - "/mnt/c/Program Files/Git/cmd/clang++"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/clang++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/clang++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/clang++"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/clang++"
-      - "/snap/bin/clang++"
-    found: false
+    found: "/usr/bin/c++"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -476,6 +283,8 @@ events:
       - "/usr/share/cmake-4.2/Modules/"
     found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -508,751 +317,19 @@ events:
       - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
       - "CMakeLists.txt:3 (project)"
     message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/bin/c++ 
       Build flags: 
       Id flags:  
       
       The output was:
-      no such file or directory
+      0
       
       
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: -c 
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
       
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: --c++ 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: --ec++ 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: -c;-I__does_not_exist__ 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags:  
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: -c 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: --c++ 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: --ec++ 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
-      
-      The output was:
-      no such file or directory
-      
-      
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-      Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-      Build flags: 
-      Id flags: -c;-I__does_not_exist__ 
-      
-      The output was:
-      no such file or directory
-      
+      The CXX compiler identification is GNU, found in:
+        /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/4.2.3/CompilerIdCXX/a.out
       
   -
     kind: "find-v1"
@@ -1274,10 +351,10 @@ events:
     names:
       - "ar"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1296,12 +373,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/ar"
-      - "/usr/local/bin/ar"
-      - "/usr/sbin/ar"
     found: "/usr/bin/ar"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1346,10 +421,10 @@ events:
     names:
       - "ranlib"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1368,12 +443,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/ranlib"
-      - "/usr/local/bin/ranlib"
-      - "/usr/sbin/ranlib"
     found: "/usr/bin/ranlib"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1418,10 +491,10 @@ events:
     names:
       - "strip"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1440,12 +513,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/strip"
-      - "/usr/local/bin/strip"
-      - "/usr/sbin/strip"
     found: "/usr/bin/strip"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1490,10 +561,10 @@ events:
     names:
       - "ld"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1512,12 +583,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/ld"
-      - "/usr/local/bin/ld"
-      - "/usr/sbin/ld"
     found: "/usr/bin/ld"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1562,10 +631,10 @@ events:
     names:
       - "nm"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1584,12 +653,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/nm"
-      - "/usr/local/bin/nm"
-      - "/usr/sbin/nm"
     found: "/usr/bin/nm"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1634,10 +701,10 @@ events:
     names:
       - "objdump"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1656,12 +723,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/objdump"
-      - "/usr/local/bin/objdump"
-      - "/usr/sbin/objdump"
     found: "/usr/bin/objdump"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1706,10 +771,10 @@ events:
     names:
       - "objcopy"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1728,12 +793,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/objcopy"
-      - "/usr/local/bin/objcopy"
-      - "/usr/sbin/objcopy"
     found: "/usr/bin/objcopy"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1778,10 +841,10 @@ events:
     names:
       - "readelf"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1800,12 +863,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/readelf"
-      - "/usr/local/bin/readelf"
-      - "/usr/sbin/readelf"
     found: "/usr/bin/readelf"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1850,10 +911,10 @@ events:
     names:
       - "dlltool"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1873,10 +934,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
+      - "/usr/bin/dlltool"
       - "/usr/local/sbin/dlltool"
       - "/usr/local/bin/dlltool"
       - "/usr/sbin/dlltool"
-      - "/usr/bin/dlltool"
       - "/sbin/dlltool"
       - "/bin/dlltool"
       - "/usr/games/dlltool"
@@ -1897,6 +958,8 @@ events:
       - "/snap/bin/dlltool"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1941,10 +1004,10 @@ events:
     names:
       - "addr2line"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -1963,12 +1026,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/addr2line"
-      - "/usr/local/bin/addr2line"
-      - "/usr/sbin/addr2line"
     found: "/usr/bin/addr2line"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2013,10 +1074,10 @@ events:
     names:
       - "tapi"
     candidate_directories:
+      - "/usr/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
-      - "/usr/bin/"
       - "/sbin/"
       - "/bin/"
       - "/usr/games/"
@@ -2036,10 +1097,10 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
+      - "/usr/bin/tapi"
       - "/usr/local/sbin/tapi"
       - "/usr/local/bin/tapi"
       - "/usr/sbin/tapi"
-      - "/usr/bin/tapi"
       - "/sbin/tapi"
       - "/bin/tapi"
       - "/usr/games/tapi"
@@ -2060,6 +1121,8 @@ events:
       - "/snap/bin/tapi"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2084,165 +1147,6 @@ events:
         - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
         - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
         - "/snap/bin"
-...
-
----
-events:
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompiler.cmake:73 (find_program)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:69 (_cmake_find_compiler)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "program"
-    variable: "CMAKE_CXX_COMPILER"
-    description: "CXX compiler"
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "c++"
-      - "CC"
-      - "g++"
-      - "aCC"
-      - "cl"
-      - "bcc"
-      - "xlC"
-      - "icpx"
-      - "icx"
-      - "clang++"
-    candidate_directories:
-      - "/usr/local/sbin/"
-      - "/usr/local/bin/"
-      - "/usr/sbin/"
-      - "/usr/bin/"
-      - "/sbin/"
-      - "/bin/"
-      - "/usr/games/"
-      - "/usr/local/games/"
-      - "/usr/lib/wsl/lib/"
-      - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe/"
-      - "/mnt/c/WINDOWS/system32/"
-      - "/mnt/c/WINDOWS/"
-      - "/mnt/c/WINDOWS/System32/Wbem/"
-      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-      - "/mnt/c/WINDOWS/System32/OpenSSH/"
-      - "/mnt/d/mingw64/bin/"
-      - "/mnt/c/Program Files/Git/cmd/"
-      - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps/"
-      - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
-      - "/snap/bin/"
-    searched_directories:
-      - "/usr/local/sbin/c++"
-      - "/usr/local/bin/c++"
-      - "/usr/sbin/c++"
-    found: "/usr/bin/c++"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-      CMAKE_INSTALL_PREFIX: "/usr/local"
-  -
-    kind: "find-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    mode: "file"
-    variable: "src_in"
-    description: "Path to a file."
-    settings:
-      SearchFramework: "NEVER"
-      SearchAppBundle: "NEVER"
-      CMAKE_FIND_USE_CMAKE_PATH: true
-      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-      CMAKE_FIND_USE_INSTALL_PREFIX: true
-    names:
-      - "CMakeCXXCompilerId.cpp.in"
-    candidate_directories:
-      - "/usr/share/cmake-4.2/Modules/"
-    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
-    search_context:
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-      CMAKE_INSTALL_PREFIX: "/usr/local"
-  -
-    kind: "message-v1"
-    backtrace:
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:3 (project)"
-    message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-      Compiler: /usr/bin/c++ 
-      Build flags: 
-      Id flags:  
-      
-      The output was:
-      0
-      
-      
-      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
-      
-      The CXX compiler identification is GNU, found in:
-        /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/4.2.3/CompilerIdCXX/a.out
-      
   -
     kind: "find-v1"
     backtrace:
@@ -2313,6 +1217,8 @@ events:
       - "/snap/bin/gcc-ar-15.2"
     found: "/usr/bin/gcc-ar-15"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2337,7 +1243,6 @@ events:
         - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
         - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
         - "/snap/bin"
-      CMAKE_INSTALL_PREFIX: "/usr/local"
   -
     kind: "find-v1"
     backtrace:
@@ -2408,6 +1313,8 @@ events:
       - "/snap/bin/gcc-ranlib-15.2"
     found: "/usr/bin/gcc-ranlib-15"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2432,7 +1339,6 @@ events:
         - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
         - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
         - "/snap/bin"
-      CMAKE_INSTALL_PREFIX: "/usr/local"
   -
     kind: "try_compile-v1"
     backtrace:
@@ -2442,24 +1348,24 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-4rfkaL"
-      binary: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-4rfkaL"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-zxMLKU"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-zxMLKU"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
       CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
       CMAKE_EXE_LINKER_FLAGS: ""
     buildResult:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-4rfkaL'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-zxMLKU'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_177e4/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_177e4.dir/build.make CMakeFiles/cmTC_177e4.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-4rfkaL'
-        Building CXX object CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o
-        /usr/bin/c++   -v -o CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_9df7f/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_9df7f.dir/build.make CMakeFiles/cmTC_9df7f.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-zxMLKU'
+        Building CXX object CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o
+        /usr/bin/c++   -v -o CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp
         Using built-in specs.
         COLLECT_GCC=/usr/bin/c++
         OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
@@ -2469,8 +1375,8 @@ events:
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
         gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_177e4.dir/'
-         /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_177e4.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccFO9pNA.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_9df7f.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_9df7f.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/cc2ae4sO.s
         GNU C++17 (Ubuntu 15.2.0-16ubuntu1) version 15.2.0 (x86_64-linux-gnu)
         	compiled by GNU C version 15.2.0, GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.27-GMP
         
@@ -2491,14 +1397,14 @@ events:
          /usr/include
         End of search list.
         Compiler executable checksum: b661a74662ad7cf413c4193391ab5290
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_177e4.dir/'
-         /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccFO9pNA.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_9df7f.dir/'
+         /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o /tmp/cc2ae4sO.s
         GNU assembler version 2.46 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.46
         COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.'
-        Linking CXX executable cmTC_177e4
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_177e4.dir/link.txt --verbose=1
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_9df7f
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9df7f.dir/link.txt --verbose=1
         Using built-in specs.
         COLLECT_GCC=/usr/bin/c++
         COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper
@@ -2511,14 +1417,14 @@ events:
         gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) 
         COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_177e4' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_177e4.'
-         /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc4pAEv5.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_177e4 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_9df7f' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_9df7f.'
+         /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccQrke4N.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_9df7f /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
         collect2 version 15.2.0
-        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc4pAEv5.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_177e4 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccQrke4N.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_9df7f /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
         GNU ld (GNU Binutils for Ubuntu) 2.46
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_177e4' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_177e4.'
-        /usr/bin/c++  -v -Wl,-v CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_177e4
-        gmake[1]: Leaving directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-4rfkaL'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_9df7f' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_9df7f.'
+        /usr/bin/c++  -v -Wl,-v CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_9df7f
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-zxMLKU'
         
       exitCode: 0
   -
@@ -2559,13 +1465,13 @@ events:
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
-        ignore line: [Change Dir: '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-4rfkaL']
+        ignore line: [Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-zxMLKU']
         ignore line: []
-        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_177e4/fast]
-        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_177e4.dir/build.make CMakeFiles/cmTC_177e4.dir/build]
-        ignore line: [gmake[1]: Entering directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-4rfkaL']
-        ignore line: [Building CXX object CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o]
-        ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_9df7f/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_9df7f.dir/build.make CMakeFiles/cmTC_9df7f.dir/build]
+        ignore line: [gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-zxMLKU']
+        ignore line: [Building CXX object CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/c++]
         ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
@@ -2575,8 +1481,8 @@ events:
         ignore line: [Thread model: posix]
         ignore line: [Supported LTO compression algorithms: zlib zstd]
         ignore line: [gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_177e4.dir/']
-        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_177e4.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccFO9pNA.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_9df7f.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_9df7f.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/cc2ae4sO.s]
         ignore line: [GNU C++17 (Ubuntu 15.2.0-16ubuntu1) version 15.2.0 (x86_64-linux-gnu)]
         ignore line: [	compiled by GNU C version 15.2.0  GMP version 6.3.0  MPFR version 4.2.2  MPC version 1.3.1  isl version isl-0.27-GMP]
         ignore line: []
@@ -2597,14 +1503,14 @@ events:
         ignore line: [ /usr/include]
         ignore line: [End of search list.]
         ignore line: [Compiler executable checksum: b661a74662ad7cf413c4193391ab5290]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_177e4.dir/']
-        ignore line: [ /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccFO9pNA.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_9df7f.dir/']
+        ignore line: [ /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o /tmp/cc2ae4sO.s]
         ignore line: [GNU assembler version 2.46 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.46]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.']
-        ignore line: [Linking CXX executable cmTC_177e4]
-        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_177e4.dir/link.txt --verbose=1]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_9df7f]
+        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9df7f.dir/link.txt --verbose=1]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/c++]
         ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper]
@@ -2617,13 +1523,13 @@ events:
         ignore line: [gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) ]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_177e4' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_177e4.']
-        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc4pAEv5.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_177e4 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_9df7f' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_9df7f.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccQrke4N.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_9df7f /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
           arg [/usr/libexec/gcc/x86_64-linux-gnu/15/collect2] ==> ignore
           arg [-plugin] ==> ignore
           arg [/usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so] ==> ignore
           arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper] ==> ignore
-          arg [-plugin-opt=-fresolution=/tmp/cc4pAEv5.res] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccQrke4N.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
           arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -2641,7 +1547,7 @@ events:
           arg [-znow] ==> ignore
           arg [-zrelro] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_177e4] ==> ignore
+          arg [cmTC_9df7f] ==> ignore
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o]
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o]
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o]
@@ -2656,7 +1562,7 @@ events:
           arg [-L/lib] ==> dir [/lib]
           arg [-L/usr/lib] ==> dir [/usr/lib]
           arg [-v] ==> ignore
-          arg [CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
           arg [-lstdc++] ==> lib [stdc++]
           arg [-lm] ==> lib [m]
           arg [-lgcc_s] ==> lib [gcc_s]
@@ -2667,7 +1573,7 @@ events:
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o]
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
         ignore line: [collect2 version 15.2.0]
-        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/cc4pAEv5.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_177e4 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_177e4.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccQrke4N.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_9df7f /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_9df7f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
         linker tool for 'CXX': /usr/bin/ld
         collapse obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
         collapse obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
@@ -2714,28 +1620,28 @@ events:
     checks:
       - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
     directories:
-      source: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-duNMMN"
-      binary: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-duNMMN"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vASlTD"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vASlTD"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
       CMAKE_EXE_LINKER_FLAGS: ""
       CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
     buildResult:
       variable: "CMAKE_HAVE_LIBC_PTHREAD"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-duNMMN'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vASlTD'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_239a1/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_239a1.dir/build.make CMakeFiles/cmTC_239a1.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-duNMMN'
-        Building CXX object CMakeFiles/cmTC_239a1.dir/src.cxx.o
-        /usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD  -std=gnu++17 -o CMakeFiles/cmTC_239a1.dir/src.cxx.o -c /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-duNMMN/src.cxx
-        Linking CXX executable cmTC_239a1
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_239a1.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_239a1.dir/src.cxx.o -o cmTC_239a1
-        gmake[1]: Leaving directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-duNMMN'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_161ee/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_161ee.dir/build.make CMakeFiles/cmTC_161ee.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vASlTD'
+        Building CXX object CMakeFiles/cmTC_161ee.dir/src.cxx.o
+        /usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD  -std=gnu++17 -o CMakeFiles/cmTC_161ee.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vASlTD/src.cxx
+        Linking CXX executable cmTC_161ee
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_161ee.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_161ee.dir/src.cxx.o -o cmTC_161ee
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vASlTD'
         
       exitCode: 0
   -
@@ -2786,11 +1692,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6CoreToolsConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6CoreToolsConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6coretools-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6coretools-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -2814,6 +1720,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2896,11 +1804,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6GuiToolsConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6GuiToolsConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6guitools-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6guitools-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -2924,6 +1832,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3003,11 +1913,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6WidgetsToolsConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6WidgetsToolsConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6widgetstools-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6widgetstools-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -3031,6 +1941,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3086,28 +1998,28 @@ events:
     checks:
       - "Performing Test HAVE_STDATOMIC"
     directories:
-      source: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-5dywAk"
-      binary: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-5dywAk"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-jx4gGN"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-jx4gGN"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
       CMAKE_EXE_LINKER_FLAGS: ""
       CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
     buildResult:
       variable: "HAVE_STDATOMIC"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-5dywAk'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-jx4gGN'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6260f/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_6260f.dir/build.make CMakeFiles/cmTC_6260f.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-5dywAk'
-        Building CXX object CMakeFiles/cmTC_6260f.dir/src.cxx.o
-        /usr/bin/c++ -DHAVE_STDATOMIC  -std=gnu++17 -o CMakeFiles/cmTC_6260f.dir/src.cxx.o -c /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-5dywAk/src.cxx
-        Linking CXX executable cmTC_6260f
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6260f.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_6260f.dir/src.cxx.o -o cmTC_6260f
-        gmake[1]: Leaving directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-5dywAk'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_bd82d/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_bd82d.dir/build.make CMakeFiles/cmTC_bd82d.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-jx4gGN'
+        Building CXX object CMakeFiles/cmTC_bd82d.dir/src.cxx.o
+        /usr/bin/c++ -DHAVE_STDATOMIC  -std=gnu++17 -o CMakeFiles/cmTC_bd82d.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-jx4gGN/src.cxx
+        Linking CXX executable cmTC_bd82d
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bd82d.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_bd82d.dir/src.cxx.o -o cmTC_bd82d
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-jx4gGN'
         
       exitCode: 0
   -
@@ -3157,11 +2069,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6CoreConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6CoreConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6core-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6core-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -3193,6 +2105,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3258,6 +2172,9 @@ events:
     names:
       - "GL/gl.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3302,6 +2219,9 @@ events:
       - "/usr/openwin/share/include/"
       - "/opt/graphics/OpenGL/include/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/gl.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/GL/gl.h"
+      - "C:/Qt/6.x.x/msvc2019_64/GL/gl.h"
       - "/usr/local/sbin/GL/gl.h"
       - "/usr/local/bin/GL/gl.h"
       - "/usr/sbin/GL/gl.h"
@@ -3330,6 +2250,8 @@ events:
       - "/usr/include/x86_64-linux-gnu/GL/gl.h"
     found: "/usr/include/"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3397,6 +2319,9 @@ events:
     names:
       - "GL/glx.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3438,6 +2363,9 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/glx.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/GL/glx.h"
+      - "C:/Qt/6.x.x/msvc2019_64/GL/glx.h"
       - "/usr/local/sbin/GL/glx.h"
       - "/usr/local/bin/GL/glx.h"
       - "/usr/sbin/GL/glx.h"
@@ -3466,6 +2394,8 @@ events:
       - "/usr/include/x86_64-linux-gnu/GL/glx.h"
     found: "/usr/include/"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3533,6 +2463,9 @@ events:
     names:
       - "EGL/egl.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3574,6 +2507,9 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/EGL/egl.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/EGL/egl.h"
+      - "C:/Qt/6.x.x/msvc2019_64/EGL/egl.h"
       - "/usr/local/sbin/EGL/egl.h"
       - "/usr/local/bin/EGL/egl.h"
       - "/usr/sbin/EGL/egl.h"
@@ -3616,6 +2552,8 @@ events:
       - "/usr/include/X11/EGL/egl.h"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3683,6 +2621,9 @@ events:
     names:
       - "GLES2/gl2.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3724,6 +2665,9 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GLES2/gl2.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/GLES2/gl2.h"
+      - "C:/Qt/6.x.x/msvc2019_64/GLES2/gl2.h"
       - "/usr/local/sbin/GLES2/gl2.h"
       - "/usr/local/bin/GLES2/gl2.h"
       - "/usr/sbin/GLES2/gl2.h"
@@ -3766,6 +2710,8 @@ events:
       - "/usr/include/X11/GLES2/gl2.h"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3833,6 +2779,9 @@ events:
     names:
       - "GLES3/gl3.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3874,6 +2823,9 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GLES3/gl3.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/GLES3/gl3.h"
+      - "C:/Qt/6.x.x/msvc2019_64/GLES3/gl3.h"
       - "/usr/local/sbin/GLES3/gl3.h"
       - "/usr/local/bin/GLES3/gl3.h"
       - "/usr/sbin/GLES3/gl3.h"
@@ -3916,6 +2868,8 @@ events:
       - "/usr/include/X11/GLES3/gl3.h"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3983,6 +2937,9 @@ events:
     names:
       - "GL/xmesa.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4027,6 +2984,9 @@ events:
       - "/usr/openwin/share/include/"
       - "/opt/graphics/OpenGL/include/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/xmesa.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/GL/xmesa.h"
+      - "C:/Qt/6.x.x/msvc2019_64/GL/xmesa.h"
       - "/usr/local/sbin/GL/xmesa.h"
       - "/usr/local/bin/GL/xmesa.h"
       - "/usr/sbin/GL/xmesa.h"
@@ -4072,6 +3032,8 @@ events:
       - "/opt/graphics/OpenGL/include/GL/xmesa.h"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4139,6 +3101,9 @@ events:
     names:
       - "GL/glu.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4180,6 +3145,9 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/glu.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/GL/glu.h"
+      - "C:/Qt/6.x.x/msvc2019_64/GL/glu.h"
       - "/usr/local/sbin/GL/glu.h"
       - "/usr/local/bin/GL/glu.h"
       - "/usr/sbin/GL/glu.h"
@@ -4222,6 +3190,8 @@ events:
       - "/usr/include/X11/GL/glu.h"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4289,6 +3259,9 @@ events:
     names:
       - "OpenGL"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4330,6 +3303,9 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4357,6 +3333,8 @@ events:
       - "/usr/local/"
     found: "/usr/lib/x86_64-linux-gnu/libOpenGL.so"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4424,6 +3402,12 @@ events:
     names:
       - "GLX"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -4505,6 +3489,12 @@ events:
       - "/usr/lib/X11/libglvnd/"
       - "/usr/lib/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -4558,6 +3548,8 @@ events:
       - "/usr/lib/x86_64-linux-gnu/libglvnd/"
     found: "/usr/lib/x86_64-linux-gnu/libGLX.so"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4625,6 +3617,12 @@ events:
     names:
       - "EGL"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -4706,6 +3704,12 @@ events:
       - "/usr/lib/X11/libglvnd/"
       - "/usr/lib/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -4788,6 +3792,8 @@ events:
       - "/usr/lib/X11/"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4855,6 +3861,9 @@ events:
     names:
       - "GLESv2"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4896,6 +3905,9 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4938,6 +3950,8 @@ events:
       - "/usr/lib/X11/"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5006,6 +4020,9 @@ events:
       - "GLESv3"
       - "GLESv2"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -5047,6 +4064,9 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -5087,6 +4107,9 @@ events:
       - "/opt/lib/"
       - "/opt/"
       - "/usr/lib/X11/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -5129,6 +4152,8 @@ events:
       - "/usr/lib/X11/"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5197,6 +4222,9 @@ events:
       - "GLU"
       - "MesaGLU"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -5241,6 +4269,9 @@ events:
       - "/usr/openwin/lib/"
       - "/usr/shlib/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -5284,6 +4315,9 @@ events:
       - "/opt/graphics/OpenGL/lib/"
       - "/usr/openwin/lib/"
       - "/usr/shlib/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -5329,6 +4363,8 @@ events:
       - "/usr/shlib/"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5394,6 +4430,9 @@ events:
     names:
       - "vulkan/vulkan.h"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/include/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/include/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -5436,6 +4475,9 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/vulkan/vulkan.h"
+      - "C:/Qt/6.x.x/msvc2019_64/include/vulkan/vulkan.h"
+      - "C:/Qt/6.x.x/msvc2019_64/vulkan/vulkan.h"
       - "/include/vulkan/vulkan.h"
       - "/usr/local/sbin/vulkan/vulkan.h"
       - "/usr/local/bin/vulkan/vulkan.h"
@@ -5465,6 +4507,8 @@ events:
       - "/usr/include/x86_64-linux-gnu/vulkan/vulkan.h"
     found: "/usr/include/"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5530,6 +4574,9 @@ events:
     names:
       - "vulkan"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/lib/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -5572,6 +4619,9 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
+      - "C:/Qt/6.x.x/msvc2019_64/lib/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/lib/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -5600,6 +4650,8 @@ events:
       - "/usr/local/"
     found: "/usr/lib/x86_64-linux-gnu/libvulkan.so"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5665,6 +4717,9 @@ events:
     names:
       - "glslc"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -5705,6 +4760,9 @@ events:
       - "/opt/sbin/"
       - "/opt/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/glslc"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/glslc"
+      - "C:/Qt/6.x.x/msvc2019_64/glslc"
       - "/bin/glslc"
       - "/usr/local/sbin/glslc"
       - "/usr/local/bin/glslc"
@@ -5746,6 +4804,8 @@ events:
       - "/opt/glslc"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5809,6 +4869,9 @@ events:
     names:
       - "glslangValidator"
     candidate_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
+      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -5849,6 +4912,9 @@ events:
       - "/opt/sbin/"
       - "/opt/"
     searched_directories:
+      - "C:/Qt/6.x.x/msvc2019_64/bin/glslangValidator"
+      - "C:/Qt/6.x.x/msvc2019_64/sbin/glslangValidator"
+      - "C:/Qt/6.x.x/msvc2019_64/glslangValidator"
       - "/bin/glslangValidator"
       - "/usr/local/sbin/glslangValidator"
       - "/usr/local/bin/glslangValidator"
@@ -5890,6 +4956,8 @@ events:
       - "/opt/glslangValidator"
     found: false
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5979,11 +5047,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6DBusToolsConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6DBusToolsConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6dbustools-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6dbustools-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -6007,6 +5075,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6093,11 +5163,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6DBusConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6DBusConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6dbus-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6dbus-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -6129,6 +5199,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6210,11 +5282,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6GuiConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6GuiConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6gui-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6gui-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -6246,6 +5318,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6319,11 +5393,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6WidgetsConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6WidgetsConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6widgets-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6widgets-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -6355,6 +5429,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6428,11 +5504,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6SvgConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6SvgConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6svg-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6svg-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -6443,8 +5519,124 @@ events:
         path: "/usr/lib/x86_64-linux-gnu/cmake/qt6svg-config.cmake"
         mode: "config"
         reason: "no_exist"
-    found: null
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgets/Qt6SvgConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgets/qt6svg-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgPrivate/Qt6SvgConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgPrivate/qt6svg-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found:
+      path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6Svg/Qt6SvgConfig.cmake"
+      mode: "config"
+      version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/d/mingw64/bin"
+        - "/mnt/c/Program Files/Git/cmd"
+        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
+        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
+        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
+        - "/snap/bin"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
+      - "CMakeLists.txt:9 (find_package)"
+    name: "Qt6SvgWidgets"
+    configs:
+      -
+        filename: "Qt6SvgWidgetsConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "qt6svgwidgets-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "optional"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "Qt6SvgWidgets"
+      search_paths:
+        - "/usr/lib/x86_64-linux-gnu/cmake"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: false
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6SvgWidgetsConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6svgwidgets-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgetsConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/qt6svgwidgets-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found:
+      path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgets/Qt6SvgWidgetsConfig.cmake"
+      mode: "config"
+      version: "6.10.2"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6532,11 +5724,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6Config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6Config.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -6665,6 +5857,30 @@ events:
         reason: "no_exist"
       -
         path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6Test/qt6-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgets/Qt6Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgets/qt6-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgPrivate/Qt6Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgPrivate/qt6-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6Svg/Qt6Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6Svg/qt6-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -6912,6 +6128,8 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
+      CMAKE_PREFIX_PATH:
+        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6950,105 +6168,6 @@ events:
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6"
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules"
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
-...
-
----
-events:
-  -
-    kind: "find_package-v1"
-    backtrace:
-      - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
-    name: "Qt6SvgWidgets"
-    configs:
-      -
-        filename: "Qt6SvgWidgetsConfig.cmake"
-        kind: "cmake"
-      -
-        filename: "qt6svgwidgets-config.cmake"
-        kind: "cmake"
-    version_request:
-      exact: false
-    settings:
-      required: "optional"
-      quiet: false
-      global: false
-      policy_scope: true
-      bypass_provider: false
-      names:
-        - "Qt6SvgWidgets"
-      search_paths:
-        - "/usr/lib/x86_64-linux-gnu/cmake"
-      path_suffixes:
-        - ""
-      paths:
-        CMAKE_FIND_USE_CMAKE_PATH: false
-        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
-        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
-        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
-        CMAKE_FIND_USE_INSTALL_PREFIX: true
-        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
-        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
-        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
-        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
-    candidates:
-      -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6SvgWidgetsConfig.cmake"
-        mode: "config"
-        reason: "no_exist"
-      -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6svgwidgets-config.cmake"
-        mode: "config"
-        reason: "no_exist"
-      -
-        path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgetsConfig.cmake"
-        mode: "config"
-        reason: "no_exist"
-      -
-        path: "/usr/lib/x86_64-linux-gnu/cmake/qt6svgwidgets-config.cmake"
-        mode: "config"
-        reason: "no_exist"
-    found:
-      path: "/usr/lib/x86_64-linux-gnu/cmake/Qt6SvgWidgets/Qt6SvgWidgetsConfig.cmake"
-      mode: "config"
-      version: "6.10.2"
-    search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
-      ENV{PATH}:
-        - "/usr/local/sbin"
-        - "/usr/local/bin"
-        - "/usr/sbin"
-        - "/usr/bin"
-        - "/sbin"
-        - "/bin"
-        - "/usr/games"
-        - "/usr/local/games"
-        - "/usr/lib/wsl/lib"
-        - "/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.6.3.0_x64__8wekyb3d8bbwe"
-        - "/mnt/c/WINDOWS/system32"
-        - "/mnt/c/WINDOWS"
-        - "/mnt/c/WINDOWS/System32/Wbem"
-        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "/mnt/c/WINDOWS/System32/OpenSSH/"
-        - "/mnt/d/mingw64/bin"
-        - "/mnt/c/Program Files/Git/cmd"
-        - "/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WindowsApps"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin"
-        - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin"
-        - "/snap/bin"
-      CMAKE_INSTALL_PREFIX: "/usr/local"
-      CMAKE_SYSTEM_PREFIX_PATH:
-        - "/usr/local"
-        - "/usr"
-        - "/"
-        - "/usr"
-        - "/usr/local"
-        - "/usr/X11R6"
-        - "/usr/pkg"
-        - "/opt"
   -
     kind: "try_compile-v1"
     backtrace:
@@ -7059,28 +6178,28 @@ events:
     checks:
       - "Performing Test Wall_FLAG_SUPPORTED"
     directories:
-      source: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-7I8zqX"
-      binary: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-7I8zqX"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-f7XScX"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-f7XScX"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
       CMAKE_EXE_LINKER_FLAGS: ""
-      CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
     buildResult:
       variable: "Wall_FLAG_SUPPORTED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-7I8zqX'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-f7XScX'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6287f/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_6287f.dir/build.make CMakeFiles/cmTC_6287f.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-7I8zqX'
-        Building CXX object CMakeFiles/cmTC_6287f.dir/src.cxx.o
-        /usr/bin/c++ -DWall_FLAG_SUPPORTED  -std=gnu++17   -Wall -o CMakeFiles/cmTC_6287f.dir/src.cxx.o -c /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-7I8zqX/src.cxx
-        Linking CXX executable cmTC_6287f
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6287f.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_6287f.dir/src.cxx.o -o cmTC_6287f
-        gmake[1]: Leaving directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-7I8zqX'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_1d92b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_1d92b.dir/build.make CMakeFiles/cmTC_1d92b.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-f7XScX'
+        Building CXX object CMakeFiles/cmTC_1d92b.dir/src.cxx.o
+        /usr/bin/c++ -DWall_FLAG_SUPPORTED  -std=gnu++17   -Wall -o CMakeFiles/cmTC_1d92b.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-f7XScX/src.cxx
+        Linking CXX executable cmTC_1d92b
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1d92b.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_1d92b.dir/src.cxx.o -o cmTC_1d92b
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-f7XScX'
         
       exitCode: 0
   -
@@ -7093,28 +6212,28 @@ events:
     checks:
       - "Performing Test pedantic_FLAG_SUPPORTED"
     directories:
-      source: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-1tFhle"
-      binary: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-1tFhle"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-KvpM8B"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-KvpM8B"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: " -Wall"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall"
       CMAKE_EXE_LINKER_FLAGS: ""
-      CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
     buildResult:
       variable: "pedantic_FLAG_SUPPORTED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-1tFhle'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-KvpM8B'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_0d24f/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_0d24f.dir/build.make CMakeFiles/cmTC_0d24f.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-1tFhle'
-        Building CXX object CMakeFiles/cmTC_0d24f.dir/src.cxx.o
-        /usr/bin/c++ -Dpedantic_FLAG_SUPPORTED  -std=gnu++17   -pedantic -o CMakeFiles/cmTC_0d24f.dir/src.cxx.o -c /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-1tFhle/src.cxx
-        Linking CXX executable cmTC_0d24f
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0d24f.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_0d24f.dir/src.cxx.o -o cmTC_0d24f
-        gmake[1]: Leaving directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-1tFhle'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_3c746/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_3c746.dir/build.make CMakeFiles/cmTC_3c746.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-KvpM8B'
+        Building CXX object CMakeFiles/cmTC_3c746.dir/src.cxx.o
+        /usr/bin/c++ -Dpedantic_FLAG_SUPPORTED  -std=gnu++17   -pedantic -o CMakeFiles/cmTC_3c746.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-KvpM8B/src.cxx
+        Linking CXX executable cmTC_3c746
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3c746.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_3c746.dir/src.cxx.o -o cmTC_3c746
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-KvpM8B'
         
       exitCode: 0
   -
@@ -7127,28 +6246,28 @@ events:
     checks:
       - "Performing Test Wextra_FLAG_SUPPORTED"
     directories:
-      source: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-yqzqYk"
-      binary: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-yqzqYk"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-oQNLau"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-oQNLau"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: " -Wall -pedantic"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -pedantic"
       CMAKE_EXE_LINKER_FLAGS: ""
-      CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
     buildResult:
       variable: "Wextra_FLAG_SUPPORTED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-yqzqYk'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-oQNLau'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e9d44/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_e9d44.dir/build.make CMakeFiles/cmTC_e9d44.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-yqzqYk'
-        Building CXX object CMakeFiles/cmTC_e9d44.dir/src.cxx.o
-        /usr/bin/c++ -DWextra_FLAG_SUPPORTED  -std=gnu++17   -Wextra -o CMakeFiles/cmTC_e9d44.dir/src.cxx.o -c /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-yqzqYk/src.cxx
-        Linking CXX executable cmTC_e9d44
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e9d44.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_e9d44.dir/src.cxx.o -o cmTC_e9d44
-        gmake[1]: Leaving directory '/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-yqzqYk'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_3ebcf/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_3ebcf.dir/build.make CMakeFiles/cmTC_3ebcf.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-oQNLau'
+        Building CXX object CMakeFiles/cmTC_3ebcf.dir/src.cxx.o
+        /usr/bin/c++ -DWextra_FLAG_SUPPORTED  -std=gnu++17   -Wextra -o CMakeFiles/cmTC_3ebcf.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-oQNLau/src.cxx
+        Linking CXX executable cmTC_3ebcf
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3ebcf.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_3ebcf.dir/src.cxx.o -o cmTC_3ebcf
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-oQNLau'
         
       exitCode: 0
   -
@@ -7217,8 +6336,8 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules/"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin/"
-      - "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/"
-      - "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/"
+      - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/"
+      - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/"
     searched_directories:
       - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/ProjectVersioning/version.h.in"
       - "C:/Qt/6.x.x/msvc2019_64/include/ProjectVersioning/version.h.in"
@@ -7266,7 +6385,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/ProjectVersioning/version.h.in"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules/ProjectVersioning/version.h.in"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin/ProjectVersioning/version.h.in"
-    found: "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/ProjectVersioning/version.h.in"
+    found: "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/ProjectVersioning/version.h.in"
     search_context:
       CMAKE_PREFIX_PATH:
         - "C:/Qt/6.x.x/msvc2019_64"
@@ -7372,8 +6491,8 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules/"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin/"
-      - "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/"
-      - "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/"
+      - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/"
+      - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/"
     searched_directories:
       - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/ProjectVersioning/version.c.in"
       - "C:/Qt/6.x.x/msvc2019_64/include/ProjectVersioning/version.c.in"
@@ -7421,7 +6540,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/ProjectVersioning/version.c.in"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules/ProjectVersioning/version.c.in"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin/ProjectVersioning/version.c.in"
-    found: "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/ProjectVersioning/version.c.in"
+    found: "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/ProjectVersioning/version.c.in"
     search_context:
       CMAKE_PREFIX_PATH:
         - "C:/Qt/6.x.x/msvc2019_64"
@@ -7497,11 +6616,11 @@ events:
         CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
     candidates:
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6DesignerConfig.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/Qt6DesignerConfig.cmake"
         mode: "config"
         reason: "no_exist"
       -
-        path: "/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6designer-config.cmake"
+        path: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/pkgRedirects/qt6designer-config.cmake"
         mode: "config"
         reason: "no_exist"
       -
@@ -7706,8 +6825,8 @@ events:
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6"
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules"
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
-        - "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules"
-        - "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets"
+        - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules"
+        - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets"
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6"
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules"
         - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"

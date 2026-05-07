@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/Code/Flavortown/Before_Effects
+CMAKE_SOURCE_DIR = /mnt/d/Code/flavortown/Before_Effects
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/Code/Flavortown/Before_Effects/linux_build
+CMAKE_BINARY_DIR = /mnt/d/Code/flavortown/Before_Effects/linux_build
 
 # Include any dependencies generated for this target.
 include external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/depend.make
@@ -75,30 +75,30 @@ external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/codegen:
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/flags.make
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o: external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o"
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o -MF CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o.d -o CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o -c /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o"
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o -MF CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o.d -o CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.i"
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp > CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.i
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp > CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.i
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.s"
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp -o CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.s
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp -o CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.s
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/flags.make
-external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o: /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp
+external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o: /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o"
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o -MF CMakeFiles/screenshot_bin.dir/screenshot.cpp.o.d -o CMakeFiles/screenshot_bin.dir/screenshot.cpp.o -c /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o"
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o -MF CMakeFiles/screenshot_bin.dir/screenshot.cpp.o.d -o CMakeFiles/screenshot_bin.dir/screenshot.cpp.o -c /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screenshot_bin.dir/screenshot.cpp.i"
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp > CMakeFiles/screenshot_bin.dir/screenshot.cpp.i
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp > CMakeFiles/screenshot_bin.dir/screenshot.cpp.i
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screenshot_bin.dir/screenshot.cpp.s"
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp -o CMakeFiles/screenshot_bin.dir/screenshot.cpp.s
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp -o CMakeFiles/screenshot_bin.dir/screenshot.cpp.s
 
 # Object files for target screenshot_bin
 screenshot_bin_OBJECTS = \
@@ -111,6 +111,7 @@ screenshot_bin_EXTERNAL_OBJECTS =
 external/Qt-Color-Widgets/gallery/screenshot_bin: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot_bin_autogen/mocs_compilation.cpp.o
 external/Qt-Color-Widgets/gallery/screenshot_bin: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/screenshot.cpp.o
 external/Qt-Color-Widgets/gallery/screenshot_bin: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/build.make
+external/Qt-Color-Widgets/gallery/screenshot_bin: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/compiler_depend.ts
 external/Qt-Color-Widgets/gallery/screenshot_bin: external/Qt-Color-Widgets/libQtColorWidgets.a
 external/Qt-Color-Widgets/gallery/screenshot_bin: /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6.10.2
 external/Qt-Color-Widgets/gallery/screenshot_bin: /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.10.2
@@ -118,18 +119,18 @@ external/Qt-Color-Widgets/gallery/screenshot_bin: /usr/lib/x86_64-linux-gnu/libG
 external/Qt-Color-Widgets/gallery/screenshot_bin: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 external/Qt-Color-Widgets/gallery/screenshot_bin: /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.10.2
 external/Qt-Color-Widgets/gallery/screenshot_bin: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable screenshot_bin"
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/screenshot_bin.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable screenshot_bin"
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/screenshot_bin.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/build: external/Qt-Color-Widgets/gallery/screenshot_bin
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/build
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/clean:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -P CMakeFiles/screenshot_bin.dir/cmake_clean.cmake
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -P CMakeFiles/screenshot_bin.dir/cmake_clean.cmake
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/clean
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/depend:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/DependInfo.cmake "--color=$(COLOR)" screenshot_bin
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/DependInfo.cmake "--color=$(COLOR)" screenshot_bin
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin.dir/depend
 

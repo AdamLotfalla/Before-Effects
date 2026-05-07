@@ -1,5 +1,5 @@
 CMakeFiles/Before_Effects.dir/main.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/main.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/main.cpp \
  /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/qt6/QtSvg/QtSvg \
  /usr/include/x86_64-linux-gnu/qt6/QtSvg/QtSvgDepends \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtCore \
@@ -1038,7 +1038,7 @@ CMakeFiles/Before_Effects.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtwidgetsglobal.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtwidgets-config.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtwidgetsexports.h \
- /mnt/d/Code/Flavortown/Before_Effects/mainwindow.h \
+ /mnt/d/Code/flavortown/Before_Effects/mainwindow.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QMainWindow \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qmainwindow.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h \
@@ -1074,7 +1074,7 @@ CMakeFiles/Before_Effects.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QProgressDialog \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qprogressdialog.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QStandardPaths \
- /mnt/d/Code/Flavortown/Before_Effects/viewPort.h \
+ /mnt/d/Code/flavortown/Before_Effects/viewPort.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QGraphicsView \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qgraphicsview.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qscrollarea.h \
@@ -1100,14 +1100,14 @@ CMakeFiles/Before_Effects.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qlineedit.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QCheckBox \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qcheckbox.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorPreview \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/ColorSelector \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QToolButton \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtoolbutton.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QDebug \
@@ -1117,9 +1117,9 @@ CMakeFiles/Before_Effects.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qstyle.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qtabbar.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qrubberband.h \
- /mnt/d/Code/Flavortown/Before_Effects/common_widget_styles.h \
+ /mnt/d/Code/flavortown/Before_Effects/common_widget_styles.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QString \
- /mnt/d/Code/Flavortown/Before_Effects/timeline.h \
+ /mnt/d/Code/flavortown/Before_Effects/timeline.h \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QScrollArea \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qscrollarea.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QResizeEvent \

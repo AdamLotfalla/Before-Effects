@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "Before_Effects_autogen"
+  "CMakeFiles/Before_Effects.dir/link.d"
   "CMakeFiles/Before_Effects_autogen.dir/AutogenUsed.txt"
   "CMakeFiles/Before_Effects_autogen.dir/ParseCache.txt"
   "Before_Effects"
@@ -19,7 +20,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/Before_Effects.dir/timeline.cpp.o.d"
   "CMakeFiles/Before_Effects.dir/viewPort.cpp.o"
   "CMakeFiles/Before_Effects.dir/viewPort.cpp.o.d"
-  "CMakeFiles/CMakeRelink.dir/Before_Effects"
 )
 
 # Per-language clean rules from dependency scanning.

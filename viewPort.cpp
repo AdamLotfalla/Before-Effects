@@ -2488,7 +2488,12 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 newPos.setX(newPos.x()/selectedPath_->scaleX_ - 1.0/selectedPath_->scaleX_ * (selectedPath_->position_.x() + selectedPath_->pivotPoint_.x()) * (1-selectedPath_->scaleX_));
                 newPos.setY(newPos.y()/selectedPath_->scaleY_ - 1.0/selectedPath_->scaleY_ * (selectedPath_->position_.y() + selectedPath_->pivotPoint_.y()) * (1-selectedPath_->scaleY_));
 
-                QPointF offset = newPos - holdStartPosition_;
+                QPointF localHoldStart = holdStartPosition_;
+                localHoldStart = selectedPath_->mapToItemRotation(localHoldStart, true);
+                localHoldStart.setX(localHoldStart.x()/selectedPath_->scaleX_ - 1.0/selectedPath_->scaleX_ * (selectedPath_->position_.x() + selectedPath_->pivotPoint_.x()) * (1-selectedPath_->scaleX_));
+                localHoldStart.setY(localHoldStart.y()/selectedPath_->scaleY_ - 1.0/selectedPath_->scaleY_ * (selectedPath_->position_.y() + selectedPath_->pivotPoint_.y()) * (1-selectedPath_->scaleY_));
+                            
+                QPointF offset = newPos - localHoldStart;
 
                 if(selectedPath_->selectedHandle_ == -1)
                     selectedPath_->moveNode(offset, selectedPath_->accessHighlightedVector(i));

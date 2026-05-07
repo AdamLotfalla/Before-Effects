@@ -1,21 +1,21 @@
 {
-	"BUILD_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen",
-	"CMAKE_BINARY_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build",
-	"CMAKE_CURRENT_BINARY_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery",
-	"CMAKE_CURRENT_SOURCE_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery",
+	"BUILD_DIR" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen",
+	"CMAKE_BINARY_DIR" : "/mnt/d/Code/flavortown/Before_Effects/linux_build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery",
 	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
 	"CMAKE_LIST_FILES" : 
 	[
-		"/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/CMakeLists.txt"
+		"/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/CMakeLists.txt"
 	],
-	"CMAKE_SOURCE_DIR" : "/mnt/d/Code/Flavortown/Before_Effects",
+	"CMAKE_SOURCE_DIR" : "/mnt/d/Code/flavortown/Before_Effects",
 	"CROSS_CONFIG" : false,
-	"DEP_FILE" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/deps",
+	"DEP_FILE" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "screenshot_bin_autogen/timestamp",
 	"HEADERS" : [],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/include",
-	"MOC_COMPILATION_FILE" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/include",
+	"MOC_COMPILATION_FILE" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"QTCOLORWIDGETS_STATICALLY_LINKED",
@@ -42,8 +42,8 @@
 	],
 	"MOC_INCLUDES" : 
 	[
-		"/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include",
-		"/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets",
+		"/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include",
+		"/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets",
 		"/usr/include/x86_64-linux-gnu/qt6/QtWidgets",
 		"/usr/include/x86_64-linux-gnu/qt6",
 		"/usr/include/x86_64-linux-gnu/qt6/QtCore",
@@ -77,21 +77,21 @@
 		"-E",
 		"/usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp"
 	],
-	"MOC_PREDEFS_FILE" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/moc_predefs.h",
+	"MOC_PREDEFS_FILE" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/moc_predefs.h",
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
 	"PARALLEL" : 14,
-	"PARSE_CACHE_FILE" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/ParseCache.txt",
 	"QT_MOC_EXECUTABLE" : "/usr/lib/qt6/libexec/moc",
 	"QT_UIC_EXECUTABLE" : "/usr/lib/qt6/libexec/uic",
 	"QT_VERSION_MAJOR" : 6,
 	"QT_VERSION_MINOR" : 10,
-	"SETTINGS_FILE" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE" : "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
 		[
-			"/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp",
+			"/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/screenshot.cpp",
 			"MU",
 			null
 		]

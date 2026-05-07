@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/Code/Flavortown/Before_Effects
+CMAKE_SOURCE_DIR = /mnt/d/Code/flavortown/Before_Effects
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/Code/Flavortown/Before_Effects/linux_build
+CMAKE_BINARY_DIR = /mnt/d/Code/flavortown/Before_Effects/linux_build
 
 # Utility rule file for QtColorWidgets_docs.
 
@@ -67,8 +67,8 @@ include external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/compiler_de
 include external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/progress.make
 
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && doxygen Doxyfile
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && cp /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/*.png /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/doxygen/html
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && doxygen Doxyfile
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && cp /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery/*.png /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/doxygen/html
 
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/codegen:
 .PHONY : external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/codegen
@@ -82,10 +82,10 @@ external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/build: QtColorWidge
 .PHONY : external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/build
 
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/clean:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && $(CMAKE_COMMAND) -P CMakeFiles/QtColorWidgets_docs.dir/cmake_clean.cmake
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && $(CMAKE_COMMAND) -P CMakeFiles/QtColorWidgets_docs.dir/cmake_clean.cmake
 .PHONY : external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/clean
 
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/depend:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/DependInfo.cmake "--color=$(COLOR)" QtColorWidgets_docs
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/DependInfo.cmake "--color=$(COLOR)" QtColorWidgets_docs
 .PHONY : external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_docs.dir/depend
 

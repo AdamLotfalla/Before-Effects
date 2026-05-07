@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/Code/Flavortown/Before_Effects
+CMAKE_SOURCE_DIR = /mnt/d/Code/flavortown/Before_Effects
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/Code/Flavortown/Before_Effects/linux_build
+CMAKE_BINARY_DIR = /mnt/d/Code/flavortown/Before_Effects/linux_build
 
 # Utility rule file for screenshot_bin_autogen_timestamp_deps.
 
@@ -77,10 +77,10 @@ external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_de
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/build
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/clean:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -P CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/cmake_clean.cmake
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -P CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/cmake_clean.cmake
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/clean
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/depend:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/DependInfo.cmake "--color=$(COLOR)" screenshot_bin_autogen_timestamp_deps
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/DependInfo.cmake "--color=$(COLOR)" screenshot_bin_autogen_timestamp_deps
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen_timestamp_deps.dir/depend
 

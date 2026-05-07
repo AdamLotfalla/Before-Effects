@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/Code/Flavortown/Before_Effects
+CMAKE_SOURCE_DIR = /mnt/d/Code/flavortown/Before_Effects
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/Code/Flavortown/Before_Effects/linux_build
+CMAKE_BINARY_DIR = /mnt/d/Code/flavortown/Before_Effects/linux_build
 
 # Utility rule file for gallery.
 
@@ -67,7 +67,7 @@ include external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/compiler_depend
 include external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/progress.make
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/gallery: external/Qt-Color-Widgets/gallery/screenshot_bin
-	cd /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery && /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin
+	cd /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery && /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/codegen:
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/codegen
@@ -81,10 +81,10 @@ external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/build: gallery
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/build
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/clean:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -P CMakeFiles/gallery.dir/cmake_clean.cmake
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && $(CMAKE_COMMAND) -P CMakeFiles/gallery.dir/cmake_clean.cmake
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/clean
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/depend:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/gallery /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/DependInfo.cmake "--color=$(COLOR)" gallery
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/gallery /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/DependInfo.cmake "--color=$(COLOR)" gallery
 .PHONY : external/Qt-Color-Widgets/gallery/CMakeFiles/gallery.dir/depend
 

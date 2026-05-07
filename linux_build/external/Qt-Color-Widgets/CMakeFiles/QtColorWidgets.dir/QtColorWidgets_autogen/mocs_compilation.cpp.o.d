@@ -1,9 +1,9 @@
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/QtColorWidgets_autogen/mocs_compilation.cpp.o: \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/mocs_compilation.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/mocs_compilation.cpp \
  /usr/include/stdc-predef.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_abstract_widget_list.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_abstract_widget_list.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QtGlobal \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qglobal.h \
  /usr/include/c++/15/type_traits \
@@ -428,25 +428,25 @@ external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/QtColorWidgets_autogen/m
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qtmochelpers.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qtmocconstants.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/q20algorithm.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_bound_color_selector.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/bound_color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_bound_color_selector.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/bound_color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QWidget \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_2d_slider.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_delegate.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_delegate.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_2d_slider.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_2d_slider.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_delegate.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_delegate.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QStyledItemDelegate \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qstyleditemdelegate.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_dialog.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_dialog.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_dialog.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_dialog.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QDialog \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qdialog.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_line_edit.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_line_edit.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_line_edit.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_line_edit.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QLineEdit \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qlineedit.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qtextcursor.h \
@@ -457,13 +457,13 @@ external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/QtColorWidgets_autogen/m
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qtextoption.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QColor \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qcolor.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_list_widget.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_list_widget.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_list_widget.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_list_widget.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/abstract_widget_list.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QList \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qlist.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_palette.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_palette.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QString \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qstring.h \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QVector \
@@ -474,44 +474,44 @@ external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/QtColorWidgets_autogen/m
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qpair.h \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QPixmap \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qpixmap.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_palette_model.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette_model.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_palette_model.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette_model.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/QAbstractListModel \
  /usr/include/x86_64-linux-gnu/qt6/QtCore/qabstractitemmodel.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_palette_widget.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette_widget.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette_model.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/swatch.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_palette_widget.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette_widget.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_palette_model.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/swatch.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QPen \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qpen.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_preview.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_selector.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_wheel.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_delegate.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_delegate.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_preview.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_preview.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_selector.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_selector.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_color_wheel.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_delegate.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_delegate.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QPainter \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qpainter.h \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/gradient_editor.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/gradient_editor.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include/QtColorWidgets/colorwidgets_global.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QGradient \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/qbrush.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_editor.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_editor.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_list_model.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_list_model.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_editor.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_editor.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_list_model.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_list_model.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtGui/QLinearGradient \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_slider.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_slider.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_gradient_slider.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_slider.hpp \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QSlider \
  /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qslider.h \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_harmony_color_wheel.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/harmony_color_wheel.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_hue_slider.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/hue_slider.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_slider.hpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_swatch.cpp \
- /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/swatch.hpp
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_harmony_color_wheel.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/harmony_color_wheel.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_hue_slider.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/hue_slider.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/gradient_slider.hpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/moc_swatch.cpp \
+ /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/RLEUYPZXAT/../../../../../external/Qt-Color-Widgets/include/QtColorWidgets/swatch.hpp

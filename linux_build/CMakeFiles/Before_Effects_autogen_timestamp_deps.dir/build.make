@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/Code/Flavortown/Before_Effects
+CMAKE_SOURCE_DIR = /mnt/d/Code/flavortown/Before_Effects
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/Code/Flavortown/Before_Effects/linux_build
+CMAKE_BINARY_DIR = /mnt/d/Code/flavortown/Before_Effects/linux_build
 
 # Utility rule file for Before_Effects_autogen_timestamp_deps.
 
@@ -81,6 +81,6 @@ CMakeFiles/Before_Effects_autogen_timestamp_deps.dir/clean:
 .PHONY : CMakeFiles/Before_Effects_autogen_timestamp_deps.dir/clean
 
 CMakeFiles/Before_Effects_autogen_timestamp_deps.dir/depend:
-	cd /mnt/d/Code/Flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build /mnt/d/Code/Flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen_timestamp_deps.dir/DependInfo.cmake "--color=$(COLOR)" Before_Effects_autogen_timestamp_deps
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen_timestamp_deps.dir/DependInfo.cmake "--color=$(COLOR)" Before_Effects_autogen_timestamp_deps
 .PHONY : CMakeFiles/Before_Effects_autogen_timestamp_deps.dir/depend
 

@@ -18,8 +18,8 @@ unsigned int QtColorWidgets_versionPatch () {
 
 const char* QtColorWidgets_versionGitInfo () {
 	return
-		"v1.0.0-9-g07c7224-dirty"
-		".with-untracked";
+		"v1.0.0-11-g74acb3b-dirty"
+		"";
 }
 
 
@@ -29,6 +29,6 @@ const char*	QtColorWidgets_versionFullString () {
 		"2."
 		"0"
 		""
-		"+v1.0.0-9-g07c7224-dirty"
-		".with-untracked";
+		"+v1.0.0-11-g74acb3b-dirty"
+		"";
 }
