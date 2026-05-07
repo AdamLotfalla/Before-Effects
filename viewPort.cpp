@@ -167,8 +167,8 @@ void path::changeNodeMode(handleMode newMode, int index)
     needTransformUpdate_ = true;
     actualNodes_[index]->mode = newMode;
     if(newMode == handleMode::smooth || newMode == handleMode::symmetric){
-        if(!actualNodes_[index]->H1) actualNodes_[index]->H1 = new bezierHandle(getActualPoint(index) - QPointF(10,10));
-        if(!actualNodes_[index]->H2) actualNodes_[index]->H2 = new bezierHandle(getActualPoint(index) + QPointF(10,10));
+        if(!actualNodes_[index]->H1) actualNodes_[index]->H1 = new bezierHandle(getActualPoint(index) - QPointF(40,40));
+        if(!actualNodes_[index]->H2) actualNodes_[index]->H2 = new bezierHandle(getActualPoint(index) + QPointF(40,40));
     }
 }
 
@@ -177,8 +177,8 @@ void path::incrementNodeMode(int index)
     actualNodes_[index]->mode = static_cast<handleMode>((static_cast<int>(actualNodes_[index]->mode) + 1) % 3);
     
     if(actualNodes_[index]->mode == handleMode::smooth || actualNodes_[index]->mode == handleMode::symmetric){
-        if(!actualNodes_[index]->H1) actualNodes_[index]->H1 = new bezierHandle(getActualPoint(index) - QPointF(10,10));
-        if(!actualNodes_[index]->H2) actualNodes_[index]->H2 = new bezierHandle(getActualPoint(index) + QPointF(10,10));
+        if(!actualNodes_[index]->H1) actualNodes_[index]->H1 = new bezierHandle(getActualPoint(index) - QPointF(40,40));
+        if(!actualNodes_[index]->H2) actualNodes_[index]->H2 = new bezierHandle(getActualPoint(index) + QPointF(40,40));
     }
     updateTransformedNodes();
 }
@@ -975,7 +975,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     PosLayout->addWidget(yPositionBox);
     VLayout->addLayout(PosLayout);
     
-
+    
     
     onPositionChanged = [xPositionBox, yPositionBox](QPointF pos) {
         xPositionBox->blockSignals(true);
@@ -991,6 +991,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     xPositionBox->connect(xPositionBox, &customSpinBox::valueChanged, [this](qreal value){
         setPosition(value, position_.y());
+        if(!xPositionFrames.empty()){
+            xPositionFrames[*currentFrame_] = value;
+        }
         update();
     });
     xPositionBox->connect(xPositionBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
@@ -1010,6 +1013,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     yPositionBox->connect(yPositionBox, &customSpinBox::valueChanged, [this](qreal value){
         setPosition(position_.x(), value);
+        if(!yPositionFrames.empty()){
+            yPositionFrames[*currentFrame_] = value;
+        }
         update();
     });
     yPositionBox->connect(yPositionBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
@@ -1064,6 +1070,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     xScaleBox->connect(xScaleBox, &customSpinBox::valueChanged, [this](qreal value){
         setScale(value, scaleY_);
+        if(!xScaleFrames.empty()){
+            xScaleFrames[*currentFrame_] = value;
+        }
         update();
     });
     xScaleBox->connect(xScaleBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
@@ -1082,6 +1091,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     yScaleBox->connect(yScaleBox, &customSpinBox::valueChanged, [this](qreal value){
         setScale(scaleX_, value);
+        if(!yScaleFrames.empty()){
+            yScaleFrames[*currentFrame_] = value;
+        }
         update();
     });
     yScaleBox->connect(yScaleBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
@@ -1125,6 +1137,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     rotationBox->connect(rotationBox, &customSpinBox::valueChanged, [this](qreal value){
         setRotation(value);
+        if(!rotationFrames.empty()){
+            rotationFrames[*currentFrame_] = value;
+        }
         update();
     });
     rotationBox->connect(rotationBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
@@ -1162,6 +1177,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     
     xPivotBox->connect(xPivotBox, &customSpinBox::valueChanged, [this](qreal value){
         pivotPoint_.setX(value);
+        if(!xPivotFrames.empty()){
+            xPivotFrames[*currentFrame_] = value;
+        }
         update();
     });
     xPivotBox->connect(xPivotBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
@@ -1179,6 +1197,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     yPivotBox->connect(yPivotBox, &customSpinBox::valueChanged, [this](qreal value){
         pivotPoint_.setY(value);
+        if(!yPivotFrames.empty()){
+            yPivotFrames[*currentFrame_] = value;
+        }
         update();
     });
     yPivotBox->connect(yPivotBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
@@ -1289,11 +1310,46 @@ QWidget *path::createAttributeWidget(QWidget *parent)
             fillColor_ = QColor(r,g,b,a); updateFillControls(); update();
         }
     });
-    fillRSpinBox->connect(fillRSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setRed(v);   updateFillControls(); update(); });
-    fillGSpinBox->connect(fillGSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setGreen(v); updateFillControls(); update(); });
-    fillBSpinBox->connect(fillBSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setBlue(v);  updateFillControls(); update(); });
-    fillAlphaSpinBox->connect(fillAlphaSpinBox,&customSpinBox::valueChanged, [this, updateFillControls](qreal v){ fillColor_.setAlpha(v); updateFillControls(); update(); });
-    fillPreview->connect(fillPreview, &ColorSelector::colorSelected, [this, updateFillControls](QColor c){ fillColor_ = c; updateFillControls(); update(); });
+    fillRSpinBox->connect(fillRSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){
+        fillColor_.setRed(v);   
+        if(!fillColorFrames.empty()){
+            fillColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateFillControls(); 
+        update(); 
+    });
+    fillGSpinBox->connect(fillGSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ 
+        fillColor_.setGreen(v); 
+        if(!fillColorFrames.empty()){
+            fillColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateFillControls(); 
+        update(); 
+    });
+    fillBSpinBox->connect(fillBSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ 
+        fillColor_.setBlue(v);  
+        if(!fillColorFrames.empty()){
+            fillColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateFillControls(); 
+        update(); 
+    });
+    fillAlphaSpinBox->connect(fillAlphaSpinBox,&customSpinBox::valueChanged, [this, updateFillControls](qreal v){ 
+        fillColor_.setAlpha(v); 
+        if(!fillColorFrames.empty()){
+            fillColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateFillControls(); 
+        update(); 
+    });
+    fillPreview->connect(fillPreview, &ColorSelector::colorSelected, [this, updateFillControls](QColor c){ 
+        fillColor_ = c; 
+        if(!fillColorFrames.empty()){
+            fillColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateFillControls(); 
+        update(); 
+    });
     fillRSpinBox->connect(fillRSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1444,10 +1500,38 @@ QWidget *path::createAttributeWidget(QWidget *parent)
             strokeColor_ = QColor(r,g,b,a); updateStrokeControls(); update();
         }
     });
-    strokeRSpinBox->connect(strokeRSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setRed(v);   updateStrokeControls(); update(); });
-    strokeGSpinBox->connect(strokeGSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setGreen(v); updateStrokeControls(); update(); });
-    strokeBSpinBox->connect(strokeBSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setBlue(v);  updateStrokeControls(); update(); });
-    strokeAlphaSpinBox->connect(strokeAlphaSpinBox,&customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ strokeColor_.setAlpha(v); updateStrokeControls(); update(); });
+    strokeRSpinBox->connect(strokeRSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
+        strokeColor_.setRed(v);   
+        if(!strokeColorFrames.empty()){
+            strokeColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateStrokeControls(); 
+        update(); 
+    });
+    strokeGSpinBox->connect(strokeGSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
+        strokeColor_.setGreen(v); 
+        if(!strokeColorFrames.empty()){
+            strokeColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateStrokeControls(); 
+        update(); 
+    });
+    strokeBSpinBox->connect(strokeBSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
+        strokeColor_.setBlue(v);  
+        if(!strokeColorFrames.empty()){
+            strokeColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateStrokeControls(); 
+        update(); 
+    });
+    strokeAlphaSpinBox->connect(strokeAlphaSpinBox,&customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
+        strokeColor_.setAlpha(v); 
+        if(!strokeColorFrames.empty()){
+            strokeColorFrames[*currentFrame_] = fillColor_;
+        }
+        updateStrokeControls(); 
+        update(); 
+    });
     strokePreview->connect(strokePreview, &ColorSelector::colorSelected, [this, updateStrokeControls](QColor c){ strokeColor_ = c; updateStrokeControls(); update(); });
 
     strokeEnable->connect(strokeEnable, &QCheckBox::toggled, [this, strokePreview, strokeHexSpinBox, strokeAlphaSpinBox, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox](bool state){
@@ -1547,6 +1631,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     strokeWidthSpinBox->connect(strokeWidthSpinBox, &customSpinBox::valueChanged, [this](qreal value){
         strokeWidth_ = value;
+        if(!strokeWidthFrames.empty()){
+            strokeWidthFrames[*currentFrame_] = value;
+        }
         update();
     });
     strokeWidthSpinBox->connect(strokeWidthSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){

@@ -489,7 +489,7 @@ class viewPort : public QGraphicsView{
     
     private:
     QGraphicsScene* scene_;
-    const int snapMargin_ = 10;
+    const int snapMargin_ = 20;
     const int nodeSelectMargin_ = 10;
     const float snappingAngle = 45.0;
 
