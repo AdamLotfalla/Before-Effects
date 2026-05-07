@@ -2488,14 +2488,17 @@ void viewPort::mouseMoveEvent(QMouseEvent *event)
                 newPos.setX(newPos.x()/selectedPath_->scaleX_ - 1.0/selectedPath_->scaleX_ * (selectedPath_->position_.x() + selectedPath_->pivotPoint_.x()) * (1-selectedPath_->scaleX_));
                 newPos.setY(newPos.y()/selectedPath_->scaleY_ - 1.0/selectedPath_->scaleY_ * (selectedPath_->position_.y() + selectedPath_->pivotPoint_.y()) * (1-selectedPath_->scaleY_));
 
+                QPointF offset = newPos - holdStartPosition_;
+
                 if(selectedPath_->selectedHandle_ == -1)
-                    selectedPath_->setNodePosition(newPos, selectedPath_->accessHighlightedVector(i));
+                    selectedPath_->moveNode(offset, selectedPath_->accessHighlightedVector(i));
                 else if(selectedPath_->getHandleExistance(selectedPath_->accessHighlightedVector(i), 0) && selectedPath_->selectedHandle_ == 0)
                     selectedPath_->setHandlePosition(newPos, selectedPath_->accessHighlightedVector(i), 0);
                 else if(selectedPath_->getHandleExistance(selectedPath_->accessHighlightedVector(i), 1) && selectedPath_->selectedHandle_ == 1)
                     selectedPath_->setHandlePosition(newPos, selectedPath_->accessHighlightedVector(i), 1);
                 
             }
+            holdStartPosition_ = canvasLocalPos;
 
             selectedPath_->makeDirty();
             selectedPath_->calculateBoundaries();
