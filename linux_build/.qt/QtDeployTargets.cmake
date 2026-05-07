@@ -1,0 +1,6 @@
+set(__QT_DEPLOY_TARGET_screenshot_bin_FILE /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin)
+set(__QT_DEPLOY_TARGET_screenshot_bin_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_QtColorWidgets_FILE /mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/libQtColorWidgets.a)
+set(__QT_DEPLOY_TARGET_QtColorWidgets_TYPE STATIC_LIBRARY)
+set(__QT_DEPLOY_TARGET_Before_Effects_FILE /mnt/d/Code/Flavortown/Before_Effects/linux_build/Before_Effects)
+set(__QT_DEPLOY_TARGET_Before_Effects_TYPE EXECUTABLE)

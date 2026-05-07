@@ -1,0 +1,25 @@
+{
+	"BUILD_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen",
+	"CMAKE_BINARY_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets",
+	"CMAKE_SOURCE_DIR" : "/mnt/d/Code/Flavortown/Before_Effects",
+	"CROSS_CONFIG" : false,
+	"GENERATOR" : "Unix Makefiles",
+	"INCLUDE_DIR" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/include",
+	"INPUTS" : 
+	[
+		"/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/resources/QtColorWidgets/alphaback.png"
+	],
+	"LOCK_FILE" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_autogen.dir/AutoRcc_color_widgets_CRZPDLJRNK_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "color_widgets" ],
+	"OUTPUT_CHECKSUM" : "CRZPDLJRNK",
+	"OUTPUT_NAME" : "qrc_color_widgets.cpp",
+	"RCC_EXECUTABLE" : "/usr/lib/qt6/libexec/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_autogen.dir/AutoRcc_color_widgets_CRZPDLJRNK_Used.txt",
+	"SOURCE" : "/mnt/d/Code/Flavortown/Before_Effects/external/Qt-Color-Widgets/resources/QtColorWidgets/color_widgets.qrc",
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}

@@ -1,0 +1,12 @@
+{
+	"InstallScripts" : 
+	[
+		"/mnt/d/Code/Flavortown/Before_Effects/linux_build/cmake_install.cmake",
+		"/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/cmake_install.cmake",
+		"/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/include/QtColorWidgets/cmake_install.cmake",
+		"/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/resources/QtColorWidgets/cmake_install.cmake",
+		"/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/src/QtColorWidgets/cmake_install.cmake",
+		"/mnt/d/Code/Flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -684,6 +684,7 @@ void Timeline::removeLayer(path *p)
     if(p != nullptr){
         timeIndicatorBar->removeLayer(p);
         updateLayers();
+        update();
     }
 }
 
