@@ -36,7 +36,6 @@ A cross-platform motion graphics desktop software supporting basic vector drawin
 ### Timeline
 https://github.com/user-attachments/assets/de1e72f0-30f8-41dd-91aa-80e473c752b4
 - Click and drag on the top bar to move the time indicator. Use the 5 playback control buttons to control it precisely. Use the zoom slider or buttons to zoom.
-https://github.com/user-attachments/assets/6e2fe263-65f4-4c99-aa6d-69ec2d3fdeec
 - Paths are shown as layers in their order of drawing and named. The selected path has a yellow highlight.
 - Click on the diamond symbol on any attribute that has it in the attribute panel, a similar diamond will be shown on the corresponding layer on the current frame
 <img width="158" height="34" alt="image" src="https://github.com/user-attachments/assets/615990c9-a0b6-46ee-a1b3-399f7355dc54" />
