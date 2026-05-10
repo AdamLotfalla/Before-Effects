@@ -72,7 +72,7 @@ Before_Effects_autogen/timestamp: /usr/lib/qt6/libexec/moc
 Before_Effects_autogen/timestamp: /usr/lib/qt6/libexec/uic
 Before_Effects_autogen/timestamp: CMakeFiles/Before_Effects_autogen.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target Before_Effects"
-	/usr/bin/cmake -E cmake_autogen /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen.dir/AutogenInfo.json ""
+	/usr/bin/cmake -E cmake_autogen /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/Before_Effects_autogen.dir/AutogenInfo.json Release
 	/usr/bin/cmake -E touch /mnt/d/Code/flavortown/Before_Effects/linux_build/Before_Effects_autogen/timestamp
 
 CMakeFiles/Before_Effects_autogen.dir/codegen:

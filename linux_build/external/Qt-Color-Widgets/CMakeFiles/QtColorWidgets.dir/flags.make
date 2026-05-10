@@ -6,5 +6,5 @@ CXX_DEFINES = -DQTCOLORWIDGETS_LIBRARY -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_CAST_F
 
 CXX_INCLUDES = -I/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/include -I/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets -isystem /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/QtColorWidgets_autogen/include -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui
 
-CXX_FLAGS = -std=gnu++17
+CXX_FLAGS = -O3 -DNDEBUG -std=gnu++17 -fPIC
 

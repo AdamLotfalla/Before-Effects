@@ -57,11 +57,11 @@ set_target_properties(QtColorWidgets PROPERTIES
   INTERFACE_QtColorWidgets_MAJOR_VERSION "2"
 )
 
-# Import target "QtColorWidgets" for configuration ""
-set_property(TARGET QtColorWidgets APPEND PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
+# Import target "QtColorWidgets" for configuration "Release"
+set_property(TARGET QtColorWidgets APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(QtColorWidgets PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_NOCONFIG "CXX"
-  IMPORTED_LOCATION_NOCONFIG "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/libQtColorWidgets.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "/mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/libQtColorWidgets.a"
   )
 
 # This file does not depend on other imported targets which have

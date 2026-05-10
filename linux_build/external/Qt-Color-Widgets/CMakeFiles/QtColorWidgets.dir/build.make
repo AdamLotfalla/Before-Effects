@@ -75,7 +75,7 @@ external/Qt-Color-Widgets/QtColorWidgets_autogen/CRZPDLJRNK/qrc_color_widgets.cp
 external/Qt-Color-Widgets/QtColorWidgets_autogen/CRZPDLJRNK/qrc_color_widgets.cpp: /usr/lib/qt6/libexec/rcc
 external/Qt-Color-Widgets/QtColorWidgets_autogen/CRZPDLJRNK/qrc_color_widgets.cpp: /usr/lib/qt6/libexec/rcc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic RCC for resources/QtColorWidgets/color_widgets.qrc"
-	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && /usr/bin/cmake -E cmake_autorcc /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_autogen.dir/AutoRcc_color_widgets_CRZPDLJRNK_Info.json 
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets && /usr/bin/cmake -E cmake_autorcc /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets_autogen.dir/AutoRcc_color_widgets_CRZPDLJRNK_Info.json Release
 
 external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/codegen:
 .PHONY : external/Qt-Color-Widgets/CMakeFiles/QtColorWidgets.dir/codegen

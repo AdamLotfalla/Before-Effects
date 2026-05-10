@@ -80,4 +80,4 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
-linux_build/
+/linux_build/

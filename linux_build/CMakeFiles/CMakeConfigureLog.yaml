@@ -20,9 +20,6 @@ events:
     names:
       - "uname"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -46,16 +43,11 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/uname"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/uname"
-      - "C:/Qt/6.x.x/msvc2019_64/uname"
       - "/usr/local/sbin/uname"
       - "/usr/local/bin/uname"
       - "/usr/sbin/uname"
     found: "/usr/bin/uname"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -108,9 +100,6 @@ events:
       - "make"
       - "smake"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -134,16 +123,11 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/gmake"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/gmake"
-      - "C:/Qt/6.x.x/msvc2019_64/gmake"
       - "/usr/local/sbin/gmake"
       - "/usr/local/bin/gmake"
       - "/usr/sbin/gmake"
     found: "/usr/bin/gmake"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -197,9 +181,6 @@ events:
       - "icx"
       - "clang++"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -223,16 +204,11 @@ events:
       - "/mnt/c/Users/Adam Lotfalla/AppData/Local/Programs/Microsoft VS Code/bin/"
       - "/snap/bin/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/c++"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/c++"
-      - "C:/Qt/6.x.x/msvc2019_64/c++"
       - "/usr/local/sbin/c++"
       - "/usr/local/bin/c++"
       - "/usr/sbin/c++"
     found: "/usr/bin/c++"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -283,8 +259,6 @@ events:
       - "/usr/share/cmake-4.2/Modules/"
     found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -375,8 +349,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/ar"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -445,8 +417,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/ranlib"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -515,8 +485,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/strip"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -585,8 +553,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/ld"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -655,8 +621,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/nm"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -725,8 +689,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/objdump"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -795,8 +757,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/objcopy"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -865,8 +825,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/readelf"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -958,8 +916,6 @@ events:
       - "/snap/bin/dlltool"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1028,8 +984,6 @@ events:
       - "/snap/bin/"
     found: "/usr/bin/addr2line"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1121,8 +1075,6 @@ events:
       - "/snap/bin/tapi"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1217,8 +1169,6 @@ events:
       - "/snap/bin/gcc-ar-15.2"
     found: "/usr/bin/gcc-ar-15"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1313,8 +1263,6 @@ events:
       - "/snap/bin/gcc-ranlib-15.2"
     found: "/usr/bin/gcc-ranlib-15"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1348,8 +1296,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-I648Y2"
-      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-I648Y2"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-VMPyzk"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-VMPyzk"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -1359,13 +1307,13 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-I648Y2'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-VMPyzk'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_997ca/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_997ca.dir/build.make CMakeFiles/cmTC_997ca.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-I648Y2'
-        Building CXX object CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o
-        /usr/bin/c++   -v -o CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_36449/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_36449.dir/build.make CMakeFiles/cmTC_36449.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-VMPyzk'
+        Building CXX object CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o
+        /usr/bin/c++   -v -o CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp
         Using built-in specs.
         COLLECT_GCC=/usr/bin/c++
         OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
@@ -1375,8 +1323,8 @@ events:
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
         gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_997ca.dir/'
-         /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_997ca.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccxjv8TT.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_36449.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_36449.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccp0F92a.s
         GNU C++17 (Ubuntu 15.2.0-16ubuntu1) version 15.2.0 (x86_64-linux-gnu)
         	compiled by GNU C version 15.2.0, GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.27-GMP
         
@@ -1397,14 +1345,14 @@ events:
          /usr/include
         End of search list.
         Compiler executable checksum: b661a74662ad7cf413c4193391ab5290
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_997ca.dir/'
-         /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccxjv8TT.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_36449.dir/'
+         /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccp0F92a.s
         GNU assembler version 2.46 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.46
         COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.'
-        Linking CXX executable cmTC_997ca
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_997ca.dir/link.txt --verbose=1
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_36449
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_36449.dir/link.txt --verbose=1
         Using built-in specs.
         COLLECT_GCC=/usr/bin/c++
         COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper
@@ -1417,14 +1365,14 @@ events:
         gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) 
         COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/
         LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_997ca' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_997ca.'
-         /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccuW8Fr2.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_997ca /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_36449' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_36449.'
+         /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFAxw2d.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_36449 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
         collect2 version 15.2.0
-        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccuW8Fr2.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_997ca /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFAxw2d.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_36449 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o
         GNU ld (GNU Binutils for Ubuntu) 2.46
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_997ca' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_997ca.'
-        /usr/bin/c++  -v -Wl,-v CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_997ca
-        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-I648Y2'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_36449' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_36449.'
+        /usr/bin/c++  -v -Wl,-v CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_36449
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-VMPyzk'
         
       exitCode: 0
   -
@@ -1465,13 +1413,13 @@ events:
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
-        ignore line: [Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-I648Y2']
+        ignore line: [Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-VMPyzk']
         ignore line: []
-        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_997ca/fast]
-        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_997ca.dir/build.make CMakeFiles/cmTC_997ca.dir/build]
-        ignore line: [gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-I648Y2']
-        ignore line: [Building CXX object CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o]
-        ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_36449/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_36449.dir/build.make CMakeFiles/cmTC_36449.dir/build]
+        ignore line: [gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-VMPyzk']
+        ignore line: [Building CXX object CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/c++]
         ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
@@ -1481,8 +1429,8 @@ events:
         ignore line: [Thread model: posix]
         ignore line: [Supported LTO compression algorithms: zlib zstd]
         ignore line: [gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_997ca.dir/']
-        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_997ca.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccxjv8TT.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_36449.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_36449.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccp0F92a.s]
         ignore line: [GNU C++17 (Ubuntu 15.2.0-16ubuntu1) version 15.2.0 (x86_64-linux-gnu)]
         ignore line: [	compiled by GNU C version 15.2.0  GMP version 6.3.0  MPFR version 4.2.2  MPC version 1.3.1  isl version isl-0.27-GMP]
         ignore line: []
@@ -1503,14 +1451,14 @@ events:
         ignore line: [ /usr/include]
         ignore line: [End of search list.]
         ignore line: [Compiler executable checksum: b661a74662ad7cf413c4193391ab5290]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_997ca.dir/']
-        ignore line: [ /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccxjv8TT.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_36449.dir/']
+        ignore line: [ /usr/bin/x86_64-linux-gnu-as -v --64 -o CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccp0F92a.s]
         ignore line: [GNU assembler version 2.46 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.46]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.']
-        ignore line: [Linking CXX executable cmTC_997ca]
-        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_997ca.dir/link.txt --verbose=1]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_36449]
+        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_36449.dir/link.txt --verbose=1]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/usr/bin/c++]
         ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper]
@@ -1523,13 +1471,13 @@ events:
         ignore line: [gcc version 15.2.0 (Ubuntu 15.2.0-16ubuntu1) ]
         ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/15/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/]
         ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/15/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/15/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_997ca' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_997ca.']
-        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccuW8Fr2.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_997ca /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_36449' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_36449.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/15/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFAxw2d.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_36449 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
           arg [/usr/libexec/gcc/x86_64-linux-gnu/15/collect2] ==> ignore
           arg [-plugin] ==> ignore
           arg [/usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so] ==> ignore
           arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper] ==> ignore
-          arg [-plugin-opt=-fresolution=/tmp/ccuW8Fr2.res] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccFAxw2d.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
           arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -1547,7 +1495,7 @@ events:
           arg [-znow] ==> ignore
           arg [-zrelro] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_997ca] ==> ignore
+          arg [cmTC_36449] ==> ignore
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o]
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o]
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o]
@@ -1562,7 +1510,7 @@ events:
           arg [-L/lib] ==> dir [/lib]
           arg [-L/usr/lib] ==> dir [/usr/lib]
           arg [-v] ==> ignore
-          arg [CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
           arg [-lstdc++] ==> lib [stdc++]
           arg [-lm] ==> lib [m]
           arg [-lgcc_s] ==> lib [gcc_s]
@@ -1573,7 +1521,7 @@ events:
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o]
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
         ignore line: [collect2 version 15.2.0]
-        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccuW8Fr2.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_997ca /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_997ca.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFAxw2d.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_36449 /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_36449.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crtn.o]
         linker tool for 'CXX': /usr/bin/ld
         collapse obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
         collapse obj [/usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
@@ -1616,32 +1564,33 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/QtPublicDependencyHelpers.cmake:36 (find_dependency)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Dependencies.cmake:38 (_qt_internal_find_third_party_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:190 (include)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     checks:
       - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
     directories:
-      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-P1dBk6"
-      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-P1dBk6"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vRAA0v"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vRAA0v"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
       CMAKE_EXE_LINKER_FLAGS: ""
       CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
     buildResult:
       variable: "CMAKE_HAVE_LIBC_PTHREAD"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-P1dBk6'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vRAA0v'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ad9fe/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_ad9fe.dir/build.make CMakeFiles/cmTC_ad9fe.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-P1dBk6'
-        Building CXX object CMakeFiles/cmTC_ad9fe.dir/src.cxx.o
-        /usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD  -std=gnu++17 -o CMakeFiles/cmTC_ad9fe.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-P1dBk6/src.cxx
-        Linking CXX executable cmTC_ad9fe
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ad9fe.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_ad9fe.dir/src.cxx.o -o cmTC_ad9fe
-        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-P1dBk6'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_9cf98/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_9cf98.dir/build.make CMakeFiles/cmTC_9cf98.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vRAA0v'
+        Building CXX object CMakeFiles/cmTC_9cf98.dir/src.cxx.o
+        /usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD  -std=gnu++17 -fPIE -o CMakeFiles/cmTC_9cf98.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vRAA0v/src.cxx
+        Linking CXX executable cmTC_9cf98
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9cf98.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_9cf98.dir/src.cxx.o -o cmTC_9cf98
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-vRAA0v'
         
       exitCode: 0
   -
@@ -1654,7 +1603,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:42 (_qt_internal_find_tool_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6CoreTools"
     configs:
       -
@@ -1720,8 +1669,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1766,7 +1713,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:42 (_qt_internal_find_tool_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6GuiTools"
     configs:
       -
@@ -1832,8 +1779,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1875,7 +1820,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:42 (_qt_internal_find_tool_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6WidgetsTools"
     configs:
       -
@@ -1941,8 +1886,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -1994,32 +1937,33 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     checks:
       - "Performing Test HAVE_STDATOMIC"
     directories:
-      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-2wLaeG"
-      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-2wLaeG"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-gWKYnZ"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-gWKYnZ"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
       CMAKE_EXE_LINKER_FLAGS: ""
       CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
     buildResult:
       variable: "HAVE_STDATOMIC"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-2wLaeG'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-gWKYnZ'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_5d5ed/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_5d5ed.dir/build.make CMakeFiles/cmTC_5d5ed.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-2wLaeG'
-        Building CXX object CMakeFiles/cmTC_5d5ed.dir/src.cxx.o
-        /usr/bin/c++ -DHAVE_STDATOMIC  -std=gnu++17 -o CMakeFiles/cmTC_5d5ed.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-2wLaeG/src.cxx
-        Linking CXX executable cmTC_5d5ed
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5d5ed.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_5d5ed.dir/src.cxx.o -o cmTC_5d5ed
-        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-2wLaeG'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_b6255/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_b6255.dir/build.make CMakeFiles/cmTC_b6255.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-gWKYnZ'
+        Building CXX object CMakeFiles/cmTC_b6255.dir/src.cxx.o
+        /usr/bin/c++ -DHAVE_STDATOMIC  -std=gnu++17 -fPIE -o CMakeFiles/cmTC_b6255.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-gWKYnZ/src.cxx
+        Linking CXX executable cmTC_b6255
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b6255.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_b6255.dir/src.cxx.o -o cmTC_b6255
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-gWKYnZ'
         
       exitCode: 0
   -
@@ -2031,7 +1975,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6Core"
     configs:
       -
@@ -2105,8 +2049,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2157,7 +2099,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "OPENGL_INCLUDE_DIR"
     description: "Path to a file."
@@ -2172,9 +2114,6 @@ events:
     names:
       - "GL/gl.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -2219,9 +2158,6 @@ events:
       - "/usr/openwin/share/include/"
       - "/opt/graphics/OpenGL/include/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/gl.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/GL/gl.h"
-      - "C:/Qt/6.x.x/msvc2019_64/GL/gl.h"
       - "/usr/local/sbin/GL/gl.h"
       - "/usr/local/bin/GL/gl.h"
       - "/usr/sbin/GL/gl.h"
@@ -2250,8 +2186,6 @@ events:
       - "/usr/include/x86_64-linux-gnu/GL/gl.h"
     found: "/usr/include/"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2304,7 +2238,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "OPENGL_GLX_INCLUDE_DIR"
     description: "Path to a file."
@@ -2319,9 +2253,6 @@ events:
     names:
       - "GL/glx.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -2363,9 +2294,6 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/glx.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/GL/glx.h"
-      - "C:/Qt/6.x.x/msvc2019_64/GL/glx.h"
       - "/usr/local/sbin/GL/glx.h"
       - "/usr/local/bin/GL/glx.h"
       - "/usr/sbin/GL/glx.h"
@@ -2394,8 +2322,6 @@ events:
       - "/usr/include/x86_64-linux-gnu/GL/glx.h"
     found: "/usr/include/"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2448,7 +2374,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "OPENGL_EGL_INCLUDE_DIR"
     description: "Path to a file."
@@ -2463,9 +2389,6 @@ events:
     names:
       - "EGL/egl.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -2507,9 +2430,6 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/EGL/egl.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/EGL/egl.h"
-      - "C:/Qt/6.x.x/msvc2019_64/EGL/egl.h"
       - "/usr/local/sbin/EGL/egl.h"
       - "/usr/local/bin/EGL/egl.h"
       - "/usr/sbin/EGL/egl.h"
@@ -2552,8 +2472,6 @@ events:
       - "/usr/include/X11/EGL/egl.h"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2606,7 +2524,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "OPENGL_GLES2_INCLUDE_DIR"
     description: "Path to a file."
@@ -2621,9 +2539,6 @@ events:
     names:
       - "GLES2/gl2.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -2665,9 +2580,6 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GLES2/gl2.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/GLES2/gl2.h"
-      - "C:/Qt/6.x.x/msvc2019_64/GLES2/gl2.h"
       - "/usr/local/sbin/GLES2/gl2.h"
       - "/usr/local/bin/GLES2/gl2.h"
       - "/usr/sbin/GLES2/gl2.h"
@@ -2710,8 +2622,6 @@ events:
       - "/usr/include/X11/GLES2/gl2.h"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2764,7 +2674,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "OPENGL_GLES3_INCLUDE_DIR"
     description: "Path to a file."
@@ -2779,9 +2689,6 @@ events:
     names:
       - "GLES3/gl3.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -2823,9 +2730,6 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GLES3/gl3.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/GLES3/gl3.h"
-      - "C:/Qt/6.x.x/msvc2019_64/GLES3/gl3.h"
       - "/usr/local/sbin/GLES3/gl3.h"
       - "/usr/local/bin/GLES3/gl3.h"
       - "/usr/sbin/GLES3/gl3.h"
@@ -2868,8 +2772,6 @@ events:
       - "/usr/include/X11/GLES3/gl3.h"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -2922,7 +2824,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "OPENGL_xmesa_INCLUDE_DIR"
     description: "Path to a file."
@@ -2937,9 +2839,6 @@ events:
     names:
       - "GL/xmesa.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -2984,9 +2883,6 @@ events:
       - "/usr/openwin/share/include/"
       - "/opt/graphics/OpenGL/include/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/xmesa.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/GL/xmesa.h"
-      - "C:/Qt/6.x.x/msvc2019_64/GL/xmesa.h"
       - "/usr/local/sbin/GL/xmesa.h"
       - "/usr/local/bin/GL/xmesa.h"
       - "/usr/sbin/GL/xmesa.h"
@@ -3032,8 +2928,6 @@ events:
       - "/opt/graphics/OpenGL/include/GL/xmesa.h"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3086,7 +2980,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "OPENGL_GLU_INCLUDE_DIR"
     description: "Path to a file."
@@ -3101,9 +2995,6 @@ events:
     names:
       - "GL/glu.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3145,9 +3036,6 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/GL/glu.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/GL/glu.h"
-      - "C:/Qt/6.x.x/msvc2019_64/GL/glu.h"
       - "/usr/local/sbin/GL/glu.h"
       - "/usr/local/bin/GL/glu.h"
       - "/usr/sbin/GL/glu.h"
@@ -3190,8 +3078,6 @@ events:
       - "/usr/include/X11/GL/glu.h"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3244,7 +3130,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "library"
     variable: "OPENGL_opengl_LIBRARY"
     description: "Path to a library."
@@ -3259,9 +3145,6 @@ events:
     names:
       - "OpenGL"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3303,9 +3186,6 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3333,8 +3213,6 @@ events:
       - "/usr/local/"
     found: "/usr/lib/x86_64-linux-gnu/libOpenGL.so"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3387,7 +3265,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "library"
     variable: "OPENGL_glx_LIBRARY"
     description: "Path to a library."
@@ -3402,12 +3280,6 @@ events:
     names:
       - "GLX"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -3489,12 +3361,6 @@ events:
       - "/usr/lib/X11/libglvnd/"
       - "/usr/lib/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -3548,8 +3414,6 @@ events:
       - "/usr/lib/x86_64-linux-gnu/libglvnd/"
     found: "/usr/lib/x86_64-linux-gnu/libGLX.so"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3602,7 +3466,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "library"
     variable: "OPENGL_egl_LIBRARY"
     description: "Path to a library."
@@ -3617,12 +3481,6 @@ events:
     names:
       - "EGL"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -3704,12 +3562,6 @@ events:
       - "/usr/lib/X11/libglvnd/"
       - "/usr/lib/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/libglvnd/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/libglvnd/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/libglvnd/"
@@ -3792,8 +3644,6 @@ events:
       - "/usr/lib/X11/"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -3846,7 +3696,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "library"
     variable: "OPENGL_gles2_LIBRARY"
     description: "Path to a library."
@@ -3861,9 +3711,6 @@ events:
     names:
       - "GLESv2"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3905,9 +3752,6 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -3950,8 +3794,6 @@ events:
       - "/usr/lib/X11/"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4004,7 +3846,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "library"
     variable: "OPENGL_gles3_LIBRARY"
     description: "Path to a library."
@@ -4020,9 +3862,6 @@ events:
       - "GLESv3"
       - "GLESv2"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4064,9 +3903,6 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4107,9 +3943,6 @@ events:
       - "/opt/lib/"
       - "/opt/"
       - "/usr/lib/X11/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4152,8 +3985,6 @@ events:
       - "/usr/lib/X11/"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4206,7 +4037,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "library"
     variable: "OPENGL_glu_LIBRARY"
     description: "Path to a library."
@@ -4222,9 +4053,6 @@ events:
       - "GLU"
       - "MesaGLU"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4269,9 +4097,6 @@ events:
       - "/usr/openwin/lib/"
       - "/usr/shlib/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4315,9 +4140,6 @@ events:
       - "/opt/graphics/OpenGL/lib/"
       - "/usr/openwin/lib/"
       - "/usr/shlib/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -4363,8 +4185,6 @@ events:
       - "/usr/shlib/"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4415,7 +4235,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "path"
     variable: "Vulkan_INCLUDE_DIR"
     description: "Path to a file."
@@ -4430,9 +4250,6 @@ events:
     names:
       - "vulkan/vulkan.h"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/include/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -4475,9 +4292,6 @@ events:
       - "/opt/"
       - "/usr/include/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/vulkan/vulkan.h"
-      - "C:/Qt/6.x.x/msvc2019_64/include/vulkan/vulkan.h"
-      - "C:/Qt/6.x.x/msvc2019_64/vulkan/vulkan.h"
       - "/include/vulkan/vulkan.h"
       - "/usr/local/sbin/vulkan/vulkan.h"
       - "/usr/local/bin/vulkan/vulkan.h"
@@ -4507,8 +4321,6 @@ events:
       - "/usr/include/x86_64-linux-gnu/vulkan/vulkan.h"
     found: "/usr/include/"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4559,7 +4371,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "library"
     variable: "Vulkan_LIBRARY"
     description: "Path to a library."
@@ -4574,9 +4386,6 @@ events:
     names:
       - "vulkan"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/lib/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -4619,9 +4428,6 @@ events:
       - "/opt/"
       - "/usr/lib/X11/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/lib/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/lib/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/lib/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -4650,8 +4456,6 @@ events:
       - "/usr/local/"
     found: "/usr/lib/x86_64-linux-gnu/libvulkan.so"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4702,7 +4506,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "program"
     variable: "Vulkan_GLSLC_EXECUTABLE"
     description: "Path to a program."
@@ -4717,9 +4521,6 @@ events:
     names:
       - "glslc"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -4760,9 +4561,6 @@ events:
       - "/opt/sbin/"
       - "/opt/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/glslc"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/glslc"
-      - "C:/Qt/6.x.x/msvc2019_64/glslc"
       - "/bin/glslc"
       - "/usr/local/sbin/glslc"
       - "/usr/local/bin/glslc"
@@ -4804,8 +4602,6 @@ events:
       - "/opt/glslc"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -4854,7 +4650,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     mode: "program"
     variable: "Vulkan_GLSLANG_VALIDATOR_EXECUTABLE"
     description: "Path to a program."
@@ -4869,9 +4665,6 @@ events:
     names:
       - "glslangValidator"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/bin/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
@@ -4912,9 +4705,6 @@ events:
       - "/opt/sbin/"
       - "/opt/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/bin/glslangValidator"
-      - "C:/Qt/6.x.x/msvc2019_64/sbin/glslangValidator"
-      - "C:/Qt/6.x.x/msvc2019_64/glslangValidator"
       - "/bin/glslangValidator"
       - "/usr/local/sbin/glslangValidator"
       - "/usr/local/bin/glslangValidator"
@@ -4956,8 +4746,6 @@ events:
       - "/opt/glslangValidator"
     found: false
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5009,7 +4797,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6DBusTools"
     configs:
       -
@@ -5075,8 +4863,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5125,7 +4911,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6DBus"
     configs:
       -
@@ -5199,8 +4985,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5244,7 +5028,7 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake:50 (_qt_internal_find_qt_dependencies)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake:50 (include)"
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6Gui"
     configs:
       -
@@ -5318,8 +5102,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5358,7 +5140,7 @@ events:
     kind: "find_package-v1"
     backtrace:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6Widgets"
     configs:
       -
@@ -5429,8 +5211,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5469,7 +5249,7 @@ events:
     kind: "find_package-v1"
     backtrace:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6Svg"
     configs:
       -
@@ -5540,8 +5320,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5580,7 +5358,7 @@ events:
     kind: "find_package-v1"
     backtrace:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)"
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6SvgWidgets"
     configs:
       -
@@ -5635,8 +5413,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -5674,7 +5450,7 @@ events:
   -
     kind: "find_package-v1"
     backtrace:
-      - "CMakeLists.txt:9 (find_package)"
+      - "CMakeLists.txt:31 (find_package)"
     name: "Qt6"
     components:
       -
@@ -6128,8 +5904,6 @@ events:
       mode: "config"
       version: "6.10.2"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6178,28 +5952,29 @@ events:
     checks:
       - "Performing Test Wall_FLAG_SUPPORTED"
     directories:
-      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-0n57cM"
-      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-0n57cM"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-6uOiTb"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-6uOiTb"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
       CMAKE_EXE_LINKER_FLAGS: ""
       CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
     buildResult:
       variable: "Wall_FLAG_SUPPORTED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-0n57cM'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-6uOiTb'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_327ba/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_327ba.dir/build.make CMakeFiles/cmTC_327ba.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-0n57cM'
-        Building CXX object CMakeFiles/cmTC_327ba.dir/src.cxx.o
-        /usr/bin/c++ -DWall_FLAG_SUPPORTED  -std=gnu++17   -Wall -o CMakeFiles/cmTC_327ba.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-0n57cM/src.cxx
-        Linking CXX executable cmTC_327ba
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_327ba.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_327ba.dir/src.cxx.o -o cmTC_327ba
-        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-0n57cM'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_8b39d/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_8b39d.dir/build.make CMakeFiles/cmTC_8b39d.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-6uOiTb'
+        Building CXX object CMakeFiles/cmTC_8b39d.dir/src.cxx.o
+        /usr/bin/c++ -DWall_FLAG_SUPPORTED  -std=gnu++17 -fPIE   -Wall -o CMakeFiles/cmTC_8b39d.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-6uOiTb/src.cxx
+        Linking CXX executable cmTC_8b39d
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8b39d.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_8b39d.dir/src.cxx.o -o cmTC_8b39d
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-6uOiTb'
         
       exitCode: 0
   -
@@ -6212,28 +5987,29 @@ events:
     checks:
       - "Performing Test pedantic_FLAG_SUPPORTED"
     directories:
-      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-82zaTw"
-      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-82zaTw"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-eUud7d"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-eUud7d"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g -Wall"
       CMAKE_EXE_LINKER_FLAGS: ""
       CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
     buildResult:
       variable: "pedantic_FLAG_SUPPORTED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-82zaTw'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-eUud7d'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7184d/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_7184d.dir/build.make CMakeFiles/cmTC_7184d.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-82zaTw'
-        Building CXX object CMakeFiles/cmTC_7184d.dir/src.cxx.o
-        /usr/bin/c++ -Dpedantic_FLAG_SUPPORTED  -std=gnu++17   -pedantic -o CMakeFiles/cmTC_7184d.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-82zaTw/src.cxx
-        Linking CXX executable cmTC_7184d
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7184d.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_7184d.dir/src.cxx.o -o cmTC_7184d
-        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-82zaTw'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7ca1b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_7ca1b.dir/build.make CMakeFiles/cmTC_7ca1b.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-eUud7d'
+        Building CXX object CMakeFiles/cmTC_7ca1b.dir/src.cxx.o
+        /usr/bin/c++ -Dpedantic_FLAG_SUPPORTED  -std=gnu++17 -fPIE   -pedantic -o CMakeFiles/cmTC_7ca1b.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-eUud7d/src.cxx
+        Linking CXX executable cmTC_7ca1b
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7ca1b.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_7ca1b.dir/src.cxx.o -o cmTC_7ca1b
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-eUud7d'
         
       exitCode: 0
   -
@@ -6246,28 +6022,29 @@ events:
     checks:
       - "Performing Test Wextra_FLAG_SUPPORTED"
     directories:
-      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-h0X9Sz"
-      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-h0X9Sz"
+      source: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-dZKxzZ"
+      binary: "/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-dZKxzZ"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -pedantic"
       CMAKE_EXE_LINKER_FLAGS: ""
       CMAKE_MODULE_PATH: "/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules;/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets;/usr/lib/x86_64-linux-gnu/cmake/Qt6;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin"
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
     buildResult:
       variable: "Wextra_FLAG_SUPPORTED"
       cached: true
       stdout: |
-        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-h0X9Sz'
+        Change Dir: '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-dZKxzZ'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_350bf/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_350bf.dir/build.make CMakeFiles/cmTC_350bf.dir/build
-        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-h0X9Sz'
-        Building CXX object CMakeFiles/cmTC_350bf.dir/src.cxx.o
-        /usr/bin/c++ -DWextra_FLAG_SUPPORTED  -std=gnu++17   -Wextra -o CMakeFiles/cmTC_350bf.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-h0X9Sz/src.cxx
-        Linking CXX executable cmTC_350bf
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_350bf.dir/link.txt --verbose=1
-        /usr/bin/c++ CMakeFiles/cmTC_350bf.dir/src.cxx.o -o cmTC_350bf
-        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-h0X9Sz'
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_68a9b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_68a9b.dir/build.make CMakeFiles/cmTC_68a9b.dir/build
+        gmake[1]: Entering directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-dZKxzZ'
+        Building CXX object CMakeFiles/cmTC_68a9b.dir/src.cxx.o
+        /usr/bin/c++ -DWextra_FLAG_SUPPORTED  -std=gnu++17 -fPIE   -Wextra -o CMakeFiles/cmTC_68a9b.dir/src.cxx.o -c /mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-dZKxzZ/src.cxx
+        Linking CXX executable cmTC_68a9b
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_68a9b.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_68a9b.dir/src.cxx.o -o cmTC_68a9b
+        gmake[1]: Leaving directory '/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles/CMakeScratch/TryCompile-dZKxzZ'
         
       exitCode: 0
   -
@@ -6290,9 +6067,6 @@ events:
     names:
       - "ProjectVersioning/version.h.in"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -6339,9 +6113,6 @@ events:
       - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/"
       - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/ProjectVersioning/version.h.in"
-      - "C:/Qt/6.x.x/msvc2019_64/include/ProjectVersioning/version.h.in"
-      - "C:/Qt/6.x.x/msvc2019_64/ProjectVersioning/version.h.in"
       - "/usr/local/sbin/ProjectVersioning/version.h.in"
       - "/usr/local/bin/ProjectVersioning/version.h.in"
       - "/usr/sbin/ProjectVersioning/version.h.in"
@@ -6387,8 +6158,6 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin/ProjectVersioning/version.h.in"
     found: "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/ProjectVersioning/version.h.in"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6445,9 +6214,6 @@ events:
     names:
       - "ProjectVersioning/version.c.in"
     candidate_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/"
-      - "C:/Qt/6.x.x/msvc2019_64/include/"
-      - "C:/Qt/6.x.x/msvc2019_64/"
       - "/usr/local/sbin/"
       - "/usr/local/bin/"
       - "/usr/sbin/"
@@ -6494,9 +6260,6 @@ events:
       - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/"
       - "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/"
     searched_directories:
-      - "C:/Qt/6.x.x/msvc2019_64/include/x86_64-linux-gnu/ProjectVersioning/version.c.in"
-      - "C:/Qt/6.x.x/msvc2019_64/include/ProjectVersioning/version.c.in"
-      - "C:/Qt/6.x.x/msvc2019_64/ProjectVersioning/version.c.in"
       - "/usr/local/sbin/ProjectVersioning/version.c.in"
       - "/usr/local/bin/ProjectVersioning/version.c.in"
       - "/usr/sbin/ProjectVersioning/version.c.in"
@@ -6542,8 +6305,6 @@ events:
       - "/usr/lib/x86_64-linux-gnu/cmake/Qt6/3rdparty/kwin/ProjectVersioning/version.c.in"
     found: "/mnt/d/Code/flavortown/Before_Effects/external/Qt-Color-Widgets/cmake/modules/ProjectVersioning/version.c.in"
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"
@@ -6785,8 +6546,6 @@ events:
         reason: "no_exist"
     found: null
     search_context:
-      CMAKE_PREFIX_PATH:
-        - "C:/Qt/6.x.x/msvc2019_64"
       ENV{PATH}:
         - "/usr/local/sbin"
         - "/usr/local/bin"

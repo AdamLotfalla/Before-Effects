@@ -6,6 +6,28 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
+# Fix for copy relocations against protected Qt6 symbols
+# Required for glibc 2.39+ (Arch Linux, Ubuntu 24.04+)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# Enforce minimum compiler versions to avoid ABI issues with Qt6
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "12.0")
+        message(FATAL_ERROR
+            "GCC 12+ is required to avoid copy relocation issues with Qt6 on modern glibc.\n"
+            "Found: GCC ${CMAKE_CXX_COMPILER_VERSION}\n"
+            "On Ubuntu 22.04: sudo apt install gcc-12 g++-12"
+        )
+    endif()
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14.0")
+        message(FATAL_ERROR
+            "Clang 14+ is required to avoid copy relocation issues with Qt6 on modern glibc.\n"
+            "Found: Clang ${CMAKE_CXX_COMPILER_VERSION}"
+        )
+    endif()
+endif()
+
 find_package(Qt6 REQUIRED COMPONENTS Widgets Svg Core SvgWidgets)
 qt_standard_project_setup()
 
@@ -21,6 +43,10 @@ qt_add_executable(Before_Effects
     viewPort.cpp viewPort.h
 )
 
+# Apply -fPIC explicitly to this target (belt-and-suspenders alongside CMAKE_POSITION_INDEPENDENT_CODE)
+target_compile_options(Before_Effects PRIVATE
+    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-fPIC>
+)
 
 target_link_libraries(Before_Effects PRIVATE
     Qt6::Widgets

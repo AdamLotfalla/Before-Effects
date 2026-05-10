@@ -31,7 +31,6 @@
   /usr/include/c++/15/bits/cpp_type_traits.h \
   /usr/include/c++/15/bits/cxxabi_forced.h \
   /usr/include/c++/15/bits/cxxabi_init_exception.h \
-  /usr/include/c++/15/bits/enable_special_members.h \
   /usr/include/c++/15/bits/erase_if.h \
   /usr/include/c++/15/bits/exception.h \
   /usr/include/c++/15/bits/exception_defines.h \
@@ -39,20 +38,16 @@
   /usr/include/c++/15/bits/functexcept.h \
   /usr/include/c++/15/bits/functional_hash.h \
   /usr/include/c++/15/bits/hash_bytes.h \
-  /usr/include/c++/15/bits/hashtable.h \
-  /usr/include/c++/15/bits/hashtable_policy.h \
   /usr/include/c++/15/bits/invoke.h \
   /usr/include/c++/15/bits/ios_base.h \
   /usr/include/c++/15/bits/list.tcc \
   /usr/include/c++/15/bits/locale_classes.h \
   /usr/include/c++/15/bits/locale_classes.tcc \
   /usr/include/c++/15/bits/localefwd.h \
-  /usr/include/c++/15/bits/memory_resource.h \
   /usr/include/c++/15/bits/memoryfwd.h \
   /usr/include/c++/15/bits/move.h \
   /usr/include/c++/15/bits/nested_exception.h \
   /usr/include/c++/15/bits/new_allocator.h \
-  /usr/include/c++/15/bits/node_handle.h \
   /usr/include/c++/15/bits/ostream_insert.h \
   /usr/include/c++/15/bits/parse_numbers.h \
   /usr/include/c++/15/bits/postypes.h \
@@ -64,7 +59,6 @@
   /usr/include/c++/15/bits/shared_ptr.h \
   /usr/include/c++/15/bits/shared_ptr_atomic.h \
   /usr/include/c++/15/bits/shared_ptr_base.h \
-  /usr/include/c++/15/bits/specfun.h \
   /usr/include/c++/15/bits/std_abs.h \
   /usr/include/c++/15/bits/std_function.h \
   /usr/include/c++/15/bits/stl_algo.h \
@@ -90,13 +84,10 @@
   /usr/include/c++/15/bits/stream_iterator.h \
   /usr/include/c++/15/bits/streambuf.tcc \
   /usr/include/c++/15/bits/streambuf_iterator.h \
-  /usr/include/c++/15/bits/string_view.tcc \
   /usr/include/c++/15/bits/stringfwd.h \
   /usr/include/c++/15/bits/uniform_int_dist.h \
   /usr/include/c++/15/bits/unique_ptr.h \
-  /usr/include/c++/15/bits/unordered_map.h \
   /usr/include/c++/15/bits/uses_allocator.h \
-  /usr/include/c++/15/bits/uses_allocator_args.h \
   /usr/include/c++/15/bits/utility.h \
   /usr/include/c++/15/bits/vector.tcc \
   /usr/include/c++/15/bits/version.h \
@@ -107,7 +98,6 @@
   /usr/include/c++/15/clocale \
   /usr/include/c++/15/cmath \
   /usr/include/c++/15/compare \
-  /usr/include/c++/15/concepts \
   /usr/include/c++/15/cstddef \
   /usr/include/c++/15/cstdint \
   /usr/include/c++/15/cstdio \
@@ -136,31 +126,15 @@
   /usr/include/c++/15/new \
   /usr/include/c++/15/numeric \
   /usr/include/c++/15/optional \
-  /usr/include/c++/15/pstl/execution_defs.h \
-  /usr/include/c++/15/pstl/glue_numeric_defs.h \
-  /usr/include/c++/15/pstl/pstl_config.h \
   /usr/include/c++/15/ratio \
   /usr/include/c++/15/stdexcept \
   /usr/include/c++/15/streambuf \
   /usr/include/c++/15/string \
   /usr/include/c++/15/string_view \
   /usr/include/c++/15/system_error \
-  /usr/include/c++/15/tr1/bessel_function.tcc \
-  /usr/include/c++/15/tr1/beta_function.tcc \
-  /usr/include/c++/15/tr1/ell_integral.tcc \
-  /usr/include/c++/15/tr1/exp_integral.tcc \
-  /usr/include/c++/15/tr1/gamma.tcc \
-  /usr/include/c++/15/tr1/hypergeometric.tcc \
-  /usr/include/c++/15/tr1/legendre_function.tcc \
-  /usr/include/c++/15/tr1/modified_bessel_func.tcc \
-  /usr/include/c++/15/tr1/poly_hermite.tcc \
-  /usr/include/c++/15/tr1/poly_laguerre.tcc \
-  /usr/include/c++/15/tr1/riemann_zeta.tcc \
-  /usr/include/c++/15/tr1/special_function_util.h \
   /usr/include/c++/15/tuple \
   /usr/include/c++/15/type_traits \
   /usr/include/c++/15/typeinfo \
-  /usr/include/c++/15/unordered_map \
   /usr/include/c++/15/utility \
   /usr/include/c++/15/variant \
   /usr/include/c++/15/vector \

@@ -72,7 +72,7 @@ external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/timestamp: /usr/lib/qt6
 external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/timestamp: /usr/lib/qt6/libexec/uic
 external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/timestamp: external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/mnt/d/Code/flavortown/Before_Effects/linux_build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target screenshot_bin"
-	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/cmake -E cmake_autogen /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/AutogenInfo.json ""
+	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/cmake -E cmake_autogen /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/AutogenInfo.json Release
 	cd /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery && /usr/bin/cmake -E touch /mnt/d/Code/flavortown/Before_Effects/linux_build/external/Qt-Color-Widgets/gallery/screenshot_bin_autogen/timestamp
 
 external/Qt-Color-Widgets/gallery/CMakeFiles/screenshot_bin_autogen.dir/codegen:
