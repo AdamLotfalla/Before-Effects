@@ -29,18 +29,21 @@ public:
     };
 
     bool isSelected_ = false;
+    bool isExpanded_ = false;
     bool isValid() const {return relatedPath_ != nullptr;}
     path* relatedPath_ = nullptr;
 
 private:
-    int height_;
+    int layerHeight_;
+    int keyframeLayerHeight_ = 24;
     void paintEvent(QPaintEvent* event) override;
+    void mousePressEvent(QMouseEvent* event);
 };
 
-class TimeIndicator : public QWidget{
+class TimeCursor : public QWidget{
     Q_OBJECT
 public:
-    TimeIndicator(QWidget* parent);
+    TimeCursor(QWidget* parent);
 
     void MoveCenter(int x, int y = 20);
 
@@ -49,11 +52,11 @@ private:
     void paintEvent(QPaintEvent* event);
 };
 
-class TimeIndicatorBar : public QWidget{   
+class TickBar : public QWidget{   
     Q_OBJECT
 public:
-    TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame);
-    TimeIndicator* timeIndicator_;
+    TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame);
+    TimeCursor* timeIndicator_;
     QWidget* LBound;
     QWidget* RBound;
     
@@ -125,7 +128,7 @@ class Timeline : public QWidget{
 public:
     Timeline(QWidget *parent, int *frameRate);
 
-    TimeIndicatorBar* timeIndicatorBar;
+    TickBar* tickBar;
     int* currentFrame_ = new int(0);
     bool playing_ = false;
 
@@ -140,9 +143,9 @@ private:
     int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
     int layerHeight_ = 50;
-    QWidget* layerPanel_;
+    QWidget* layerLeftPanel_;
     QHBoxLayout* timelineSplitterLayout_;
-    QVBoxLayout* layersLayout_;
+    QVBoxLayout* leftPanelLayout_;
     QString theme_;
     QScrollArea* scroller;
     QToolButton* playButton;
@@ -151,7 +154,7 @@ private:
     void playButtonClickEvent();
     
 public slots:
-    void updateLayers();
+    void onLayersUpdate();
     void updateSelectedLayer(path* p);
 
 private slots:

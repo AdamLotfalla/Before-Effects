@@ -137,10 +137,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QObject::connect(viewPort_, &viewPort::attributePanelUpdateNeeded, LPanel, &AttributePanelWidget::showObject);
     QObject::connect(viewPort_, &viewPort::pathCreated, TimelinePanel_, &Timeline::addLayer);
     QObject::connect(viewPort_, &viewPort::pathDeleted, TimelinePanel_, &Timeline::removeLayer);
-    QObject::connect(viewPort_, &viewPort::layerInfoUpdated, TimelinePanel_, &Timeline::updateLayers);
-    QObject::connect(viewPort_, &viewPort::layerSelected, TimelinePanel_, &Timeline::updateSelectedLayer);
+    QObject::connect(viewPort_, &viewPort::updateLayers, TimelinePanel_, &Timeline::onLayersUpdate);
+    QObject::connect(viewPort_, &viewPort::selectLayer, TimelinePanel_, &Timeline::updateSelectedLayer);
     QObject::connect(TimelinePanel_, &Timeline::frameChanged, viewPort_, &viewPort::onFrameChanged);
     QObject::connect(TimelinePanel_, &Timeline::optimize, viewPort_, &viewPort::optimize);
+
+    selectionTool(true);
+    viewPort_->createTestPath();
 }
 
 MainWindow::~MainWindow()
@@ -186,13 +189,13 @@ void MainWindow::exportAnimation()
         "Export Animation", QDir::homePath(), "MP4 Video (*.mp4)");
     if (savePath.isEmpty()) return;
 
-    if (!TimelinePanel_ || !TimelinePanel_->timeIndicatorBar || !viewPort_) {
+    if (!TimelinePanel_ || !TimelinePanel_->tickBar || !viewPort_) {
         QMessageBox::critical(this, "Error", "Timeline or Viewport not initialized.");
         return;
     }
 
-    int startFrame  = TimelinePanel_->timeIndicatorBar->getLBound();
-    int endFrame    = TimelinePanel_->timeIndicatorBar->getRBound();
+    int startFrame  = TimelinePanel_->tickBar->getLBound();
+    int endFrame    = TimelinePanel_->tickBar->getRBound();
     int totalFrames = (endFrame - startFrame) + 1;
 
     if (totalFrames <= 0) {

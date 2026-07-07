@@ -400,6 +400,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::map<int, qreal> strokeWidthFrames;
     std::map<int, QColor> fillColorFrames;
     std::map<int, QColor> strokeColorFrames;
+
     
     
     QRectF ULHandle, DLHandle, URHandle, DRHandle; //corner scale
@@ -468,7 +469,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::function<void(qreal, qreal)> onScaleChanged;
     std::function<void(qreal)> onRotationChanged;
     signals:
-    void layerInfoUpdated();
+    void updateLayers();
     void updateSpinBoxes(bool xposF, bool yposF, bool xpivotF, bool ypivotF, 
                          bool rotationF, bool xscaleF, bool yscaleF, 
                          bool RfillF, bool GfillF, bool BfillF, bool AfillF,
@@ -486,6 +487,8 @@ class viewPort : public QGraphicsView{
     void enableSelectionTool(bool state);
     void enableNodeTool(bool state);
     void enableBezierTool(bool state);
+    void createTestPath();
+
 
     void setSelectedPath(path* newSelectedPath = nullptr, bool state = true, bool hideAttributePanel = false);
     void setPathEditingMode(bool state);
@@ -569,8 +572,8 @@ signals:
     void attributePanelUpdateNeeded(AttributePanel* obj);
     void pathCreated(path* p);
     void pathDeleted(path* p);
-    void layerInfoUpdated();
-    void layerSelected(path* p);
+    void updateLayers();
+    void selectLayer(path* p);
     void frameChanged();
     void optimizeSignal(bool state);
     void supressKeyframesSignal(bool state);

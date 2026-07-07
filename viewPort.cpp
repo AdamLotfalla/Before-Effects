@@ -915,6 +915,47 @@ void path::makeDirty()
     needTransformUpdate_ = true;
 }
 
+void viewPort::createTestPath()
+{
+    QPointF points[4] = {{400,400}, {400,800}, {800,800}, {800,400}};
+    QVector<QVector<int>> edges = {{1}, {2}, {3}, {0}};
+    QVector<node*> defaultPathNodes;
+    for(auto i : points){
+        node* temporaryNode = new node(i);
+        defaultPathNodes.push_back(temporaryNode);
+    }
+    path* testPath = new path(defaultPathNodes, edges, canvas_, &inPathEditingMode_, currentFrame_);
+    testPath->setDrawingMode(true);
+    setSelectedPath(testPath, true, true);
+
+    testPath->connect(testPath, &path::updateLayers, [this](){
+        emit updateLayers();
+    });
+    testPath->connect(this, &viewPort::supressKeyframesSignal, testPath, &path::supressKeyframeWrite);
+    connect(this, &viewPort::optimizeSignal, testPath, &path::optimize);
+    
+    testPath->clearPreviewPoint();
+    testPath->setDrawingMode(false);
+    testPath->showSnapMargin(false);
+    
+    
+    testPath->calculateBoundaries();
+    testPath->position_ = {(testPath->minX_ + testPath->maxX_)/2.0, (testPath->minY_ + testPath->maxY_)/2.0};
+
+    testPath->xPositionFrames[3] = 600;
+    testPath->xPositionFrames[17] = 1200;
+
+    testPath->rotationFrames[7] = 90;
+    testPath->yScaleFrames[11] = 1;
+
+    testPath->update();
+    paths_.push_back(testPath);
+    emit pathCreated(testPath);
+    emit attributePanelUpdateNeeded(testPath);
+    emit updateLayers();
+    scene_->update();
+}
+
 QWidget *path::createAttributeWidget(QWidget *parent)
 {
     //use cached panel everytime except for the first time
@@ -944,7 +985,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     nameEdit->connect(nameEdit, &QLineEdit::editingFinished, [this, nameEdit](){
         name_ = nameEdit->text();
         update();
-        emit layerInfoUpdated();
+        emit updateLayers();
     });
     // nameEdit->connect(nameEdit, &QLineEdit::editingFinished, &Timeline::updateLayers);
 
@@ -2088,6 +2129,7 @@ viewPort::viewPort(QWidget* parent, int* frame): QGraphicsView(parent)
     
     scene_->addItem(canvas_);    
     canvas_->setPos((scene_->width() - canvasWidth) /2, (scene_->height() - canvasHeight)/2);
+
 }
 
 void viewPort::enableSelectionTool(bool state)
@@ -2126,7 +2168,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
             selectedPath_ = nullptr;
         }
         emit attributePanelUpdateNeeded(nullptr); // ← notify panel: nothing selected
-        emit layerSelected(nullptr);
+        emit selectLayer(nullptr);
         return;
     }
 
@@ -2137,7 +2179,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         }
 
         if(selectedPath_ != newSelectedPath){
-            emit layerInfoUpdated(); //for highlighting
+            emit updateLayers(); //for highlighting
         }
 
         if(selectedPath_ != newSelectedPath && !hideAttributePanel){
@@ -2148,7 +2190,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         selectedPath_->setSelected(true);
         selectedPath_->update();
 
-        emit layerSelected(selectedPath_);
+        emit selectLayer(selectedPath_);
     }
     else{
         if(selectedPath_ != nullptr){
@@ -2157,7 +2199,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
             selectedPath_ = nullptr;
         }
         emit attributePanelUpdateNeeded(nullptr);
-        emit layerSelected(nullptr);
+        emit selectLayer(nullptr);
     }
 }
 
@@ -2202,8 +2244,8 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath->setDrawingMode(true);
             setSelectedPath(currentPath, true, true);
 
-            currentPath->connect(currentPath, &path::layerInfoUpdated, [this](){
-                emit layerInfoUpdated();
+            currentPath->connect(currentPath, &path::updateLayers, [this](){
+                emit updateLayers();
             });
             currentPath->connect(this, &viewPort::supressKeyframesSignal, currentPath, &path::supressKeyframeWrite);
             connect(this, &viewPort::optimizeSignal, currentPath, &path::optimize);
@@ -2235,7 +2277,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
                 emit attributePanelUpdateNeeded(currentPath);
-                emit layerInfoUpdated();
+                emit updateLayers();
             }
             else{
                 currentPath->addPoint(pointToAdd);

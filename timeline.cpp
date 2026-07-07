@@ -2,9 +2,9 @@
 
 Layer::Layer(QWidget* parent, path *p, int height) : QWidget(parent)
 {
-    height_ = height;
+    layerHeight_ = height;
     relatedPath_ = p;
-    this->setFixedHeight(height_);
+    this->setMinimumHeight(layerHeight_);
 
     setAutoFillBackground(false);
 }
@@ -16,29 +16,113 @@ void Layer::paintEvent(QPaintEvent *event)
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
 
     if(isSelected_)
-        painter.setBrush(QColor("#55504a"));
+        painter.setBrush(QColor("#585547"));
     else
         painter.setBrush(QColor("#444444"));
     painter.setPen(Qt::NoPen);
-
-    painter.drawRoundedRect(0,0, this->width(), height_, 2, 2);
+    
+    QPainterPath closedExpantionArrow;
+    closedExpantionArrow.moveTo(12, (layerHeight_ - 8) / 2.0); //13.5
+    closedExpantionArrow.lineTo(17,layerHeight_ / 2.0); //17.5
+    closedExpantionArrow.lineTo(12, layerHeight_ - (layerHeight_ - 8) / 2.0); //21.5
+    
+    QPainterPath openExpantionArrow;
+    openExpantionArrow.moveTo(10, (layerHeight_ - 5) / 2.0);
+    openExpantionArrow.lineTo(14, 5 + (layerHeight_ - 5) / 2.0);
+    openExpantionArrow.lineTo(18, (layerHeight_ - 5) / 2.0);
+    
+    
+    painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
     painter.setPen(QPen("#FFFFFF"));
-    painter.drawText(20,0, this->width(), height_, Qt::AlignVCenter, relatedPath_->name_);
+    painter.drawText(30,0, this->width() - 30, layerHeight_, Qt::AlignVCenter, relatedPath_->name_);
+    
+    
+    
+    
+    if(relatedPath_ && isExpanded_){
+        int counter = 0;
+
+        painter.setPen(QPen("#FFFFFF"));
+        painter.drawPath(openExpantionArrow);
+        
+        std::array<bool, 10> hasFrames = {
+            !relatedPath_->xPositionFrames.empty(),
+            !relatedPath_->yPositionFrames.empty(),
+            !relatedPath_->xScaleFrames.empty(),
+            !relatedPath_->yScaleFrames.empty(),
+            !relatedPath_->rotationFrames.empty(),
+            !relatedPath_->xPivotFrames.empty(),
+            !relatedPath_->yPivotFrames.empty(),
+            !relatedPath_->strokeWidthFrames.empty(),
+            !relatedPath_->fillColorFrames.empty(),
+            !relatedPath_->strokeColorFrames.empty()
+        };
+        
+        int textBegin = 35, childBracketBegin = 14, childBracketEnd = 23; 
+        
+        for(int i = 0; i < hasFrames.size(); i++){
+            bool present = hasFrames[i];
+            if(!present) continue;
+            
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QColor("#373737"));
+            painter.drawRect(0, counter * keyframeLayerHeight_ + layerHeight_, this->width(), keyframeLayerHeight_);
+            
+            painter.setPen(QPen("#FFFFFF"));
+            QString keyframeText;
+            
+            switch (i)
+            {
+            case 0: keyframeText = "x-position";   break;
+            case 1: keyframeText = "y-position";   break;
+            case 2: keyframeText = "x-scale";      break;
+            case 3: keyframeText = "y-scale";      break;
+            case 4: keyframeText = "rotation";     break;
+            case 5: keyframeText = "x-pivot";      break;
+            case 6: keyframeText = "y-pivot";      break;
+            case 7: keyframeText = "stroke width"; break;
+            case 8: keyframeText = "fill color";   break;
+            case 9: keyframeText = "stroke color"; break;
+            }
+
+            painter.drawText(textBegin, counter * keyframeLayerHeight_ + layerHeight_ - 1, this->width() - textBegin, keyframeLayerHeight_, Qt::AlignVCenter, keyframeText);
+
+            painter.setPen(QPen(QBrush("#FFFFFF"), 1, Qt::DotLine));
+            painter.drawLine(childBracketBegin, counter * keyframeLayerHeight_ + layerHeight_ + 1, childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
+            painter.drawLine(childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_, childBracketEnd, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
+            counter++;
+        }
+
+        setFixedHeight(counter * keyframeLayerHeight_ + layerHeight_);
+    }
+    else if(relatedPath_ && !isExpanded_){
+        painter.drawPath(closedExpantionArrow);
+        setFixedHeight(layerHeight_);
+    }
 }
 
-TimeIndicator::TimeIndicator(QWidget *parent) : QWidget(parent)
+void Layer::mousePressEvent(QMouseEvent *event)
+{
+    if(event->pos().x() <= 30){
+        isExpanded_ = !isExpanded_;
+        update();
+        updateGeometry();
+    }
+}
+
+TimeCursor::TimeCursor(QWidget *parent) : QWidget(parent)
 {
     setAttribute(Qt::WA_TranslucentBackground);
     setStyleSheet("background: transparent;");
 }
 
-void TimeIndicator::MoveCenter(int x, int y)
+void TimeCursor::MoveCenter(int x, int y)
 {
     this->move(x - IndicatorWidth_/2, y);
     update();
 }
 
-void TimeIndicator::paintEvent(QPaintEvent *event)
+void TimeCursor::paintEvent(QPaintEvent *event)
 {
     int centerX = IndicatorWidth_/2;
     QPainter painter(this);
@@ -66,7 +150,7 @@ void TimeIndicator::paintEvent(QPaintEvent *event)
 }
 
 // ----------------------- INDICATOR BAR -----------------------
-TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame){
+TickBar::TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame){
     //TEMPORARY
     currentFrame_ = currentFrame;
     
@@ -83,7 +167,7 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
     resize(fullWidth_, fullHeight_);
     setMouseTracking(true);
 
-    timeIndicator_ = new TimeIndicator(this);
+    timeIndicator_ = new TimeCursor(this);
     timeIndicator_->show();
     setAttribute(Qt::WA_TranslucentBackground);
     setStyleSheet("background: transparent;");
@@ -105,24 +189,24 @@ TimeIndicatorBar::TimeIndicatorBar(QWidget* parent, int *frameRate, int *frameWi
 
 
 
-    connect(this, &TimeIndicatorBar::tickBarClickedSignal,
-            this, &TimeIndicatorBar::onTickBarClick);
-    connect(this, &TimeIndicatorBar::tickBarUnClickedSignal,
-            this, &TimeIndicatorBar::onTickBarUnClick);
-    connect(this, &TimeIndicatorBar::LBoundClickedSignal,
-            this, &TimeIndicatorBar::onLBoundClick);
-    connect(this, &TimeIndicatorBar::LBoundUnClickedSignal,
-            this, &TimeIndicatorBar::onLBoundUnClick);
-    connect(this, &TimeIndicatorBar::RBoundClickedSignal,
-            this, &TimeIndicatorBar::onRBoundClick);
-    connect(this, &TimeIndicatorBar::RBoundUnClickedSignal,
-            this, &TimeIndicatorBar::onRBoundUnClick);
+    connect(this, &TickBar::tickBarClickedSignal,
+            this, &TickBar::onTickBarClick);
+    connect(this, &TickBar::tickBarUnClickedSignal,
+            this, &TickBar::onTickBarUnClick);
+    connect(this, &TickBar::LBoundClickedSignal,
+            this, &TickBar::onLBoundClick);
+    connect(this, &TickBar::LBoundUnClickedSignal,
+            this, &TickBar::onLBoundUnClick);
+    connect(this, &TickBar::RBoundClickedSignal,
+            this, &TickBar::onRBoundClick);
+    connect(this, &TickBar::RBoundUnClickedSignal,
+            this, &TickBar::onRBoundUnClick);
 
     
     update();
 }
 
-void TimeIndicatorBar::paintEvent(QPaintEvent *event)
+void TickBar::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QPen pen;
@@ -297,17 +381,17 @@ void TimeIndicatorBar::paintEvent(QPaintEvent *event)
 
 }
 
-int TimeIndicatorBar::getRBound()
+int TickBar::getRBound()
 {
     return RBoundFrame_;
 }
 
-int TimeIndicatorBar::getLBound()
+int TickBar::getLBound()
 {
     return LBoundFrame_;
 }
 
-void TimeIndicatorBar::addLayer(path* p, QWidget* parent)
+void TickBar::addLayer(path* p, QWidget* parent)
 {
     setActiveLayer(nullptr);
     Layer* addedLayer = new Layer(parent, p, layerHeight_);
@@ -315,7 +399,7 @@ void TimeIndicatorBar::addLayer(path* p, QWidget* parent)
     setActiveLayer(addedLayer);
 }
 
-void TimeIndicatorBar::removeLayer(path *p)
+void TickBar::removeLayer(path *p)
 {
     setActiveLayer(nullptr);
     for(auto i = 0; i < layers_.size(); i++){
@@ -328,12 +412,12 @@ void TimeIndicatorBar::removeLayer(path *p)
     }
 }
 
-Layer *TimeIndicatorBar::getActiveLayer()
+Layer *TickBar::getActiveLayer()
 {
     return activeLayer_;
 }
 
-Layer* TimeIndicatorBar::accessLayer(int index)
+Layer* TickBar::accessLayer(int index)
 {
     if(index < layers_.size())
         return layers_[index];
@@ -341,7 +425,7 @@ Layer* TimeIndicatorBar::accessLayer(int index)
         return nullptr;
 }
 
-void TimeIndicatorBar::setActiveLayer(Layer *l)
+void TickBar::setActiveLayer(Layer *l)
 {
     if(activeLayer_ != nullptr){
         activeLayer_->isSelected_ = false;
@@ -355,17 +439,17 @@ void TimeIndicatorBar::setActiveLayer(Layer *l)
     }
 }
 
-int TimeIndicatorBar::getLayerCount()
+int TickBar::getLayerCount()
 {
     return layers_.size();
 }
 
-int TimeIndicatorBar::getTopBarHeight()
+int TickBar::getTopBarHeight()
 {
     return tickLayerHeight_ + boundLayerHeight_;
 }
 
-void TimeIndicatorBar::onTickBarClick(QPoint pos)
+void TickBar::onTickBarClick(QPoint pos)
 {
     barClicked_ = true;
     repaint();
@@ -385,7 +469,7 @@ void TimeIndicatorBar::onTickBarClick(QPoint pos)
     emit frameChanged();
 }
 
-void TimeIndicatorBar::mousePressEvent(QMouseEvent *event)
+void TickBar::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton){
         int x = event->pos().x();
@@ -412,7 +496,7 @@ void TimeIndicatorBar::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
 }
 
-void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
+void TickBar::mouseMoveEvent(QMouseEvent *event)
 {
     int frame = round((event->pos().x() - offset_) / (float)*frameWidth_);
     frame = qBound(0, frame, *frameCount_);
@@ -441,7 +525,7 @@ void TimeIndicatorBar::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 
-void TimeIndicatorBar::mouseReleaseEvent(QMouseEvent *event)
+void TickBar::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton){
         emit tickBarUnClickedSignal();
@@ -450,32 +534,32 @@ void TimeIndicatorBar::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void TimeIndicatorBar::onTickBarUnClick()
+void TickBar::onTickBarUnClick()
 {
     barClicked_ = false;
 }
 
-void TimeIndicatorBar::onLBoundClick(QPoint pos)
+void TickBar::onLBoundClick(QPoint pos)
 {
     LBoundClicked_ = true;
 }
 
-void TimeIndicatorBar::onLBoundUnClick()
+void TickBar::onLBoundUnClick()
 {
     LBoundClicked_ = false;
 }
 
-void TimeIndicatorBar::onRBoundClick(QPoint pos)
+void TickBar::onRBoundClick(QPoint pos)
 {
     RBoundClicked_ = true;
 }
 
-void TimeIndicatorBar::onRBoundUnClick()
+void TickBar::onRBoundUnClick()
 {
     RBoundClicked_ = false;
 }
 
-void TimeIndicatorBar::resizeEvent(QResizeEvent *event)
+void TickBar::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 
@@ -490,7 +574,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     frameRate_ = frameRate;
     theme_= "Dark";
-    this->setPalette(QPalette(QColor("#333333")));
+    this->setPalette(QPalette(QColor("#292929")));
 
     QWidget* toolbar = new QWidget(this);
     toolbar->setFixedHeight(25);
@@ -574,28 +658,28 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
                      this, &Timeline::playButtonClickEvent);
 
     QObject::connect(goToStartButton, &QToolButton::pressed, [this](){
-        *currentFrame_ = timeIndicatorBar->getLBound();
-        timeIndicatorBar->update();
+        *currentFrame_ = tickBar->getLBound();
+        tickBar->update();
         emit frameChanged();
     });
 
     QObject::connect(goToEndButton, &QToolButton::pressed, [this](){
-        *currentFrame_ = timeIndicatorBar->getRBound();
-        timeIndicatorBar->update();
+        *currentFrame_ = tickBar->getRBound();
+        tickBar->update();
         emit frameChanged();
     });
 
     QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
-        if(*currentFrame_ < timeIndicatorBar->getRBound())
+        if(*currentFrame_ < tickBar->getRBound())
             (*currentFrame_) ++;
-        timeIndicatorBar->update();
+        tickBar->update();
         emit frameChanged();
     });
 
     QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
-        if(*currentFrame_ > timeIndicatorBar->getLBound())
+        if(*currentFrame_ > tickBar->getLBound())
             (*currentFrame_) --;
-        timeIndicatorBar->update();
+        tickBar->update();
         emit frameChanged();
     });
 
@@ -614,34 +698,34 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     toolBarLayout->addWidget(zoomInButton);
 
     timelineSplitterLayout_ = new QHBoxLayout();
-    layerPanel_ = new QWidget(this);
-    layerPanel_->setMinimumWidth(175);
-    layersLayout_ = new QVBoxLayout(layerPanel_);
-    layerPanel_->setLayout(layersLayout_);
+    layerLeftPanel_ = new QWidget(this);
+    layerLeftPanel_->setMinimumWidth(175);
+    leftPanelLayout_ = new QVBoxLayout(layerLeftPanel_);
+    layerLeftPanel_->setLayout(leftPanelLayout_);
 
     scroller = new QScrollArea(this);
 
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    QVBoxLayout* verticalLayout = new QVBoxLayout(this); //to put toolbar on top
     verticalLayout->setContentsMargins(0,0,0,0);
     verticalLayout->setSpacing(0);
     verticalLayout->addWidget(toolbar);
     verticalLayout->addLayout(timelineSplitterLayout_);
 
-    timelineSplitterLayout_->addWidget(layerPanel_);
+    timelineSplitterLayout_->addWidget(layerLeftPanel_);
     timelineSplitterLayout_->addWidget(scroller);
 
     frameWidth_ = 5 * zoomSlider->value();
-    timeIndicatorBar = new TimeIndicatorBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), currentFrame_);
-    timeIndicatorBar->show();
+    tickBar = new TickBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), currentFrame_);
+    tickBar->show();
 
-    layersLayout_->setContentsMargins(0,0,0,0);
-    layersLayout_->setSpacing(1);
-    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
-    layersLayout_->addStretch();
+    leftPanelLayout_->setContentsMargins(0,0,0,0);
+    leftPanelLayout_->setSpacing(1);
+    leftPanelLayout_->addSpacing(tickBar->getTopBarHeight());
+    leftPanelLayout_->addStretch();
 
-    scroller->setWidget(timeIndicatorBar);
+    scroller->setWidget(tickBar);
 
-    connect(timeIndicatorBar, &TimeIndicatorBar::frameChanged, this, [this](){
+    connect(tickBar, &TickBar::frameChanged, this, [this](){
         emit frameChanged();
     });
 
@@ -650,15 +734,15 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
 void Timeline::step()
 {   
-    if(*currentFrame_ < timeIndicatorBar->getLBound() || *currentFrame_ == timeIndicatorBar->getRBound())
-        *currentFrame_ = timeIndicatorBar->getLBound();
-    else if(*currentFrame_ < timeIndicatorBar->getRBound()) 
+    if(*currentFrame_ < tickBar->getLBound() || *currentFrame_ == tickBar->getRBound())
+        *currentFrame_ = tickBar->getLBound();
+    else if(*currentFrame_ < tickBar->getRBound()) 
         (*currentFrame_) ++;
     else
-        *currentFrame_ = timeIndicatorBar->getRBound();
+        *currentFrame_ = tickBar->getRBound();
 
     emit frameChanged();
-    timeIndicatorBar->update();
+    tickBar->update();
     update();
 }
 
@@ -670,60 +754,62 @@ void Timeline::setTheme(QString theme)
 void Timeline::addLayer(path* p)
 {
     if(p != nullptr){
-        timeIndicatorBar->addLayer(p, layerPanel_);
-        Layer* newLayer = timeIndicatorBar->accessLayer(timeIndicatorBar->getLayerCount() - 1);
-        layersLayout_->insertWidget(1, newLayer);
+        tickBar->addLayer(p, layerLeftPanel_);
+        Layer* newLayer = tickBar->accessLayer(tickBar->getLayerCount() - 1);
+        leftPanelLayout_->insertWidget(1, newLayer);
         newLayer->show();
 
-        timeIndicatorBar->update();
+        tickBar->update();
     }
 }
 
 void Timeline::removeLayer(path *p)
 {
     if(p != nullptr){
-        timeIndicatorBar->removeLayer(p);
-        updateLayers();
+        tickBar->removeLayer(p);
+        onLayersUpdate();
         update();
     }
 }
 
-void Timeline::updateLayers()
+void Timeline::onLayersUpdate()
 {
-    if (layersLayout_) {
+    if (leftPanelLayout_) {
        QLayoutItem *item;
-        while ((item = layersLayout_->takeAt(0)) != nullptr) {
+        while ((item = leftPanelLayout_->takeAt(0)) != nullptr) {
             if (QWidget *widget = item->widget()) {
                 widget->hide();
             }
             delete item;
         }
-        // delete layersLayout_;
+        // delete leftPanelLayout_;
     }
     else{
-        layersLayout_ = new QVBoxLayout(layerPanel_);
-        layersLayout_->setContentsMargins(0,0,0,0);
-        layersLayout_->setSpacing(0);
+        leftPanelLayout_ = new QVBoxLayout(layerLeftPanel_);
+        leftPanelLayout_->setContentsMargins(0,0,0,0);
+        leftPanelLayout_->setSpacing(0);
     }
 
-    layersLayout_->addSpacing(timeIndicatorBar->getTopBarHeight());
-    for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
-        Layer* temporaryLayer = timeIndicatorBar->accessLayer(i);
+    leftPanelLayout_->addSpacing(tickBar->getTopBarHeight());
+    for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
+        Layer* temporaryLayer = tickBar->accessLayer(i);
         if(temporaryLayer){
-            if(temporaryLayer == timeIndicatorBar->getActiveLayer()){
+            if(temporaryLayer == tickBar->getActiveLayer()){
                 temporaryLayer->isSelected_ = true;
             }
             temporaryLayer->update();
-            layersLayout_->addWidget(temporaryLayer);
+            leftPanelLayout_->addWidget(temporaryLayer);
         }
     }
 
     
-    layersLayout_->addStretch();
-    for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
-        timeIndicatorBar->accessLayer(i)->show();
+    leftPanelLayout_->addStretch();
+    for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
+        tickBar->accessLayer(i)->show();
     }
-    layerPanel_->update();
+    
+    for(auto layer : layers_)
+    layerLeftPanel_->update();
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -734,7 +820,7 @@ void Timeline::zoomSliderChanged(int value)
 
     // --- compute OLD content position ---
     int oldOffset =
-        (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
+        (tickBar->width() - frameCount_ * frameWidth_) / 2;
 
     int oldContentX =
         oldOffset + *currentFrame_ * frameWidth_;
@@ -748,14 +834,14 @@ void Timeline::zoomSliderChanged(int value)
     // --- apply zoom ---
     frameWidth_ = newFrameWidth;
 
-    timeIndicatorBar->resize(
+    tickBar->resize(
         qMax(frameCount_ * frameWidth_ + 235, width() - 4),
         scroller->viewport()->height()
     );
 
     // --- compute NEW content position ---
     int newOffset =
-        (timeIndicatorBar->width() - frameCount_ * frameWidth_) / 2;
+        (tickBar->width() - frameCount_ * frameWidth_) / 2;
 
     int newContentX =
         newOffset + *currentFrame_ * frameWidth_;
@@ -767,16 +853,16 @@ void Timeline::zoomSliderChanged(int value)
     scroller->horizontalScrollBar()->setValue(newScroll);
 
     update();
-    timeIndicatorBar->update();
+    tickBar->update();
 }
 
 void Timeline::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 
-    if (timeIndicatorBar)
+    if (tickBar)
     {
-        timeIndicatorBar->resize(
+        tickBar->resize(
             qMax(frameCount_ * frameWidth_ + 235, width() - 4),
             scroller->viewport()->height()
         );
@@ -800,17 +886,17 @@ void Timeline::playButtonClickEvent()
 void Timeline::updateSelectedLayer(path *p)
 {
     if(p == nullptr){
-        timeIndicatorBar->setActiveLayer(nullptr);
-        updateLayers();
+        tickBar->setActiveLayer(nullptr);
+        onLayersUpdate();
         return;
     }
 
-    for(int i = timeIndicatorBar->getLayerCount() - 1; i >= 0; i--){
-        if(timeIndicatorBar->accessLayer(i)->relatedPath_ == p){
-            timeIndicatorBar->setActiveLayer(timeIndicatorBar->accessLayer(i));
+    for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
+        if(tickBar->accessLayer(i)->relatedPath_ == p){
+            tickBar->setActiveLayer(tickBar->accessLayer(i));
             break;
         }
     }
 
-    updateLayers();
+    onLayersUpdate();
 }
