@@ -808,7 +808,6 @@ void Timeline::onLayersUpdate()
         tickBar->accessLayer(i)->show();
     }
     
-    for(auto layer : layers_)
     layerLeftPanel_->update();
 }
 
