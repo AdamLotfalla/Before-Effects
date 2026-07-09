@@ -164,7 +164,7 @@ TickBar::TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCou
     RBoundFrame_ = *frameCount_;
     LBoundFrame_ = 0;
 
-    resize(fullWidth_, fullHeight_);
+    setFixedSize(fullWidth_, fullHeight_);
     setMouseTracking(true);
 
     timeIndicator_ = new TimeCursor(this);
@@ -300,82 +300,6 @@ void TickBar::paintEvent(QPaintEvent *event)
     timeIndicator_->MoveCenter(offset_ + *currentFrame_ * *frameWidth_);
 
 
-    // draw layers
-    painter.setPen(Qt::NoPen);
-
-    QPainterPath Rhombus;
-    Rhombus.moveTo(5,0);
-    Rhombus.lineTo(10,5);
-    Rhombus.lineTo(5,10);
-    Rhombus.lineTo(0,5);
-    Rhombus.closeSubpath();
-    
-    for(int i = 0; i < layers_.size(); i++){
-
-        int visualRow = layers_.size() - 1 - i;
-
-        if(visualRow % 2 == 0){
-            painter.setBrush(QColor("#292929"));
-        }
-        else{
-            painter.setBrush(QColor("#313131"));
-        }
-        
-        painter.drawRoundedRect(LBound->x() + boundHandleThickness, getTopBarHeight() + visualRow * layerHeight_, RBound->x() - LBound->x() - boundHandleThickness, layerHeight_, 2, 2); 
-
-        // draw keyframes
-        painter.setBrush(QBrush("#7BC7B0"));
-        for(auto j : layers_[i]->relatedPath_->xPositionFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->yPositionFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->xPivotFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->yPivotFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->xScaleFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->yScaleFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->rotationFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->strokeWidthFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->fillColorFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : layers_[i]->relatedPath_->strokeColorFrames){
-            Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-        }
-    }
 
 
 
@@ -391,58 +315,58 @@ int TickBar::getLBound()
     return LBoundFrame_;
 }
 
-void TickBar::addLayer(path* p, QWidget* parent)
-{
-    setActiveLayer(nullptr);
-    Layer* addedLayer = new Layer(parent, p, layerHeight_);
-    layers_.push_back(addedLayer);
-    setActiveLayer(addedLayer);
-}
+// void TickBar::addLayer(path* p, QWidget* parent)
+// {
+//     setActiveLayer(nullptr);
+//     Layer* addedLayer = new Layer(parent, p, layerHeight_);
+//     layers_.push_back(addedLayer);
+//     setActiveLayer(addedLayer);
+// }
 
-void TickBar::removeLayer(path *p)
-{
-    setActiveLayer(nullptr);
-    for(auto i = 0; i < layers_.size(); i++){
-        if(layers_[i]->relatedPath_ == p){
-            Layer* layerToRemove = layers_[i];
-            layers_.remove(i);
-            delete layerToRemove;
-            break;
-        }
-    }
-}
+// void TickBar::removeLayer(path *p)
+// {
+//     setActiveLayer(nullptr);
+//     for(auto i = 0; i < layers_.size(); i++){
+//         if(layers_[i]->relatedPath_ == p){
+//             Layer* layerToRemove = layers_[i];
+//             layers_.remove(i);
+//             delete layerToRemove;
+//             break;
+//         }
+//     }
+// }
 
-Layer *TickBar::getActiveLayer()
-{
-    return activeLayer_;
-}
+// Layer *TickBar::getActiveLayer()
+// {
+//     return activeLayer_;
+// }
 
-Layer* TickBar::accessLayer(int index)
-{
-    if(index < layers_.size())
-        return layers_[index];
-    else
-        return nullptr;
-}
+// Layer* TickBar::accessLayer(int index)
+// {
+//     if(index < layers_.size())
+//         return layers_[index];
+//     else
+//         return nullptr;
+// }
 
-void TickBar::setActiveLayer(Layer *l)
-{
-    if(activeLayer_ != nullptr){
-        activeLayer_->isSelected_ = false;
-        activeLayer_->update();
-    }
-    activeLayer_ = l;
+// void TickBar::setActiveLayer(Layer *l)
+// {
+//     if(activeLayer_ != nullptr){
+//         activeLayer_->isSelected_ = false;
+//         activeLayer_->update();
+//     }
+//     activeLayer_ = l;
 
-    if(activeLayer_ != nullptr){
-        activeLayer_->isSelected_ = true;
-        activeLayer_->update();
-    }
-}
+//     if(activeLayer_ != nullptr){
+//         activeLayer_->isSelected_ = true;
+//         activeLayer_->update();
+//     }
+// }
 
-int TickBar::getLayerCount()
-{
-    return layers_.size();
-}
+// int TickBar::getLayerCount()
+// {
+//     return layers_.size();
+// }
 
 int TickBar::getTopBarHeight()
 {
@@ -683,53 +607,127 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
         emit frameChanged();
     });
 
-    QHBoxLayout* toolBarLayout = new QHBoxLayout(toolbar);
-    toolBarLayout->setContentsMargins(0,0,0,0);
-    toolBarLayout->setSpacing(5);
-    toolBarLayout->addStretch();
-    toolBarLayout->addWidget(goToStartButton);
-    toolBarLayout->addWidget(previousFrameButton);
-    toolBarLayout->addWidget(playButton);
-    toolBarLayout->addWidget(nextFrameButton);
-    toolBarLayout->addWidget(goToEndButton);
-    toolBarLayout->addStretch();
-    toolBarLayout->addWidget(zoomOutButton);
-    toolBarLayout->addWidget(zoomSlider, 0, Qt::AlignVCenter);
-    toolBarLayout->addWidget(zoomInButton);
-
-    timelineSplitterLayout_ = new QHBoxLayout();
-    layerLeftPanel_ = new QWidget(this);
-    layerLeftPanel_->setMinimumWidth(175);
-    leftPanelLayout_ = new QVBoxLayout(layerLeftPanel_);
-    layerLeftPanel_->setLayout(leftPanelLayout_);
-
-    scroller = new QScrollArea(this);
-
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this); //to put toolbar on top
-    verticalLayout->setContentsMargins(0,0,0,0);
-    verticalLayout->setSpacing(0);
-    verticalLayout->addWidget(toolbar);
-    verticalLayout->addLayout(timelineSplitterLayout_);
-
-    timelineSplitterLayout_->addWidget(layerLeftPanel_);
-    timelineSplitterLayout_->addWidget(scroller);
+    QHBoxLayout* toolBarHLayout = new QHBoxLayout(toolbar);
+    toolBarHLayout->setContentsMargins(0,0,0,0);
+    toolBarHLayout->setSpacing(5);
+    toolBarHLayout->addStretch();
+    toolBarHLayout->addWidget(goToStartButton);
+    toolBarHLayout->addWidget(previousFrameButton);
+    toolBarHLayout->addWidget(playButton);
+    toolBarHLayout->addWidget(nextFrameButton);
+    toolBarHLayout->addWidget(goToEndButton);
+    toolBarHLayout->addStretch();
+    toolBarHLayout->addWidget(zoomOutButton);
+    toolBarHLayout->addWidget(zoomSlider, 0, Qt::AlignVCenter);
+    toolBarHLayout->addWidget(zoomInButton);
 
     frameWidth_ = 5 * zoomSlider->value();
-    tickBar = new TickBar(scroller, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, scroller->viewport()->height(), currentFrame_);
+
+    /*
+    -----------------------------------------------------------------------------------------
+    | hierarchyPanel_                       |   keyframeHScroller_                          |
+    |   |_ hierarchyVLayout_                |       |_ keyframePanel_                       |
+    |       |_ spacer                       |           |_ keyframeVLayout_                 |
+    |       |_ hierarchyScroller_           |               |_ tickBar                      |
+    |           |_ hierarchyLayerPanel_     |               |_ keyframeVScroller_           |
+    |               |_ hierarchyLayerLayout |                   |_ keyframeLayerPanel_      |
+    |                   |_ layer(s)         |                       |_ keyframeLayerLayout_ |
+    -----------------------------------------------------------------------------------------
+    */
+
+    QSplitter* splitter = new QSplitter(Qt::Horizontal);
+    splitter->setHandleWidth(0);
+
+    
+    toolBarVLayout_ = new QVBoxLayout;
+    toolBarVLayout_->addWidget(toolbar);
+    toolBarVLayout_->addWidget(splitter);
+    toolBarVLayout_->setContentsMargins(0,0,0,0);
+    toolBarVLayout_->setSpacing(1);
+    
+    hierarchyPanel_ = new QWidget(this);
+    hierarchyPanel_->setMinimumWidth(200);
+    keyframeHScroller_ = new QScrollArea;
+    keyframeHScroller_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    keyframeHScroller_->setWidgetResizable(true);
+    
+    hierarchyScroller_ = new QScrollArea(hierarchyPanel_);
+    hierarchyScroller_->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    hierarchyScroller_->setWidgetResizable(true);
+    
+    keyframePanel_ = new QWidget;
+    tickBar = new TickBar(keyframePanel_, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, keyframeHScroller_->viewport()->height(), currentFrame_);
     tickBar->show();
+    keyframeHScroller_->setWidget(keyframePanel_);
+    
+    hierarchyVLayout_ = new QVBoxLayout;
+    hierarchyVLayout_->addSpacing(tickBar->getTopBarHeight());
+    hierarchyVLayout_->addWidget(hierarchyScroller_, 1);
+    hierarchyVLayout_->setContentsMargins(0,0,0,0);
+    hierarchyVLayout_->setSpacing(1);
+    
+    hierarchyPanel_->setLayout(hierarchyVLayout_);
 
-    leftPanelLayout_->setContentsMargins(0,0,0,0);
-    leftPanelLayout_->setSpacing(1);
-    leftPanelLayout_->addSpacing(tickBar->getTopBarHeight());
-    leftPanelLayout_->addStretch();
+    splitter->addWidget(hierarchyPanel_);
+    splitter->addWidget(keyframeHScroller_);
+    
+    hierarchyLayerPanel_ = new QWidget;
+    hierarchyLayerLayout_ = new QVBoxLayout;
+    hierarchyLayerPanel_->setLayout(hierarchyLayerLayout_);
+    hierarchyLayerPanel_->setAutoFillBackground(false);
+    hierarchyScroller_->setWidget(hierarchyLayerPanel_);
 
-    scroller->setWidget(tickBar);
+    keyframeVScroller_ = new QScrollArea;
+
+    keyframeVLayout_ = new QVBoxLayout;
+    keyframeVLayout_->addWidget(tickBar);
+    keyframeVLayout_->addWidget(keyframeVScroller_, 1);
+    keyframeVLayout_->setContentsMargins(0,0,0,0);
+    keyframeVLayout_->setSpacing(1);
+
+    keyframePanel_->setLayout(keyframeVLayout_);
+
+    keyframeLayerPanel_ = new QWidget;
+    keyframeVScroller_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    keyframeVScroller_->setWidget(keyframeLayerPanel_);
+
+
+    //temporary fixes
+    keyframeVScroller_->setWidgetResizable(true);
+    keyframeLayerPanel_->adjustSize();
+
+    hierarchyScroller_->setWidgetResizable(true);
+
+    keyframeLayerLayout_ = new QVBoxLayout;
+    keyframeLayerPanel_->setLayout(keyframeLayerLayout_);
+    updateKeyframeLayerPanelHeight();
+
+    // qDebug() << "viewport:"
+    //      << keyframeVScroller_->viewport()->height();
+
+    // qDebug() << "panel:"
+    //      << keyframeLayerPanel_->height();
+
+    // qDebug() << "layout size hint:"
+    //      << keyframeLayerLayout_->sizeHint().height();
+    
+    keyframeVScroller_->setStyleSheet("background:red;");
+    keyframeLayerPanel_->setStyleSheet("background:blue;");
+
+    //--------------
+    
+    // QWidget* testLayer = new QWidget(); //timelinecanvas to be adjusted on the new 3-scroller architecture
+    // testLayer->setFixedHeight(layerHeight_); 
+    
+
+
 
     connect(tickBar, &TickBar::frameChanged, this, [this](){
         emit frameChanged();
     });
 
-    // scroller->setWidgetResizable(true);
+    setLayout(toolBarVLayout_);
+    // tickBarScroller_->setWidgetResizable(true);
 }
 
 void Timeline::step()
@@ -753,62 +751,62 @@ void Timeline::setTheme(QString theme)
 
 void Timeline::addLayer(path* p)
 {
-    if(p != nullptr){
-        tickBar->addLayer(p, layerLeftPanel_);
-        Layer* newLayer = tickBar->accessLayer(tickBar->getLayerCount() - 1);
-        leftPanelLayout_->insertWidget(1, newLayer);
-        newLayer->show();
+//     if(p != nullptr){
+//         tickBar->addLayer(p, leftPanel_);
+//         Layer* newLayer = tickBar->accessLayer(tickBar->getLayerCount() - 1);
+//         leftPanelLayout_->insertWidget(1, newLayer);
+//         newLayer->show();
 
-        tickBar->update();
-    }
+//         tickBar->update();
+//     }
 }
 
 void Timeline::removeLayer(path *p)
 {
-    if(p != nullptr){
-        tickBar->removeLayer(p);
-        onLayersUpdate();
-        update();
-    }
+//     if(p != nullptr){
+//         tickBar->removeLayer(p);
+//         onLayersUpdate();
+//         update();
+//     }
 }
 
 void Timeline::onLayersUpdate()
 {
-    if (leftPanelLayout_) {
-       QLayoutItem *item;
-        while ((item = leftPanelLayout_->takeAt(0)) != nullptr) {
-            if (QWidget *widget = item->widget()) {
-                widget->hide();
-            }
-            delete item;
-        }
-        // delete leftPanelLayout_;
-    }
-    else{
-        leftPanelLayout_ = new QVBoxLayout(layerLeftPanel_);
-        leftPanelLayout_->setContentsMargins(0,0,0,0);
-        leftPanelLayout_->setSpacing(0);
-    }
+//     if (leftPanelLayout_) {
+//        QLayoutItem *item;
+//         while ((item = leftPanelLayout_->takeAt(0)) != nullptr) {
+//             if (QWidget *widget = item->widget()) {
+//                 widget->hide();
+//             }
+//             delete item;
+//         }
+//         // delete leftPanelLayout_;
+//     }
+//     else{
+//         leftPanelLayout_ = new QVBoxLayout(leftPanel_);
+//         leftPanelLayout_->setContentsMargins(0,0,0,0);
+//         leftPanelLayout_->setSpacing(0);
+//     }
 
-    leftPanelLayout_->addSpacing(tickBar->getTopBarHeight());
-    for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
-        Layer* temporaryLayer = tickBar->accessLayer(i);
-        if(temporaryLayer){
-            if(temporaryLayer == tickBar->getActiveLayer()){
-                temporaryLayer->isSelected_ = true;
-            }
-            temporaryLayer->update();
-            leftPanelLayout_->addWidget(temporaryLayer);
-        }
-    }
+//     leftPanelLayout_->addSpacing(tickBar->getTopBarHeight());
+//     for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
+//         Layer* temporaryLayer = tickBar->accessLayer(i);
+//         if(temporaryLayer){
+//             if(temporaryLayer == tickBar->getActiveLayer()){
+//                 temporaryLayer->isSelected_ = true;
+//             }
+//             temporaryLayer->update();
+//             leftPanelLayout_->addWidget(temporaryLayer);
+//         }
+//     }
 
     
-    leftPanelLayout_->addStretch();
-    for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
-        tickBar->accessLayer(i)->show();
-    }
+//     leftPanelLayout_->addStretch();
+//     for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
+//         tickBar->accessLayer(i)->show();
+//     }
     
-    layerLeftPanel_->update();
+//     leftPanel_->update();
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -825,7 +823,7 @@ void Timeline::zoomSliderChanged(int value)
         oldOffset + *currentFrame_ * frameWidth_;
 
     int oldScroll =
-        scroller->horizontalScrollBar()->value();
+        keyframeHScroller_->horizontalScrollBar()->value();
 
     int indicatorViewportX =
         oldContentX - oldScroll;
@@ -833,9 +831,9 @@ void Timeline::zoomSliderChanged(int value)
     // --- apply zoom ---
     frameWidth_ = newFrameWidth;
 
-    tickBar->resize(
+    tickBar->setFixedSize(
         qMax(frameCount_ * frameWidth_ + 235, width() - 4),
-        scroller->viewport()->height()
+        keyframeHScroller_->viewport()->height()
     );
 
     // --- compute NEW content position ---
@@ -849,7 +847,7 @@ void Timeline::zoomSliderChanged(int value)
     int newScroll =
         newContentX - indicatorViewportX;
 
-    scroller->horizontalScrollBar()->setValue(newScroll);
+    keyframeHScroller_->horizontalScrollBar()->setValue(newScroll);
 
     update();
     tickBar->update();
@@ -861,9 +859,9 @@ void Timeline::resizeEvent(QResizeEvent *event)
 
     if (tickBar)
     {
-        tickBar->resize(
+        tickBar->setFixedSize(
             qMax(frameCount_ * frameWidth_ + 235, width() - 4),
-            scroller->viewport()->height()
+            keyframeHScroller_->viewport()->height()
         );
     }
 }
@@ -882,20 +880,106 @@ void Timeline::playButtonClickEvent()
     emit playSignal(playing_);
 }
 
+void Timeline::updateKeyframeLayerPanelHeight()
+{
+    int h = keyframeLayerLayout_->sizeHint().height();
+    keyframeLayerPanel_->setFixedHeight(h);   // sets real min==max==h, overrides policy to Fixed vertically
+}
+
 void Timeline::updateSelectedLayer(path *p)
 {
-    if(p == nullptr){
-        tickBar->setActiveLayer(nullptr);
-        onLayersUpdate();
-        return;
-    }
+//     if(p == nullptr){
+//         tickBar->setActiveLayer(nullptr);
+//         onLayersUpdate();
+//         return;
+//     }
 
-    for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
-        if(tickBar->accessLayer(i)->relatedPath_ == p){
-            tickBar->setActiveLayer(tickBar->accessLayer(i));
-            break;
-        }
-    }
+//     for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
+//         if(tickBar->accessLayer(i)->relatedPath_ == p){
+//             tickBar->setActiveLayer(tickBar->accessLayer(i));
+//             break;
+//         }
+//     }
 
-    onLayersUpdate();
+//     onLayersUpdate();
 }
+
+
+
+    // // draw layers
+    // painter.setPen(Qt::NoPen);
+
+    // QPainterPath Rhombus;
+    // Rhombus.moveTo(5,0);
+    // Rhombus.lineTo(10,5);
+    // Rhombus.lineTo(5,10);
+    // Rhombus.lineTo(0,5);
+    // Rhombus.closeSubpath();
+    
+
+    // for(int i = 0; i < layers_.size(); i++){
+
+    //     int visualRow = layers_.size() - 1 - i;
+
+    //     if(visualRow % 2 == 0){
+    //         painter.setBrush(QColor("#292929"));
+    //     }
+    //     else{
+    //         painter.setBrush(QColor("#313131"));
+    //     }
+        
+    //     painter.drawRoundedRect(LBound->x() + boundHandleThickness, getTopBarHeight() + visualRow * layerHeight_, RBound->x() - LBound->x() - boundHandleThickness, layerHeight_, 2, 2); 
+
+    //     // draw keyframes
+    //     painter.setBrush(QBrush("#7BC7B0"));
+    //     for(auto j : layers_[i]->relatedPath_->xPositionFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->yPositionFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->xPivotFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->yPivotFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->xScaleFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->yScaleFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->rotationFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->strokeWidthFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->fillColorFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    //     for(auto j : layers_[i]->relatedPath_->strokeColorFrames){
+    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
+    //         painter.drawPath(Rhombus);
+    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
+    //     }
+    // }

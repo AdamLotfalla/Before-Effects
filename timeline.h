@@ -17,6 +17,7 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QMouseEvent>
+#include <QSplitter>
 #include "viewPort.h"
 #include "common_widget_styles.h"
 
@@ -89,9 +90,9 @@ private:
     bool LBoundClicked_ = false;
     bool RBoundClicked_ = false;
 
-    QVector<Layer*> layers_;
-    Layer* activeLayer_ = nullptr;
-    int layerHeight_ = 35;
+    // QVector<Layer*> layers_;
+    // Layer* activeLayer_ = nullptr;
+    // int layerHeight_ = 35;
 
     int RBoundFrame_;
     int LBoundFrame_;
@@ -132,6 +133,9 @@ public:
     int* currentFrame_ = new int(0);
     bool playing_ = false;
 
+    QVector<Layer*> layers_;
+    Layer* activeLayer_ = nullptr;
+
     void step();
     void setTheme(QString theme = "Dark");
     void addLayer(path* p);
@@ -142,16 +146,31 @@ private:
     int *frameRate_; // initialized on creating the instance 
     int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
-    int layerHeight_ = 50;
-    QWidget* layerLeftPanel_;
-    QHBoxLayout* timelineSplitterLayout_;
-    QVBoxLayout* leftPanelLayout_;
+    int layerHeight_ = 35; //there is alos a layerHeight_ member in Layer
+    QVBoxLayout* toolBarVLayout_;
     QString theme_;
-    QScrollArea* scroller;
+
+    QWidget* hierarchyPanel_;
+    QVBoxLayout* hierarchyVLayout_;
+    QScrollArea* hierarchyScroller_;
+    QWidget* hierarchyLayerPanel_;
+    QVBoxLayout* hierarchyLayerLayout_;
+
+    QWidget* keyframePanel_;
+    QVBoxLayout* keyframeVLayout_;
+    QScrollArea* keyframeHScroller_;
+    QScrollArea* keyframeVScroller_;
+    QWidget* keyframeLayerPanel_;
+    QVBoxLayout* keyframeLayerLayout_;
+
+
+
     QToolButton* playButton;
 
     void resizeEvent(QResizeEvent *event) override;
     void playButtonClickEvent();
+
+    void updateKeyframeLayerPanelHeight();
     
 public slots:
     void onLayersUpdate();
