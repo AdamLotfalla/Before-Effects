@@ -23,22 +23,37 @@
 
 
 class Layer : public QWidget{
+    Q_OBJECT
 public:
-    Layer(QWidget* parent, path* p, int height);
+    Layer(QWidget* parent, path* p, int height, int* frameWidth);
     ~Layer(){
         relatedPath_ = nullptr;
     };
 
+    enum DrawMode {
+        hierarchy,
+        keyframe
+    };
+
+    DrawMode drawMode_ = hierarchy; 
     bool isSelected_ = false;
     bool isExpanded_ = false;
     bool isValid() const {return relatedPath_ != nullptr;}
+    void setDrawMode(DrawMode newMode);
+    void setExpanded(bool state);
     path* relatedPath_ = nullptr;
+    QColor color_ = QColor("#F16E7A"); //light coral; temporary
 
 private:
+    QWidget* parent_;
     int layerHeight_;
+    int* frameWidth_;
     int keyframeLayerHeight_ = 24;
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event);
+
+signals:
+    void expandedChanged(bool expanded);
 };
 
 class TimeCursor : public QWidget{
@@ -63,17 +78,21 @@ public:
     void paintEvent(QPaintEvent* event);
     int getRBound();
     int getLBound();
-    void addLayer(path* p, QWidget* parent);
-    void removeLayer(path* p);
-    Layer* accessLayer(int index);
-    Layer* getActiveLayer();
-    int getLayerCount();
+
+    // void addLayer(path* p, QWidget* parent);
+    // void removeLayer(path* p);
+    // Layer* accessLayer(int index);
+    // Layer* getActiveLayer();
+    // int getLayerCount();
+    // void setActiveLayer(Layer* l);
+
     int getTopBarHeight();
     
     int getFrameWidth();
     int getOffset();
+    int getXLayerStart();
+    int getLayerWidth();
 
-    void setActiveLayer(Layer* l);
 
 private:
     int* frameWidth_; 
@@ -141,13 +160,14 @@ public:
     void setTheme(QString theme = "Dark");
     void addLayer(path* p);
     void removeLayer(path* p);
+    void setActiveLayer(Layer *l);
     // void clickTimeIndicatorBar(QEvent* event);
     
 private:
     int *frameRate_; // initialized on creating the instance 
     int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
-    int layerHeight_ = 35; //there is alos a layerHeight_ member in Layer
+    int layerHeight_ = 30; //there is also a layerHeight_ member in Layer
     QVBoxLayout* toolBarVLayout_;
     QString theme_;
 
@@ -161,6 +181,10 @@ private:
     QVBoxLayout* keyframeVLayout_;
     QScrollArea* keyframeHScroller_;
     QScrollArea* keyframeVScroller_;
+    QHBoxLayout* keyframeMarginLayout_;
+    QWidget* keyframeScrollerPanel_;
+    QWidget* keyframeLeftMargin_;
+    QWidget* keyframeRightMargin_;
     QWidget* keyframeLayerPanel_;
     QVBoxLayout* keyframeLayerLayout_;
 

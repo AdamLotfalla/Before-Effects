@@ -1,12 +1,19 @@
 #include "timeline.h"
 
-Layer::Layer(QWidget* parent, path *p, int height) : QWidget(parent)
+Layer::Layer(QWidget* parent, path *p, int height, int* frameWidth) : QWidget(parent)
 {
     layerHeight_ = height;
     relatedPath_ = p;
+    parent_ = parent;
+    frameWidth_ = frameWidth;
     this->setMinimumHeight(layerHeight_);
 
     setAutoFillBackground(false);
+}
+
+void Layer::setDrawMode(DrawMode newMode)
+{
+    drawMode_ = newMode;
 }
 
 void Layer::paintEvent(QPaintEvent *event)
@@ -15,100 +22,184 @@ void Layer::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
 
-    if(isSelected_)
-        painter.setBrush(QColor("#585547"));
-    else
-        painter.setBrush(QColor("#444444"));
-    painter.setPen(Qt::NoPen);
-    
-    QPainterPath closedExpantionArrow;
-    closedExpantionArrow.moveTo(12, (layerHeight_ - 8) / 2.0); //13.5
-    closedExpantionArrow.lineTo(17,layerHeight_ / 2.0); //17.5
-    closedExpantionArrow.lineTo(12, layerHeight_ - (layerHeight_ - 8) / 2.0); //21.5
-    
-    QPainterPath openExpantionArrow;
-    openExpantionArrow.moveTo(10, (layerHeight_ - 5) / 2.0);
-    openExpantionArrow.lineTo(14, 5 + (layerHeight_ - 5) / 2.0);
-    openExpantionArrow.lineTo(18, (layerHeight_ - 5) / 2.0);
-    
-    
-    painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
-    painter.setPen(QPen("#FFFFFF"));
-    painter.drawText(30,0, this->width() - 30, layerHeight_, Qt::AlignVCenter, relatedPath_->name_);
-    
-    
-    
-    
-    if(relatedPath_ && isExpanded_){
-        int counter = 0;
-
+    if(drawMode_ == DrawMode::hierarchy){
+        if(isSelected_)
+            painter.setBrush(QColor("#585547"));
+        else
+            painter.setBrush(QColor("#444444"));
+        painter.setPen(Qt::NoPen);
+        
+        QPainterPath closedExpantionArrow;
+        closedExpantionArrow.moveTo(12, (layerHeight_ - 8) / 2.0); //13.5
+        closedExpantionArrow.lineTo(17,layerHeight_ / 2.0); //17.5
+        closedExpantionArrow.lineTo(12, layerHeight_ - (layerHeight_ - 8) / 2.0); //21.5
+        
+        QPainterPath openExpantionArrow;
+        openExpantionArrow.moveTo(10, (layerHeight_ - 5) / 2.0);
+        openExpantionArrow.lineTo(14, 5 + (layerHeight_ - 5) / 2.0);
+        openExpantionArrow.lineTo(18, (layerHeight_ - 5) / 2.0);
+        
+        
+        painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
         painter.setPen(QPen("#FFFFFF"));
-        painter.drawPath(openExpantionArrow);
+        painter.drawText(30,0, this->width() - 30, layerHeight_, Qt::AlignVCenter, relatedPath_->name_);
         
-        std::array<bool, 10> hasFrames = {
-            !relatedPath_->xPositionFrames.empty(),
-            !relatedPath_->yPositionFrames.empty(),
-            !relatedPath_->xScaleFrames.empty(),
-            !relatedPath_->yScaleFrames.empty(),
-            !relatedPath_->rotationFrames.empty(),
-            !relatedPath_->xPivotFrames.empty(),
-            !relatedPath_->yPivotFrames.empty(),
-            !relatedPath_->strokeWidthFrames.empty(),
-            !relatedPath_->fillColorFrames.empty(),
-            !relatedPath_->strokeColorFrames.empty()
-        };
         
-        int textBegin = 35, childBracketBegin = 14, childBracketEnd = 23; 
         
-        for(int i = 0; i < hasFrames.size(); i++){
-            bool present = hasFrames[i];
-            if(!present) continue;
-            
-            painter.setPen(Qt::NoPen);
-            painter.setBrush(QColor("#373737"));
-            painter.drawRect(0, counter * keyframeLayerHeight_ + layerHeight_, this->width(), keyframeLayerHeight_);
-            
+        
+        if(relatedPath_ && isExpanded_){
+            int counter = 0;
+    
             painter.setPen(QPen("#FFFFFF"));
-            QString keyframeText;
+            painter.drawPath(openExpantionArrow);
             
-            switch (i)
-            {
-            case 0: keyframeText = "x-position";   break;
-            case 1: keyframeText = "y-position";   break;
-            case 2: keyframeText = "x-scale";      break;
-            case 3: keyframeText = "y-scale";      break;
-            case 4: keyframeText = "rotation";     break;
-            case 5: keyframeText = "x-pivot";      break;
-            case 6: keyframeText = "y-pivot";      break;
-            case 7: keyframeText = "stroke width"; break;
-            case 8: keyframeText = "fill color";   break;
-            case 9: keyframeText = "stroke color"; break;
+            std::array<bool, 10> hasFrames = {
+                !relatedPath_->xPositionFrames.empty(),
+                !relatedPath_->yPositionFrames.empty(),
+                !relatedPath_->xScaleFrames.empty(),
+                !relatedPath_->yScaleFrames.empty(),
+                !relatedPath_->rotationFrames.empty(),
+                !relatedPath_->xPivotFrames.empty(),
+                !relatedPath_->yPivotFrames.empty(),
+                !relatedPath_->strokeWidthFrames.empty(),
+                !relatedPath_->fillColorFrames.empty(),
+                !relatedPath_->strokeColorFrames.empty()
+            };
+            
+            int textBegin = 35, childBracketBegin = 14, childBracketEnd = 23; 
+            
+            for(int i = 0; i < hasFrames.size(); i++){
+                bool present = hasFrames[i];
+                if(!present) continue;
+                
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(QColor("#373737"));
+                painter.drawRect(0, counter * keyframeLayerHeight_ + layerHeight_, this->width(), keyframeLayerHeight_);
+                
+                painter.setPen(QPen("#FFFFFF"));
+                QString keyframeText;
+                
+                switch (i)
+                {
+                case 0: keyframeText = "x-position";   break;
+                case 1: keyframeText = "y-position";   break;
+                case 2: keyframeText = "x-scale";      break;
+                case 3: keyframeText = "y-scale";      break;
+                case 4: keyframeText = "rotation";     break;
+                case 5: keyframeText = "x-pivot";      break;
+                case 6: keyframeText = "y-pivot";      break;
+                case 7: keyframeText = "stroke width"; break;
+                case 8: keyframeText = "fill color";   break;
+                case 9: keyframeText = "stroke color"; break;
+                }
+    
+                painter.drawText(textBegin, counter * keyframeLayerHeight_ + layerHeight_ - 1, this->width() - textBegin, keyframeLayerHeight_, Qt::AlignVCenter, keyframeText);
+    
+                painter.setPen(QPen(QBrush("#FFFFFF"), 1, Qt::DotLine));
+                painter.drawLine(childBracketBegin, counter * keyframeLayerHeight_ + layerHeight_ + 1, childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
+                painter.drawLine(childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_, childBracketEnd, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
+                counter++;
             }
-
-            painter.drawText(textBegin, counter * keyframeLayerHeight_ + layerHeight_ - 1, this->width() - textBegin, keyframeLayerHeight_, Qt::AlignVCenter, keyframeText);
-
-            painter.setPen(QPen(QBrush("#FFFFFF"), 1, Qt::DotLine));
-            painter.drawLine(childBracketBegin, counter * keyframeLayerHeight_ + layerHeight_ + 1, childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
-            painter.drawLine(childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_, childBracketEnd, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
-            counter++;
+    
+            setFixedHeight(counter * keyframeLayerHeight_ + layerHeight_);
         }
+        else if(relatedPath_ && !isExpanded_){
+            painter.drawPath(closedExpantionArrow);
+            setFixedHeight(layerHeight_);
+        }
+    }
+    else if(drawMode_ == DrawMode::keyframe){
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(color_));
 
-        setFixedHeight(counter * keyframeLayerHeight_ + layerHeight_);
+        QPainterPath Rhombus;
+        Rhombus.moveTo(5,0);
+        Rhombus.lineTo(10,5);
+        Rhombus.lineTo(5,10);
+        Rhombus.lineTo(0,5);
+        Rhombus.closeSubpath();
+        
+        painter.setPen(QColor("#1e1e1e"));
+
+
+        painter.drawRoundedRect(0, 0, parent_->width(), layerHeight_, 2, 2);
+
+        // draw keyframes
+        painter.setBrush(QBrush("#7BC7B0"));
+        for(auto j : relatedPath_->xPositionFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->yPositionFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->xPivotFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->yPivotFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->xScaleFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->yScaleFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->rotationFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->strokeWidthFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->fillColorFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
+        for(auto j : relatedPath_->strokeColorFrames){
+            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+            painter.drawPath(Rhombus);
+            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+        }
     }
-    else if(relatedPath_ && !isExpanded_){
-        painter.drawPath(closedExpantionArrow);
-        setFixedHeight(layerHeight_);
-    }
+
+}
+
+void Layer::setExpanded(bool state)
+{
+    if (isExpanded_ == state) return;
+    isExpanded_ = state;
+    update();
+    updateGeometry();
 }
 
 void Layer::mousePressEvent(QMouseEvent *event)
 {
-    if(event->pos().x() <= 30){
+    if(drawMode_ != DrawMode::keyframe && event->pos().x() <= 30){
         isExpanded_ = !isExpanded_;
         update();
         updateGeometry();
+        emit expandedChanged(isExpanded_);
     }
 }
+
+
+
 
 TimeCursor::TimeCursor(QWidget *parent) : QWidget(parent)
 {
@@ -313,59 +404,6 @@ int TickBar::getLBound()
     return LBoundFrame_;
 }
 
-// void TickBar::addLayer(path* p, QWidget* parent)
-// {
-//     setActiveLayer(nullptr);
-//     Layer* addedLayer = new Layer(parent, p, layerHeight_);
-//     layers_.push_back(addedLayer);
-//     setActiveLayer(addedLayer);
-// }
-
-// void TickBar::removeLayer(path *p)
-// {
-//     setActiveLayer(nullptr);
-//     for(auto i = 0; i < layers_.size(); i++){
-//         if(layers_[i]->relatedPath_ == p){
-//             Layer* layerToRemove = layers_[i];
-//             layers_.remove(i);
-//             delete layerToRemove;
-//             break;
-//         }
-//     }
-// }
-
-// Layer *TickBar::getActiveLayer()
-// {
-//     return activeLayer_;
-// }
-
-// Layer* TickBar::accessLayer(int index)
-// {
-//     if(index < layers_.size())
-//         return layers_[index];
-//     else
-//         return nullptr;
-// }
-
-// void TickBar::setActiveLayer(Layer *l)
-// {
-//     if(activeLayer_ != nullptr){
-//         activeLayer_->isSelected_ = false;
-//         activeLayer_->update();
-//     }
-//     activeLayer_ = l;
-
-//     if(activeLayer_ != nullptr){
-//         activeLayer_->isSelected_ = true;
-//         activeLayer_->update();
-//     }
-// }
-
-// int TickBar::getLayerCount()
-// {
-//     return layers_.size();
-// }
-
 int TickBar::getTopBarHeight()
 {
     return tickLayerHeight_ + boundLayerHeight_;
@@ -380,6 +418,17 @@ int TickBar::getOffset()
 {
     return offset_;
 }
+
+int TickBar::getXLayerStart()
+{
+    return (LBound->x() + boundHandleThickness);
+}
+
+int TickBar::getLayerWidth()
+{
+    return (RBound->x() - LBound->x() - boundHandleThickness);
+}
+
 
 void TickBar::onTickBarClick(QPoint pos)
 {
@@ -630,7 +679,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     | hierarchyPanel_                       |   keyframeHScroller_                          |
     |   |_ hierarchyVLayout_                |       |_ keyframePanel_                       |
     |       |_ spacer                       |           |_ keyframeVLayout_                 |
-    |       |_ hierarchyScroller_           |               |_ tickBar_                      |
+    |       |_ hierarchyScroller_           |               |_ tickBar_                     |
     |           |_ hierarchyLayerPanel_     |               |_ keyframeVScroller_           |
     |               |_ hierarchyLayerLayout |                   |_ keyframeLayerPanel_      |
     |                   |_ layer(s)         |                       |_ keyframeLayerLayout_ |
@@ -663,7 +712,6 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     keyframeHScroller_->setWidget(keyframePanel_);
     
     hierarchyVLayout_ = new QVBoxLayout;
-    hierarchyVLayout_->addSpacing(tickBar_->getTopBarHeight());
     hierarchyVLayout_->addWidget(hierarchyScroller_, 1);
     hierarchyVLayout_->setContentsMargins(0,0,0,0);
     hierarchyVLayout_->setSpacing(1);
@@ -675,6 +723,8 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     
     hierarchyLayerPanel_ = new QWidget;
     hierarchyLayerLayout_ = new QVBoxLayout;
+    hierarchyLayerLayout_->setContentsMargins(0,2,0,0);
+    hierarchyLayerLayout_->setSpacing(1);
     hierarchyLayerPanel_->setLayout(hierarchyLayerLayout_);
     hierarchyLayerPanel_->setAutoFillBackground(false);
     hierarchyScroller_->setWidget(hierarchyLayerPanel_);
@@ -689,50 +739,59 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     keyframePanel_->setLayout(keyframeVLayout_);
 
+    keyframeMarginLayout_ = new QHBoxLayout;
+    keyframeMarginLayout_->setContentsMargins(0,0,0,0);
+    keyframeMarginLayout_->setSpacing(0);
+
+    keyframeLeftMargin_ = new QWidget;
+    keyframeRightMargin_ = new QWidget;
+    keyframeScrollerPanel_ = new QWidget;
     keyframeLayerPanel_ = new QWidget;
+    keyframeLayerPanel_->setPalette(QPalette("#1e1e1e"));
+
+    keyframeLeftMargin_->setFixedWidth(tickBar_->getOffset());
+    keyframeRightMargin_->setFixedWidth(tickBar_->getOffset());
+
+    keyframeLeftMargin_->setAutoFillBackground(true);
+    keyframeRightMargin_->setAutoFillBackground(true);
+    keyframeLeftMargin_->setPalette(QPalette("#1c1c1c"));
+    keyframeRightMargin_->setPalette(QPalette("#1c1c1c"));
+    
+
+    keyframeMarginLayout_->addWidget(keyframeLeftMargin_);
+    keyframeMarginLayout_->addWidget(keyframeLayerPanel_);
+    keyframeMarginLayout_->addWidget(keyframeRightMargin_);
+    keyframeScrollerPanel_->setLayout(keyframeMarginLayout_);
+
     keyframeVScroller_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    keyframeVScroller_->setWidget(keyframeLayerPanel_);
+    keyframeVScroller_->setWidget(keyframeScrollerPanel_);
 
-
-    //temporary fixes
-    keyframeVScroller_->setWidgetResizable(true);
-    keyframeLayerPanel_->adjustSize();
-
-    hierarchyScroller_->setWidgetResizable(true);
 
     keyframeLayerLayout_ = new QVBoxLayout;
+    keyframeLayerLayout_->setContentsMargins(0,0,0,0);
+    keyframeLayerLayout_->setSpacing(0);
     keyframeLayerPanel_->setLayout(keyframeLayerLayout_);
-    updateKeyframeLayerPanelHeight();
 
-    // qDebug() << "viewport:"
-    //      << keyframeVScroller_->viewport()->height();
-
-    // qDebug() << "panel:"
-    //      << keyframeLayerPanel_->height();
-
-    // qDebug() << "layout size hint:"
-    //      << keyframeLayerLayout_->sizeHint().height();
+    keyframeVScroller_->setWidgetResizable(true);
+    keyframeLayerPanel_->adjustSize();
     
-    keyframeVScroller_->setStyleSheet("background:red;");
-    keyframeLayerPanel_->setStyleSheet("background:blue;");
-
-    //--------------
-    
-    // QWidget* testLayer = new QWidget(); //timelinecanvas to be adjusted on the new 3-scroller architecture
+    // QWidget* testLayer = new QWidget; 
     // testLayer->setFixedHeight(layerHeight_); 
-    
+    // testLayer->setStyleSheet("background:green;");
+    // keyframeLayerLayout_->addWidget(testLayer);
+    // keyframeLayerLayout_->addStretch();
 
 
+    connect(hierarchyScroller_->verticalScrollBar(), &QScrollBar::valueChanged,
+            keyframeVScroller_->verticalScrollBar(), &QScrollBar::setValue);
+    connect(keyframeVScroller_->verticalScrollBar(), &QScrollBar::valueChanged,
+            hierarchyScroller_->verticalScrollBar(), &QScrollBar::setValue);
 
     
     setLayout(toolBarVLayout_);
-    // tickBarScroller_->setWidgetResizable(true);
     
-    //================== Time Cursor ===================
     cursor_ = new TimeCursor(keyframePanel_);
-    cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
-    //==================================================
-    
+    cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());    
     
     connect(tickBar_, &TickBar::frameChanged, this, [this](){
         cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
@@ -762,62 +821,87 @@ void Timeline::setTheme(QString theme)
 
 void Timeline::addLayer(path* p)
 {
-//     if(p != nullptr){
-//         tickBar_->addLayer(p, leftPanel_);
-//         Layer* newLayer = tickBar_->accessLayer(tickBar_->getLayerCount() - 1);
-//         leftPanelLayout_->insertWidget(1, newLayer);
-//         newLayer->show();
+    setActiveLayer(nullptr);
+    Layer* hierarchyLayer = new Layer(hierarchyLayerPanel_, p, layerHeight_, &frameWidth_);
+    Layer* keyframeLayer = new Layer(keyframeLayerPanel_, p, layerHeight_, &frameWidth_);
+    keyframeLayer->setDrawMode(Layer::DrawMode::keyframe);
 
-//         tickBar_->update();
-//     }
+    connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::setExpanded);
+
+    hierarchyLayerLayout_->insertWidget(0, hierarchyLayer);
+    keyframeLayerLayout_->insertWidget(0, keyframeLayer);
+
+    hierarchyLayer->show();
+    keyframeLayer->show();
+
+    layers_.push_back(hierarchyLayer);
+    setActiveLayer(hierarchyLayer);
 }
 
 void Timeline::removeLayer(path *p)
 {
-//     if(p != nullptr){
-//         tickBar_->removeLayer(p);
-//         onLayersUpdate();
-//         update();
-//     }
+    setActiveLayer(nullptr);
+    for(auto i = 0; i < layers_.size(); i++){
+        if(layers_[i]->relatedPath_ == p){
+            Layer* layerToRemove = layers_[i];
+            layers_.remove(i);
+            delete layerToRemove;
+            break;
+        }
+    }
+}
+
+void Timeline::setActiveLayer(Layer *l)
+{
+    if(activeLayer_ != nullptr){
+        activeLayer_->isSelected_ = false;
+        activeLayer_->update();
+    }
+    activeLayer_ = l;
+
+    if(activeLayer_ != nullptr){
+        activeLayer_->isSelected_ = true;
+        activeLayer_->update();
+    }
 }
 
 void Timeline::onLayersUpdate()
 {
-//     if (leftPanelLayout_) {
-//        QLayoutItem *item;
-//         while ((item = leftPanelLayout_->takeAt(0)) != nullptr) {
-//             if (QWidget *widget = item->widget()) {
-//                 widget->hide();
-//             }
-//             delete item;
-//         }
-//         // delete leftPanelLayout_;
-//     }
-//     else{
-//         leftPanelLayout_ = new QVBoxLayout(leftPanel_);
-//         leftPanelLayout_->setContentsMargins(0,0,0,0);
-//         leftPanelLayout_->setSpacing(0);
-//     }
+    if (hierarchyLayerLayout_) {
+       QLayoutItem *item;
+        while ((item = hierarchyLayerLayout_->takeAt(0)) != nullptr) {
+            if (QWidget *widget = item->widget()) {
+                widget->hide();
+            }
+            delete item;
+        }
+        // delete leftPanelLayout_;
+    }
+    else{
+        hierarchyLayerLayout_ = new QVBoxLayout(hierarchyLayerPanel_);
+        hierarchyLayerLayout_->setContentsMargins(0,0,0,0);
+        hierarchyLayerLayout_->setSpacing(0);
+    }
 
-//     leftPanelLayout_->addSpacing(tickBar_->getTopBarHeight());
-//     for(int i = tickBar_->getLayerCount() - 1; i >= 0; i--){
-//         Layer* temporaryLayer = tickBar_->accessLayer(i);
-//         if(temporaryLayer){
-//             if(temporaryLayer == tickBar_->getActiveLayer()){
-//                 temporaryLayer->isSelected_ = true;
-//             }
-//             temporaryLayer->update();
-//             leftPanelLayout_->addWidget(temporaryLayer);
-//         }
-//     }
+    hierarchyLayerLayout_->addSpacing(tickBar_->getTopBarHeight());
+    for(int i = layers_.size() - 1; i >= 0; i--){
+        Layer* temporaryLayer = layers_[i];
+        if(temporaryLayer){
+            if(temporaryLayer == activeLayer_){
+                temporaryLayer->isSelected_ = true;
+            }
+            temporaryLayer->update();
+            hierarchyLayerLayout_->addWidget(temporaryLayer);
+        }
+    }
 
     
-//     leftPanelLayout_->addStretch();
-//     for(int i = tickBar_->getLayerCount() - 1; i >= 0; i--){
-//         tickBar_->accessLayer(i)->show();
-//     }
+    hierarchyLayerLayout_->addStretch();
+    for(int i = layers_.size() - 1; i >= 0; i--){
+        layers_[i]->show();
+    }
     
-//     leftPanel_->update();
+    hierarchyLayerPanel_->update();
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -842,9 +926,8 @@ void Timeline::zoomSliderChanged(int value)
     // --- apply zoom ---
     frameWidth_ = newFrameWidth;
 
-    tickBar_->setFixedSize(
-        qMax(frameCount_ * frameWidth_ + 235, width() - 4),
-        tickBar_->getTopBarHeight()
+    tickBar_->setFixedWidth(
+        qMax(frameCount_ * frameWidth_ + 235, width() - 4)
     );
 
     // --- compute NEW content position ---
@@ -859,6 +942,8 @@ void Timeline::zoomSliderChanged(int value)
         newContentX - indicatorViewportX;
 
     keyframeHScroller_->horizontalScrollBar()->setValue(newScroll);
+
+    cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
 
     update();
     tickBar_->update();
@@ -902,98 +987,18 @@ void Timeline::updateKeyframeLayerPanelHeight()
 
 void Timeline::updateSelectedLayer(path *p)
 {
-//     if(p == nullptr){
-//         tickBar_->setActiveLayer(nullptr);
-//         onLayersUpdate();
-//         return;
-//     }
+    if(p == nullptr){
+        activeLayer_ = nullptr;
+        onLayersUpdate();
+        return;
+    }
 
-//     for(int i = tickBar_->getLayerCount() - 1; i >= 0; i--){
-//         if(tickBar_->accessLayer(i)->relatedPath_ == p){
-//             tickBar_->setActiveLayer(tickBar_->accessLayer(i));
-//             break;
-//         }
-//     }
+    for(int i = layers_.size() - 1; i >= 0; i--){
+        if(layers_[i]->relatedPath_ == p){
+            activeLayer_ = layers_[i];
+            break;
+        }
+    }
 
-//     onLayersUpdate();
+    onLayersUpdate();
 }
-
-
-
-    // // draw layers
-    // painter.setPen(Qt::NoPen);
-
-    // QPainterPath Rhombus;
-    // Rhombus.moveTo(5,0);
-    // Rhombus.lineTo(10,5);
-    // Rhombus.lineTo(5,10);
-    // Rhombus.lineTo(0,5);
-    // Rhombus.closeSubpath();
-    
-
-    // for(int i = 0; i < layers_.size(); i++){
-
-    //     int visualRow = layers_.size() - 1 - i;
-
-    //     if(visualRow % 2 == 0){
-    //         painter.setBrush(QColor("#292929"));
-    //     }
-    //     else{
-    //         painter.setBrush(QColor("#313131"));
-    //     }
-        
-    //     painter.drawRoundedRect(LBound->x() + boundHandleThickness, getTopBarHeight() + visualRow * layerHeight_, RBound->x() - LBound->x() - boundHandleThickness, layerHeight_, 2, 2); 
-
-    //     // draw keyframes
-    //     painter.setBrush(QBrush("#7BC7B0"));
-    //     for(auto j : layers_[i]->relatedPath_->xPositionFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->yPositionFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->xPivotFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->yPivotFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->xScaleFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->yScaleFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->rotationFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->strokeWidthFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->fillColorFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    //     for(auto j : layers_[i]->relatedPath_->strokeColorFrames){
-    //         Rhombus.translate(QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5));
-    //         painter.drawPath(Rhombus);
-    //         Rhombus.translate(-1 * (QPointF(offset_ + j.first * *frameWidth_, getTopBarHeight() + (visualRow + 0.5) * layerHeight_) - QPointF(5,5)));
-    //     }
-    // }
