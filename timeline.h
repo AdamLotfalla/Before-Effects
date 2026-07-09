@@ -56,8 +56,7 @@ private:
 class TickBar : public QWidget{   
     Q_OBJECT
 public:
-    TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame);
-    TimeCursor* timeIndicator_;
+    TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int *currentFrame);
     QWidget* LBound;
     QWidget* RBound;
     
@@ -70,6 +69,9 @@ public:
     Layer* getActiveLayer();
     int getLayerCount();
     int getTopBarHeight();
+    
+    int getFrameWidth();
+    int getOffset();
 
     void setActiveLayer(Layer* l);
 
@@ -79,7 +81,6 @@ private:
     int* currentFrame_;
     int* frameRate_;
 
-    int fullHeight_;
     int fullWidth_;
     int tickInterval_ = 10;
     int offset_;
@@ -97,7 +98,6 @@ private:
     int RBoundFrame_;
     int LBoundFrame_;
     
-    void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
@@ -129,7 +129,8 @@ class Timeline : public QWidget{
 public:
     Timeline(QWidget *parent, int *frameRate);
 
-    TickBar* tickBar;
+    TickBar* tickBar_;
+    TimeCursor* cursor_;
     int* currentFrame_ = new int(0);
     bool playing_ = false;
 

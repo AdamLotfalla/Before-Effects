@@ -150,7 +150,7 @@ void TimeCursor::paintEvent(QPaintEvent *event)
 }
 
 // ----------------------- INDICATOR BAR -----------------------
-TickBar::TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int fullHeight, int *currentFrame){
+TickBar::TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int *currentFrame){
     //TEMPORARY
     currentFrame_ = currentFrame;
     
@@ -158,17 +158,15 @@ TickBar::TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCou
     frameWidth_ = frameWidth;
     frameCount_ = frameCount;
 
-    fullHeight_ = fullHeight;
     fullWidth_ = width;
 
     RBoundFrame_ = *frameCount_;
     LBoundFrame_ = 0;
 
-    setFixedSize(fullWidth_, fullHeight_);
+    setFixedSize(fullWidth_, getTopBarHeight());
     setMouseTracking(true);
 
-    timeIndicator_ = new TimeCursor(this);
-    timeIndicator_->show();
+
     setAttribute(Qt::WA_TranslucentBackground);
     setStyleSheet("background: transparent;");
     // timeIndicator->setAttribute(Qt::WA_AlwaysStackOnTop);
@@ -297,7 +295,7 @@ void TickBar::paintEvent(QPaintEvent *event)
     painter.drawRoundedRect(RBound->x(), RBound->y(), boundHandleThickness, boundLayerHeight_, 1, 1);
     painter.drawRoundedRect(LBound->x(), LBound->y(), boundHandleThickness, boundLayerHeight_, 1, 1);
     
-    timeIndicator_->MoveCenter(offset_ + *currentFrame_ * *frameWidth_);
+    
 
 
 
@@ -373,6 +371,16 @@ int TickBar::getTopBarHeight()
     return tickLayerHeight_ + boundLayerHeight_;
 }
 
+int TickBar::getFrameWidth()
+{
+    return *frameWidth_;
+}
+
+int TickBar::getOffset()
+{
+    return offset_;
+}
+
 void TickBar::onTickBarClick(QPoint pos)
 {
     barClicked_ = true;
@@ -389,7 +397,7 @@ void TickBar::onTickBarClick(QPoint pos)
         *currentFrame_ = frame;
     }
         
-    timeIndicator_->MoveCenter(*currentFrame_ * (*frameWidth_));
+    
     emit frameChanged();
 }
 
@@ -483,16 +491,6 @@ void TickBar::onRBoundUnClick()
     RBoundClicked_ = false;
 }
 
-void TickBar::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-
-    timeIndicator_->resize(
-        timeIndicator_->width(),
-        height()
-    );
-}
-
 // ----------------------- TIMELINE -----------------------
 Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
@@ -582,28 +580,32 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
                      this, &Timeline::playButtonClickEvent);
 
     QObject::connect(goToStartButton, &QToolButton::pressed, [this](){
-        *currentFrame_ = tickBar->getLBound();
-        tickBar->update();
+        *currentFrame_ = tickBar_->getLBound();
+        tickBar_->update();
+        cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
         emit frameChanged();
     });
 
     QObject::connect(goToEndButton, &QToolButton::pressed, [this](){
-        *currentFrame_ = tickBar->getRBound();
-        tickBar->update();
+        *currentFrame_ = tickBar_->getRBound();
+        tickBar_->update();
+        cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
         emit frameChanged();
     });
 
     QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
-        if(*currentFrame_ < tickBar->getRBound())
+        if(*currentFrame_ < tickBar_->getRBound())
             (*currentFrame_) ++;
-        tickBar->update();
+        tickBar_->update();
+        cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
         emit frameChanged();
     });
 
     QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
-        if(*currentFrame_ > tickBar->getLBound())
+        if(*currentFrame_ > tickBar_->getLBound())
             (*currentFrame_) --;
-        tickBar->update();
+        tickBar_->update();
+        cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
         emit frameChanged();
     });
 
@@ -628,7 +630,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     | hierarchyPanel_                       |   keyframeHScroller_                          |
     |   |_ hierarchyVLayout_                |       |_ keyframePanel_                       |
     |       |_ spacer                       |           |_ keyframeVLayout_                 |
-    |       |_ hierarchyScroller_           |               |_ tickBar                      |
+    |       |_ hierarchyScroller_           |               |_ tickBar_                      |
     |           |_ hierarchyLayerPanel_     |               |_ keyframeVScroller_           |
     |               |_ hierarchyLayerLayout |                   |_ keyframeLayerPanel_      |
     |                   |_ layer(s)         |                       |_ keyframeLayerLayout_ |
@@ -656,12 +658,12 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     hierarchyScroller_->setWidgetResizable(true);
     
     keyframePanel_ = new QWidget;
-    tickBar = new TickBar(keyframePanel_, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, keyframeHScroller_->viewport()->height(), currentFrame_);
-    tickBar->show();
+    tickBar_ = new TickBar(keyframePanel_, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, currentFrame_);
+    tickBar_->show();
     keyframeHScroller_->setWidget(keyframePanel_);
     
     hierarchyVLayout_ = new QVBoxLayout;
-    hierarchyVLayout_->addSpacing(tickBar->getTopBarHeight());
+    hierarchyVLayout_->addSpacing(tickBar_->getTopBarHeight());
     hierarchyVLayout_->addWidget(hierarchyScroller_, 1);
     hierarchyVLayout_->setContentsMargins(0,0,0,0);
     hierarchyVLayout_->setSpacing(1);
@@ -680,7 +682,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     keyframeVScroller_ = new QScrollArea;
 
     keyframeVLayout_ = new QVBoxLayout;
-    keyframeVLayout_->addWidget(tickBar);
+    keyframeVLayout_->addWidget(tickBar_);
     keyframeVLayout_->addWidget(keyframeVScroller_, 1);
     keyframeVLayout_->setContentsMargins(0,0,0,0);
     keyframeVLayout_->setSpacing(1);
@@ -722,25 +724,34 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
 
 
-    connect(tickBar, &TickBar::frameChanged, this, [this](){
+    
+    setLayout(toolBarVLayout_);
+    // tickBarScroller_->setWidgetResizable(true);
+    
+    //================== Time Cursor ===================
+    cursor_ = new TimeCursor(keyframePanel_);
+    cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
+    //==================================================
+    
+    
+    connect(tickBar_, &TickBar::frameChanged, this, [this](){
+        cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
         emit frameChanged();
     });
 
-    setLayout(toolBarVLayout_);
-    // tickBarScroller_->setWidgetResizable(true);
 }
 
 void Timeline::step()
 {   
-    if(*currentFrame_ < tickBar->getLBound() || *currentFrame_ == tickBar->getRBound())
-        *currentFrame_ = tickBar->getLBound();
-    else if(*currentFrame_ < tickBar->getRBound()) 
+    if(*currentFrame_ < tickBar_->getLBound() || *currentFrame_ == tickBar_->getRBound())
+        *currentFrame_ = tickBar_->getLBound();
+    else if(*currentFrame_ < tickBar_->getRBound()) 
         (*currentFrame_) ++;
     else
-        *currentFrame_ = tickBar->getRBound();
+        *currentFrame_ = tickBar_->getRBound();
 
+    cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
     emit frameChanged();
-    tickBar->update();
     update();
 }
 
@@ -752,19 +763,19 @@ void Timeline::setTheme(QString theme)
 void Timeline::addLayer(path* p)
 {
 //     if(p != nullptr){
-//         tickBar->addLayer(p, leftPanel_);
-//         Layer* newLayer = tickBar->accessLayer(tickBar->getLayerCount() - 1);
+//         tickBar_->addLayer(p, leftPanel_);
+//         Layer* newLayer = tickBar_->accessLayer(tickBar_->getLayerCount() - 1);
 //         leftPanelLayout_->insertWidget(1, newLayer);
 //         newLayer->show();
 
-//         tickBar->update();
+//         tickBar_->update();
 //     }
 }
 
 void Timeline::removeLayer(path *p)
 {
 //     if(p != nullptr){
-//         tickBar->removeLayer(p);
+//         tickBar_->removeLayer(p);
 //         onLayersUpdate();
 //         update();
 //     }
@@ -788,11 +799,11 @@ void Timeline::onLayersUpdate()
 //         leftPanelLayout_->setSpacing(0);
 //     }
 
-//     leftPanelLayout_->addSpacing(tickBar->getTopBarHeight());
-//     for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
-//         Layer* temporaryLayer = tickBar->accessLayer(i);
+//     leftPanelLayout_->addSpacing(tickBar_->getTopBarHeight());
+//     for(int i = tickBar_->getLayerCount() - 1; i >= 0; i--){
+//         Layer* temporaryLayer = tickBar_->accessLayer(i);
 //         if(temporaryLayer){
-//             if(temporaryLayer == tickBar->getActiveLayer()){
+//             if(temporaryLayer == tickBar_->getActiveLayer()){
 //                 temporaryLayer->isSelected_ = true;
 //             }
 //             temporaryLayer->update();
@@ -802,8 +813,8 @@ void Timeline::onLayersUpdate()
 
     
 //     leftPanelLayout_->addStretch();
-//     for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
-//         tickBar->accessLayer(i)->show();
+//     for(int i = tickBar_->getLayerCount() - 1; i >= 0; i--){
+//         tickBar_->accessLayer(i)->show();
 //     }
     
 //     leftPanel_->update();
@@ -817,7 +828,7 @@ void Timeline::zoomSliderChanged(int value)
 
     // --- compute OLD content position ---
     int oldOffset =
-        (tickBar->width() - frameCount_ * frameWidth_) / 2;
+        (tickBar_->width() - frameCount_ * frameWidth_) / 2;
 
     int oldContentX =
         oldOffset + *currentFrame_ * frameWidth_;
@@ -831,14 +842,14 @@ void Timeline::zoomSliderChanged(int value)
     // --- apply zoom ---
     frameWidth_ = newFrameWidth;
 
-    tickBar->setFixedSize(
+    tickBar_->setFixedSize(
         qMax(frameCount_ * frameWidth_ + 235, width() - 4),
-        keyframeHScroller_->viewport()->height()
+        tickBar_->getTopBarHeight()
     );
 
     // --- compute NEW content position ---
     int newOffset =
-        (tickBar->width() - frameCount_ * frameWidth_) / 2;
+        (tickBar_->width() - frameCount_ * frameWidth_) / 2;
 
     int newContentX =
         newOffset + *currentFrame_ * frameWidth_;
@@ -850,19 +861,22 @@ void Timeline::zoomSliderChanged(int value)
     keyframeHScroller_->horizontalScrollBar()->setValue(newScroll);
 
     update();
-    tickBar->update();
+    tickBar_->update();
 }
 
 void Timeline::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 
-    if (tickBar)
+    if (tickBar_)
     {
-        tickBar->setFixedSize(
-            qMax(frameCount_ * frameWidth_ + 235, width() - 4),
-            keyframeHScroller_->viewport()->height()
+        tickBar_->setFixedWidth(
+            qMax(frameCount_ * frameWidth_ + 235, width() - 4)
         );
+    }
+
+    if(cursor_){
+        cursor_->setFixedHeight(height());
     }
 }
 
@@ -889,14 +903,14 @@ void Timeline::updateKeyframeLayerPanelHeight()
 void Timeline::updateSelectedLayer(path *p)
 {
 //     if(p == nullptr){
-//         tickBar->setActiveLayer(nullptr);
+//         tickBar_->setActiveLayer(nullptr);
 //         onLayersUpdate();
 //         return;
 //     }
 
-//     for(int i = tickBar->getLayerCount() - 1; i >= 0; i--){
-//         if(tickBar->accessLayer(i)->relatedPath_ == p){
-//             tickBar->setActiveLayer(tickBar->accessLayer(i));
+//     for(int i = tickBar_->getLayerCount() - 1; i >= 0; i--){
+//         if(tickBar_->accessLayer(i)->relatedPath_ == p){
+//             tickBar_->setActiveLayer(tickBar_->accessLayer(i));
 //             break;
 //         }
 //     }

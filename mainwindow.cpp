@@ -189,13 +189,13 @@ void MainWindow::exportAnimation()
         "Export Animation", QDir::homePath(), "MP4 Video (*.mp4)");
     if (savePath.isEmpty()) return;
 
-    if (!TimelinePanel_ || !TimelinePanel_->tickBar || !viewPort_) {
+    if (!TimelinePanel_ || !TimelinePanel_->tickBar_ || !viewPort_) {
         QMessageBox::critical(this, "Error", "Timeline or Viewport not initialized.");
         return;
     }
 
-    int startFrame  = TimelinePanel_->tickBar->getLBound();
-    int endFrame    = TimelinePanel_->tickBar->getRBound();
+    int startFrame  = TimelinePanel_->tickBar_->getLBound();
+    int endFrame    = TimelinePanel_->tickBar_->getRBound();
     int totalFrames = (endFrame - startFrame) + 1;
 
     if (totalFrames <= 0) {
