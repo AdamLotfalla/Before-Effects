@@ -1,8 +1,7 @@
 #include "timeline.h"
 
-Layer::Layer(QWidget* parent, path *p, int height, int* frameWidth) : QWidget(parent)
+Layer::Layer(QWidget* parent, path *p, int* frameWidth) : QWidget(parent)
 {
-    layerHeight_ = height;
     relatedPath_ = p;
     parent_ = parent;
     frameWidth_ = frameWidth;
@@ -14,6 +13,24 @@ Layer::Layer(QWidget* parent, path *p, int height, int* frameWidth) : QWidget(pa
 void Layer::setDrawMode(DrawMode newMode)
 {
     drawMode_ = newMode;
+}
+
+void Layer::setExpanded(bool state)
+{
+    if (isExpanded_ == state) return;
+    isExpanded_ = state;
+    update();
+    updateGeometry();
+}
+
+void Layer::mousePressEvent(QMouseEvent *event)
+{
+    if(drawMode_ != DrawMode::keyframe && event->pos().x() <= 30){
+        isExpanded_ = !isExpanded_;
+        update();
+        updateGeometry();
+        emit expandedChanged(isExpanded_);
+    }
 }
 
 void Layer::paintEvent(QPaintEvent *event)
@@ -28,6 +45,10 @@ void Layer::paintEvent(QPaintEvent *event)
         else
             painter.setBrush(QColor("#444444"));
         painter.setPen(Qt::NoPen);
+
+        QFont font = painter.font();
+        font.setPointSize(8.5);
+        painter.setFont(font);
         
         QPainterPath closedExpantionArrow;
         closedExpantionArrow.moveTo(12, (layerHeight_ - 8) / 2.0); //13.5
@@ -42,35 +63,29 @@ void Layer::paintEvent(QPaintEvent *event)
         
         painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
         painter.setPen(QPen("#FFFFFF"));
-        painter.drawText(30,0, this->width() - 30, layerHeight_, Qt::AlignVCenter, relatedPath_->name_);
+        painter.drawText(30,0, this->width() - 30, layerHeight_ - 1, Qt::AlignVCenter, relatedPath_->name_);
         
         
+        std::array<bool, 10> hasFrames = {
+            !relatedPath_->xPositionFrames.empty(),
+            !relatedPath_->yPositionFrames.empty(),
+            !relatedPath_->xScaleFrames.empty(),
+            !relatedPath_->yScaleFrames.empty(),
+            !relatedPath_->rotationFrames.empty(),
+            !relatedPath_->xPivotFrames.empty(),
+            !relatedPath_->yPivotFrames.empty(),
+            !relatedPath_->strokeWidthFrames.empty(),
+            !relatedPath_->fillColorFrames.empty(),
+            !relatedPath_->strokeColorFrames.empty()
+        };
         
         
         if(relatedPath_ && isExpanded_){
-            int counter = 0;
-    
-            painter.setPen(QPen("#FFFFFF"));
-            painter.drawPath(openExpantionArrow);
-            
-            std::array<bool, 10> hasFrames = {
-                !relatedPath_->xPositionFrames.empty(),
-                !relatedPath_->yPositionFrames.empty(),
-                !relatedPath_->xScaleFrames.empty(),
-                !relatedPath_->yScaleFrames.empty(),
-                !relatedPath_->rotationFrames.empty(),
-                !relatedPath_->xPivotFrames.empty(),
-                !relatedPath_->yPivotFrames.empty(),
-                !relatedPath_->strokeWidthFrames.empty(),
-                !relatedPath_->fillColorFrames.empty(),
-                !relatedPath_->strokeColorFrames.empty()
-            };
-            
+            int counter = 0;         
             int textBegin = 35, childBracketBegin = 14, childBracketEnd = 23; 
             
             for(int i = 0; i < hasFrames.size(); i++){
-                bool present = hasFrames[i];
-                if(!present) continue;
+                if(!hasFrames[i]) continue;
                 
                 painter.setPen(Qt::NoPen);
                 painter.setBrush(QColor("#373737"));
@@ -94,11 +109,17 @@ void Layer::paintEvent(QPaintEvent *event)
                 }
     
                 painter.drawText(textBegin, counter * keyframeLayerHeight_ + layerHeight_ - 1, this->width() - textBegin, keyframeLayerHeight_, Qt::AlignVCenter, keyframeText);
-    
+   
+                int VShfit = 2;
                 painter.setPen(QPen(QBrush("#FFFFFF"), 1, Qt::DotLine));
-                painter.drawLine(childBracketBegin, counter * keyframeLayerHeight_ + layerHeight_ + 1, childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
-                painter.drawLine(childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_, childBracketEnd, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_);
+                painter.drawLine(childBracketBegin, counter * keyframeLayerHeight_ + layerHeight_ + VShfit, childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_ + VShfit);
+                painter.drawLine(childBracketBegin, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_ + VShfit, childBracketEnd, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_ + VShfit);
                 counter++;
+            }
+
+            if(counter != 0){
+                painter.setPen(QPen("#FFFFFF"));
+                painter.drawPath(openExpantionArrow);
             }
     
             setFixedHeight(counter * keyframeLayerHeight_ + layerHeight_);
@@ -109,9 +130,7 @@ void Layer::paintEvent(QPaintEvent *event)
         }
     }
     else if(drawMode_ == DrawMode::keyframe){
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(color_));
-
+        
         QPainterPath Rhombus;
         Rhombus.moveTo(5,0);
         Rhombus.lineTo(10,5);
@@ -119,12 +138,28 @@ void Layer::paintEvent(QPaintEvent *event)
         Rhombus.lineTo(0,5);
         Rhombus.closeSubpath();
         
-        painter.setPen(QColor("#1e1e1e"));
-
-
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(color_));
         painter.drawRoundedRect(0, 0, parent_->width(), layerHeight_, 2, 2);
+        
 
+        //drawing hatches if selected (needs implementing proper selection)
+        painter.setPen(QPen(QColor("#ffffff"), 15));
+        painter.setOpacity(0.1);
+        
+        QPainterPath Rect;
+        Rect.addRoundedRect(0, 0, parent_->width(), layerHeight_, 2, 2);
+        painter.setClipPath(Rect);
+        float lineSpacing = 30.0;
+        int NLines = width() / lineSpacing + 1;
+        while(NLines--){
+            painter.drawLine(NLines * lineSpacing + 20, -10, NLines * lineSpacing, keyframeLayerHeight_ + 10);
+        }
+        
+        
         // draw keyframes
+        painter.setPen(Qt::NoPen);
+        painter.setOpacity(1);
         painter.setBrush(QBrush("#7BC7B0"));
         for(auto j : relatedPath_->xPositionFrames){
             Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
@@ -180,25 +215,6 @@ void Layer::paintEvent(QPaintEvent *event)
 
 }
 
-void Layer::setExpanded(bool state)
-{
-    if (isExpanded_ == state) return;
-    isExpanded_ = state;
-    update();
-    updateGeometry();
-}
-
-void Layer::mousePressEvent(QMouseEvent *event)
-{
-    if(drawMode_ != DrawMode::keyframe && event->pos().x() <= 30){
-        isExpanded_ = !isExpanded_;
-        update();
-        updateGeometry();
-        emit expandedChanged(isExpanded_);
-    }
-}
-
-
 
 
 TimeCursor::TimeCursor(QWidget *parent) : QWidget(parent)
@@ -240,7 +256,8 @@ void TimeCursor::paintEvent(QPaintEvent *event)
     painter.drawLine(centerX, 8, centerX, this->height());
 }
 
-// ----------------------- INDICATOR BAR -----------------------
+
+
 TickBar::TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCount, int width, int *currentFrame){
     //TEMPORARY
     currentFrame_ = currentFrame;
@@ -429,7 +446,6 @@ int TickBar::getLayerWidth()
     return (RBound->x() - LBound->x() - boundHandleThickness);
 }
 
-
 void TickBar::onTickBarClick(QPoint pos)
 {
     barClicked_ = true;
@@ -540,7 +556,8 @@ void TickBar::onRBoundUnClick()
     RBoundClicked_ = false;
 }
 
-// ----------------------- TIMELINE -----------------------
+
+
 Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     frameRate_ = frameRate;
@@ -769,7 +786,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     keyframeLayerLayout_ = new QVBoxLayout;
     keyframeLayerLayout_->setContentsMargins(0,0,0,0);
-    keyframeLayerLayout_->setSpacing(0);
+    keyframeLayerLayout_->setSpacing(1);
     keyframeLayerPanel_->setLayout(keyframeLayerLayout_);
 
     keyframeVScroller_->setWidgetResizable(true);
@@ -822,8 +839,8 @@ void Timeline::setTheme(QString theme)
 void Timeline::addLayer(path* p)
 {
     setActiveLayer(nullptr);
-    Layer* hierarchyLayer = new Layer(hierarchyLayerPanel_, p, layerHeight_, &frameWidth_);
-    Layer* keyframeLayer = new Layer(keyframeLayerPanel_, p, layerHeight_, &frameWidth_);
+    Layer* hierarchyLayer = new Layer(hierarchyLayerPanel_, p, &frameWidth_);
+    Layer* keyframeLayer = new Layer(keyframeLayerPanel_, p, &frameWidth_);
     keyframeLayer->setDrawMode(Layer::DrawMode::keyframe);
 
     connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::setExpanded);
@@ -834,7 +851,7 @@ void Timeline::addLayer(path* p)
     hierarchyLayer->show();
     keyframeLayer->show();
 
-    layers_.push_back(hierarchyLayer);
+    layers_.push_back({hierarchyLayer, keyframeLayer});
     setActiveLayer(hierarchyLayer);
 }
 
@@ -842,10 +859,12 @@ void Timeline::removeLayer(path *p)
 {
     setActiveLayer(nullptr);
     for(auto i = 0; i < layers_.size(); i++){
-        if(layers_[i]->relatedPath_ == p){
-            Layer* layerToRemove = layers_[i];
+        if(layers_[i].first->relatedPath_ == p){ //active layer will always point to the hierarchy layer
+            Layer* layer1ToRemove = layers_[i].first;
+            Layer* layer2ToRemove = layers_[i].second;
             layers_.remove(i);
-            delete layerToRemove;
+            delete layer1ToRemove;
+            delete layer2ToRemove;
             break;
         }
     }
@@ -867,6 +886,15 @@ void Timeline::setActiveLayer(Layer *l)
 
 void Timeline::onLayersUpdate()
 {
+    for (auto& pair : layers_) {
+        pair.first->isSelected_ = false;
+        pair.second->isSelected_ = false;
+    }   
+
+    if(activeLayer_) {
+        activeLayer_->isSelected_ = true;
+    }
+
     if (hierarchyLayerLayout_) {
        QLayoutItem *item;
         while ((item = hierarchyLayerLayout_->takeAt(0)) != nullptr) {
@@ -883,25 +911,48 @@ void Timeline::onLayersUpdate()
         hierarchyLayerLayout_->setSpacing(0);
     }
 
+    if (keyframeLayerLayout_) {
+       QLayoutItem *item;
+        while ((item = keyframeLayerLayout_->takeAt(0)) != nullptr) {
+            if (QWidget *widget = item->widget()) {
+                widget->hide();
+            }
+            delete item;
+        }
+        // delete leftPanelLayout_;
+    }
+    else{
+        keyframeLayerLayout_ = new QVBoxLayout(hierarchyLayerPanel_);
+        keyframeLayerLayout_->setContentsMargins(0,0,0,0);
+        keyframeLayerLayout_->setSpacing(0);
+    }
+
     hierarchyLayerLayout_->addSpacing(tickBar_->getTopBarHeight());
     for(int i = layers_.size() - 1; i >= 0; i--){
-        Layer* temporaryLayer = layers_[i];
-        if(temporaryLayer){
-            if(temporaryLayer == activeLayer_){
-                temporaryLayer->isSelected_ = true;
+        Layer* temporaryLayer1 = layers_[i].first;
+        Layer* temporaryLayer2 = layers_[i].second;
+        if(temporaryLayer1 && temporaryLayer2){
+            if(temporaryLayer1 == activeLayer_){
+                temporaryLayer1->isSelected_ = true;
+                temporaryLayer2->isSelected_ = true;
             }
-            temporaryLayer->update();
-            hierarchyLayerLayout_->addWidget(temporaryLayer);
+            temporaryLayer1->update();
+            temporaryLayer2->update();
+            hierarchyLayerLayout_->addWidget(temporaryLayer1);
+            keyframeLayerLayout_->addWidget(temporaryLayer2);
         }
     }
 
     
     hierarchyLayerLayout_->addStretch();
+    keyframeLayerLayout_->addStretch();
     for(int i = layers_.size() - 1; i >= 0; i--){
-        layers_[i]->show();
+        layers_[i].first->show();
+        layers_[i].second->show();
     }
     
     hierarchyLayerPanel_->update();
+    keyframeLayerPanel_->update();
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -988,14 +1039,14 @@ void Timeline::updateKeyframeLayerPanelHeight()
 void Timeline::updateSelectedLayer(path *p)
 {
     if(p == nullptr){
-        activeLayer_ = nullptr;
+        setActiveLayer(nullptr);
         onLayersUpdate();
         return;
     }
 
     for(int i = layers_.size() - 1; i >= 0; i--){
-        if(layers_[i]->relatedPath_ == p){
-            activeLayer_ = layers_[i];
+        if(layers_[i].first->relatedPath_ == p || layers_[i].second->relatedPath_ == p){
+            setActiveLayer(layers_[i].first);
             break;
         }
     }

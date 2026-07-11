@@ -25,7 +25,7 @@
 class Layer : public QWidget{
     Q_OBJECT
 public:
-    Layer(QWidget* parent, path* p, int height, int* frameWidth);
+    Layer(QWidget* parent, path* p, int* frameWidth);
     ~Layer(){
         relatedPath_ = nullptr;
     };
@@ -46,9 +46,9 @@ public:
 
 private:
     QWidget* parent_;
-    int layerHeight_;
     int* frameWidth_;
-    int keyframeLayerHeight_ = 24;
+    int layerHeight_ = 22;
+    int keyframeLayerHeight_ = 20;
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event);
 
@@ -153,21 +153,19 @@ public:
     int* currentFrame_ = new int(0);
     bool playing_ = false;
 
-    QVector<Layer*> layers_;
-    Layer* activeLayer_ = nullptr;
+    QVector<QPair<Layer*, Layer*>> layers_;
+    Layer* activeLayer_ = nullptr; //active layer will always point to the hierarchy layer
 
     void step();
     void setTheme(QString theme = "Dark");
     void addLayer(path* p);
     void removeLayer(path* p);
-    void setActiveLayer(Layer *l);
-    // void clickTimeIndicatorBar(QEvent* event);
+    void setActiveLayer(Layer *l); //active layer will always point to the hierarchy layer
     
 private:
     int *frameRate_; // initialized on creating the instance 
     int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
-    int layerHeight_ = 30; //there is also a layerHeight_ member in Layer
     QVBoxLayout* toolBarVLayout_;
     QString theme_;
 
