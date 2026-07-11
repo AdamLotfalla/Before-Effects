@@ -928,9 +928,10 @@ void viewPort::createTestPath()
     testPath->setDrawingMode(true);
     setSelectedPath(testPath, true, true);
 
-    testPath->connect(testPath, &path::updateLayers, [this](){
-        emit updateLayers();
+    testPath->connect(testPath, &path::updateLayers, [this, testPath](){
+        emit updateLayers(testPath);
     });
+
     testPath->connect(this, &viewPort::supressKeyframesSignal, testPath, &path::supressKeyframeWrite);
     connect(this, &viewPort::optimizeSignal, testPath, &path::optimize);
     
@@ -952,7 +953,7 @@ void viewPort::createTestPath()
     paths_.push_back(testPath);
     emit pathCreated(testPath);
     emit attributePanelUpdateNeeded(testPath);
-    emit updateLayers();
+    emit updateLayers(testPath);
     scene_->update();
 }
 
@@ -2179,7 +2180,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         }
 
         if(selectedPath_ != newSelectedPath){
-            emit updateLayers(); //for highlighting
+            emit updateLayers(newSelectedPath); //for highlighting
         }
 
         if(selectedPath_ != newSelectedPath && !hideAttributePanel){
@@ -2244,8 +2245,8 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath->setDrawingMode(true);
             setSelectedPath(currentPath, true, true);
 
-            currentPath->connect(currentPath, &path::updateLayers, [this](){
-                emit updateLayers();
+            currentPath->connect(currentPath, &path::updateLayers, [this, currentPath](){
+                emit updateLayers(currentPath);
             });
             currentPath->connect(this, &viewPort::supressKeyframesSignal, currentPath, &path::supressKeyframeWrite);
             connect(this, &viewPort::optimizeSignal, currentPath, &path::optimize);
@@ -2277,7 +2278,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
                 emit attributePanelUpdateNeeded(currentPath);
-                emit updateLayers();
+                emit updateLayers(currentPath);
             }
             else{
                 currentPath->addPoint(pointToAdd);

@@ -413,6 +413,8 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     void toggleRotationMode();
     bool inRotationMode();
     void supressKeyframeWrite(bool state);
+
+    bool layerIsExpanded_ = false; // don't like it being public
     
     private:
     
@@ -572,7 +574,7 @@ signals:
     void attributePanelUpdateNeeded(AttributePanel* obj);
     void pathCreated(path* p);
     void pathDeleted(path* p);
-    void updateLayers();
+    void updateLayers(path* p);
     void selectLayer(path* p);
     void frameChanged();
     void optimizeSignal(bool state);

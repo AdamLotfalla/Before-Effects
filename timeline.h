@@ -36,8 +36,8 @@ public:
     };
 
     DrawMode drawMode_ = hierarchy; 
-    bool isSelected_ = false;
-    bool isExpanded_ = false;
+
+    void refresh();
     bool isValid() const {return relatedPath_ != nullptr;}
     void setDrawMode(DrawMode newMode);
     void setExpanded(bool state);
@@ -45,7 +45,6 @@ public:
     QColor color_ = QColor("#F16E7A"); //light coral; temporary
 
 private:
-    QWidget* parent_;
     int* frameWidth_;
     int layerHeight_ = 22;
     int keyframeLayerHeight_ = 20;
@@ -186,18 +185,16 @@ private:
     QWidget* keyframeLayerPanel_;
     QVBoxLayout* keyframeLayerLayout_;
 
-
+    QHash<path*, QPair<Layer*, Layer*>> layerLookup_;
 
     QToolButton* playButton;
 
     void resizeEvent(QResizeEvent *event) override;
     void playButtonClickEvent();
-
-    void updateKeyframeLayerPanelHeight();
     
 public slots:
-    void onLayersUpdate();
-    void updateSelectedLayer(path* p);
+    void setSelectedLayer(path* p);
+    void refreshLayer(path* p);
 
 private slots:
     void zoomSliderChanged(int value);

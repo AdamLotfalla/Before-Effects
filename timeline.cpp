@@ -3,11 +3,16 @@
 Layer::Layer(QWidget* parent, path *p, int* frameWidth) : QWidget(parent)
 {
     relatedPath_ = p;
-    parent_ = parent;
     frameWidth_ = frameWidth;
     this->setMinimumHeight(layerHeight_);
 
     setAutoFillBackground(false);
+}
+
+void Layer::refresh()
+{
+    update();
+    updateGeometry();
 }
 
 void Layer::setDrawMode(DrawMode newMode)
@@ -17,8 +22,8 @@ void Layer::setDrawMode(DrawMode newMode)
 
 void Layer::setExpanded(bool state)
 {
-    if (isExpanded_ == state) return;
-    isExpanded_ = state;
+    if (relatedPath_->layerIsExpanded_ == state) return;
+    relatedPath_->layerIsExpanded_ = state;
     update();
     updateGeometry();
 }
@@ -26,10 +31,10 @@ void Layer::setExpanded(bool state)
 void Layer::mousePressEvent(QMouseEvent *event)
 {
     if(drawMode_ != DrawMode::keyframe && event->pos().x() <= 30){
-        isExpanded_ = !isExpanded_;
+        relatedPath_->layerIsExpanded_ = !relatedPath_->layerIsExpanded_;
         update();
         updateGeometry();
-        emit expandedChanged(isExpanded_);
+        emit expandedChanged(relatedPath_->layerIsExpanded_);
     }
 }
 
@@ -40,7 +45,7 @@ void Layer::paintEvent(QPaintEvent *event)
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
 
     if(drawMode_ == DrawMode::hierarchy){
-        if(isSelected_)
+        if(relatedPath_->isSelected())
             painter.setBrush(QColor("#585547"));
         else
             painter.setBrush(QColor("#444444"));
@@ -80,7 +85,7 @@ void Layer::paintEvent(QPaintEvent *event)
         };
         
         
-        if(relatedPath_ && isExpanded_){
+        if(relatedPath_ && relatedPath_->layerIsExpanded_){
             int counter = 0;         
             int textBegin = 35, childBracketBegin = 14, childBracketEnd = 23; 
             
@@ -124,7 +129,7 @@ void Layer::paintEvent(QPaintEvent *event)
     
             setFixedHeight(counter * keyframeLayerHeight_ + layerHeight_);
         }
-        else if(relatedPath_ && !isExpanded_){
+        else if(relatedPath_ && !relatedPath_->layerIsExpanded_){
             painter.drawPath(closedExpantionArrow);
             setFixedHeight(layerHeight_);
         }
@@ -140,67 +145,45 @@ void Layer::paintEvent(QPaintEvent *event)
         
         painter.setPen(Qt::NoPen);
         painter.setBrush(QBrush(color_));
-        painter.drawRoundedRect(0, 0, parent_->width(), layerHeight_, 2, 2);
+        painter.drawRoundedRect(0, 0, parentWidget()->width(), layerHeight_, 2, 2);
         
 
-        //drawing hatches if selected (needs implementing proper selection)
-        painter.setPen(QPen(QColor("#ffffff"), 15));
-        painter.setOpacity(0.1);
-        
-        QPainterPath Rect;
-        Rect.addRoundedRect(0, 0, parent_->width(), layerHeight_, 2, 2);
-        painter.setClipPath(Rect);
-        float lineSpacing = 30.0;
-        int NLines = width() / lineSpacing + 1;
-        while(NLines--){
-            painter.drawLine(NLines * lineSpacing + 20, -10, NLines * lineSpacing, keyframeLayerHeight_ + 10);
+        //drawing hatches if selected
+        if(relatedPath_->isSelected()){
+            painter.setPen(QPen(QColor("#ffffff"), 15));
+            painter.setOpacity(0.1);
+            
+            QPainterPath Rect;
+            Rect.addRoundedRect(0, 0, parentWidget()->width(), layerHeight_, 2, 2);
+            painter.setClipPath(Rect);
+            float lineSpacing = 30.0;
+            int NLines = width() / lineSpacing + 1;
+            while(NLines--){
+                painter.drawLine(NLines * lineSpacing + 20, -10, NLines * lineSpacing, keyframeLayerHeight_ + 10);
+            }
         }
-        
+            
         
         // draw keyframes
         painter.setPen(Qt::NoPen);
         painter.setOpacity(1);
         painter.setBrush(QBrush("#7BC7B0"));
-        for(auto j : relatedPath_->xPositionFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+
+        std::array<const std::map<int, qreal>*, 8> frameMaps = {
+            &relatedPath_->xPositionFrames, &relatedPath_->yPositionFrames,
+            &relatedPath_->xPivotFrames,    &relatedPath_->yPivotFrames,
+            &relatedPath_->xScaleFrames,    &relatedPath_->yScaleFrames,
+            &relatedPath_->rotationFrames,  &relatedPath_->strokeWidthFrames,
+        };
+
+        for(auto* frames : frameMaps){
+            for(auto& j : *frames){
+                Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
+                painter.drawPath(Rhombus);
+                Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
+            }
         }
-        for(auto j : relatedPath_->yPositionFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : relatedPath_->xPivotFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : relatedPath_->yPivotFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : relatedPath_->xScaleFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : relatedPath_->yScaleFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : relatedPath_->rotationFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : relatedPath_->strokeWidthFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
+        
         for(auto j : relatedPath_->fillColorFrames){
             Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
             painter.drawPath(Rhombus);
@@ -740,8 +723,10 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     
     hierarchyLayerPanel_ = new QWidget;
     hierarchyLayerLayout_ = new QVBoxLayout;
-    hierarchyLayerLayout_->setContentsMargins(0,2,0,0);
+    hierarchyLayerLayout_->setContentsMargins(0,3,0,0);
     hierarchyLayerLayout_->setSpacing(1);
+    hierarchyLayerLayout_->addSpacing(tickBar_->getTopBarHeight());
+    hierarchyLayerLayout_->addStretch();
     hierarchyLayerPanel_->setLayout(hierarchyLayerLayout_);
     hierarchyLayerPanel_->setAutoFillBackground(false);
     hierarchyScroller_->setWidget(hierarchyLayerPanel_);
@@ -787,6 +772,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     keyframeLayerLayout_ = new QVBoxLayout;
     keyframeLayerLayout_->setContentsMargins(0,0,0,0);
     keyframeLayerLayout_->setSpacing(1);
+    keyframeLayerLayout_->addStretch();
     keyframeLayerPanel_->setLayout(keyframeLayerLayout_);
 
     keyframeVScroller_->setWidgetResizable(true);
@@ -841,118 +827,59 @@ void Timeline::addLayer(path* p)
     setActiveLayer(nullptr);
     Layer* hierarchyLayer = new Layer(hierarchyLayerPanel_, p, &frameWidth_);
     Layer* keyframeLayer = new Layer(keyframeLayerPanel_, p, &frameWidth_);
-    keyframeLayer->setDrawMode(Layer::DrawMode::keyframe);
+    keyframeLayer->setDrawMode(Layer::DrawMode::keyframe); // the other is hierarchy by default
 
-    connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::setExpanded);
+    connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::refresh);
 
-    hierarchyLayerLayout_->insertWidget(0, hierarchyLayer);
+    hierarchyLayerLayout_->insertWidget(1, hierarchyLayer);
     keyframeLayerLayout_->insertWidget(0, keyframeLayer);
 
     hierarchyLayer->show();
     keyframeLayer->show();
 
     layers_.push_back({hierarchyLayer, keyframeLayer});
+    layerLookup_.insert(p, {hierarchyLayer, keyframeLayer});
     setActiveLayer(hierarchyLayer);
 }
 
 void Timeline::removeLayer(path *p)
 {
-    setActiveLayer(nullptr);
-    for(auto i = 0; i < layers_.size(); i++){
-        if(layers_[i].first->relatedPath_ == p){ //active layer will always point to the hierarchy layer
-            Layer* layer1ToRemove = layers_[i].first;
-            Layer* layer2ToRemove = layers_[i].second;
-            layers_.remove(i);
-            delete layer1ToRemove;
-            delete layer2ToRemove;
-            break;
-        }
-    }
+    auto it = layerLookup_.find(p);
+    if(it == layerLookup_.end()) return;
+
+    auto [hLayer, kLayer] = it.value();
+    if(activeLayer_ == hLayer) setActiveLayer(nullptr);
+
+    layerLookup_.erase(it);
+    layers_.removeIf([hLayer](const QPair<Layer*,Layer*>& pr){ return pr.first == hLayer; });
+
+    delete hLayer;
+    delete kLayer;
 }
 
 void Timeline::setActiveLayer(Layer *l)
 {
     if(activeLayer_ != nullptr){
-        activeLayer_->isSelected_ = false;
+        activeLayer_->relatedPath_->setSelected(false);
         activeLayer_->update();
+
+        auto it = layerLookup_.find(activeLayer_->relatedPath_);
+        if(it != layerLookup_.end()){
+            it.value().second->update();
+        }
     }
+    
     activeLayer_ = l;
-
+    
     if(activeLayer_ != nullptr){
-        activeLayer_->isSelected_ = true;
+        activeLayer_->relatedPath_->setSelected(true);
         activeLayer_->update();
-    }
-}
 
-void Timeline::onLayersUpdate()
-{
-    for (auto& pair : layers_) {
-        pair.first->isSelected_ = false;
-        pair.second->isSelected_ = false;
-    }   
-
-    if(activeLayer_) {
-        activeLayer_->isSelected_ = true;
-    }
-
-    if (hierarchyLayerLayout_) {
-       QLayoutItem *item;
-        while ((item = hierarchyLayerLayout_->takeAt(0)) != nullptr) {
-            if (QWidget *widget = item->widget()) {
-                widget->hide();
-            }
-            delete item;
-        }
-        // delete leftPanelLayout_;
-    }
-    else{
-        hierarchyLayerLayout_ = new QVBoxLayout(hierarchyLayerPanel_);
-        hierarchyLayerLayout_->setContentsMargins(0,0,0,0);
-        hierarchyLayerLayout_->setSpacing(0);
-    }
-
-    if (keyframeLayerLayout_) {
-       QLayoutItem *item;
-        while ((item = keyframeLayerLayout_->takeAt(0)) != nullptr) {
-            if (QWidget *widget = item->widget()) {
-                widget->hide();
-            }
-            delete item;
-        }
-        // delete leftPanelLayout_;
-    }
-    else{
-        keyframeLayerLayout_ = new QVBoxLayout(hierarchyLayerPanel_);
-        keyframeLayerLayout_->setContentsMargins(0,0,0,0);
-        keyframeLayerLayout_->setSpacing(0);
-    }
-
-    hierarchyLayerLayout_->addSpacing(tickBar_->getTopBarHeight());
-    for(int i = layers_.size() - 1; i >= 0; i--){
-        Layer* temporaryLayer1 = layers_[i].first;
-        Layer* temporaryLayer2 = layers_[i].second;
-        if(temporaryLayer1 && temporaryLayer2){
-            if(temporaryLayer1 == activeLayer_){
-                temporaryLayer1->isSelected_ = true;
-                temporaryLayer2->isSelected_ = true;
-            }
-            temporaryLayer1->update();
-            temporaryLayer2->update();
-            hierarchyLayerLayout_->addWidget(temporaryLayer1);
-            keyframeLayerLayout_->addWidget(temporaryLayer2);
+        auto it = layerLookup_.find(activeLayer_->relatedPath_);
+        if(it != layerLookup_.end()){
+            it.value().second->update();
         }
     }
-
-    
-    hierarchyLayerLayout_->addStretch();
-    keyframeLayerLayout_->addStretch();
-    for(int i = layers_.size() - 1; i >= 0; i--){
-        layers_[i].first->show();
-        layers_[i].second->show();
-    }
-    
-    hierarchyLayerPanel_->update();
-    keyframeLayerPanel_->update();
 }
 
 void Timeline::zoomSliderChanged(int value)
@@ -1030,26 +957,18 @@ void Timeline::playButtonClickEvent()
     emit playSignal(playing_);
 }
 
-void Timeline::updateKeyframeLayerPanelHeight()
+void Timeline::refreshLayer(path* p)
 {
-    int h = keyframeLayerLayout_->sizeHint().height();
-    keyframeLayerPanel_->setFixedHeight(h);   // sets real min==max==h, overrides policy to Fixed vertically
+    auto it = layerLookup_.find(p);
+    if(it == layerLookup_.end()) return;
+    it.value().first->update();    // now used to repaint the name text since text is extracted every layer paint event
+    it.value().second->update();
 }
 
-void Timeline::updateSelectedLayer(path *p)
+void Timeline::setSelectedLayer(path *p)
 {
-    if(p == nullptr){
-        setActiveLayer(nullptr);
-        onLayersUpdate();
-        return;
-    }
-
-    for(int i = layers_.size() - 1; i >= 0; i--){
-        if(layers_[i].first->relatedPath_ == p || layers_[i].second->relatedPath_ == p){
-            setActiveLayer(layers_[i].first);
-            break;
-        }
-    }
-
-    onLayersUpdate();
+    if(p == nullptr){ setActiveLayer(nullptr); return; }
+    auto it = layerLookup_.find(p);
+    if(it != layerLookup_.end())
+        setActiveLayer(it.value().first);
 }
