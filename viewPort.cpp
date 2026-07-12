@@ -552,11 +552,9 @@ QPainterPath path::shape() const
 
     auto transformPoint = [&](QPointF p)
     {
-        // scale
         p.setX(p.x() * scaleX_ + globalPivotPoint.x() * (1 - scaleX_));
         p.setY(p.y() * scaleY_ + globalPivotPoint.y() * (1 - scaleY_));
 
-        // rotate
         qreal x = p.x();
         qreal y = p.y();
 
@@ -566,9 +564,9 @@ QPainterPath path::shape() const
         );
     };
 
-    QPainterPath p;
-
-    p.moveTo(transformPoint(actualNodes_[0]->position_));
+    // Build the raw outline path — identical to before, unchanged
+    QPainterPath rawPath;
+    rawPath.moveTo(transformPoint(actualNodes_[0]->position_));
 
     for (int i = 0; i < actualNodes_.size(); i++)
     {
@@ -583,27 +581,56 @@ QPainterPath path::shape() const
             if ((endMode == handleMode::symmetric || endMode == handleMode::smooth) && startMode == handleMode::linear)
             {
                 QPointF P1 = transformPoint(actualNodes_[j]->H1->position_);
-                p.quadTo(P1, P3);
+                rawPath.quadTo(P1, P3);
             }
             else if ((endMode == handleMode::symmetric || endMode == handleMode::smooth) && (startMode == handleMode::symmetric || startMode == handleMode::smooth))
             {
                 QPointF P1 = transformPoint(actualNodes_[i]->H2->position_);
                 QPointF P2 = transformPoint(actualNodes_[j]->H1->position_);
-                p.cubicTo(P1, P2, P3);
+                rawPath.cubicTo(P1, P2, P3);
             }
             else if (endMode == handleMode::linear && (startMode == handleMode::symmetric || startMode == handleMode::smooth))
             {
                 QPointF P1 = transformPoint(actualNodes_[i]->H2->position_);
-                p.quadTo(P1, P3);
+                rawPath.quadTo(P1, P3);
             }
             else
             {
-                p.lineTo(P3);
+                rawPath.lineTo(P3);
             }
         }
     }
 
-    return p;
+    // ---- Build the actual hit-test area from fill_ / stroke_ ----
+    QPainterPath hitPath;
+
+    if (fill_) {
+        // Interior area. For an unclosed (open/spline) path, Qt implicitly
+        // closes the subpath for fill/contains purposes — matching what
+        // painter->fillPath() would visually produce.
+        hitPath.addPath(rawPath);
+    }
+
+    if (stroke_) {
+        QPainterPathStroker stroker;
+        // Use a minimum click width so thin strokes stay easily clickable,
+        // independent of the actual (possibly hairline) visual stroke width.
+        stroker.setWidth(qMax(strokeWidth_, 6.0));
+        stroker.setJoinStyle(pathJointStyle);
+        stroker.setCapStyle(pathCapStyle);
+        QPainterPath strokeOutline = stroker.createStroke(rawPath);
+        hitPath = hitPath.isEmpty() ? strokeOutline : hitPath.united(strokeOutline);
+    }
+
+    if (!fill_ && !stroke_) {
+        // Nothing visible — fall back to a thin clickable strip along the
+        // path so it isn't completely unselectable.
+        QPainterPathStroker fallbackStroker;
+        fallbackStroker.setWidth(6.0);
+        hitPath = fallbackStroker.createStroke(rawPath);
+    }
+
+    return hitPath;
 }
 
 void path::updateTransformedNodes()
@@ -2271,26 +2298,24 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         emit selectLayer(nullptr);
         return;
     }
-
+    
     if (newSelectedPath != nullptr) {
-        if (selectedPath_ != nullptr && selectedPath_ != newSelectedPath) {
-            selectedPath_->setSelected(false);
-            selectedPath_->update();
+        if (selectedPath_ != newSelectedPath) {
+            if(!hideAttributePanel){
+                emit attributePanelUpdateNeeded(newSelectedPath);
+            } 
+            
+            if(selectedPath_ != nullptr){
+                selectedPath_->setSelected(false);
+                selectedPath_->update();
+            }
+            
+            selectedPath_ = newSelectedPath;
+            selectedPath_->setSelected(true);
+            selectedPath_->update(); //same as updating newSelectedPath
+            emit updateLayers(selectedPath_); //for highlighting
+            emit selectLayer(selectedPath_);
         }
-
-        if(selectedPath_ != newSelectedPath){
-            emit updateLayers(newSelectedPath); //for highlighting
-        }
-
-        if(selectedPath_ != newSelectedPath && !hideAttributePanel){
-            emit attributePanelUpdateNeeded(newSelectedPath);
-        }
-
-        selectedPath_ = newSelectedPath;
-        selectedPath_->setSelected(true);
-        selectedPath_->update();
-
-        emit selectLayer(selectedPath_);
     }
     else{
         if(selectedPath_ != nullptr){
@@ -2301,6 +2326,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
         emit attributePanelUpdateNeeded(nullptr);
         emit selectLayer(nullptr);
     }
+
 }
 
 void viewPort::setPathEditingMode(bool state)
@@ -2390,25 +2416,27 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         scene_->update();
         return;
     }
-    else if(nodeToolActivated_ && event->button() == Qt::LeftButton){
+    else if(nodeToolActivated_ && event->button() == Qt::LeftButton){      
         bool clickedOnNode = false;
         inPathEditingMode_ = true;
 
-        if(selectedPath_ == nullptr){
-            path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
-            
-            if (clickedPath) {
-                if(selectedPath_ != clickedPath)
-                    clickedPath->recentlySelected_ = true;
+        path* clickedPath = qgraphicsitem_cast<path*>(itemAt(event->pos()));
+        
 
-                setSelectedPath(clickedPath, true);
-                holdStartPosition_ = canvasLocalPos;
-                holding_ = true;
-            } 
-            else{
-                return;
-            }
+        if(clickedPath){
+            if(selectedPath_ != clickedPath)
+                clickedPath->recentlySelected_ = true;
+
+            setSelectedPath(clickedPath, true);
+            holding_ = true;
+            holdStartPosition_ = canvasLocalPos;
+            return;
         }
+        else{
+            setSelectedPath(nullptr);
+            return;
+        }
+
         
         QRectF searchRect(
                 scenePos.x() - nodeSelectMargin_, 
