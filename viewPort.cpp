@@ -957,11 +957,14 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 {
     //use cached panel everytime except for the first time
     if (cachedAttributeWidget_ && cachedAttributeWidget_->parent() == parent) {
-        // Ensure data in the cached widget is up to date before returning
+        bool prevSuppress = supressKeyframeWrite_;
+        supressKeyframeWrite_ = true;
+
         if(onPositionChanged) onPositionChanged(position_);
         if(onScaleChanged) onScaleChanged(scaleX_, scaleY_);
         if(onRotationChanged) onRotationChanged(rotation_);
 
+        supressKeyframeWrite_ = prevSuppress;
         return cachedAttributeWidget_;
     }
 
