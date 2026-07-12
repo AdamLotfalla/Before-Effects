@@ -2424,18 +2424,19 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         
 
         if(clickedPath){
-            if(selectedPath_ != clickedPath)
-                clickedPath->recentlySelected_ = true;
-
-            setSelectedPath(clickedPath, true);
+            if(selectedPath_ != clickedPath){
+                clickedPath->recentlySelected_ = true;   
+                setSelectedPath(clickedPath, true);
+                return;
+            }
             holding_ = true;
             holdStartPosition_ = canvasLocalPos;
-            return;
+            // return;
         }
-        else{
-            setSelectedPath(nullptr);
-            return;
-        }
+        // else{
+        //     setSelectedPath(nullptr);
+        //     // return;
+        // }
 
         
         QRectF searchRect(
@@ -2444,6 +2445,9 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 nodeSelectMargin_ * 2, 
                 nodeSelectMargin_ * 2
             );
+
+        if(!selectedPath_) return;
+        
         for (int i = 0; i < selectedPath_->getNodeCount(); i++) {
             QPointF nodePos = canvas_->mapToScene(selectedPath_->getDrawnPoint(i)); //converted to scene coordincates, scale, then rotate to follow the object transformation
 
@@ -2511,6 +2515,12 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 selectedPath_->clearHighlightedNodes();
                 selectedPath_->update();
             }
+
+            if(!clickedPath){
+                setSelectedPath(nullptr);
+                return;
+            }
+
             QGraphicsView::mousePressEvent(event);
             return;
         }
