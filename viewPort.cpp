@@ -2697,6 +2697,22 @@ void viewPort::keyPressEvent(QKeyEvent *event)
     else if(event->key() == Qt::Key_Control){
         controlPressed_ = true;
     }
+    else if(event->key() == Qt::Key_Return){
+        if(startedNewPath_){
+                path* currentPath = paths_.back();
+                currentPath->clearPreviewPoint();
+                currentPath->setDrawingMode(false);
+                currentPath->showSnapMargin(false);
+            
+                startedNewPath_ = false;
+
+                currentPath->calculateBoundaries();
+                currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
+                emit pathCreated(currentPath);
+                emit attributePanelUpdateNeeded(currentPath);
+                emit updateLayers(currentPath);
+        }
+    }
 }
 
 void viewPort::keyReleaseEvent(QKeyEvent *event)
