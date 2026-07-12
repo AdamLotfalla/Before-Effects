@@ -943,6 +943,12 @@ void viewPort::createTestPath()
     testPath->calculateBoundaries();
     testPath->position_ = {(testPath->minX_ + testPath->maxX_)/2.0, (testPath->minY_ + testPath->maxY_)/2.0};
 
+    testPath->xPositionFrames[3] = 600;
+    testPath->xPositionFrames[17] = 1200;
+
+    testPath->rotationFrames[7] = 90;
+    testPath->yScaleFrames[11] = 1;
+
     emit pathCreated(testPath);
     emit attributePanelUpdateNeeded(testPath);
     

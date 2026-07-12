@@ -139,7 +139,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QObject::connect(viewPort_, &viewPort::pathDeleted, TimelinePanel_, &Timeline::removeLayer);
     // QObject::connect(viewPort_, &viewPort::updateLayers, TimelinePanel_, &Timeline::onLayersUpdate);
     QObject::connect(viewPort_, &viewPort::updateLayers, TimelinePanel_, &Timeline::refreshLayer);
+
+    // select path from timeline and select layer from viewport
     QObject::connect(viewPort_, &viewPort::selectLayer, TimelinePanel_, &Timeline::setSelectedLayer);
+    QObject::connect(TimelinePanel_, &Timeline::setSelectedPath, [&](path* p){viewPort_->setSelectedPath(p);});
+
     QObject::connect(TimelinePanel_, &Timeline::frameChanged, viewPort_, &viewPort::onFrameChanged);
     QObject::connect(TimelinePanel_, &Timeline::optimize, viewPort_, &viewPort::optimize);
 

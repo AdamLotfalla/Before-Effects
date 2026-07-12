@@ -53,6 +53,7 @@ private:
 
 signals:
     void expandedChanged(bool expanded);
+    void makeSelected();
 };
 
 class TimeCursor : public QWidget{
@@ -203,4 +204,5 @@ signals:
     void playSignal(bool playing);
     void frameChanged();
     void optimize(bool state);
+    void setSelectedPath(path* newSelectedPath);
 };

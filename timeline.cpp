@@ -36,6 +36,8 @@ void Layer::mousePressEvent(QMouseEvent *event)
         updateGeometry();
         emit expandedChanged(relatedPath_->layerIsExpanded_);
     }
+    
+    if(event->pos().x() > 30) emit makeSelected();
 }
 
 void Layer::paintEvent(QPaintEvent *event)
@@ -151,7 +153,9 @@ void Layer::paintEvent(QPaintEvent *event)
         Rhombus.closeSubpath();
         
         painter.setPen(Qt::NoPen);
-        painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content    
+        painter.setBrush(QBrush("#373737"));
+        painter.drawRoundedRect(0, 0, width(), 4000, 2, 2);
         painter.setBrush(QBrush(color_));
         painter.drawRoundedRect(0, 0, parentWidget()->width(), layerHeight_, 2, 2);
         
@@ -867,6 +871,7 @@ void Timeline::addLayer(path* p)
     keyframeLayer->setDrawMode(Layer::DrawMode::keyframe); // the other is hierarchy by default
 
     connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::refresh);
+    connect(hierarchyLayer, &Layer::makeSelected, [p, this](){emit setSelectedPath(p);});
 
     hierarchyLayerLayout_->insertWidget(1, hierarchyLayer);
     keyframeLayerLayout_->insertWidget(0, keyframeLayer);
