@@ -2183,6 +2183,7 @@ void viewPort::enableBezierTool(bool state)
 {
     bezierToolActivated_ = state;
     startedNewPath_ = false;
+    if(state) setSelectedPath(nullptr);
     
     if(!paths_.empty()){
         paths_.back()->clearPreviewPoint();
