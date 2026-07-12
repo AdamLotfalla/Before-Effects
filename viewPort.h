@@ -387,6 +387,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     bool fill_ = true;
     bool stroke_ = true;
     Qt::PenJoinStyle pathJointStyle = Qt::MiterJoin;
+    Qt::PenCapStyle pathCapStyle = Qt::SquareCap;
 
     //keyframing
     int* currentFrame_;

@@ -1756,7 +1756,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     QHBoxLayout* jointLayout = new QHBoxLayout();
     QLabel* JointLabel = new QLabel(background);
-    JointLabel->setText("Joint type");
+    JointLabel->setText("Joint style");
 
 
     VLayout->addLayout(jointLayout);
@@ -1817,6 +1817,75 @@ QWidget *path::createAttributeWidget(QWidget *parent)
             pathJointStyle = Qt::PenJoinStyle::RoundJoin;
             miterJointButton->setChecked(false);
             bevelJointButton->setChecked(false);
+            update();
+        }
+    });
+    
+
+    
+    QHBoxLayout* capLayout = new QHBoxLayout();
+    QLabel* capLabel = new QLabel(background);
+    capLabel->setText("Cap style");
+
+
+    VLayout->addLayout(capLayout);
+
+
+    QToolButton* squareCapButton = new QToolButton(background);
+    squareCapButton->setStyleSheet(toolBarButtonStyle);
+    squareCapButton->setIcon(QIcon(":/CapTypes/icons/SquareCap.svg"));
+    squareCapButton->setIconSize(QSize(25,25));
+    squareCapButton->setFixedSize(QSize(28,28));
+    squareCapButton->setCheckable(true);
+    squareCapButton->setChecked(true);
+    squareCapButton->setToolTip("Square Cap");
+    
+    
+    QToolButton* flatCapButton = new QToolButton(background);
+    flatCapButton->setStyleSheet(toolBarButtonStyle);
+    flatCapButton->setIcon(QIcon(":/CapTypes/icons/FlatCap.svg"));
+    flatCapButton->setIconSize(QSize(25,25));
+    flatCapButton->setFixedSize(QSize(28,28));
+    flatCapButton->setCheckable(true);
+    flatCapButton->setChecked(false);
+    flatCapButton->setToolTip("Flat Cap");
+    
+    QToolButton* roundCapButton = new QToolButton(background);
+    roundCapButton->setStyleSheet(toolBarButtonStyle);
+    roundCapButton->setIcon(QIcon(":/CapTypes/icons/RoundCap.svg"));
+    roundCapButton->setIconSize(QSize(25,25));
+    roundCapButton->setFixedSize(QSize(28,28));
+    roundCapButton->setCheckable(true);
+    roundCapButton->setChecked(false);
+    roundCapButton->setToolTip("Round Cap");
+    
+    
+    capLayout->addWidget(capLabel);
+    capLayout->addWidget(squareCapButton);
+    capLayout->addWidget(flatCapButton);
+    capLayout->addWidget(roundCapButton);
+
+    squareCapButton->connect(squareCapButton, &QToolButton::toggled, [this, flatCapButton, roundCapButton](bool state){
+        if(state && pathCapStyle != Qt::PenCapStyle::SquareCap){
+            pathCapStyle = Qt::PenCapStyle::SquareCap;
+            flatCapButton->setChecked(false);
+            roundCapButton->setChecked(false);
+            update();
+        }
+    });
+    flatCapButton->connect(flatCapButton, &QToolButton::toggled, [this, squareCapButton, roundCapButton](bool state){
+        if(state && pathCapStyle != Qt::PenCapStyle::FlatCap){
+            pathCapStyle = Qt::PenCapStyle::FlatCap;
+            squareCapButton->setChecked(false);
+            roundCapButton->setChecked(false);
+            update();
+        }
+    });
+    roundCapButton->connect(roundCapButton, &QToolButton::toggled, [this, flatCapButton, squareCapButton](bool state){
+        if(state && pathCapStyle != Qt::PenCapStyle::RoundCap){
+            pathCapStyle = Qt::PenCapStyle::RoundCap;
+            flatCapButton->setChecked(false);
+            squareCapButton->setChecked(false);
             update();
         }
     });
@@ -1883,7 +1952,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     
     // Stroke
     if(!inPathDrawingMode_ && stroke_){
-        painter->setPen(QPen(strokeColor_, strokeWidth_, Qt::SolidLine, Qt::SquareCap, pathJointStyle));
+        painter->setPen(QPen(strokeColor_, strokeWidth_, Qt::SolidLine, pathCapStyle, pathJointStyle));
     }
     else if(!inPathDrawingMode_ && !stroke_){
         painter->setPen(QPen(Qt::NoPen));

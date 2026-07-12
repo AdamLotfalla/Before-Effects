@@ -45,4 +45,9 @@
     <qresource prefix="/Program">
         <file>icons/Program_icon.svg</file>
     </qresource>
+    <qresource prefix="/CapTypes">
+        <file>icons/FlatCap.svg</file>
+        <file>icons/SquareCap.svg</file>
+        <file>icons/RoundCap.svg</file>
+    </qresource>
 </RCC>
