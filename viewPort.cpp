@@ -943,17 +943,13 @@ void viewPort::createTestPath()
     testPath->calculateBoundaries();
     testPath->position_ = {(testPath->minX_ + testPath->maxX_)/2.0, (testPath->minY_ + testPath->maxY_)/2.0};
 
-    testPath->xPositionFrames[3] = 600;
-    testPath->xPositionFrames[17] = 1200;
-
-    testPath->rotationFrames[7] = 90;
-    testPath->yScaleFrames[11] = 1;
-
-    testPath->update();
-    paths_.push_back(testPath);
     emit pathCreated(testPath);
     emit attributePanelUpdateNeeded(testPath);
+    
+    paths_.push_back(testPath);
     emit updateLayers(testPath);
+
+    testPath->update();
     scene_->update();
 }
 
@@ -1030,9 +1026,11 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         if(!supressKeyframeWrite_){
             if(!xPositionFrames.empty()){
                 xPositionFrames[*currentFrame_] = pos.x();
+                xPositionBox->setKeyframe();
             }
             if(!yPositionFrames.empty()){
                 yPositionFrames[*currentFrame_] = pos.y();
+                yPositionBox->setKeyframe();
             }
         }
         xPositionBox->setValue(pos.x());
@@ -1040,8 +1038,11 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         xPositionBox->blockSignals(false);
         yPositionBox->blockSignals(false);
         
+
         xPositionBox->update();
         yPositionBox->update();
+
+        emit updateLayers();
     };
 
     xPositionBox->connect(xPositionBox, &customSpinBox::valueChanged, [this](qreal value){
@@ -1119,9 +1120,11 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         if(!supressKeyframeWrite_){
             if(!xScaleFrames.empty()){
                 xScaleFrames[*currentFrame_] = newScaleX;
+                xScaleBox->setKeyframe();
             }
             if(!yScaleFrames.empty()){
                 yScaleFrames[*currentFrame_] = newScaleY;
+                yScaleBox->setKeyframe();
             }
         }
         xScaleBox->setValue(newScaleX);
@@ -1199,6 +1202,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         if(!supressKeyframeWrite_){
             if(!rotationFrames.empty()){
                 rotationFrames[*currentFrame_] = newRotation;
+                rotationBox->setKeyframe();
             }
         }
         rotationBox->setValue(newRotation);
