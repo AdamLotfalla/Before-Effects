@@ -148,7 +148,6 @@ class Timeline : public QWidget{
 public:
     Timeline(QWidget *parent, int *frameRate);
 
-    TickBar* tickBar_;
     TimeCursor* cursor_;
     int* currentFrame_ = new int(0);
     bool playing_ = false;
@@ -162,12 +161,13 @@ public:
     void removeLayer(path* p);
     void setActiveLayer(Layer *l); //active layer will always point to the hierarchy layer
     
-private:
+// private:
     int *frameRate_; // initialized on creating the instance 
     int frameWidth_; // initialized when reading the zoomSlider value
     int frameCount_ = 240;
     QVBoxLayout* toolBarVLayout_;
     QString theme_;
+    TickBar* tickBar_;
 
     QWidget* hierarchyPanel_;
     QVBoxLayout* hierarchyVLayout_;
@@ -178,13 +178,6 @@ private:
     QWidget* keyframePanel_;
     QVBoxLayout* keyframeVLayout_;
     QScrollArea* keyframeHScroller_;
-    QScrollArea* keyframeVScroller_;
-    QHBoxLayout* keyframeMarginLayout_;
-    QWidget* keyframeScrollerPanel_;
-    QWidget* keyframeLeftMargin_;
-    QWidget* keyframeRightMargin_;
-    QWidget* keyframeLayerPanel_;
-    QVBoxLayout* keyframeLayerLayout_;
 
     QHash<path*, QPair<Layer*, Layer*>> layerLookup_;
 
@@ -205,4 +198,24 @@ signals:
     void frameChanged();
     void optimize(bool state);
     void setSelectedPath(path* newSelectedPath);
+};
+
+class TimeEditor : public Timeline{
+public:
+    TimeEditor(QWidget* parent, int* frameRate);
+
+private:
+
+
+    QScrollArea* keyframeVScroller_;
+    QHBoxLayout* keyframeMarginLayout_;
+    QWidget* keyframeScrollerPanel_;
+    QWidget* keyframeLeftMargin_;
+    QWidget* keyframeRightMargin_;
+    QWidget* keyframeLayerPanel_;
+    QVBoxLayout* keyframeLayerLayout_;
+};
+
+class GraphEditor : public Timeline{
+
 };

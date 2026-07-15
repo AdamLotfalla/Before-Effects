@@ -99,7 +99,7 @@ private:
     void bezierTool(bool checked);
 
     QWidget* templateAttributeWidget_ = nullptr;
-    Timeline* TimelinePanel_;
+    Timeline* TimeEditorPanel_;
     
     void preCreateAttributeWidgets();
 

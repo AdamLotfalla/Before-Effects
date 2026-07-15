@@ -739,18 +739,13 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     
     hierarchyPanel_ = new QWidget(this);
     hierarchyPanel_->setMinimumWidth(200);
-    keyframeHScroller_ = new QScrollArea;
-    keyframeHScroller_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    keyframeHScroller_->setWidgetResizable(true);
+    
     
     hierarchyScroller_ = new QScrollArea(hierarchyPanel_);
     hierarchyScroller_->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     hierarchyScroller_->setWidgetResizable(true);
     
-    keyframePanel_ = new QWidget;
-    tickBar_ = new TickBar(keyframePanel_, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, currentFrame_);
-    tickBar_->show();
-    keyframeHScroller_->setWidget(keyframePanel_);
+
     
     hierarchyVLayout_ = new QVBoxLayout;
     hierarchyVLayout_->addWidget(hierarchyScroller_, 1);
@@ -760,92 +755,47 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     hierarchyPanel_->setLayout(hierarchyVLayout_);
 
     splitter->addWidget(hierarchyPanel_);
-    splitter->addWidget(keyframeHScroller_);
-    
-    hierarchyLayerPanel_ = new QWidget;
-    hierarchyLayerLayout_ = new QVBoxLayout;
-    hierarchyLayerLayout_->setContentsMargins(2,1,2,0);
-    hierarchyLayerLayout_->setSpacing(1);
-    hierarchyLayerLayout_->addSpacing(tickBar_->getTopBarHeight());
-    hierarchyLayerLayout_->addStretch();
-    hierarchyLayerPanel_->setLayout(hierarchyLayerLayout_);
-    hierarchyLayerPanel_->setAutoFillBackground(false);
-    hierarchyScroller_->setWidget(hierarchyLayerPanel_);
 
-    keyframeVScroller_ = new QScrollArea;
+        hierarchyLayerLayout_->addSpacing(tickBar_->getTopBarHeight()); // added before all the layers
+    hierarchyLayerLayout_->addStretch(); // added after all the layers
+    
+    keyframeHScroller_ = new QScrollArea;
+    keyframeHScroller_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    keyframeHScroller_->setWidgetResizable(true);
+
+    keyframePanel_ = new QWidget;
+    tickBar_ = new TickBar(keyframePanel_, frameRate_, &frameWidth_, &frameCount_, frameWidth_ * frameCount_ + 235, currentFrame_);
+    tickBar_->show();
+    keyframeHScroller_->setWidget(keyframePanel_);
+
+    splitter->addWidget(keyframeHScroller_);
+
 
     keyframeVLayout_ = new QVBoxLayout;
     keyframeVLayout_->addWidget(tickBar_);
-    keyframeVLayout_->addWidget(keyframeVScroller_, 1);
     keyframeVLayout_->setContentsMargins(0,0,0,0);
     keyframeVLayout_->setSpacing(1);
 
     keyframePanel_->setLayout(keyframeVLayout_);
-
-    keyframeMarginLayout_ = new QHBoxLayout;
-    keyframeMarginLayout_->setContentsMargins(0,0,0,0);
-    keyframeMarginLayout_->setSpacing(0);
-
-    keyframeLeftMargin_ = new QWidget;
-    keyframeRightMargin_ = new QWidget;
-    keyframeScrollerPanel_ = new QWidget;
-    keyframeLayerPanel_ = new QWidget;
-    keyframeLayerPanel_->setPalette(QPalette("#1e1e1e"));
-
-    keyframeLeftMargin_->setFixedWidth(tickBar_->getOffset());
-    keyframeRightMargin_->setFixedWidth(tickBar_->getOffset());
-
-    keyframeLeftMargin_->setAutoFillBackground(true);
-    keyframeRightMargin_->setAutoFillBackground(true);
-    keyframeLeftMargin_->setPalette(QPalette("#1c1c1c"));
-    keyframeRightMargin_->setPalette(QPalette("#1c1c1c"));
     
-
-    keyframeMarginLayout_->addWidget(keyframeLeftMargin_);
-    keyframeMarginLayout_->addWidget(keyframeLayerPanel_);
-    keyframeMarginLayout_->addWidget(keyframeRightMargin_);
-    keyframeScrollerPanel_->setLayout(keyframeMarginLayout_);
-
-    keyframeVScroller_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    keyframeVScroller_->setWidget(keyframeScrollerPanel_);
-
-
-    keyframeLayerLayout_ = new QVBoxLayout;
-    keyframeLayerLayout_->setContentsMargins(0,0,0,0);
-    keyframeLayerLayout_->setSpacing(1);
-    keyframeLayerLayout_->addStretch();
-    keyframeLayerPanel_->setLayout(keyframeLayerLayout_);
-
-    keyframeVScroller_->setWidgetResizable(true);
-    keyframeLayerPanel_->adjustSize();
-
-    keyframeHScroller_->setFrameShape(QFrame::NoFrame);
+    hierarchyLayerPanel_ = new QWidget;
+    hierarchyLayerLayout_ = new QVBoxLayout;
+    
+    hierarchyLayerLayout_->setContentsMargins(2,1,2,0);
+    hierarchyLayerLayout_->setSpacing(1);
+    
+    hierarchyLayerPanel_->setLayout(hierarchyLayerLayout_);
+    hierarchyLayerPanel_->setAutoFillBackground(false);
+    hierarchyScroller_->setWidget(hierarchyLayerPanel_);
     hierarchyScroller_->setFrameShape(QFrame::NoFrame);
-    keyframeVScroller_->setFrameShape(QFrame::NoFrame);
-    
-    // QWidget* testLayer = new QWidget; 
-    // testLayer->setFixedHeight(layerHeight_); 
-    // testLayer->setStyleSheet("background:green;");
-    // keyframeLayerLayout_->addWidget(testLayer);
-    // keyframeLayerLayout_->addStretch();
+    keyframeHScroller_->setFrameShape(QFrame::NoFrame);
 
-
-    connect(hierarchyScroller_->verticalScrollBar(), &QScrollBar::valueChanged,
-            keyframeVScroller_->verticalScrollBar(), &QScrollBar::setValue);
-    connect(keyframeVScroller_->verticalScrollBar(), &QScrollBar::valueChanged,
-            hierarchyScroller_->verticalScrollBar(), &QScrollBar::setValue);
-
-    
-    setLayout(toolBarVLayout_);
-    
-    cursor_ = new TimeCursor(keyframePanel_);
-    cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());    
-    
     connect(tickBar_, &TickBar::frameChanged, this, [this](){
         cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
         emit frameChanged();
     });
-
+    
+    setLayout(toolBarVLayout_);
 }
 
 void Timeline::step()
@@ -1021,4 +971,59 @@ void Timeline::setSelectedLayer(path *p)
     auto it = layerLookup_.find(p);
     if(it != layerLookup_.end())
         setActiveLayer(it.value().first);
+}
+
+TimeEditor::TimeEditor(QWidget *parent, int *frameRate) : Timeline(parent, frameRate)
+{
+    keyframeVScroller_ = new QScrollArea;
+    keyframeVLayout_->addWidget(keyframeVScroller_, 1);
+
+
+    keyframeMarginLayout_ = new QHBoxLayout;
+    keyframeMarginLayout_->setContentsMargins(0,0,0,0);
+    keyframeMarginLayout_->setSpacing(0);
+
+    keyframeLeftMargin_ = new QWidget;
+    keyframeRightMargin_ = new QWidget;
+    keyframeScrollerPanel_ = new QWidget;
+    keyframeLayerPanel_ = new QWidget;
+    keyframeLayerPanel_->setPalette(QPalette("#1e1e1e"));
+
+    keyframeLeftMargin_->setFixedWidth(tickBar_->getOffset()); // to be removed
+    keyframeRightMargin_->setFixedWidth(tickBar_->getOffset()); // to be removed
+
+    keyframeLeftMargin_->setAutoFillBackground(true);
+    keyframeRightMargin_->setAutoFillBackground(true);
+    keyframeLeftMargin_->setPalette(QPalette("#1c1c1c"));
+    keyframeRightMargin_->setPalette(QPalette("#1c1c1c"));
+    
+
+    keyframeMarginLayout_->addWidget(keyframeLeftMargin_);
+    keyframeMarginLayout_->addWidget(keyframeLayerPanel_);
+    keyframeMarginLayout_->addWidget(keyframeRightMargin_);
+    keyframeScrollerPanel_->setLayout(keyframeMarginLayout_);
+
+    keyframeVScroller_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    keyframeVScroller_->setWidget(keyframeScrollerPanel_);
+
+
+    keyframeLayerLayout_ = new QVBoxLayout;
+    keyframeLayerLayout_->setContentsMargins(0,0,0,0);
+    keyframeLayerLayout_->setSpacing(1);
+    keyframeLayerLayout_->addStretch();
+    keyframeLayerPanel_->setLayout(keyframeLayerLayout_);
+
+    keyframeVScroller_->setWidgetResizable(true);
+    keyframeLayerPanel_->adjustSize();
+
+    keyframeVScroller_->setFrameShape(QFrame::NoFrame);
+
+    cursor_ = new TimeCursor(keyframePanel_); // this way, each subclass of timeline has to get its own cursor
+    cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth()); 
+
+
+    connect(hierarchyScroller_->verticalScrollBar(), &QScrollBar::valueChanged,
+            keyframeVScroller_->verticalScrollBar(), &QScrollBar::setValue);
+    connect(keyframeVScroller_->verticalScrollBar(), &QScrollBar::valueChanged,
+            hierarchyScroller_->verticalScrollBar(), &QScrollBar::setValue);
 }

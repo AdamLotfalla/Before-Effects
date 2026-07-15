@@ -81,16 +81,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     
 
     
-    TimelinePanel_ = new Timeline(this, &frameRate_);
-    TimelinePanel_->setAutoFillBackground(true);
-    // TimelinePanel_->setPalette(QPalette(QColor(100,100,200)));
+    TimeEditorPanel_ = new TimeEditor(this, &frameRate_);
+    TimeEditorPanel_->setAutoFillBackground(true);
+    // TimeEditorPanel_->setPalette(QPalette(QColor(100,100,200)));
 
-    viewPort_ = new viewPort(this, TimelinePanel_->currentFrame_);
+    viewPort_ = new viewPort(this, TimeEditorPanel_->currentFrame_);
 
     
     QSplitter* timelineSplitter = new QSplitter(Qt::Vertical, centralWidget);
     timelineSplitter->addWidget(viewPort_);
-    timelineSplitter->addWidget(TimelinePanel_);
+    timelineSplitter->addWidget(TimeEditorPanel_);
 
     QVBoxLayout* verticalLayout = new QVBoxLayout(centralWidget);
     verticalLayout->addWidget(toolBar);
@@ -113,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     
     LPanel->setMinimumWidth(50); 
     RPanel->setMinimumWidth(100);
-    TimelinePanel_->setMinimumHeight(200);
+    TimeEditorPanel_->setMinimumHeight(200);
 
     timelineSplitter->setHandleWidth(1);
     sideSplitter->setHandleWidth(1); 
@@ -127,25 +127,25 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     mainLayout->setContentsMargins(0, 0, 0, 0); 
 
 
-    QObject::connect(TimelinePanel_, &Timeline::playSignal,
+    QObject::connect(TimeEditorPanel_, &Timeline::playSignal,
                      this, &MainWindow::startTimer);
-    QObject::connect(TimelinePanel_, &Timeline::playSignal,
+    QObject::connect(TimeEditorPanel_, &Timeline::playSignal,
                      viewPort_, &viewPort::supressKeyframesSlot);
     timer_ = new QTimer(this); 
     timer_->setInterval(1000/frameRate_);
-    QObject::connect(timer_, &QTimer::timeout, TimelinePanel_, &Timeline::step);
+    QObject::connect(timer_, &QTimer::timeout, TimeEditorPanel_, &Timeline::step);
     QObject::connect(viewPort_, &viewPort::attributePanelUpdateNeeded, LPanel, &AttributePanelWidget::showObject);
-    QObject::connect(viewPort_, &viewPort::pathCreated, TimelinePanel_, &Timeline::addLayer);
-    QObject::connect(viewPort_, &viewPort::pathDeleted, TimelinePanel_, &Timeline::removeLayer);
-    // QObject::connect(viewPort_, &viewPort::updateLayer, TimelinePanel_, &Timeline::onLayersUpdate);
-    QObject::connect(viewPort_, &viewPort::updateLayer, TimelinePanel_, &Timeline::refreshLayer);
+    QObject::connect(viewPort_, &viewPort::pathCreated, TimeEditorPanel_, &Timeline::addLayer);
+    QObject::connect(viewPort_, &viewPort::pathDeleted, TimeEditorPanel_, &Timeline::removeLayer);
+    // QObject::connect(viewPort_, &viewPort::updateLayer, TimeEditorPanel_, &Timeline::onLayersUpdate);
+    QObject::connect(viewPort_, &viewPort::updateLayer, TimeEditorPanel_, &Timeline::refreshLayer);
 
     // select path from timeline and select layer from viewport
-    QObject::connect(viewPort_, &viewPort::selectLayer, TimelinePanel_, &Timeline::setSelectedLayer);
-    QObject::connect(TimelinePanel_, &Timeline::setSelectedPath, [&](path* p){viewPort_->setSelectedPath(p);});
+    QObject::connect(viewPort_, &viewPort::selectLayer, TimeEditorPanel_, &Timeline::setSelectedLayer);
+    QObject::connect(TimeEditorPanel_, &Timeline::setSelectedPath, [&](path* p){viewPort_->setSelectedPath(p);});
 
-    QObject::connect(TimelinePanel_, &Timeline::frameChanged, viewPort_, &viewPort::onFrameChanged);
-    QObject::connect(TimelinePanel_, &Timeline::optimize, viewPort_, &viewPort::optimize);
+    QObject::connect(TimeEditorPanel_, &Timeline::frameChanged, viewPort_, &viewPort::onFrameChanged);
+    QObject::connect(TimeEditorPanel_, &Timeline::optimize, viewPort_, &viewPort::optimize);
 
     selectionTool(true);
     viewPort_->createTestPath();
@@ -194,13 +194,13 @@ void MainWindow::exportAnimation()
         "Export Animation", QDir::homePath(), "MP4 Video (*.mp4)");
     if (savePath.isEmpty()) return;
 
-    if (!TimelinePanel_ || !TimelinePanel_->tickBar_ || !viewPort_) {
+    if (!TimeEditorPanel_ || !TimeEditorPanel_->tickBar_ || !viewPort_) {
         QMessageBox::critical(this, "Error", "Timeline or Viewport not initialized.");
         return;
     }
 
-    int startFrame  = TimelinePanel_->tickBar_->getLBound();
-    int endFrame    = TimelinePanel_->tickBar_->getRBound();
+    int startFrame  = TimeEditorPanel_->tickBar_->getLBound();
+    int endFrame    = TimeEditorPanel_->tickBar_->getRBound();
     int totalFrames = (endFrame - startFrame) + 1;
 
     if (totalFrames <= 0) {
@@ -208,7 +208,7 @@ void MainWindow::exportAnimation()
         return;
     }
 
-    originalFrame = *TimelinePanel_->currentFrame_;
+    originalFrame = *TimeEditorPanel_->currentFrame_;
 
     if (tempDir) { delete tempDir; tempDir = nullptr; }
     tempDir = new QTemporaryDir();
@@ -231,7 +231,7 @@ void MainWindow::exportAnimation()
     for (int i = 0; i < totalFrames; ++i) {
         if (progressDialog->wasCanceled()) { cancelled = true; break; }
 
-        *TimelinePanel_->currentFrame_ = startFrame + i;
+        *TimeEditorPanel_->currentFrame_ = startFrame + i;
         viewPort_->onFrameChanged();
 
         QImage image(outputSize, QImage::Format_RGB32);
@@ -259,7 +259,7 @@ void MainWindow::exportAnimation()
         progressDialog->close();
         delete tempDir; tempDir = nullptr;
         // Restore frame
-        *TimelinePanel_->currentFrame_ = originalFrame;
+        *TimeEditorPanel_->currentFrame_ = originalFrame;
         viewPort_->onFrameChanged();
         return;
     }
@@ -307,7 +307,7 @@ void MainWindow::onExportFinished(int exitCode, QProcess::ExitStatus /*exitStatu
 
     if (tempDir) { delete tempDir; tempDir = nullptr; }
 
-    *TimelinePanel_->currentFrame_ = originalFrame;
+    *TimeEditorPanel_->currentFrame_ = originalFrame;
     viewPort_->onFrameChanged();
 
     if (ffmpegProcess) { ffmpegProcess->deleteLater(); ffmpegProcess = nullptr; }
