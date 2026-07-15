@@ -37,7 +37,8 @@ void Layer::mousePressEvent(QMouseEvent *event)
         emit expandedChanged(relatedPath_->layerIsExpanded_);
     }
     
-    if(event->pos().x() > 30) emit makeSelected();
+    if(drawMode_ != DrawMode::keyframe && event->pos().x() > 30) emit makeSelected();
+    if(drawMode_ == DrawMode::keyframe) emit makeSelected();
 }
 
 void Layer::paintEvent(QPaintEvent *event)
@@ -876,6 +877,7 @@ void Timeline::addLayer(path* p)
 
     connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::refresh);
     connect(hierarchyLayer, &Layer::makeSelected, [p, this](){emit setSelectedPath(p);});
+    connect(keyframeLayer, &Layer::makeSelected, hierarchyLayer, &Layer::makeSelected);
 
     hierarchyLayerLayout_->insertWidget(1, hierarchyLayer);
     keyframeLayerLayout_->insertWidget(0, keyframeLayer);
