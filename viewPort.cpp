@@ -955,8 +955,8 @@ void viewPort::createTestPath()
     testPath->setDrawingMode(true);
     setSelectedPath(testPath, true, true);
 
-    testPath->connect(testPath, &path::updateLayers, [this, testPath](){
-        emit updateLayers(testPath);
+    testPath->connect(testPath, &path::updateLayer, [this, testPath](){
+        emit updateLayer(testPath);
     });
 
     testPath->connect(this, &viewPort::supressKeyframesSignal, testPath, &path::supressKeyframeWrite);
@@ -980,7 +980,7 @@ void viewPort::createTestPath()
     emit attributePanelUpdateNeeded(testPath);
     
     paths_.push_back(testPath);
-    emit updateLayers(testPath);
+    emit updateLayer(testPath);
 
     testPath->update();
     scene_->update();
@@ -1018,9 +1018,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     nameEdit->connect(nameEdit, &QLineEdit::editingFinished, [this, nameEdit](){
         name_ = nameEdit->text();
         update();
-        emit updateLayers();
+        emit updateLayer();
     });
-    // nameEdit->connect(nameEdit, &QLineEdit::editingFinished, &Timeline::updateLayers);
+    // nameEdit->connect(nameEdit, &QLineEdit::editingFinished, &Timeline::updateLayer);
 
     nameLayout->addWidget(nameLabel,1);
     nameLayout->addWidget(nameEdit,2);
@@ -1078,7 +1078,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         xPositionBox->update();
         yPositionBox->update();
 
-        emit updateLayers();
+        emit updateLayer();
     };
 
     xPositionBox->connect(xPositionBox, &customSpinBox::valueChanged, [this](qreal value){
@@ -1097,7 +1097,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         else{
             xPositionFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     xPositionBox->connect(this, &path::updateSpinBoxes, xPositionBox, [xPositionBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         xPositionBox->setKeyframe(xposF);
@@ -1120,7 +1120,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         else{
             yPositionFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     yPositionBox->connect(this, &path::updateSpinBoxes, yPositionBox, [yPositionBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         yPositionBox->setKeyframe(yposF);
@@ -1186,7 +1186,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         } else {
             xScaleFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     xScaleBox->connect(this, &path::updateSpinBoxes, xScaleBox, [xScaleBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         xScaleBox->setKeyframe(xscaleF);
@@ -1208,7 +1208,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         } else {
             yScaleFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     yScaleBox->connect(this, &path::updateSpinBoxes, yScaleBox, [yScaleBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         yScaleBox->setKeyframe(yscaleF);
@@ -1261,7 +1261,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         } else {
             rotationFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     rotationBox->connect(this, &path::updateSpinBoxes, rotationBox, [rotationBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         rotationBox->setKeyframe(rotationF);
@@ -1302,7 +1302,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         } else {
             xPivotFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     xPivotBox->connect(this, &path::updateSpinBoxes, xPivotBox, [xPivotBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         xPivotBox->setKeyframe(xpivotF);
@@ -1323,7 +1323,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         } else {
             yPivotFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     yPivotBox->connect(this, &path::updateSpinBoxes, yPivotBox, [yPivotBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         yPivotBox->setKeyframe(ypivotF);
@@ -1365,7 +1365,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         .toUpper();
 
     customSpinBox* fillHexSpinBox   = new customSpinBox(background, '#');
-    customSpinBox* fillAlphaSpinBox = new customSpinBox(background, 'A');
+    customSpinBox* fillASpinBox = new customSpinBox(background, 'A');
     customSpinBox* fillRSpinBox     = new customSpinBox(background, 'R');
     customSpinBox* fillGSpinBox     = new customSpinBox(background, 'G');
     customSpinBox* fillBSpinBox     = new customSpinBox(background, 'B');
@@ -1373,34 +1373,34 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     fillHexSpinBox->setStringInput(true);
     fillHexSpinBox->setValue(fillHexString);
 
-    fillAlphaSpinBox->setMinimum(0); fillAlphaSpinBox->setMaximum(255);
+    fillASpinBox->setMinimum(0); fillASpinBox->setMaximum(255);
     fillRSpinBox->setMinimum(0);     fillRSpinBox->setMaximum(255);
     fillGSpinBox->setMinimum(0);     fillGSpinBox->setMaximum(255);
     fillBSpinBox->setMinimum(0);     fillBSpinBox->setMaximum(255);
 
-    fillAlphaSpinBox->setValue(fillColor_.alpha());
+    fillASpinBox->setValue(fillColor_.alpha());
     fillRSpinBox->setValue(fillColor_.red());
     fillGSpinBox->setValue(fillColor_.green());
     fillBSpinBox->setValue(fillColor_.blue());
 
     fillRow1Layout->addWidget(fillPreview,   1);
     fillRow1Layout->addWidget(fillHexSpinBox,1);
-    fillRow1Layout->addWidget(fillAlphaSpinBox, 1);
+    fillRow1Layout->addWidget(fillASpinBox, 1);
     fillRow2Layout->addWidget(fillRSpinBox);
     fillRow2Layout->addWidget(fillGSpinBox);
     fillRow2Layout->addWidget(fillBSpinBox);
 
-    auto updateFillControls = [this, fillPreview, fillRSpinBox, fillGSpinBox, fillBSpinBox, fillAlphaSpinBox, fillHexSpinBox]() {
+    auto updateFillControls = [this, fillPreview, fillRSpinBox, fillGSpinBox, fillBSpinBox, fillASpinBox, fillHexSpinBox]() {
         fillRSpinBox->blockSignals(true);
         fillGSpinBox->blockSignals(true);
         fillBSpinBox->blockSignals(true);
-        fillAlphaSpinBox->blockSignals(true);
+        fillASpinBox->blockSignals(true);
         fillHexSpinBox->blockSignals(true);
 
         fillRSpinBox->setValue(fillColor_.red());
         fillGSpinBox->setValue(fillColor_.green());
         fillBSpinBox->setValue(fillColor_.blue());
-        fillAlphaSpinBox->setValue(fillColor_.alpha());
+        fillASpinBox->setValue(fillColor_.alpha());
         fillHexSpinBox->setValue(QString("%1%2%3%4")
             .arg(fillColor_.red(),   2, 16, QChar('0'))
             .arg(fillColor_.green(), 2, 16, QChar('0'))
@@ -1412,7 +1412,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         fillRSpinBox->blockSignals(false);
         fillGSpinBox->blockSignals(false);
         fillBSpinBox->blockSignals(false);
-        fillAlphaSpinBox->blockSignals(false);
+        fillASpinBox->blockSignals(false);
         fillHexSpinBox->blockSignals(false);
     };
 
@@ -1425,56 +1425,79 @@ QWidget *path::createAttributeWidget(QWidget *parent)
             fillColor_ = QColor(r,g,b,a); updateFillControls(); update();
         }
 
-        if(!fillColorFrames.empty()){
-            fillColorFrames[*currentFrame_] = fillColor_;
+        if(!fillRFrames.empty()){
+            fillRFrames[*currentFrame_] = fillColor_.red();
+        }
+        if(!fillGFrames.empty()){
+            fillGFrames[*currentFrame_] = fillColor_.green();
+        }
+        if(!fillBFrames.empty()){
+            fillBFrames[*currentFrame_] = fillColor_.blue();
+        }
+        if(!fillAFrames.empty()){
+            fillAFrames[*currentFrame_] = fillColor_.alpha();
         }
     });
     fillRSpinBox->connect(fillRSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){
         fillColor_.setRed(v);   
-        if(!fillColorFrames.empty()){
-            fillColorFrames[*currentFrame_] = fillColor_;
+        if(!fillRFrames.empty()){
+            fillRFrames[*currentFrame_] = fillColor_.red();
         }
         updateFillControls(); 
         update(); 
     });
     fillGSpinBox->connect(fillGSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ 
         fillColor_.setGreen(v); 
-        if(!fillColorFrames.empty()){
-            fillColorFrames[*currentFrame_] = fillColor_;
+        if(!fillGFrames.empty()){
+            fillGFrames[*currentFrame_] = fillColor_.green();
         }
         updateFillControls(); 
         update(); 
     });
     fillBSpinBox->connect(fillBSpinBox,    &customSpinBox::valueChanged, [this, updateFillControls](qreal v){ 
         fillColor_.setBlue(v);  
-        if(!fillColorFrames.empty()){
-            fillColorFrames[*currentFrame_] = fillColor_;
+        if(!fillBFrames.empty()){
+            fillBFrames[*currentFrame_] = fillColor_.blue();
         }
         updateFillControls(); 
         update(); 
     });
-    fillAlphaSpinBox->connect(fillAlphaSpinBox,&customSpinBox::valueChanged, [this, updateFillControls](qreal v){ 
+    fillASpinBox->connect(fillASpinBox,&customSpinBox::valueChanged, [this, updateFillControls](qreal v){ 
         fillColor_.setAlpha(v); 
-        if(!fillColorFrames.empty()){
-            fillColorFrames[*currentFrame_] = fillColor_;
+        if(!fillAFrames.empty()){
+            fillAFrames[*currentFrame_] = fillColor_.alpha();
         }
         updateFillControls(); 
         update(); 
     });
-    fillPreview->connect(fillPreview, &ColorSelector::colorSelected, [this, updateFillControls](QColor c){ 
+    fillPreview->connect(fillPreview, &ColorSelector::colorSelected, [this, fillRSpinBox, fillGSpinBox, fillBSpinBox, fillASpinBox, updateFillControls](QColor c){ 
         fillColor_ = c; 
-        if(!fillColorFrames.empty()){
-            fillColorFrames[*currentFrame_] = fillColor_;
+        if(!fillRFrames.empty()){
+            fillRFrames[*currentFrame_] = fillColor_.red();
+            fillRSpinBox->setKeyframe();
+        }
+        if(!fillGFrames.empty()){
+            fillGFrames[*currentFrame_] = fillColor_.green();
+            fillGSpinBox->setKeyframe();
+        }
+        if(!fillBFrames.empty()){
+            fillBFrames[*currentFrame_] = fillColor_.blue();
+            fillBSpinBox->setKeyframe();
+        }
+        if(!fillAFrames.empty()){
+            fillAFrames[*currentFrame_] = fillColor_.alpha();
+            fillASpinBox->setKeyframe();
         }
         updateFillControls(); 
         update(); 
+        emit updateLayer();
     });
     fillRSpinBox->connect(fillRSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            fillColorFrames[*currentFrame_].setRed((int)value);
+            fillRFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
     fillRSpinBox->connect(this, &path::updateSpinBoxes, fillRSpinBox, [fillRSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
@@ -1485,9 +1508,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     fillGSpinBox->connect(fillGSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            fillColorFrames[*currentFrame_].setGreen((int)value);
+            fillGFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
     fillGSpinBox->connect(this, &path::updateSpinBoxes, fillGSpinBox, [fillGSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
@@ -1498,9 +1521,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     fillBSpinBox->connect(fillBSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            fillColorFrames[*currentFrame_].setBlue((int)value);
+            fillBFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
     fillBSpinBox->connect(this, &path::updateSpinBoxes, fillBSpinBox, [fillBSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
@@ -1508,24 +1531,24 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         fillBSpinBox->update();
     });
 
-    fillAlphaSpinBox->connect(fillAlphaSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
+    fillASpinBox->connect(fillASpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            fillColorFrames[*currentFrame_].setAlpha((int)value);
+            fillAFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
-    fillAlphaSpinBox->connect(this, &path::updateSpinBoxes, fillAlphaSpinBox, [fillAlphaSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        fillAlphaSpinBox->setKeyframe(AfillF);
-        fillAlphaSpinBox->update();
+    fillASpinBox->connect(this, &path::updateSpinBoxes, fillASpinBox, [fillASpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
+        fillASpinBox->setKeyframe(AfillF);
+        fillASpinBox->update();
     });
 
-    fillEnable->connect(fillEnable, &QCheckBox::toggled, [this, fillPreview, fillHexSpinBox, fillAlphaSpinBox, fillRSpinBox, fillGSpinBox, fillBSpinBox](bool state){
+    fillEnable->connect(fillEnable, &QCheckBox::toggled, [this, fillPreview, fillHexSpinBox, fillASpinBox, fillRSpinBox, fillGSpinBox, fillBSpinBox](bool state){
         fill_ = state;
         fillPreview->setDisabled(!state);
         fillHexSpinBox->setDisabled(!state);
-        fillAlphaSpinBox->setDisabled(!state);
+        fillASpinBox->setDisabled(!state);
         fillRSpinBox->setDisabled(!state);
         fillGSpinBox->setDisabled(!state);
         fillBSpinBox->setDisabled(!state);
@@ -1558,7 +1581,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     strokePreview->setDisplayMode(color_widgets::ColorPreview::DisplayMode::SplitAlpha);
 
     customSpinBox* strokeHexSpinBox   = new customSpinBox(background, '#');
-    customSpinBox* strokeAlphaSpinBox = new customSpinBox(background, 'A');
+    customSpinBox* strokeASpinBox = new customSpinBox(background, 'A');
     customSpinBox* strokeRSpinBox     = new customSpinBox(background, 'R');
     customSpinBox* strokeGSpinBox     = new customSpinBox(background, 'G');
     customSpinBox* strokeBSpinBox     = new customSpinBox(background, 'B');
@@ -1571,34 +1594,34 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         .arg(strokeColor_.alpha(), 2, 16, QChar('0'))
         .toUpper());
 
-    strokeAlphaSpinBox->setMinimum(0); strokeAlphaSpinBox->setMaximum(255);
+    strokeASpinBox->setMinimum(0); strokeASpinBox->setMaximum(255);
     strokeRSpinBox->setMinimum(0);     strokeRSpinBox->setMaximum(255);
     strokeGSpinBox->setMinimum(0);     strokeGSpinBox->setMaximum(255);
     strokeBSpinBox->setMinimum(0);     strokeBSpinBox->setMaximum(255);
 
-    strokeAlphaSpinBox->setValue(strokeColor_.alpha());
+    strokeASpinBox->setValue(strokeColor_.alpha());
     strokeRSpinBox->setValue(strokeColor_.red());
     strokeGSpinBox->setValue(strokeColor_.green());
     strokeBSpinBox->setValue(strokeColor_.blue());
 
     strokeRow1Layout->addWidget(strokePreview,    1);
     strokeRow1Layout->addWidget(strokeHexSpinBox, 1);
-    strokeRow1Layout->addWidget(strokeAlphaSpinBox, 1);
+    strokeRow1Layout->addWidget(strokeASpinBox, 1);
     strokeRow2Layout->addWidget(strokeRSpinBox);
     strokeRow2Layout->addWidget(strokeGSpinBox);
     strokeRow2Layout->addWidget(strokeBSpinBox);
 
-    auto updateStrokeControls = [this, strokePreview, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox, strokeAlphaSpinBox, strokeHexSpinBox]() {
+    auto updateStrokeControls = [this, strokePreview, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox, strokeASpinBox, strokeHexSpinBox]() {
         strokeRSpinBox->blockSignals(true);
         strokeGSpinBox->blockSignals(true);
         strokeBSpinBox->blockSignals(true);
-        strokeAlphaSpinBox->blockSignals(true);
+        strokeASpinBox->blockSignals(true);
         strokeHexSpinBox->blockSignals(true);
 
         strokeRSpinBox->setValue(strokeColor_.red());
         strokeGSpinBox->setValue(strokeColor_.green());
         strokeBSpinBox->setValue(strokeColor_.blue());
-        strokeAlphaSpinBox->setValue(strokeColor_.alpha());
+        strokeASpinBox->setValue(strokeColor_.alpha());
         strokeHexSpinBox->setValue(QString("%1%2%3%4")
             .arg(strokeColor_.red(),   2, 16, QChar('0'))
             .arg(strokeColor_.green(), 2, 16, QChar('0'))
@@ -1610,11 +1633,11 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         strokeRSpinBox->blockSignals(false);
         strokeGSpinBox->blockSignals(false);
         strokeBSpinBox->blockSignals(false);
-        strokeAlphaSpinBox->blockSignals(false);
+        strokeASpinBox->blockSignals(false);
         strokeHexSpinBox->blockSignals(false);
     };
 
-    strokeHexSpinBox->connect(strokeHexSpinBox, &customSpinBox::stringValueChanged, [this, updateStrokeControls](QString value){
+    strokeHexSpinBox->connect(strokeHexSpinBox, &customSpinBox::stringValueChanged, [&](QString value){
         if(value[0] == '#') value.remove(0, 1);
         bool ok; int r, g, b, a = strokeColor_.alpha();
         if(value.length() >= 6){
@@ -1623,49 +1646,84 @@ QWidget *path::createAttributeWidget(QWidget *parent)
             strokeColor_ = QColor(r,g,b,a); updateStrokeControls(); update();
         }
 
-        if(!strokeColorFrames.empty()){
-            strokeColorFrames[*currentFrame_] = fillColor_;
+        if(!strokeRFrames.empty()){
+            strokeRFrames[*currentFrame_] = strokeColor_.red();
+            strokeRSpinBox->setKeyframe();
+        }
+        if(!strokeGFrames.empty()){
+            strokeGFrames[*currentFrame_] = strokeColor_.green();
+            strokeGSpinBox->setKeyframe();
+        }
+        if(!strokeBFrames.empty()){
+            strokeBFrames[*currentFrame_] = strokeColor_.blue();
+            strokeBSpinBox->setKeyframe();
+        }
+        if(!strokeAFrames.empty()){
+            strokeAFrames[*currentFrame_] = strokeColor_.alpha();
+            strokeASpinBox->setKeyframe();
         }
     });
     strokeRSpinBox->connect(strokeRSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
         strokeColor_.setRed(v);   
-        if(!strokeColorFrames.empty()){
-            strokeColorFrames[*currentFrame_] = fillColor_;
+        if(!strokeRFrames.empty()){
+            strokeRFrames[*currentFrame_] = strokeColor_.red();
         }
         updateStrokeControls(); 
         update(); 
     });
     strokeGSpinBox->connect(strokeGSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
         strokeColor_.setGreen(v); 
-        if(!strokeColorFrames.empty()){
-            strokeColorFrames[*currentFrame_] = fillColor_;
+        if(!strokeGFrames.empty()){
+            strokeGFrames[*currentFrame_] = strokeColor_.green();
         }
         updateStrokeControls(); 
         update(); 
     });
     strokeBSpinBox->connect(strokeBSpinBox,    &customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
         strokeColor_.setBlue(v);  
-        if(!strokeColorFrames.empty()){
-            strokeColorFrames[*currentFrame_] = fillColor_;
+        if(!strokeBFrames.empty()){
+            strokeBFrames[*currentFrame_] = strokeColor_.blue();
         }
         updateStrokeControls(); 
         update(); 
     });
-    strokeAlphaSpinBox->connect(strokeAlphaSpinBox,&customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
+    strokeASpinBox->connect(strokeASpinBox,&customSpinBox::valueChanged, [this, updateStrokeControls](qreal v){ 
         strokeColor_.setAlpha(v); 
-        if(!strokeColorFrames.empty()){
-            strokeColorFrames[*currentFrame_] = fillColor_;
+        if(!strokeAFrames.empty()){
+            strokeAFrames[*currentFrame_] = strokeColor_.alpha();
         }
         updateStrokeControls(); 
         update(); 
     });
-    strokePreview->connect(strokePreview, &ColorSelector::colorSelected, [this, updateStrokeControls](QColor c){ strokeColor_ = c; updateStrokeControls(); update(); });
+    strokePreview->connect(strokePreview, &ColorSelector::colorSelected, [this, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox, strokeASpinBox, updateStrokeControls](QColor c){
+        strokeColor_ = c;
 
-    strokeEnable->connect(strokeEnable, &QCheckBox::toggled, [this, strokePreview, strokeHexSpinBox, strokeAlphaSpinBox, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox](bool state){
+        if(!strokeRFrames.empty()){
+            strokeRFrames[*currentFrame_] = strokeColor_.red();
+            strokeRSpinBox->setKeyframe();
+        } 
+        if(!strokeGFrames.empty()){
+            strokeGFrames[*currentFrame_] = strokeColor_.green();
+            strokeGSpinBox->setKeyframe();
+        } 
+        if(!strokeBFrames.empty()){
+            strokeBFrames[*currentFrame_] = strokeColor_.blue();
+            strokeBSpinBox->setKeyframe();
+        }
+        if(!strokeAFrames.empty()) {
+            strokeAFrames[*currentFrame_] = strokeColor_.alpha();
+            strokeASpinBox->setKeyframe();
+        }
+        updateStrokeControls();
+        update();
+        emit updateLayer();
+    });  
+
+    strokeEnable->connect(strokeEnable, &QCheckBox::toggled, [this, strokePreview, strokeHexSpinBox, strokeASpinBox, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox](bool state){
         stroke_ = state;
         strokePreview->setDisabled(!state);
         strokeHexSpinBox->setDisabled(!state);
-        strokeAlphaSpinBox->setDisabled(!state);
+        strokeASpinBox->setDisabled(!state);
         strokeRSpinBox->setDisabled(!state);
         strokeGSpinBox->setDisabled(!state);
         strokeBSpinBox->setDisabled(!state);
@@ -1677,9 +1735,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     strokeRSpinBox->connect(strokeRSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            strokeColorFrames[*currentFrame_].setRed((int)value);
+            strokeRFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
     strokeRSpinBox->connect(this, &path::updateSpinBoxes, strokeRSpinBox, [strokeRSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
@@ -1690,9 +1748,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     strokeGSpinBox->connect(strokeGSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            strokeColorFrames[*currentFrame_].setGreen((int)value);
+            strokeGFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
     strokeGSpinBox->connect(this, &path::updateSpinBoxes, strokeGSpinBox, [strokeGSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
@@ -1703,9 +1761,9 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     strokeBSpinBox->connect(strokeBSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            strokeColorFrames[*currentFrame_].setBlue((int)value);
+            strokeBFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
     strokeBSpinBox->connect(this, &path::updateSpinBoxes, strokeBSpinBox, [strokeBSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
@@ -1713,17 +1771,17 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         strokeBSpinBox->update();
     });
 
-    strokeAlphaSpinBox->connect(strokeAlphaSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
+    strokeASpinBox->connect(strokeASpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
-            strokeColorFrames[*currentFrame_].setAlpha((int)value);
+            strokeAFrames[*currentFrame_] = value;
         }
-        emit updateLayers();
+        emit updateLayer();
     });
 
-    strokeAlphaSpinBox->connect(this, &path::updateSpinBoxes, strokeAlphaSpinBox, [strokeAlphaSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        strokeAlphaSpinBox->setKeyframe(AstrokeF);
-        strokeAlphaSpinBox->update();
+    strokeASpinBox->connect(this, &path::updateSpinBoxes, strokeASpinBox, [strokeASpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
+        strokeASpinBox->setKeyframe(AstrokeF);
+        strokeASpinBox->update();
     });
 
 
@@ -1731,7 +1789,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     if(!fill_){
         fillPreview->setDisabled(!fill_);
         fillHexSpinBox->setDisabled(!fill_);
-        fillAlphaSpinBox->setDisabled(!fill_);
+        fillASpinBox->setDisabled(!fill_);
         fillRSpinBox->setDisabled(!fill_);
         fillGSpinBox->setDisabled(!fill_);
         fillBSpinBox->setDisabled(!fill_);
@@ -1741,7 +1799,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     if(!stroke_){
         strokePreview->setDisabled(!stroke_);
         strokeHexSpinBox->setDisabled(!stroke_);
-        strokeAlphaSpinBox->setDisabled(!stroke_);
+        strokeASpinBox->setDisabled(!stroke_);
         strokeRSpinBox->setDisabled(!stroke_);
         strokeGSpinBox->setDisabled(!stroke_);
         strokeBSpinBox->setDisabled(!stroke_);
@@ -1774,7 +1832,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         } else {
             strokeWidthFrames.erase(*currentFrame_);
         }
-        emit updateLayers();
+        emit updateLayer();
     });
     strokeWidthSpinBox->connect(this, &path::updateSpinBoxes, strokeWidthSpinBox, [strokeWidthSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         strokeWidthSpinBox->setKeyframe(strokeWF);
@@ -2313,7 +2371,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
             selectedPath_ = newSelectedPath;
             selectedPath_->setSelected(true);
             selectedPath_->update(); //same as updating newSelectedPath
-            emit updateLayers(selectedPath_); //for highlighting
+            emit updateLayer(selectedPath_); //for highlighting
             emit selectLayer(selectedPath_);
         }
     }
@@ -2370,8 +2428,8 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             currentPath->setDrawingMode(true);
             setSelectedPath(currentPath, true, true);
 
-            currentPath->connect(currentPath, &path::updateLayers, [this, currentPath](){
-                emit updateLayers(currentPath);
+            currentPath->connect(currentPath, &path::updateLayer, [this, currentPath](){
+                emit updateLayer(currentPath);
             });
             currentPath->connect(this, &viewPort::supressKeyframesSignal, currentPath, &path::supressKeyframeWrite);
             connect(this, &viewPort::optimizeSignal, currentPath, &path::optimize);
@@ -2403,7 +2461,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
                 emit attributePanelUpdateNeeded(currentPath);
-                emit updateLayers(currentPath);
+                emit updateLayer(currentPath);
             }
             else{
                 currentPath->addPoint(pointToAdd);
@@ -2817,7 +2875,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
                 emit attributePanelUpdateNeeded(currentPath);
-                emit updateLayers(currentPath);
+                emit updateLayer(currentPath);
         }
     }
 }
@@ -2891,13 +2949,31 @@ void viewPort::onFrameChanged() {
         }
 
         // --- Fill Color ---
-        if(p->fillColorFrames.find(*currentFrame_) != p->fillColorFrames.end()) {
-            RfillF = GfillF = BfillF = AfillF = true;           
+        if(p->fillRFrames.find(*currentFrame_) != p->fillRFrames.end()) {
+            RfillF = true;           
+        }
+        if(p->fillGFrames.find(*currentFrame_) != p->fillGFrames.end()) {
+            GfillF = true;           
+        }
+        if(p->fillBFrames.find(*currentFrame_) != p->fillBFrames.end()) {
+            BfillF = true;           
+        }
+        if(p->fillAFrames.find(*currentFrame_) != p->fillAFrames.end()) {
+            AfillF = true;           
         }
 
         // --- Stroke Color ---
-        if(p->strokeColorFrames.find(*currentFrame_) != p->strokeColorFrames.end()) {
-            RstrokeF = GstrokeF = BstrokeF = AstrokeF = true;         
+        if(p->strokeRFrames.find(*currentFrame_) != p->strokeRFrames.end()) {
+            RstrokeF = true;         
+        }
+        if(p->strokeGFrames.find(*currentFrame_) != p->strokeGFrames.end()) {
+            GstrokeF = true;         
+        }
+        if(p->strokeBFrames.find(*currentFrame_) != p->strokeBFrames.end()) {
+            BstrokeF = true;         
+        }
+        if(p->strokeAFrames.find(*currentFrame_) != p->strokeAFrames.end()) {
+            AstrokeF = true;         
         }
 
         
@@ -3025,8 +3101,18 @@ void viewPort::onFrameChanged() {
         
         p->strokeWidth_ = linearInterpolation(p->strokeWidthFrames, p->strokeWidth_, *currentFrame_, 0, 244);
         
-        p->strokeColor_ = linearColorInterpolation(p->strokeColorFrames, p->strokeColor_, *currentFrame_, 0, 244);
-        p->fillColor_ = linearColorInterpolation(p->fillColorFrames, p->fillColor_, *currentFrame_, 0, 244);
+        int R = linearInterpolation(p->fillRFrames, p->fillColor_.red(), *currentFrame_, 0, 244);
+        int G = linearInterpolation(p->fillGFrames, p->fillColor_.green(), *currentFrame_, 0, 244);
+        int B = linearInterpolation(p->fillBFrames, p->fillColor_.blue(), *currentFrame_, 0, 244);
+        int A = linearInterpolation(p->fillAFrames, p->fillColor_.alpha(), *currentFrame_, 0, 244);
+
+        p->fillColor_ = QColor(R, G, B, A);
+
+        R = linearInterpolation(p->strokeRFrames, p->strokeColor_.red(), *currentFrame_, 0, 244);
+        G = linearInterpolation(p->strokeGFrames, p->strokeColor_.green(), *currentFrame_, 0, 244);
+        B = linearInterpolation(p->strokeBFrames, p->strokeColor_.blue(), *currentFrame_, 0, 244);
+        A = linearInterpolation(p->strokeAFrames, p->strokeColor_.alpha(), *currentFrame_, 0, 244);
+        p->strokeColor_ = QColor(R, G, B, A);
         
         p->setPosition(
             linearInterpolation(p->xPositionFrames, p->position_.x(), *currentFrame_, 0, 244), 

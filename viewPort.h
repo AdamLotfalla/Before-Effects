@@ -131,6 +131,7 @@ class customSpinBox: public QWidget{
 
     void setKeyframe(bool state = true){
         keyFramed = state;
+        update();
     }
 
     double getValue(){
@@ -399,8 +400,14 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::map<int, qreal> yScaleFrames;
     std::map<int, qreal> rotationFrames;
     std::map<int, qreal> strokeWidthFrames;
-    std::map<int, QColor> fillColorFrames;
-    std::map<int, QColor> strokeColorFrames;
+    std::map<int, qreal> fillRFrames;
+    std::map<int, qreal> fillGFrames;
+    std::map<int, qreal> fillBFrames;
+    std::map<int, qreal> fillAFrames;
+    std::map<int, qreal> strokeRFrames;
+    std::map<int, qreal> strokeGFrames;
+    std::map<int, qreal> strokeBFrames;
+    std::map<int, qreal> strokeAFrames;
 
     
     
@@ -472,7 +479,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::function<void(qreal, qreal)> onScaleChanged;
     std::function<void(qreal)> onRotationChanged;
     signals:
-    void updateLayers();
+    void updateLayer();
     void updateSpinBoxes(bool xposF, bool yposF, bool xpivotF, bool ypivotF, 
                          bool rotationF, bool xscaleF, bool yscaleF, 
                          bool RfillF, bool GfillF, bool BfillF, bool AfillF,
@@ -575,7 +582,7 @@ signals:
     void attributePanelUpdateNeeded(AttributePanel* obj);
     void pathCreated(path* p);
     void pathDeleted(path* p);
-    void updateLayers(path* p);
+    void updateLayer(path* p);
     void selectLayer(path* p);
     void frameChanged();
     void optimizeSignal(bool state);

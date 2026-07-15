@@ -47,7 +47,7 @@ void Layer::paintEvent(QPaintEvent *event)
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content
 
             
-    std::array<bool, 10> hasFrames = {
+    std::array<bool, 16> hasFrames = {
         !relatedPath_->xPositionFrames.empty(),
         !relatedPath_->yPositionFrames.empty(),
         !relatedPath_->xScaleFrames.empty(),
@@ -56,8 +56,14 @@ void Layer::paintEvent(QPaintEvent *event)
         !relatedPath_->xPivotFrames.empty(),
         !relatedPath_->yPivotFrames.empty(),
         !relatedPath_->strokeWidthFrames.empty(),
-        !relatedPath_->fillColorFrames.empty(),
-        !relatedPath_->strokeColorFrames.empty()
+        !relatedPath_->fillRFrames.empty(),
+        !relatedPath_->fillGFrames.empty(),
+        !relatedPath_->fillBFrames.empty(),
+        !relatedPath_->fillAFrames.empty(),
+        !relatedPath_->strokeRFrames.empty(),
+        !relatedPath_->strokeGFrames.empty(),
+        !relatedPath_->strokeBFrames.empty(),
+        !relatedPath_->strokeAFrames.empty()
     };
         
 
@@ -112,8 +118,14 @@ void Layer::paintEvent(QPaintEvent *event)
                 case 5: keyframeText = "x-pivot";      break;
                 case 6: keyframeText = "y-pivot";      break;
                 case 7: keyframeText = "stroke width"; break;
-                case 8: keyframeText = "fill color";   break;
-                case 9: keyframeText = "stroke color"; break;
+                case 8: keyframeText = "fill R";   break;
+                case 9: keyframeText = "fill G";   break;
+                case 10: keyframeText = "fill B";   break;
+                case 11: keyframeText = "fill A";   break;
+                case 12: keyframeText = "stroke R"; break;
+                case 13: keyframeText = "stroke G"; break;
+                case 14: keyframeText = "stroke B"; break;
+                case 15: keyframeText = "stroke A"; break;
                 }
     
                 painter.drawText(textBegin, counter * keyframeLayerHeight_ + layerHeight_ - 1, this->width() - textBegin, keyframeLayerHeight_, Qt::AlignVCenter, keyframeText);
@@ -186,12 +198,14 @@ void Layer::paintEvent(QPaintEvent *event)
         painter.setOpacity(1);
         painter.setPen(Qt::NoPen);
         
-        std::array<const std::map<int, qreal>*, 8> frameMaps = {
+        std::array<const std::map<int, qreal>*, 16> frameMaps = {
             &relatedPath_->xPositionFrames, &relatedPath_->yPositionFrames,
             &relatedPath_->xScaleFrames,    &relatedPath_->yScaleFrames,
             &relatedPath_->rotationFrames,  
             &relatedPath_->xPivotFrames,    &relatedPath_->yPivotFrames,
-            &relatedPath_->strokeWidthFrames
+            &relatedPath_->strokeWidthFrames,
+            &relatedPath_->fillRFrames, &relatedPath_->fillGFrames, &relatedPath_->fillBFrames, &relatedPath_->fillAFrames,
+            &relatedPath_->strokeRFrames, &relatedPath_->strokeGFrames, &relatedPath_->strokeBFrames, &relatedPath_->strokeAFrames
         };
 
 
@@ -213,19 +227,9 @@ void Layer::paintEvent(QPaintEvent *event)
             }
             if(hasFrames[i]) counter++;
         }
-        for(auto j : relatedPath_->fillColorFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
-        for(auto j : relatedPath_->strokeColorFrames){
-            Rhombus.translate(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5));
-            painter.drawPath(Rhombus);
-            Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, 0.5 * layerHeight_) - QPointF(5,5)));
-        }
     
         if(relatedPath_->layerIsExpanded_){
-            setFixedHeight(layerHeight_ + counter * keyframeLayerHeight_); //still need to figure out the color ones
+            setFixedHeight(layerHeight_ + counter * keyframeLayerHeight_);
         }
         else{
             setFixedHeight(layerHeight_);
