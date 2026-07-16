@@ -21,6 +21,45 @@
 #include "viewPort.h"
 #include "common_widget_styles.h"
 
+class MarginPanel : public QWidget{
+private:
+    int LMarginWidth_;
+    int RMarginWidth_;
+    int offset_;
+    int interBoundDist_;
+    
+    void paintEvent(QPaintEvent* event){
+        QPainter painter(this);
+        
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush("#1e1e1e"));
+        painter.drawRect(0,0, offset_, height());
+        painter.drawRect(offset_ + LMarginWidth_ + interBoundDist_ + RMarginWidth_, 0, width() - offset_ - interBoundDist_ - RMarginWidth_, height());
+        painter.setBrush(QBrush("#252525"));
+        painter.drawRect(offset_ + LMarginWidth_, 0, interBoundDist_, height());
+        painter.setBrush(QBrush("#212121"));
+        painter.drawRect(offset_,0, LMarginWidth_ , height());
+        painter.drawRect(offset_ + LMarginWidth_ + interBoundDist_, 0, RMarginWidth_, height());
+    }
+public:
+    MarginPanel(QWidget* parent) : QWidget(parent){setAutoFillBackground(false);};
+    void setLMarginWidth(int value){
+        LMarginWidth_ = value;
+        update();
+    }
+    void setRMarginWidth(int value){
+        RMarginWidth_ = value;
+        update();
+    }
+    void setOffset(int value){
+        offset_ = value;
+        update();
+    }
+    void setInterBoundDist(int value){
+        interBoundDist_ = value;
+        update();
+    }
+};
 
 class Layer : public QWidget{
     Q_OBJECT
@@ -41,10 +80,12 @@ public:
     bool isValid() const {return relatedPath_ != nullptr;}
     void setDrawMode(DrawMode newMode);
     void setExpanded(bool state);
+    static void setOffset(int value);
     path* relatedPath_ = nullptr;
     QColor color_ = QColor("#F16E7A"); //light coral; temporary
-
-private:
+    
+    private:
+    inline static int offset_;
     int* frameWidth_;
     int layerHeight_ = 22;
     int keyframeLayerHeight_ = 20;
@@ -91,7 +132,7 @@ public:
     int getFrameWidth();
     int getOffset();
     int getXLayerStart();
-    int getLayerWidth();
+    int getInterBoundDist();
 
 
 private:
@@ -135,9 +176,11 @@ signals:
 
     void RBoundClickedSignal(QPoint position);
     void RBoundUnClickedSignal();
+    void RBoundChanged(int frame);
 
     void LBoundClickedSignal(QPoint position);
     void LBoundUnClickedSignal();
+    void LBoundChanged(int frame);
 
     void LayerClickedSignal(int layer);
     void frameChanged();
@@ -179,11 +222,7 @@ private:
     QVBoxLayout* keyframeVLayout_;
     QScrollArea* keyframeHScroller_;
     QScrollArea* keyframeVScroller_;
-    QHBoxLayout* keyframeMarginLayout_;
-    QWidget* keyframeScrollerPanel_;
-    QWidget* keyframeLeftMargin_;
-    QWidget* keyframeRightMargin_;
-    QWidget* keyframeLayerPanel_;
+    MarginPanel* keyframeLayerPanel_ ;
     QVBoxLayout* keyframeLayerLayout_;
 
     QHash<path*, QPair<Layer*, Layer*>> layerLookup_;

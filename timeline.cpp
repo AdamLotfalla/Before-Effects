@@ -28,6 +28,11 @@ void Layer::setExpanded(bool state)
     updateGeometry();
 }
 
+void Layer::setOffset(int value)
+{
+    Layer::offset_ = value;
+}
+
 void Layer::mousePressEvent(QMouseEvent *event)
 {
     if(drawMode_ != DrawMode::keyframe && event->pos().x() <= 30){
@@ -158,6 +163,8 @@ void Layer::paintEvent(QPaintEvent *event)
     }
     else if(drawMode_ == DrawMode::keyframe){
         
+        painter.translate(QPoint(Layer::offset_, 0));
+
         QPainterPath Rhombus;
         Rhombus.moveTo(5,0);
         Rhombus.lineTo(10,5);
@@ -236,6 +243,8 @@ void Layer::paintEvent(QPaintEvent *event)
             setFixedHeight(layerHeight_);
         }
         adjustSize();
+
+        painter.translate(QPoint(- Layer::offset_, 0));
     }
 
 }
@@ -466,9 +475,9 @@ int TickBar::getXLayerStart()
     return (LBound->x() + boundHandleThickness);
 }
 
-int TickBar::getLayerWidth()
+int TickBar::getInterBoundDist()
 {
-    return (RBound->x() - LBound->x() - boundHandleThickness);
+    return (getRBound() - getLBound()) * *frameWidth_;
 }
 
 void TickBar::onTickBarClick(QPoint pos)
@@ -534,6 +543,7 @@ void TickBar::mouseMoveEvent(QMouseEvent *event)
         else{
             LBoundFrame_ = frame;
         }
+        emit LBoundChanged(LBoundFrame_);
     }
     else if(RBoundClicked_){
         if (frame <= LBoundFrame_){
@@ -542,6 +552,7 @@ void TickBar::mouseMoveEvent(QMouseEvent *event)
         else{
             RBoundFrame_ = frame;
         }
+        emit RBoundChanged(RBoundFrame_);
     }
     
     update();
@@ -783,32 +794,23 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
 
     keyframePanel_->setLayout(keyframeVLayout_);
 
-    keyframeMarginLayout_ = new QHBoxLayout;
-    keyframeMarginLayout_->setContentsMargins(0,0,0,0);
-    keyframeMarginLayout_->setSpacing(0);
+    keyframeLayerPanel_ = new MarginPanel(keyframePanel_);
+    keyframeLayerPanel_->setLMarginWidth(tickBar_->getLBound() * frameWidth_);
+    keyframeLayerPanel_->setRMarginWidth(tickBar_->width() - tickBar_->getRBound() * frameWidth_ - 2 * tickBar_->getOffset());
+    keyframeLayerPanel_->setOffset(tickBar_->getOffset());
+    keyframeLayerPanel_->setInterBoundDist(tickBar_->getInterBoundDist());
 
-    keyframeLeftMargin_ = new QWidget;
-    keyframeRightMargin_ = new QWidget;
-    keyframeScrollerPanel_ = new QWidget;
-    keyframeLayerPanel_ = new QWidget;
-    keyframeLayerPanel_->setPalette(QPalette("#1e1e1e"));
-
-    keyframeLeftMargin_->setFixedWidth(tickBar_->getOffset());
-    keyframeRightMargin_->setFixedWidth(tickBar_->getOffset());
-
-    keyframeLeftMargin_->setAutoFillBackground(true);
-    keyframeRightMargin_->setAutoFillBackground(true);
-    keyframeLeftMargin_->setPalette(QPalette("#1c1c1c"));
-    keyframeRightMargin_->setPalette(QPalette("#1c1c1c"));
-    
-
-    keyframeMarginLayout_->addWidget(keyframeLeftMargin_);
-    keyframeMarginLayout_->addWidget(keyframeLayerPanel_);
-    keyframeMarginLayout_->addWidget(keyframeRightMargin_);
-    keyframeScrollerPanel_->setLayout(keyframeMarginLayout_);
+    keyframeLayerPanel_->connect(tickBar_, &TickBar::LBoundChanged, [&](){
+        keyframeLayerPanel_->setLMarginWidth(tickBar_->getLBound() * frameWidth_);
+        keyframeLayerPanel_->setInterBoundDist(tickBar_->getInterBoundDist());
+    });
+    keyframeLayerPanel_->connect(tickBar_, &TickBar::RBoundChanged, [&](){
+        keyframeLayerPanel_->setRMarginWidth(tickBar_->width() - tickBar_->getRBound() * frameWidth_ - 2 * tickBar_->getOffset());   
+        keyframeLayerPanel_->setInterBoundDist(tickBar_->getInterBoundDist());
+    });
 
     keyframeVScroller_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    keyframeVScroller_->setWidget(keyframeScrollerPanel_);
+    keyframeVScroller_->setWidget(keyframeLayerPanel_);
 
 
     keyframeLayerLayout_ = new QVBoxLayout;
@@ -847,6 +849,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
         emit frameChanged();
     });
 
+    Layer::setOffset(tickBar_->getOffset());
 }
 
 void Timeline::step()
@@ -955,8 +958,11 @@ void Timeline::zoomSliderChanged(int value)
     tickBar_->setFixedWidth(
         qMax(frameCount_ * frameWidth_ + 235, width() - 4)
     );
-    keyframeLeftMargin_->setFixedWidth(tickBar_->getOffset());
-    keyframeRightMargin_->setFixedWidth(tickBar_->getOffset());  
+    keyframeLayerPanel_ = new MarginPanel(keyframePanel_);
+    keyframeLayerPanel_->setLMarginWidth(tickBar_->getLBound() * frameWidth_);
+    keyframeLayerPanel_->setRMarginWidth(tickBar_->width() - tickBar_->getRBound() * frameWidth_ - 2 * tickBar_->getOffset());   
+    keyframeLayerPanel_->setOffset(tickBar_->getOffset());
+    keyframeLayerPanel_->setInterBoundDist(tickBar_->getInterBoundDist());
 
     // --- compute NEW content position ---
     int newOffset =
@@ -986,8 +992,10 @@ void Timeline::resizeEvent(QResizeEvent *event)
         tickBar_->setFixedWidth(
             qMax(frameCount_ * frameWidth_ + 235, width() - 4)
         );
-        keyframeLeftMargin_->setFixedWidth(tickBar_->getOffset());
-        keyframeRightMargin_->setFixedWidth(tickBar_->getOffset());  
+        keyframeLayerPanel_->setLMarginWidth(tickBar_->getLBound() * frameWidth_);
+        keyframeLayerPanel_->setRMarginWidth(tickBar_->width() - tickBar_->getRBound() * frameWidth_ - 2 * tickBar_->getOffset());   
+        keyframeLayerPanel_->setOffset(tickBar_->getOffset());
+        keyframeLayerPanel_->setInterBoundDist(tickBar_->getInterBoundDist());
     }
 
     if(cursor_){
