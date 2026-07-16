@@ -83,12 +83,16 @@ public:
     static void setOffset(int value);
     path* relatedPath_ = nullptr;
     QColor color_ = QColor("#F16E7A"); //light coral; temporary
+    void setLBoundFrame(int frame);
+    void setRBoundFrame(int frame);
     
-    private:
+private:
     inline static int offset_;
     int* frameWidth_;
     int layerHeight_ = 22;
     int keyframeLayerHeight_ = 20;
+    int frameStart_ = 0, frameEnd_ = 240;
+    int LboundFrame_ = frameStart_, RBoundFrame_ = frameEnd_;
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event);
 

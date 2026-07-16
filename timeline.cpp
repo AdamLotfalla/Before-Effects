@@ -33,6 +33,16 @@ void Layer::setOffset(int value)
     Layer::offset_ = value;
 }
 
+void Layer::setLBoundFrame(int frame)
+{
+    LboundFrame_ = frame;
+}
+
+void Layer::setRBoundFrame(int frame)
+{
+    RBoundFrame_ = frame;
+}
+
 void Layer::mousePressEvent(QMouseEvent *event)
 {
     if(drawMode_ != DrawMode::keyframe && event->pos().x() <= 30){
@@ -175,9 +185,9 @@ void Layer::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::NoPen);
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content    
         painter.setBrush(QBrush("#373737"));
-        painter.drawRoundedRect(0, 0, width(), 4000, 2, 2);
+        painter.drawRoundedRect(0, 0, (frameEnd_ - frameStart_) * *frameWidth_, 4000, 2, 2); // for layers
         painter.setBrush(QBrush(color_));
-        painter.drawRoundedRect(0, 0, parentWidget()->width(), layerHeight_, 2, 2);
+        painter.drawRoundedRect(0, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
         
         
         //drawing hatches & outline if selected
@@ -186,7 +196,7 @@ void Layer::paintEvent(QPaintEvent *event)
             painter.setOpacity(0.1);
             
             QPainterPath Rect;
-            Rect.addRoundedRect(0, 0, parentWidget()->width(), layerHeight_, 2, 2);
+            Rect.addRoundedRect(0, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
             painter.setClipPath(Rect);
             float lineSpacing = 30.0;
             int NLines = width() / lineSpacing + 1;
@@ -244,6 +254,12 @@ void Layer::paintEvent(QPaintEvent *event)
         }
         adjustSize();
 
+        painter.setOpacity(0.5);
+        painter.setBrush(QBrush("#161616"));
+        painter.drawRect(0, 0, LboundFrame_ * *frameWidth_, height());
+        painter.drawRect(RBoundFrame_ * *frameWidth_, 0, (frameEnd_ - RBoundFrame_) * *frameWidth_, height());
+        painter.setOpacity(1);
+        
         painter.translate(QPoint(- Layer::offset_, 0));
     }
 
@@ -881,6 +897,8 @@ void Timeline::addLayer(path* p)
     connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::refresh);
     connect(hierarchyLayer, &Layer::makeSelected, [p, this](){emit setSelectedPath(p);});
     connect(keyframeLayer, &Layer::makeSelected, hierarchyLayer, &Layer::makeSelected);
+    connect(tickBar_, &TickBar::LBoundChanged, keyframeLayer, &Layer::setLBoundFrame);
+    connect(tickBar_, &TickBar::RBoundChanged, keyframeLayer, &Layer::setRBoundFrame);
 
     hierarchyLayerLayout_->insertWidget(1, hierarchyLayer);
     keyframeLayerLayout_->insertWidget(0, keyframeLayer);
