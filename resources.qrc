@@ -50,4 +50,8 @@
         <file>icons/SquareCap.svg</file>
         <file>icons/RoundCap.svg</file>
     </qresource>
+    <qresource prefix="/LayerUtils">
+        <file>icons/invisible.svg</file>
+        <file>icons/visible.svg</file>
+    </qresource>
 </RCC>

@@ -1983,6 +1983,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(widget);
+    if(!visible_) return;
     initSvgRenderers();
 
     painter->setClipping(false);

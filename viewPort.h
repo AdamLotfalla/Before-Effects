@@ -387,6 +387,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     QColor fillColor_ = QColor("#EDAE49");
     bool fill_ = true;
     bool stroke_ = true;
+    bool visible_ = true;
     Qt::PenJoinStyle pathJointStyle = Qt::MiterJoin;
     Qt::PenCapStyle pathCapStyle = Qt::SquareCap;
 

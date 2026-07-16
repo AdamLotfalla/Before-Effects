@@ -51,7 +51,11 @@ void Layer::mousePressEvent(QMouseEvent *event)
         updateGeometry();
         emit expandedChanged(relatedPath_->layerIsExpanded_);
     }
-    
+    if(drawMode_ != DrawMode::keyframe && event->pos().x() >= width() - 30){
+        relatedPath_->visible_ = !relatedPath_->visible_;
+        relatedPath_->update();
+        update();
+    }
     if(drawMode_ != DrawMode::keyframe && event->pos().x() > 30) emit makeSelected();
     if(drawMode_ == DrawMode::keyframe) emit makeSelected();
 }
@@ -107,7 +111,15 @@ void Layer::paintEvent(QPaintEvent *event)
         
         painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
         painter.setPen(QPen("#FFFFFF"));
-        painter.drawText(30,0, this->width() - 30, layerHeight_ - 1, Qt::AlignVCenter, relatedPath_->name_);
+        painter.drawText(30,0, this->width() - 60, layerHeight_ - 1, Qt::AlignVCenter, relatedPath_->name_);
+        
+        QSvgRenderer* visible = new QSvgRenderer(QString(":/LayerUtils/icons/visible.svg"));
+        QSvgRenderer* invisible = new QSvgRenderer(QString(":/LayerUtils/icons/invisible.svg"));
+
+        if(relatedPath_->visible_)
+            visible->render(&painter, QRect(width() - 25, (height() - 20) / 2.0, 20, 20));
+        else
+            invisible->render(&painter, QRect(width() - 25, (height() - 20) / 2.0, 20, 20));
         
         
         if(relatedPath_ && relatedPath_->layerIsExpanded_){
