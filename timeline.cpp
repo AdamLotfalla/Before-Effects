@@ -45,19 +45,82 @@ void Layer::setRBoundFrame(int frame)
 
 void Layer::mousePressEvent(QMouseEvent *event)
 {
-    if(drawMode_ != DrawMode::keyframe && event->pos().x() <= 30){
-        relatedPath_->layerIsExpanded_ = !relatedPath_->layerIsExpanded_;
-        update();
-        updateGeometry();
-        emit expandedChanged(relatedPath_->layerIsExpanded_);
+    holding_ = true;
+    prevDragDist_ = {0,0};
+    holdStartPos_ = event->pos();
+    if(drawMode_ == DrawMode::hierarchy){
+        if(event->pos().x() <= 30){
+            relatedPath_->layerIsExpanded_ = !relatedPath_->layerIsExpanded_;
+            update();
+            updateGeometry();
+            emit expandedChanged();
+        }
+        if(event->pos().x() >= width() - 30){
+            relatedPath_->visible_ = !relatedPath_->visible_;
+            relatedPath_->update();
+            update();
+            emit visibilityChanged();
+        }
+        if(event->pos().x() > 30) emit makeSelected();
     }
-    if(drawMode_ != DrawMode::keyframe && event->pos().x() >= width() - 30){
-        relatedPath_->visible_ = !relatedPath_->visible_;
-        relatedPath_->update();
-        update();
-    }
-    if(drawMode_ != DrawMode::keyframe && event->pos().x() > 30) emit makeSelected();
     if(drawMode_ == DrawMode::keyframe) emit makeSelected();
+}
+
+void Layer::mouseReleaseEvent(QMouseEvent *event)
+{
+    holding_ = false;
+
+    if(dragFrameOffset_ == 0) return;
+    
+    // commit shifts to the maps
+    std::array<std::map<int, qreal>*, 16> frameMaps = {
+        &relatedPath_->xPositionFrames, &relatedPath_->yPositionFrames,
+        &relatedPath_->xScaleFrames,    &relatedPath_->yScaleFrames,
+        &relatedPath_->rotationFrames,  
+        &relatedPath_->xPivotFrames,    &relatedPath_->yPivotFrames,
+        &relatedPath_->strokeWidthFrames,
+        &relatedPath_->fillRFrames, &relatedPath_->fillGFrames, &relatedPath_->fillBFrames, &relatedPath_->fillAFrames,
+        &relatedPath_->strokeRFrames, &relatedPath_->strokeGFrames, &relatedPath_->strokeBFrames, &relatedPath_->strokeAFrames
+    };
+
+    for(auto map : frameMaps){
+        std::map<int,qreal> shifted;
+
+        for (auto const& [frame,value] : *map){
+            shifted[frame + dragFrameOffset_] = value;
+        }
+
+        *map = std::move(shifted);
+    }
+
+    dragFrameOffset_ = 0;
+
+}
+
+void Layer::mouseMoveEvent(QMouseEvent *event)
+{
+    if(holding_){
+        if(drawMode_ == DrawMode::keyframe){
+            dragFrameOffset_ = std::floor((event->pos() - holdStartPos_).x() / *frameWidth_);
+            shiftKeyframeLayer((event->pos() - holdStartPos_).x());
+        }
+    }
+}
+
+void Layer::shiftKeyframeLayer(qreal dist)
+{
+    int frameShifts = std::floor(
+        (dist - prevDragDist_.x())
+        / *frameWidth_
+    );
+    frameStart_ += frameShifts;
+    frameEnd_ += frameShifts;
+
+    update();
+
+    prevDragDist_.setX(
+        prevDragDist_.x() + frameShifts * *frameWidth_
+    );
 }
 
 void Layer::paintEvent(QPaintEvent *event)
@@ -117,9 +180,9 @@ void Layer::paintEvent(QPaintEvent *event)
         QSvgRenderer* invisible = new QSvgRenderer(QString(":/LayerUtils/icons/invisible.svg"));
 
         if(relatedPath_->visible_)
-            visible->render(&painter, QRect(width() - 25, (height() - 20) / 2.0, 20, 20));
+            visible->render(&painter, QRect(width() - 25, (layerHeight_ - 20) / 2.0, 20, 20));
         else
-            invisible->render(&painter, QRect(width() - 25, (height() - 20) / 2.0, 20, 20));
+            invisible->render(&painter, QRect(width() - 25, (layerHeight_ - 20) / 2.0, 20, 20));
         
         
         if(relatedPath_ && relatedPath_->layerIsExpanded_){
@@ -197,9 +260,9 @@ void Layer::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::NoPen);
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content    
         painter.setBrush(QBrush("#373737"));
-        painter.drawRoundedRect(0, 0, (frameEnd_ - frameStart_) * *frameWidth_, 4000, 2, 2); // for layers
+        painter.drawRoundedRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, 4000, 2, 2); // for layers
         painter.setBrush(QBrush(color_));
-        painter.drawRoundedRect(0, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
+        painter.drawRoundedRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
         
         
         //drawing hatches & outline if selected
@@ -208,12 +271,12 @@ void Layer::paintEvent(QPaintEvent *event)
             painter.setOpacity(0.1);
             
             QPainterPath Rect;
-            Rect.addRoundedRect(0, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
+            Rect.addRoundedRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
             painter.setClipPath(Rect);
             float lineSpacing = 30.0;
             int NLines = width() / lineSpacing + 1;
             while(NLines--){
-                painter.drawLine(NLines * lineSpacing + 20, -10, NLines * lineSpacing, keyframeLayerHeight_ + 10);
+                painter.drawLine(NLines * lineSpacing + frameStart_ * *frameWidth_ + 20, -10, NLines * lineSpacing + frameStart_ * *frameWidth_, keyframeLayerHeight_ + 10);
             }
             
             painter.setOpacity(0.8);
@@ -245,14 +308,14 @@ void Layer::paintEvent(QPaintEvent *event)
                 
                 painter.setBrush(QBrush("#a4a588"));
                 painter.setCompositionMode(QPainter::CompositionMode_Multiply);
-                painter.drawEllipse(QPointF(j.first * *frameWidth_, 0.5 * layerHeight_), 3, 3); 
+                painter.drawEllipse(QPointF((j.first + dragFrameOffset_) * *frameWidth_, 0.5 * layerHeight_), 3, 3); 
                 painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
                 
                 if(relatedPath_->layerIsExpanded_){
                     painter.setBrush(QBrush("#7BC7B0"));
-                    Rhombus.translate(QPointF(j.first * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5));
+                    Rhombus.translate(QPointF((j.first + dragFrameOffset_) * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5));
                     painter.drawPath(Rhombus);    
-                    Rhombus.translate(-1 * (QPointF(j.first * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5)));
+                    Rhombus.translate(-1 * (QPointF((j.first + dragFrameOffset_) * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5)));
                 }
             }
             if(hasFrames[i]) counter++;
@@ -268,8 +331,11 @@ void Layer::paintEvent(QPaintEvent *event)
 
         painter.setOpacity(0.5);
         painter.setBrush(QBrush("#161616"));
-        painter.drawRect(0, 0, LboundFrame_ * *frameWidth_, height());
+        painter.drawRect(frameStart_ * *frameWidth_, 0, LboundFrame_ * *frameWidth_, height());
         painter.drawRect(RBoundFrame_ * *frameWidth_, 0, (frameEnd_ - RBoundFrame_) * *frameWidth_, height());
+        if(!relatedPath_->visible_){
+            painter.drawRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, height());
+        }
         painter.setOpacity(1);
         
         painter.translate(QPoint(- Layer::offset_, 0));
@@ -907,6 +973,7 @@ void Timeline::addLayer(path* p)
     keyframeLayer->setDrawMode(Layer::DrawMode::keyframe); // the other is hierarchy by default
 
     connect(hierarchyLayer, &Layer::expandedChanged, keyframeLayer, &Layer::refresh);
+    connect(hierarchyLayer, &Layer::visibilityChanged, keyframeLayer, &Layer::refresh);
     connect(hierarchyLayer, &Layer::makeSelected, [p, this](){emit setSelectedPath(p);});
     connect(keyframeLayer, &Layer::makeSelected, hierarchyLayer, &Layer::makeSelected);
     connect(tickBar_, &TickBar::LBoundChanged, keyframeLayer, &Layer::setLBoundFrame);

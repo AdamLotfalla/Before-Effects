@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="135mm"
+   height="135mm"
+   viewBox="0 0 135 135"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="invisible.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showborder="true"
+     inkscape:zoom="0.35945918"
+     inkscape:cx="178.04525"
+     inkscape:cy="98.759477"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path1"
+       style="fill:#c1c1c1;fill-opacity:1;stroke:none;stroke-width:40;stroke-linecap:round;stroke-linejoin:round"
+       d="M 67.43361 40.798027 C 66.184557 40.800911 64.94098 40.844033 63.704639 40.926701 L 66.00734 44.915088 A 22.633829 22.633829 0 0 1 67.499756 44.865995 A 22.633829 22.633829 0 0 1 90.133516 67.500273 A 22.633829 22.633829 0 0 1 86.312561 80.084517 L 91.446098 88.975964 C 101.42465 84.415798 110.05841 77.037198 116.1433 67.500273 C 105.53078 50.866749 87.164288 40.79839 67.43361 40.798027 z M 43.553414 46.024064 C 33.57404 50.584704 24.940517 57.963975 18.856213 67.500273 C 29.443546 84.09405 47.750038 94.156652 67.43361 94.202002 C 68.727117 94.201986 70.014892 94.158899 71.294873 94.073328 L 68.992171 90.084941 A 22.633829 22.633829 0 0 1 67.499756 90.134033 A 22.633829 22.633829 0 0 1 44.865995 67.500273 A 22.633829 22.633829 0 0 1 48.686951 54.915511 L 43.553414 46.024064 z M 71.141394 53.807052 L 81.179024 71.19307 A 14.169145 14.169145 0 0 0 81.668917 67.500273 A 14.169145 14.169145 0 0 0 71.141394 53.807052 z M 53.820487 63.806958 A 14.169145 14.169145 0 0 0 53.330595 67.500273 A 14.169145 14.169145 0 0 0 63.858118 81.192977 L 53.820487 63.806958 z " />
+    <rect
+       style="fill:#c1c1c1;fill-opacity:1;stroke-width:10;stroke-linecap:round;stroke-linejoin:round"
+       id="rect2"
+       width="10"
+       height="100"
+       x="14.706495"
+       y="42.206604"
+       rx="0"
+       ry="0"
+       transform="rotate(-30)" />
+  </g>
+</svg>

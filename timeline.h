@@ -95,9 +95,19 @@ private:
     int LboundFrame_ = frameStart_, RBoundFrame_ = frameEnd_;
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void shiftKeyframeLayer(qreal Xdist);
+
+    bool holding_ = false;
+    QPointF holdStartPos_;
+    QPointF prevDragDist_;
+    int dragFrameOffset_ = 0; 
+    //I will use this so the keyframe positions only change visually while dragging the layer, but the changes will be commited and it will be zeroed on unclick 
 
 signals:
-    void expandedChanged(bool expanded);
+    void expandedChanged();
+    void visibilityChanged();
     void makeSelected();
 };
 

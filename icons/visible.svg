@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="135mm"
+   height="135mm"
+   viewBox="0 0 135 135"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="visible.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showborder="true"
+     inkscape:zoom="0.71891835"
+     inkscape:cx="93.195562"
+     inkscape:cy="169.00389"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path1"
+       style="fill:#c1c1c1;fill-opacity:1;stroke:none;stroke-width:40;stroke-linecap:round;stroke-linejoin:round"
+       d="M 67.43361 40.798027 C 47.749938 40.84349 29.443423 50.906298 18.856213 67.500273 C 29.443546 84.09405 47.750038 94.156652 67.43361 94.202002 C 87.164187 94.201752 105.53066 84.1336 116.1433 67.500273 C 105.53078 50.866749 87.164288 40.79839 67.43361 40.798027 z M 67.499756 44.865995 A 22.633829 22.633829 0 0 1 90.133516 67.500273 A 22.633829 22.633829 0 0 1 67.499756 90.134033 A 22.633829 22.633829 0 0 1 44.865995 67.500273 A 22.633829 22.633829 0 0 1 67.499756 44.865995 z " />
+    <circle
+       style="opacity:1;fill:#c1c1c1;fill-opacity:1;stroke:none;stroke-width:17.5001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       id="path5"
+       cx="67.499756"
+       cy="67.500015"
+       r="14.169145" />
+  </g>
+</svg>
