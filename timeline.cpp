@@ -331,8 +331,8 @@ void Layer::paintEvent(QPaintEvent *event)
 
         painter.setOpacity(0.5);
         painter.setBrush(QBrush("#161616"));
-        painter.drawRect(frameStart_ * *frameWidth_, 0, LboundFrame_ * *frameWidth_, height());
-        painter.drawRect(RBoundFrame_ * *frameWidth_, 0, (frameEnd_ - RBoundFrame_) * *frameWidth_, height());
+        painter.drawRect(frameStart_ * *frameWidth_, 0, std::max(LboundFrame_ - frameStart_, 0) * *frameWidth_, height());
+        painter.drawRect(RBoundFrame_ * *frameWidth_, 0, std::max(frameEnd_ - RBoundFrame_, 0) * *frameWidth_, height());
         if(!relatedPath_->visible_){
             painter.drawRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, height());
         }
