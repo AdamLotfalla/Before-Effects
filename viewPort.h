@@ -576,7 +576,7 @@ class viewPort : public QGraphicsView{
     void resizeEvent(QResizeEvent* event) override;
 
 public slots:
-    void onFrameChanged();
+    void onFrameChanged(int frame);
     void supressKeyframesSlot(bool state);
 
 signals:

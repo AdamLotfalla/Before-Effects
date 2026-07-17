@@ -232,7 +232,7 @@ void MainWindow::exportAnimation()
         if (progressDialog->wasCanceled()) { cancelled = true; break; }
 
         *TimelinePanel_->currentFrame_ = startFrame + i;
-        viewPort_->onFrameChanged();
+        viewPort_->onFrameChanged(*TimelinePanel_->currentFrame_);
 
         QImage image(outputSize, QImage::Format_RGB32);
         image.fill(QColor("#1E1E1E"));
@@ -260,7 +260,7 @@ void MainWindow::exportAnimation()
         delete tempDir; tempDir = nullptr;
         // Restore frame
         *TimelinePanel_->currentFrame_ = originalFrame;
-        viewPort_->onFrameChanged();
+        viewPort_->onFrameChanged(*TimelinePanel_->currentFrame_);
         return;
     }
 
@@ -308,7 +308,7 @@ void MainWindow::onExportFinished(int exitCode, QProcess::ExitStatus /*exitStatu
     if (tempDir) { delete tempDir; tempDir = nullptr; }
 
     *TimelinePanel_->currentFrame_ = originalFrame;
-    viewPort_->onFrameChanged();
+    viewPort_->onFrameChanged(*TimelinePanel_->currentFrame_);
 
     if (ffmpegProcess) { ffmpegProcess->deleteLater(); ffmpegProcess = nullptr; }
 }

@@ -103,6 +103,7 @@ void Layer::mouseMoveEvent(QMouseEvent *event)
         if(drawMode_ == DrawMode::keyframe){
             dragFrameOffset_ = std::floor((event->pos() - holdStartPos_).x() / *frameWidth_);
             shiftKeyframeLayer((event->pos() - holdStartPos_).x());
+            emit LayerDragged(dragFrameOffset_);
         }
     }
 }
@@ -779,14 +780,14 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
         *currentFrame_ = tickBar_->getLBound();
         tickBar_->update();
         cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
-        emit frameChanged();
+        emit frameChanged(*currentFrame_);
     });
 
     QObject::connect(goToEndButton, &QToolButton::pressed, [this](){
         *currentFrame_ = tickBar_->getRBound();
         tickBar_->update();
         cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
-        emit frameChanged();
+        emit frameChanged(*currentFrame_);
     });
 
     QObject::connect(nextFrameButton, &QToolButton::pressed, [this](){
@@ -794,7 +795,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
             (*currentFrame_) ++;
         tickBar_->update();
         cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
-        emit frameChanged();
+        emit frameChanged(*currentFrame_);
     });
 
     QObject::connect(previousFrameButton, &QToolButton::pressed, [this](){
@@ -802,7 +803,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
             (*currentFrame_) --;
         tickBar_->update();
         cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
-        emit frameChanged();
+        emit frameChanged(*currentFrame_);
     });
 
     QHBoxLayout* toolBarHLayout = new QHBoxLayout(toolbar);
@@ -940,7 +941,7 @@ Timeline::Timeline (QWidget *parent, int *frameRate) : QWidget(parent){
     
     connect(tickBar_, &TickBar::frameChanged, this, [this](){
         cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
-        emit frameChanged();
+        emit frameChanged(*currentFrame_);
     });
 
     Layer::setOffset(tickBar_->getOffset());
@@ -956,7 +957,7 @@ void Timeline::step()
         *currentFrame_ = tickBar_->getRBound();
 
     cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * tickBar_->getFrameWidth());
-    emit frameChanged();
+    emit frameChanged(*currentFrame_);
     update();
 }
 
@@ -976,6 +977,9 @@ void Timeline::addLayer(path* p)
     connect(hierarchyLayer, &Layer::visibilityChanged, keyframeLayer, &Layer::refresh);
     connect(hierarchyLayer, &Layer::makeSelected, [p, this](){emit setSelectedPath(p);});
     connect(keyframeLayer, &Layer::makeSelected, hierarchyLayer, &Layer::makeSelected);
+    connect(keyframeLayer, &Layer::LayerDragged, hierarchyLayer, [&](int frameOffset){
+        emit frameChanged(*currentFrame_ - frameOffset); //pseudo frame change to live update path based on layer drag
+    });
     connect(tickBar_, &TickBar::LBoundChanged, keyframeLayer, &Layer::setLBoundFrame);
     connect(tickBar_, &TickBar::RBoundChanged, keyframeLayer, &Layer::setRBoundFrame);
 

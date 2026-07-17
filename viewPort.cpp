@@ -2906,7 +2906,7 @@ void viewPort::supressKeyframesSlot(bool state)
     emit supressKeyframesSignal(state);
 }
 
-void viewPort::onFrameChanged() {
+void viewPort::onFrameChanged(int frame) {
     emit supressKeyframesSignal(true);
     for(auto p : paths_) {
         bool xposF = false, yposF = false, xpivotF = false, ypivotF = false, 
@@ -2916,64 +2916,64 @@ void viewPort::onFrameChanged() {
              strokeWF = false;
 
         // --- Position ---
-        if(p->xPositionFrames.find(*currentFrame_) != p->xPositionFrames.end()) {
+        if(p->xPositionFrames.find(frame) != p->xPositionFrames.end()) {
             xposF = true;
         }
-        if(p->yPositionFrames.find(*currentFrame_) != p->yPositionFrames.end()) {
+        if(p->yPositionFrames.find(frame) != p->yPositionFrames.end()) {
             yposF = true;
         }
 
         // --- Rotation ---
-        if(p->rotationFrames.find(*currentFrame_) != p->rotationFrames.end()) {
+        if(p->rotationFrames.find(frame) != p->rotationFrames.end()) {
             rotationF = true;            
         }
 
         // --- Pivot ---
-        if(p->xPivotFrames.find(*currentFrame_) != p->xPivotFrames.end()) {
+        if(p->xPivotFrames.find(frame) != p->xPivotFrames.end()) {
             xpivotF = true;
         }
-        if(p->yPivotFrames.find(*currentFrame_) != p->yPivotFrames.end()) {
+        if(p->yPivotFrames.find(frame) != p->yPivotFrames.end()) {
             ypivotF = true;
         }
 
         // --- Scale ---
-        if(p->xScaleFrames.find(*currentFrame_) != p->xScaleFrames.end()) {
+        if(p->xScaleFrames.find(frame) != p->xScaleFrames.end()) {
             xscaleF = true;   
         }
-        if(p->yScaleFrames.find(*currentFrame_) != p->yScaleFrames.end()) {
+        if(p->yScaleFrames.find(frame) != p->yScaleFrames.end()) {
             yscaleF = true;       
         }
 
         // --- Stroke Width ---
-        if(p->strokeWidthFrames.find(*currentFrame_) != p->strokeWidthFrames.end()) {
+        if(p->strokeWidthFrames.find(frame) != p->strokeWidthFrames.end()) {
             strokeWF = true;      
         }
 
         // --- Fill Color ---
-        if(p->fillRFrames.find(*currentFrame_) != p->fillRFrames.end()) {
+        if(p->fillRFrames.find(frame) != p->fillRFrames.end()) {
             RfillF = true;           
         }
-        if(p->fillGFrames.find(*currentFrame_) != p->fillGFrames.end()) {
+        if(p->fillGFrames.find(frame) != p->fillGFrames.end()) {
             GfillF = true;           
         }
-        if(p->fillBFrames.find(*currentFrame_) != p->fillBFrames.end()) {
+        if(p->fillBFrames.find(frame) != p->fillBFrames.end()) {
             BfillF = true;           
         }
-        if(p->fillAFrames.find(*currentFrame_) != p->fillAFrames.end()) {
+        if(p->fillAFrames.find(frame) != p->fillAFrames.end()) {
             AfillF = true;           
         }
 
         // --- Stroke Color ---
-        if(p->strokeRFrames.find(*currentFrame_) != p->strokeRFrames.end()) {
+        if(p->strokeRFrames.find(frame) != p->strokeRFrames.end()) {
             RstrokeF = true;         
         }
-        if(p->strokeGFrames.find(*currentFrame_) != p->strokeGFrames.end()) {
+        if(p->strokeGFrames.find(frame) != p->strokeGFrames.end()) {
             GstrokeF = true;         
         }
-        if(p->strokeBFrames.find(*currentFrame_) != p->strokeBFrames.end()) {
+        if(p->strokeBFrames.find(frame) != p->strokeBFrames.end()) {
             BstrokeF = true;         
         }
-        if(p->strokeAFrames.find(*currentFrame_) != p->strokeAFrames.end()) {
+        if(p->strokeAFrames.find(frame) != p->strokeAFrames.end()) {
             AstrokeF = true;         
         }
 
@@ -3090,34 +3090,34 @@ void viewPort::onFrameChanged() {
         };
         
 
-        p->rotation_ = linearInterpolation(p->rotationFrames, p->rotation_, *currentFrame_, 0, 244); //0 and 244 need to change
+        p->rotation_ = linearInterpolation(p->rotationFrames, p->rotation_, frame, 0, 244); //0 and 244 need to change
         p->pivotPoint_ = QPointF(
-            linearInterpolation(p->xPivotFrames, p->pivotPoint_.x(), *currentFrame_, 0, 244),
-            linearInterpolation(p->yPivotFrames, p->pivotPoint_.y(), *currentFrame_, 0, 244)
+            linearInterpolation(p->xPivotFrames, p->pivotPoint_.x(), frame, 0, 244),
+            linearInterpolation(p->yPivotFrames, p->pivotPoint_.y(), frame, 0, 244)
         );
         
-        p->scaleX_ = linearInterpolation(p->xScaleFrames, p->scaleX_, *currentFrame_, 0, 244);
-        p->scaleY_ = linearInterpolation(p->yScaleFrames, p->scaleY_, *currentFrame_, 0, 244);
+        p->scaleX_ = linearInterpolation(p->xScaleFrames, p->scaleX_, frame, 0, 244);
+        p->scaleY_ = linearInterpolation(p->yScaleFrames, p->scaleY_, frame, 0, 244);
         
         
-        p->strokeWidth_ = linearInterpolation(p->strokeWidthFrames, p->strokeWidth_, *currentFrame_, 0, 244);
+        p->strokeWidth_ = linearInterpolation(p->strokeWidthFrames, p->strokeWidth_, frame, 0, 244);
         
-        int R = linearInterpolation(p->fillRFrames, p->fillColor_.red(), *currentFrame_, 0, 244);
-        int G = linearInterpolation(p->fillGFrames, p->fillColor_.green(), *currentFrame_, 0, 244);
-        int B = linearInterpolation(p->fillBFrames, p->fillColor_.blue(), *currentFrame_, 0, 244);
-        int A = linearInterpolation(p->fillAFrames, p->fillColor_.alpha(), *currentFrame_, 0, 244);
+        int R = linearInterpolation(p->fillRFrames, p->fillColor_.red(), frame, 0, 244);
+        int G = linearInterpolation(p->fillGFrames, p->fillColor_.green(), frame, 0, 244);
+        int B = linearInterpolation(p->fillBFrames, p->fillColor_.blue(), frame, 0, 244);
+        int A = linearInterpolation(p->fillAFrames, p->fillColor_.alpha(), frame, 0, 244);
 
         p->fillColor_ = QColor(R, G, B, A);
 
-        R = linearInterpolation(p->strokeRFrames, p->strokeColor_.red(), *currentFrame_, 0, 244);
-        G = linearInterpolation(p->strokeGFrames, p->strokeColor_.green(), *currentFrame_, 0, 244);
-        B = linearInterpolation(p->strokeBFrames, p->strokeColor_.blue(), *currentFrame_, 0, 244);
-        A = linearInterpolation(p->strokeAFrames, p->strokeColor_.alpha(), *currentFrame_, 0, 244);
+        R = linearInterpolation(p->strokeRFrames, p->strokeColor_.red(), frame, 0, 244);
+        G = linearInterpolation(p->strokeGFrames, p->strokeColor_.green(), frame, 0, 244);
+        B = linearInterpolation(p->strokeBFrames, p->strokeColor_.blue(), frame, 0, 244);
+        A = linearInterpolation(p->strokeAFrames, p->strokeColor_.alpha(), frame, 0, 244);
         p->strokeColor_ = QColor(R, G, B, A);
         
         p->setPosition(
-            linearInterpolation(p->xPositionFrames, p->position_.x(), *currentFrame_, 0, 244), 
-            linearInterpolation(p->yPositionFrames, p->position_.y(), *currentFrame_, 0, 244)
+            linearInterpolation(p->xPositionFrames, p->position_.x(), frame, 0, 244), 
+            linearInterpolation(p->yPositionFrames, p->position_.y(), frame, 0, 244)
         ); //inside setPosition it updates geometry and redraws.
 
     }

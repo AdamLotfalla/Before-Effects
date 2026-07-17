@@ -109,6 +109,7 @@ signals:
     void expandedChanged();
     void visibilityChanged();
     void makeSelected();
+    void LayerDragged(int frameOffset);
 };
 
 class TimeCursor : public QWidget{
@@ -255,7 +256,7 @@ private slots:
 
 signals:
     void playSignal(bool playing);
-    void frameChanged();
+    void frameChanged(int frame);
     void optimize(bool state);
     void setSelectedPath(path* newSelectedPath);
 };
