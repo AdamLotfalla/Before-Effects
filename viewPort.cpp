@@ -541,6 +541,9 @@ void path::setSnapping(bool state)
 
 QPainterPath path::shape() const
 {
+    if(!visible_ || *currentFrame_ < layerStartFrame_ || *currentFrame_ > layerEndFrame_)
+        return QPainterPath();
+
     if (actualNodes_.isEmpty())
         return QPainterPath();
 
@@ -1983,7 +1986,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(widget);
-    if(!visible_) return;
+    if(!visible_ || *currentFrame_ < layerStartFrame_ || *currentFrame_ > layerEndFrame_) return;
     initSvgRenderers();
 
     painter->setClipping(false);

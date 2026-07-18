@@ -91,8 +91,8 @@ private:
     int* frameWidth_;
     int layerHeight_ = 22;
     int keyframeLayerHeight_ = 20;
-    int startFrame_ = 0, endFrame_ = 240;
-    int LboundFrame_ = startFrame_, RBoundFrame_ = endFrame_;
+    // int startFrame_ = 0, endFrame_ = 240;
+    int LboundFrame_, RBoundFrame_; // int LboundFrame_ = startFrame_, RBoundFrame_ = endFrame_; 
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);

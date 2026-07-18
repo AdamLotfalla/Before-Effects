@@ -388,6 +388,8 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     bool fill_ = true;
     bool stroke_ = true;
     bool visible_ = true;
+    int layerStartFrame_ = 0;
+    int layerEndFrame_ = 240;
     Qt::PenJoinStyle pathJointStyle = Qt::MiterJoin;
     Qt::PenCapStyle pathCapStyle = Qt::SquareCap;
 
