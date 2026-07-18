@@ -5,6 +5,7 @@ Layer::Layer(QWidget* parent, path *p, int* frameWidth) : QWidget(parent)
     relatedPath_ = p;
     frameWidth_ = frameWidth;
     this->setMinimumHeight(layerHeight_);
+    setMouseTracking(true);
 
     setAutoFillBackground(false);
 }
@@ -65,15 +66,15 @@ void Layer::mousePressEvent(QMouseEvent *event)
     }
     if(drawMode_ == DrawMode::keyframe){
         emit makeSelected();
-        if(event->pos().x() >= offset_ + startFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + startFrame_ * *frameWidth_ +5){
+        if(event->pos().x() >= offset_ + startFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + startFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
             draggingLboundary_ = true;
             QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
         }
-        else if(event->pos().x() >= offset_ + endFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + endFrame_ * *frameWidth_ +5){
+        else if(event->pos().x() >= offset_ + endFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + endFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
             draggingRboundary_ = true;
             QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
         }
-        else{
+        else if(event->pos().y() <= layerHeight_){
             QGuiApplication::setOverrideCursor(Qt::ClosedHandCursor);
         }
     } 
@@ -133,6 +134,37 @@ void Layer::mouseMoveEvent(QMouseEvent *event)
             }
         }
     }
+    else{
+        if(drawMode_ == DrawMode::keyframe){
+            if(event->pos().x() >= offset_ + startFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + startFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
+                QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
+                hoveringLboundary_ = true;
+            }
+            else if(event->pos().x() >= offset_ + endFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + endFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
+                QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
+                hoveringRboundary_ = true;
+            }
+            else if(event->pos().x() >= offset_ + startFrame_ * *frameWidth_ && event->pos().x() <= offset_ + endFrame_ * *frameWidth_ && event->pos().y() <= layerHeight_){
+                QGuiApplication::setOverrideCursor(Qt::OpenHandCursor);
+                hoveringRboundary_ = false;
+                hoveringLboundary_ = false;
+            }
+            else{
+                QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
+                hoveringRboundary_ = false;
+                hoveringLboundary_ = false;
+            }
+            update();
+        }
+    }
+}
+
+void Layer::leaveEvent(QEvent *event)
+{
+    QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
+    hoveringLboundary_ = false;
+    hoveringRboundary_ = false;
+    update();
 }
 
 void Layer::shiftKeyframeLayer(qreal dist)
@@ -315,6 +347,7 @@ void Layer::paintEvent(QPaintEvent *event)
         }
         
         
+
         // draw keyframes
         painter.setOpacity(1);
         painter.setPen(Qt::NoPen);
@@ -364,6 +397,16 @@ void Layer::paintEvent(QPaintEvent *event)
         if(!relatedPath_->visible_){
             painter.drawRect(startFrame_ * *frameWidth_, 0, (endFrame_ - startFrame_) * *frameWidth_, height());
         }
+        
+        painter.setOpacity(0.8);
+        painter.setPen(QPen(QColor("#f0f0f0"), 1));
+        painter.setBrush(QBrush("#f0f0f0"));
+        if(hoveringLboundary_){
+            painter.drawRoundedRect(startFrame_ * *frameWidth_ - 3, 0, 3, layerHeight_, 1, 1);
+        }
+        if(hoveringRboundary_){
+            painter.drawRoundedRect(endFrame_ * *frameWidth_ - 3, 0, 3, layerHeight_, 1, 1);
+        }
         painter.setOpacity(1);
         
         painter.translate(QPoint(- Layer::offset_, 0));
@@ -377,6 +420,7 @@ TimeCursor::TimeCursor(QWidget *parent) : QWidget(parent)
 {
     setAttribute(Qt::WA_TranslucentBackground);
     setStyleSheet("background: transparent;");
+    setFixedWidth(IndicatorWidth_);
 }
 
 void TimeCursor::MoveCenter(int x, int y)

@@ -20,7 +20,6 @@
 #include <QSplitter>
 #include "viewPort.h"
 #include "common_widget_styles.h"
-#include <QGuiApplication>
 
 class MarginPanel : public QWidget{
 private:
@@ -98,11 +97,14 @@ private:
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
+    void leaveEvent(QEvent *event) override;
     void shiftKeyframeLayer(qreal Xdist);
 
     bool holding_ = false;
     bool draggingLboundary_ = false;
     bool draggingRboundary_ = false;
+    bool hoveringLboundary_ = false;
+    bool hoveringRboundary_ = false;
     QPointF holdStartPos_;
     QPointF prevDragDist_;
     int dragFrameOffset_ = 0; 
@@ -124,7 +126,7 @@ public:
     void MoveCenter(int x, int y = 20);
 
 private:
-    int IndicatorWidth_ = 12;
+    int IndicatorWidth_ = 10;
     void paintEvent(QPaintEvent* event);
 };
 
