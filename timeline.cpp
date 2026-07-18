@@ -63,12 +63,28 @@ void Layer::mousePressEvent(QMouseEvent *event)
         }
         if(event->pos().x() > 30) emit makeSelected();
     }
-    if(drawMode_ == DrawMode::keyframe) emit makeSelected();
+    if(drawMode_ == DrawMode::keyframe){
+        emit makeSelected();
+        if(event->pos().x() >= offset_ + startFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + startFrame_ * *frameWidth_ +5){
+            draggingLboundary_ = true;
+            QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
+        }
+        else if(event->pos().x() >= offset_ + endFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + endFrame_ * *frameWidth_ +5){
+            draggingRboundary_ = true;
+            QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
+        }
+        else{
+            QGuiApplication::setOverrideCursor(Qt::ClosedHandCursor);
+        }
+    } 
 }
 
 void Layer::mouseReleaseEvent(QMouseEvent *event)
 {
     holding_ = false;
+    draggingLboundary_ = false;
+    draggingRboundary_ = false;
+    QGuiApplication::restoreOverrideCursor();
 
     if(dragFrameOffset_ == 0) return;
     
@@ -101,9 +117,20 @@ void Layer::mouseMoveEvent(QMouseEvent *event)
 {
     if(holding_){
         if(drawMode_ == DrawMode::keyframe){
-            dragFrameOffset_ = std::floor((event->pos() - holdStartPos_).x() / *frameWidth_);
-            shiftKeyframeLayer((event->pos() - holdStartPos_).x());
-            emit LayerDragged(dragFrameOffset_);
+            if(!draggingLboundary_ && !draggingRboundary_){
+                dragFrameOffset_ = std::floor((event->pos() - holdStartPos_).x() / *frameWidth_);
+                shiftKeyframeLayer((event->pos() - holdStartPos_).x());
+                emit LayerDragged(dragFrameOffset_);
+                if(startFrame_ * *frameWidth_ < -offset_) emit boundariesCrossed(- startFrame_ * *frameWidth_);
+            }
+            else if(draggingLboundary_){
+                startFrame_ = std::floor((event->pos().x() - offset_) / *frameWidth_);
+                update();
+            }
+            else if(draggingRboundary_){
+                endFrame_ = std::floor((event->pos().x() - offset_) / *frameWidth_);
+                update();
+            }
         }
     }
 }
@@ -114,8 +141,8 @@ void Layer::shiftKeyframeLayer(qreal dist)
         (dist - prevDragDist_.x())
         / *frameWidth_
     );
-    frameStart_ += frameShifts;
-    frameEnd_ += frameShifts;
+    startFrame_ += frameShifts;
+    endFrame_ += frameShifts;
 
     update();
 
@@ -261,9 +288,9 @@ void Layer::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::NoPen);
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver); // Draw over existing content    
         painter.setBrush(QBrush("#373737"));
-        painter.drawRoundedRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, 4000, 2, 2); // for layers
+        painter.drawRoundedRect(startFrame_ * *frameWidth_, 0, (endFrame_ - startFrame_) * *frameWidth_, 4000, 2, 2); // for layers
         painter.setBrush(QBrush(color_));
-        painter.drawRoundedRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
+        painter.drawRoundedRect(startFrame_ * *frameWidth_, 0, (endFrame_ - startFrame_) * *frameWidth_, layerHeight_, 2, 2);
         
         
         //drawing hatches & outline if selected
@@ -272,12 +299,12 @@ void Layer::paintEvent(QPaintEvent *event)
             painter.setOpacity(0.1);
             
             QPainterPath Rect;
-            Rect.addRoundedRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, layerHeight_, 2, 2);
+            Rect.addRoundedRect(startFrame_ * *frameWidth_, 0, (endFrame_ - startFrame_) * *frameWidth_, layerHeight_, 2, 2);
             painter.setClipPath(Rect);
             float lineSpacing = 30.0;
             int NLines = width() / lineSpacing + 1;
             while(NLines--){
-                painter.drawLine(NLines * lineSpacing + frameStart_ * *frameWidth_ + 20, -10, NLines * lineSpacing + frameStart_ * *frameWidth_, keyframeLayerHeight_ + 10);
+                painter.drawLine(NLines * lineSpacing + startFrame_ * *frameWidth_ + 20, -10, NLines * lineSpacing + startFrame_ * *frameWidth_, keyframeLayerHeight_ + 10);
             }
             
             painter.setOpacity(0.8);
@@ -332,10 +359,10 @@ void Layer::paintEvent(QPaintEvent *event)
 
         painter.setOpacity(0.5);
         painter.setBrush(QBrush("#161616"));
-        painter.drawRect(frameStart_ * *frameWidth_, 0, std::max(LboundFrame_ - frameStart_, 0) * *frameWidth_, height());
-        painter.drawRect(RBoundFrame_ * *frameWidth_, 0, std::max(frameEnd_ - RBoundFrame_, 0) * *frameWidth_, height());
+        painter.drawRect(startFrame_ * *frameWidth_, 0, std::max(LboundFrame_ - startFrame_, 0) * *frameWidth_, height());
+        painter.drawRect(RBoundFrame_ * *frameWidth_, 0, std::max(endFrame_ - RBoundFrame_, 0) * *frameWidth_, height());
         if(!relatedPath_->visible_){
-            painter.drawRect(frameStart_ * *frameWidth_, 0, (frameEnd_ - frameStart_) * *frameWidth_, height());
+            painter.drawRect(startFrame_ * *frameWidth_, 0, (endFrame_ - startFrame_) * *frameWidth_, height());
         }
         painter.setOpacity(1);
         
@@ -420,7 +447,6 @@ TickBar::TickBar(QWidget* parent, int *frameRate, int *frameWidth, int *frameCou
     RBound->setAttribute(Qt::WA_TranslucentBackground);
     RBound->setStyleSheet("background: transparent;");
 
-    offset_ = (this->width() - *frameCount_ * *frameWidth_) / 2;
 
 
 
@@ -448,7 +474,6 @@ void TickBar::paintEvent(QPaintEvent *event)
     QPen pen;
     // fullHeight = this->height();
     fullWidth_ = *frameCount_ * *frameWidth_;
-    offset_ = (width() - *frameCount_ * *frameWidth_) / 2;
 
     switch (int((float)*frameWidth_/5))
     {
@@ -563,6 +588,11 @@ int TickBar::getFrameWidth()
 int TickBar::getOffset()
 {
     return offset_;
+}
+
+void TickBar::setOffset(qreal value)
+{
+    offset_ = value;
 }
 
 int TickBar::getXLayerStart()
@@ -977,9 +1007,17 @@ void Timeline::addLayer(path* p)
     connect(hierarchyLayer, &Layer::visibilityChanged, keyframeLayer, &Layer::refresh);
     connect(hierarchyLayer, &Layer::makeSelected, [p, this](){emit setSelectedPath(p);});
     connect(keyframeLayer, &Layer::makeSelected, hierarchyLayer, &Layer::makeSelected);
+    connect(keyframeLayer, &Layer::boundariesCrossed, [&](int crossDist){
+        tickBar_->setOffset(crossDist + 2);
+        tickBar_->setFixedWidth(frameCount_ * frameWidth_ + 2*tickBar_->getOffset());
+        keyframeLayer->setOffset(tickBar_->getOffset());
+        keyframeLayerPanel_->setOffset(tickBar_->getOffset());
+        tickBar_->update();
+        cursor_->MoveCenter(tickBar_->getOffset() + *currentFrame_ * frameWidth_);
+    });
     connect(keyframeLayer, &Layer::LayerDragged, hierarchyLayer, [&](int frameOffset){
         emit frameChanged(*currentFrame_ - frameOffset); //pseudo frame change to live update path based on layer drag
-    });
+    }); 
     connect(tickBar_, &TickBar::LBoundChanged, keyframeLayer, &Layer::setLBoundFrame);
     connect(tickBar_, &TickBar::RBoundChanged, keyframeLayer, &Layer::setRBoundFrame);
 
@@ -1057,7 +1095,7 @@ void Timeline::zoomSliderChanged(int value)
     frameWidth_ = newFrameWidth;
 
     tickBar_->setFixedWidth(
-        qMax(frameCount_ * frameWidth_ + 235, width() - 4)
+        qMax(frameCount_ * frameWidth_ + tickBar_->getOffset(), width() - 4)
     );
     keyframeLayerPanel_ = new MarginPanel(keyframePanel_);
     keyframeLayerPanel_->setLMarginWidth(tickBar_->getLBound() * frameWidth_);
@@ -1091,7 +1129,7 @@ void Timeline::resizeEvent(QResizeEvent *event)
     if (tickBar_)
     {
         tickBar_->setFixedWidth(
-            qMax(frameCount_ * frameWidth_ + 235, width() - 4)
+            qMax(frameCount_ * frameWidth_ + tickBar_->getOffset(), width() - 4)
         );
         keyframeLayerPanel_->setLMarginWidth(tickBar_->getLBound() * frameWidth_);
         keyframeLayerPanel_->setRMarginWidth(tickBar_->width() - tickBar_->getRBound() * frameWidth_ - 2 * tickBar_->getOffset());   

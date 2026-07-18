@@ -20,6 +20,7 @@
 #include <QSplitter>
 #include "viewPort.h"
 #include "common_widget_styles.h"
+#include <QGuiApplication>
 
 class MarginPanel : public QWidget{
 private:
@@ -91,8 +92,8 @@ private:
     int* frameWidth_;
     int layerHeight_ = 22;
     int keyframeLayerHeight_ = 20;
-    int frameStart_ = 0, frameEnd_ = 240;
-    int LboundFrame_ = frameStart_, RBoundFrame_ = frameEnd_;
+    int startFrame_ = 0, endFrame_ = 240;
+    int LboundFrame_ = startFrame_, RBoundFrame_ = endFrame_;
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
@@ -100,6 +101,8 @@ private:
     void shiftKeyframeLayer(qreal Xdist);
 
     bool holding_ = false;
+    bool draggingLboundary_ = false;
+    bool draggingRboundary_ = false;
     QPointF holdStartPos_;
     QPointF prevDragDist_;
     int dragFrameOffset_ = 0; 
@@ -110,6 +113,7 @@ signals:
     void visibilityChanged();
     void makeSelected();
     void LayerDragged(int frameOffset);
+    void boundariesCrossed(qreal crossDist);
 };
 
 class TimeCursor : public QWidget{
@@ -146,6 +150,7 @@ public:
     
     int getFrameWidth();
     int getOffset();
+    void setOffset(qreal value);
     int getXLayerStart();
     int getInterBoundDist();
 
@@ -158,7 +163,7 @@ private:
 
     int fullWidth_;
     int tickInterval_ = 10;
-    int offset_;
+    int offset_ = 118;
     int tickLayerHeight_ = 23;
     int boundHandleThickness = 8;
     int boundLayerHeight_ = 10;
