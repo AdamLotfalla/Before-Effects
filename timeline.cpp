@@ -68,11 +68,11 @@
         }
         if(drawMode_ == DrawMode::keyframe){
             emit makeSelected();
-            if(event->pos().x() >= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
+            if(event->pos().x() >= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ && event->pos().x() <= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ + 8 && event->pos().y() <= layerHeight_){
                 draggingLboundary_ = true;
                 QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
             }
-            else if(event->pos().x() >= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
+            else if(event->pos().x() >= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ - 8 && event->pos().x() <= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ && event->pos().y() <= layerHeight_){
                 draggingRboundary_ = true;
                 QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
             }
@@ -138,11 +138,11 @@
         }
         else{
             if(drawMode_ == DrawMode::keyframe){
-                if(event->pos().x() >= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
+                if(event->pos().x() >= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ && event->pos().x() <= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ + 8 && event->pos().y() <= layerHeight_){
                     QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
                     hoveringLboundary_ = true;
                 }
-                else if(event->pos().x() >= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ - 5 && event->pos().x() <= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ +5 && event->pos().y() <= layerHeight_){
+                else if(event->pos().x() >= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ - 8 && event->pos().x() <= offset_ + relatedPath_->layerEndFrame_ * *frameWidth_ && event->pos().y() <= layerHeight_){
                     QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
                     hoveringRboundary_ = true;
                 }
@@ -404,10 +404,10 @@
             painter.setPen(QPen(QColor("#f0f0f0"), 1));
             painter.setBrush(QBrush("#f0f0f0"));
             if(hoveringLboundary_){
-                painter.drawRoundedRect(relatedPath_->layerStartFrame_ * *frameWidth_ - 3, 0, 3, layerHeight_, 1, 1);
+                painter.drawRoundedRect(relatedPath_->layerStartFrame_ * *frameWidth_ , 0, 4, layerHeight_, 2, 2);
             }
             if(hoveringRboundary_){
-                painter.drawRoundedRect(relatedPath_->layerEndFrame_ * *frameWidth_ - 3, 0, 3, layerHeight_, 1, 1);
+                painter.drawRoundedRect(relatedPath_->layerEndFrame_ * *frameWidth_ - 4, 0, 4, layerHeight_, 2, 2);
             }
             painter.setOpacity(1);
             
