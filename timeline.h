@@ -105,16 +105,19 @@ private:
     bool draggingRboundary_ = false;
     bool hoveringLboundary_ = false;
     bool hoveringRboundary_ = false;
+    bool draggingLayer_ = false;
     QPointF holdStartPos_;
     QPointF prevDragDist_;
     int dragFrameOffset_ = 0; 
     //I will use this so the keyframe positions only change visually while dragging the layer, but the changes will be commited and it will be zeroed on unclick 
+    QMap<std::map<int,qreal>*, QSet<int>> selectedKeyframes; // each map will contain many selected keyframes
 
 signals:
     void expandedChanged();
     void visibilityChanged();
     void makeSelected();
     void LayerDragged(int frameOffset);
+    void keyframeMoved();
     void boundariesCrossed(qreal crossDist);
 };
 

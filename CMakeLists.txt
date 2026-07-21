@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Before_Effects VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
@@ -58,7 +58,7 @@ target_link_libraries(Before_Effects PRIVATE
 
 set_target_properties(Before_Effects PROPERTIES
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE          # hides the console window on Windows, comment to enable qDebug()
+    # WIN32_EXECUTABLE TRUE          # hides the console window on Windows, comment to enable qDebug()
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )

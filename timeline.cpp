@@ -77,16 +77,42 @@
                 QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
             }
             else if(event->pos().y() <= layerHeight_){
+                draggingLayer_ = true;
                 QGuiApplication::setOverrideCursor(Qt::ClosedHandCursor);
+            }
+            else{
+                std::array<std::map<int, qreal>*, 16> frameMaps = {
+                    &relatedPath_->xPositionFrames, &relatedPath_->yPositionFrames,
+                    &relatedPath_->xScaleFrames,    &relatedPath_->yScaleFrames,
+                    &relatedPath_->rotationFrames,  
+                    &relatedPath_->xPivotFrames,    &relatedPath_->yPivotFrames,
+                    &relatedPath_->strokeWidthFrames,
+                    &relatedPath_->fillRFrames, &relatedPath_->fillGFrames, &relatedPath_->fillBFrames, &relatedPath_->fillAFrames,
+                    &relatedPath_->strokeRFrames, &relatedPath_->strokeGFrames, &relatedPath_->strokeBFrames, &relatedPath_->strokeAFrames
+                };
+
+                int currentKeyframeLayerIndex = (event->pos().y() - layerHeight_) / (float)keyframeLayerHeight_;
+                int counter = 0;
+                for(auto map : frameMaps){
+                    if(!map->empty()){
+                        if(counter == currentKeyframeLayerIndex){
+                            int currentFrame = (event->pos().x() - offset_) / *frameWidth_;
+                            if(map->contains(currentFrame)){
+                                selectedKeyframes[map].insert(currentFrame);
+                            }
+                            break;
+                        }
+                        counter ++;
+                    }
+                }
             }
         } 
     }
 
     void Layer::mouseReleaseEvent(QMouseEvent *event)
     {
-        holding_ = false;
-        draggingLboundary_ = false;
-        draggingRboundary_ = false;
+
+
         QGuiApplication::restoreOverrideCursor();
 
         if(dragFrameOffset_ == 0) return;
@@ -103,28 +129,52 @@
         };
 
         for(auto map : frameMaps){
-            std::map<int,qreal> shifted;
-
-            for (auto const& [frame,value] : *map){
-                shifted[frame + dragFrameOffset_] = value;
+            if(draggingLayer_){
+                std::map<int,qreal> shifted;
+                for (auto const& [frame,value] : *map){
+                    shifted[frame + dragFrameOffset_] = value;
+                }
+                *map = std::move(shifted);
             }
-
-            *map = std::move(shifted);
+            else if(selectedKeyframes.contains(map)){
+                for(auto i : selectedKeyframes[map]){
+                    auto keyframe = map->extract(i);
+                    keyframe.key() = i + dragFrameOffset_;
+                    map->insert(std::move(keyframe));
+                }
+            }
+            
         }
 
-        dragFrameOffset_ = 0;
+        if(selectedKeyframes.size() > 0)
+            emit keyframeMoved();
 
+
+        if(selectedKeyframes.size() == 1 && !selectedKeyframes.begin().value().empty()){ // only one frame
+            selectedKeyframes.clear();
+        }
+
+        holding_ = false;
+        draggingLboundary_ = false;
+        draggingRboundary_ = false;
+        draggingLayer_ = false;
+        dragFrameOffset_ = 0;
+        update();
     }
 
     void Layer::mouseMoveEvent(QMouseEvent *event)
     {
         if(holding_){
             if(drawMode_ == DrawMode::keyframe){
-                if(!draggingLboundary_ && !draggingRboundary_){
-                    dragFrameOffset_ = std::floor((event->pos() - holdStartPos_).x() / *frameWidth_);
+                dragFrameOffset_ = std::floor((event->pos() - holdStartPos_).x() / *frameWidth_);
+                if(draggingLayer_){
                     shiftKeyframeLayer((event->pos() - holdStartPos_).x());
                     emit LayerDragged(dragFrameOffset_);
                     if(relatedPath_->layerStartFrame_ * *frameWidth_ < -offset_) emit boundariesCrossed(- relatedPath_->layerStartFrame_ * *frameWidth_);
+                    if(relatedPath_->layerEndFrame_ * *frameWidth_ > width() - offset_){
+                        emit boundariesCrossed(relatedPath_->layerEndFrame_ * *frameWidth_ - (width() - 2 * offset_));
+                        // needs a fix to scrolling problem
+                    } 
                 }
                 else if(draggingLboundary_){
                     relatedPath_->layerStartFrame_ = std::floor((event->pos().x() - offset_) / *frameWidth_);
@@ -155,6 +205,8 @@
                     QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
                     hoveringRboundary_ = false;
                     hoveringLboundary_ = false;
+
+
                 }
                 update();
             }
@@ -354,7 +406,7 @@
             painter.setOpacity(1);
             painter.setPen(Qt::NoPen);
             
-            std::array<const std::map<int, qreal>*, 16> frameMaps = {
+            std::array<std::map<int, qreal>*, 16> frameMaps = {
                 &relatedPath_->xPositionFrames, &relatedPath_->yPositionFrames,
                 &relatedPath_->xScaleFrames,    &relatedPath_->yScaleFrames,
                 &relatedPath_->rotationFrames,  
@@ -371,14 +423,34 @@
                     
                     painter.setBrush(QBrush("#a4a588"));
                     painter.setCompositionMode(QPainter::CompositionMode_Multiply);
-                    painter.drawEllipse(QPointF((j.first + dragFrameOffset_) * *frameWidth_, 0.5 * layerHeight_), 3, 3); 
+
+                    if(selectedKeyframes.contains(frameMaps[i]) && selectedKeyframes[frameMaps[i]].contains(j.first) || draggingLayer_){
+                        painter.drawEllipse(QPointF((j.first + dragFrameOffset_) * *frameWidth_, 0.5 * layerHeight_), 3, 3); 
+                    }
+                    else{
+                        painter.drawEllipse(QPointF((j.first) * *frameWidth_, 0.5 * layerHeight_), 3, 3); 
+                    }
+
                     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
                     
                     if(relatedPath_->layerIsExpanded_){
                         painter.setBrush(QBrush("#7BC7B0"));
-                        Rhombus.translate(QPointF((j.first + dragFrameOffset_) * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5));
-                        painter.drawPath(Rhombus);    
-                        Rhombus.translate(-1 * (QPointF((j.first + dragFrameOffset_) * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5)));
+
+                        Rhombus.translate(QPointF((j.first + (draggingLayer_? dragFrameOffset_ : 0)) * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5));
+                        
+                        if(selectedKeyframes.contains(frameMaps[i]) && selectedKeyframes[frameMaps[i]].contains(j.first)){
+                                Rhombus.translate(QPointF(dragFrameOffset_ * *frameWidth_,0));
+                                painter.setPen(QPen("#f0f0f0"));
+                        }
+                            
+                        painter.drawPath(Rhombus);
+                            
+                        if(selectedKeyframes.contains(frameMaps[i]) && selectedKeyframes[frameMaps[i]].contains(j.first)){
+                            Rhombus.translate(QPointF(-dragFrameOffset_ * *frameWidth_,0));
+                            painter.setPen(Qt::NoPen);
+                        }
+
+                        Rhombus.translate(-1 * (QPointF((j.first + (draggingLayer_? dragFrameOffset_ : 0)) * *frameWidth_, (counter + 0.5) * keyframeLayerHeight_ + layerHeight_) - QPointF(5,5)));
                     }
                 }
                 if(hasFrames[i]) counter++;
@@ -1064,6 +1136,9 @@
         connect(keyframeLayer, &Layer::LayerDragged, hierarchyLayer, [&](int frameOffset){
             emit frameChanged(*currentFrame_ - frameOffset); //pseudo frame change to live update path based on layer drag
         }); 
+        connect(keyframeLayer, &Layer::keyframeMoved, [&](){
+            emit frameChanged(*currentFrame_);
+        });
         connect(tickBar_, &TickBar::LBoundChanged, keyframeLayer, &Layer::setLBoundFrame);
         connect(tickBar_, &TickBar::RBoundChanged, keyframeLayer, &Layer::setRBoundFrame);
 
