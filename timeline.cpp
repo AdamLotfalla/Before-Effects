@@ -493,6 +493,7 @@
     TimeCursor::TimeCursor(QWidget *parent) : QWidget(parent)
     {
         setAttribute(Qt::WA_TranslucentBackground);
+        setAttribute(Qt::WA_TransparentForMouseEvents, true);
         setStyleSheet("background: transparent;");
         setFixedWidth(IndicatorWidth_);
     }
