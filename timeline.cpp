@@ -93,18 +93,23 @@
 
                 int currentKeyframeLayerIndex = (event->pos().y() - layerHeight_) / (float)keyframeLayerHeight_;
                 int counter = 0;
+                bool clickedOnSomething = false;
+
                 for(auto map : frameMaps){
-                    if(!map->empty()){
+                    if(!map->empty()){ // not empty --> displayed in keyframe layers
                         if(counter == currentKeyframeLayerIndex){
                             int currentFrame = (event->pos().x() - offset_) / *frameWidth_;
                             if(map->contains(currentFrame)){
                                 selectedKeyframes[map].insert(currentFrame);
+                                clickedOnSomething = true;
                             }
                             break;
                         }
                         counter ++;
                     }
                 }
+
+                if(!clickedOnSomething) selectedKeyframes.clear();
             }
         } 
     }
@@ -115,7 +120,10 @@
 
         QGuiApplication::restoreOverrideCursor();
 
-        if(dragFrameOffset_ == 0) return;
+        if(dragFrameOffset_ == 0) {
+            update();
+            return;
+        }
         
         // commit shifts to the maps
         std::array<std::map<int, qreal>*, 16> frameMaps = {
@@ -127,6 +135,8 @@
             &relatedPath_->fillRFrames, &relatedPath_->fillGFrames, &relatedPath_->fillBFrames, &relatedPath_->fillAFrames,
             &relatedPath_->strokeRFrames, &relatedPath_->strokeGFrames, &relatedPath_->strokeBFrames, &relatedPath_->strokeAFrames
         };
+
+        QMap<std::map<int, qreal>*, QSet<int>> modifiedSelectedKeyframesMap;
 
         for(auto map : frameMaps){
             if(draggingLayer_){
@@ -141,18 +151,43 @@
                     auto keyframe = map->extract(i);
                     keyframe.key() = i + dragFrameOffset_;
                     map->insert(std::move(keyframe));
+
+                    modifiedSelectedKeyframesMap[map].insert(i + dragFrameOffset_);
                 }
             }
-            
         }
+
+        selectedKeyframes = modifiedSelectedKeyframesMap;
 
         if(selectedKeyframes.size() > 0)
             emit keyframeMoved();
 
+        if(!draggingLayer_ && !draggingLboundary_ && !draggingRboundary_){
+            qreal localMouseStartHeight = (holdStartPos_.y() - layerHeight_);
+            qreal localMouseEndHeight = (event->pos().y() - layerHeight_);
+            int counter = 0;
 
-        if(selectedKeyframes.size() == 1 && !selectedKeyframes.begin().value().empty()){ // only one frame
-            selectedKeyframes.clear();
+            for(auto map : frameMaps){
+                if(!map->empty()){ // not empty --> displayed in keyframe layers
+                    if((counter + 0.5) * keyframeLayerHeight_ >= localMouseStartHeight && (counter + 0.5) * keyframeLayerHeight_ <= localMouseEndHeight){
+                        int firstFrame = (holdStartPos_.x() - offset_) / *frameWidth_;
+                        int lastFrame = (event->pos().x() - offset_) / *frameWidth_;
+
+                        auto it_start = map->lower_bound(firstFrame);
+                        auto it_end = map->upper_bound(lastFrame + 1);
+
+                        for(auto it = it_start; it != it_end; ++it){
+                            selectedKeyframes[map].insert(it->first);
+                        }
+                    }
+                    counter ++;
+                }
+            }
         }
+
+        // if(selectedKeyframes.size() == 1 && !selectedKeyframes.begin().value().empty()){ // only one frame
+        //     selectedKeyframes.clear();
+        // }
 
         holding_ = false;
         draggingLboundary_ = false;
