@@ -18,6 +18,7 @@
 #include <QScrollBar>
 #include <QMouseEvent>
 #include <QSplitter>
+#include <QRubberBand>
 #include "viewPort.h"
 #include "common_widget_styles.h"
 
@@ -68,7 +69,8 @@ public:
     ~Layer(){
         relatedPath_ = nullptr;
     };
-
+    void selectKeyframesInRect(QRect localRect, bool additive);
+    void commitSelectedKeyframeShift(int offset);
     enum DrawMode {
         hierarchy,
         keyframe
@@ -99,6 +101,8 @@ private:
     void mouseMoveEvent(QMouseEvent* event);
     void leaveEvent(QEvent *event) override;
     void shiftKeyframeLayer(qreal Xdist);
+    bool rectSelecting_ = false;
+    QRubberBand* rubberBand_ = nullptr;
 
     bool holding_ = false;
     bool draggingLboundary_ = false;
@@ -119,6 +123,12 @@ signals:
     void LayerDragged(int frameOffset);
     void keyframeMoved();
     void boundariesCrossed(qreal crossDist);
+    void rectSelectionFinished(QRect panelRect);
+    void keyframeDragging(int offset);
+    void keyframeDragFinished();
+public slots:
+    void applyExternalDragOffset(int offset);
+    void commitExternalDrag();
 };
 
 class TimeCursor : public QWidget{

@@ -12,6 +12,84 @@
         setAutoFillBackground(false);
     }
 
+    void Layer::selectKeyframesInRect(QRect localRect, bool additive)
+    {
+        if(!additive) selectedKeyframes.clear();
+
+        std::array<std::map<int, qreal>*, 16> frameMaps = {
+            &relatedPath_->xPositionFrames, &relatedPath_->yPositionFrames,
+            &relatedPath_->xScaleFrames,    &relatedPath_->yScaleFrames,
+            &relatedPath_->rotationFrames,
+            &relatedPath_->xPivotFrames,    &relatedPath_->yPivotFrames,
+            &relatedPath_->strokeWidthFrames,
+            &relatedPath_->fillRFrames, &relatedPath_->fillGFrames, &relatedPath_->fillBFrames, &relatedPath_->fillAFrames,
+            &relatedPath_->strokeRFrames, &relatedPath_->strokeGFrames, &relatedPath_->strokeBFrames, &relatedPath_->strokeAFrames
+        };
+
+        if(!relatedPath_->layerIsExpanded_){
+            if(localRect.top() <= layerHeight_ && localRect.bottom() >= 0){
+                for(auto map : frameMaps)
+                    for(auto& [frame, value] : *map){
+                        int frameX = offset_ + frame * *frameWidth_;
+                        if(localRect.left() <= frameX && frameX <= localRect.right())
+                            selectedKeyframes[map].insert(frame);
+                    }
+            }
+        }
+        else{
+            int counter = 0;
+            for(auto map : frameMaps){
+                if(!map->empty()){
+                    qreal rowCenterY = (counter + 0.5) * keyframeLayerHeight_ + layerHeight_;
+                    if(localRect.top() <= rowCenterY && rowCenterY <= localRect.bottom()){
+                        for(auto& [frame, value] : *map){
+                            int frameX = offset_ + frame * *frameWidth_;
+                            if(localRect.left() <= frameX && frameX <= localRect.right())
+                                selectedKeyframes[map].insert(frame);
+                        }
+                    }
+                    counter++;
+                }
+            }
+        }
+        update();
+    }
+
+    void Layer::commitSelectedKeyframeShift(int offset)
+    {
+        if(selectedKeyframes.isEmpty() || offset == 0) return;
+
+        QMap<std::map<int, qreal>*, QSet<int>> modified;
+        for(auto it = selectedKeyframes.begin(); it != selectedKeyframes.end(); ++it){
+            std::map<int, qreal>* map = it.key();
+            for(int frame : it.value()){
+                auto kf = map->extract(frame);
+                if(kf.empty()) continue;
+                kf.key() = frame + offset;
+                map->insert(std::move(kf));
+                modified[map].insert(frame + offset);
+            }
+        }
+        selectedKeyframes = modified;
+        update();
+        relatedPath_->update();
+    }
+
+    void Layer::applyExternalDragOffset(int offset)
+    {
+        if(holding_ || selectedKeyframes.isEmpty()) return; // ignore if this layer is itself driving a drag
+        dragFrameOffset_ = offset;
+        update();
+    }
+
+    void Layer::commitExternalDrag()
+    {
+        if(selectedKeyframes.isEmpty()) return;
+        commitSelectedKeyframeShift(dragFrameOffset_);
+        dragFrameOffset_ = 0;
+        emit keyframeMoved();
+    }
+
     void Layer::refresh()
     {
         update();
@@ -68,6 +146,7 @@
         }
         if(drawMode_ == DrawMode::keyframe){
             emit makeSelected();
+            grabMouse();
             if(event->pos().x() >= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ && event->pos().x() <= offset_ + relatedPath_->layerStartFrame_ * *frameWidth_ + 8 && event->pos().y() <= layerHeight_){
                 draggingLboundary_ = true;
                 QGuiApplication::setOverrideCursor(Qt::SizeHorCursor);
@@ -109,7 +188,14 @@
                     }
                 }
 
-                if(!clickedOnSomething) selectedKeyframes.clear();
+                if(!clickedOnSomething){
+                    selectedKeyframes.clear();
+                    rectSelecting_ = true;
+                    if(!rubberBand_) rubberBand_ = new QRubberBand(QRubberBand::Rectangle, parentWidget());
+                    rubberBand_->setGeometry(QRect(mapTo(parentWidget(), event->pos()), QSize()));
+                    rubberBand_->show();
+                    rubberBand_->raise();
+                }
             }
         } 
     }
@@ -117,8 +203,17 @@
     void Layer::mouseReleaseEvent(QMouseEvent *event)
     {
 
-
+        releaseMouse();
         QGuiApplication::restoreOverrideCursor();
+        if(rectSelecting_){
+            rectSelecting_ = false;
+            QRect panelRect = rubberBand_->geometry().normalized();
+            rubberBand_->hide();
+            emit rectSelectionFinished(panelRect);
+            holding_ = false;
+            update();
+            return;
+        }
 
         if(dragFrameOffset_ == 0) {
             update();
@@ -136,8 +231,6 @@
             &relatedPath_->strokeRFrames, &relatedPath_->strokeGFrames, &relatedPath_->strokeBFrames, &relatedPath_->strokeAFrames
         };
 
-        QMap<std::map<int, qreal>*, QSet<int>> modifiedSelectedKeyframesMap;
-
         for(auto map : frameMaps){
             if(draggingLayer_){
                 std::map<int,qreal> shifted;
@@ -146,18 +239,13 @@
                 }
                 *map = std::move(shifted);
             }
-            else if(selectedKeyframes.contains(map)){
-                for(auto i : selectedKeyframes[map]){
-                    auto keyframe = map->extract(i);
-                    keyframe.key() = i + dragFrameOffset_;
-                    map->insert(std::move(keyframe));
-
-                    modifiedSelectedKeyframesMap[map].insert(i + dragFrameOffset_);
-                }
-            }
         }
 
-        selectedKeyframes = modifiedSelectedKeyframesMap;
+        if(!draggingLayer_ && selectedKeyframes.size() > 0){
+            commitSelectedKeyframeShift(dragFrameOffset_);
+            emit keyframeMoved();
+            emit keyframeDragFinished();
+        }
 
         if(selectedKeyframes.size() > 0)
             emit keyframeMoved();
@@ -201,6 +289,12 @@
     {
         if(holding_){
             if(drawMode_ == DrawMode::keyframe){
+                if(rectSelecting_){
+                    QRect panelRect(mapTo(parentWidget(), holdStartPos_.toPoint()),
+                                     mapTo(parentWidget(), event->pos()));
+                    rubberBand_->setGeometry(panelRect.normalized());
+                    return;
+                }
                 dragFrameOffset_ = std::floor((event->pos() - holdStartPos_).x() / *frameWidth_);
                 if(draggingLayer_){
                     shiftKeyframeLayer((event->pos() - holdStartPos_).x());
@@ -216,6 +310,9 @@
                 }
                 else if(draggingRboundary_){
                     relatedPath_->layerEndFrame_ = std::floor((event->pos().x() - offset_) / *frameWidth_);
+                }
+                else if(selectedKeyframes.size() > 0){
+                    emit keyframeDragging(dragFrameOffset_);
                 }
                 update();
                 relatedPath_->update();
@@ -1175,6 +1272,21 @@
         connect(keyframeLayer, &Layer::keyframeMoved, [&](){
             emit frameChanged(*currentFrame_);
         });
+        connect(keyframeLayer, &Layer::rectSelectionFinished, [&](QRect panelRect){
+            for(auto& pr : layers_){
+                Layer* kLayer = pr.second;
+                QRect localRect(kLayer->mapFromParent(panelRect.topLeft()),
+                                 kLayer->mapFromParent(panelRect.bottomRight()));
+                kLayer->selectKeyframesInRect(localRect, false);
+            }
+        });
+        for(auto& pr : layers_){
+            Layer* otherKLayer = pr.second;
+            connect(keyframeLayer, &Layer::keyframeDragging, otherKLayer, &Layer::applyExternalDragOffset);
+            connect(keyframeLayer, &Layer::keyframeDragFinished, otherKLayer, &Layer::commitExternalDrag);
+            connect(otherKLayer, &Layer::keyframeDragging, keyframeLayer, &Layer::applyExternalDragOffset);
+            connect(otherKLayer, &Layer::keyframeDragFinished, keyframeLayer, &Layer::commitExternalDrag);
+        }
         connect(tickBar_, &TickBar::LBoundChanged, keyframeLayer, &Layer::setLBoundFrame);
         connect(tickBar_, &TickBar::RBoundChanged, keyframeLayer, &Layer::setRBoundFrame);
 
