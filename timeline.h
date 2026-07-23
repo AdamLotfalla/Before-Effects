@@ -123,7 +123,7 @@ signals:
     void LayerDragged(int frameOffset);
     void keyframeMoved();
     void boundariesCrossed(qreal crossDist);
-    void rectSelectionFinished(QRect panelRect);
+    void rectSelectionFinished(QRect panelRect, bool shifting);
     void keyframeDragging(int offset);
     void keyframeDragFinished();
 public slots:

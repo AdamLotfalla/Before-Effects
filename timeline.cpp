@@ -177,14 +177,15 @@
                 for(auto map : frameMaps){
                     if(!map->empty()){ // not empty --> displayed in keyframe layers
                         if(counter == currentKeyframeLayerIndex){ // the currently clicked keyfarme layer
-                            int pickRadius = 8;
+                            int pickRadius = 5;
                             int mousePosX = event->pos().x() - offset_;
                             int BestFrame = INT_MAX;
                             for(auto it = map->begin(); it != map->end(); ++it){
-                                if(std::abs(it->first * *frameWidth_ - mousePosX) < BestFrame) BestFrame = it->first;
+                                if(std::abs(it->first * *frameWidth_ - mousePosX) < BestFrame * *frameWidth_) BestFrame = it->first;
                             }
 
                             if(std::abs(BestFrame * *frameWidth_ - mousePosX) <= pickRadius){
+                                if(!(event->modifiers() & Qt::ShiftModifier || selectedKeyframes[map].contains(BestFrame)) ) selectedKeyframes.clear();
                                 selectedKeyframes[map].insert(BestFrame);
                                 clickedOnSomething = true;
                             }
@@ -195,7 +196,8 @@
                 }
 
                 if(!clickedOnSomething){
-                    selectedKeyframes.clear();
+                    if(!(event->modifiers() & Qt::ShiftModifier))
+                        selectedKeyframes.clear();
                     rectSelecting_ = true;
                     if(!rubberBand_) rubberBand_ = new QRubberBand(QRubberBand::Rectangle, parentWidget());
                     rubberBand_->setGeometry(QRect(mapTo(parentWidget(), event->pos()), QSize()));
@@ -215,7 +217,7 @@
             rectSelecting_ = false;
             QRect panelRect = rubberBand_->geometry().normalized();
             rubberBand_->hide();
-            emit rectSelectionFinished(panelRect);
+            emit rectSelectionFinished(panelRect, event->modifiers() & Qt::ShiftModifier);
             holding_ = false;
             update();
             return;
@@ -279,10 +281,6 @@
                 }
             }
         }
-
-        // if(selectedKeyframes.size() == 1 && !selectedKeyframes.begin().value().empty()){ // only one frame
-        //     selectedKeyframes.clear();
-        // }
 
         holding_ = false;
         draggingLboundary_ = false;
@@ -1279,12 +1277,12 @@
         connect(keyframeLayer, &Layer::keyframeMoved, [&](){
             emit frameChanged(*currentFrame_);
         });
-        connect(keyframeLayer, &Layer::rectSelectionFinished, [&](QRect panelRect){
+        connect(keyframeLayer, &Layer::rectSelectionFinished, [&](QRect panelRect, bool shifting){
             for(auto& pr : layers_){
                 Layer* kLayer = pr.second;
                 QRect localRect(kLayer->mapFromParent(panelRect.topLeft()),
                                  kLayer->mapFromParent(panelRect.bottomRight()));
-                kLayer->selectKeyframesInRect(localRect, false);
+                kLayer->selectKeyframesInRect(localRect, shifting);
             }
         });
         for(auto& pr : layers_){
