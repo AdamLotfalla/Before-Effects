@@ -176,10 +176,16 @@
 
                 for(auto map : frameMaps){
                     if(!map->empty()){ // not empty --> displayed in keyframe layers
-                        if(counter == currentKeyframeLayerIndex){
-                            int currentFrame = (event->pos().x() - offset_) / *frameWidth_;
-                            if(map->contains(currentFrame)){
-                                selectedKeyframes[map].insert(currentFrame);
+                        if(counter == currentKeyframeLayerIndex){ // the currently clicked keyfarme layer
+                            int pickRadius = 8;
+                            int mousePosX = event->pos().x() - offset_;
+                            int BestFrame = INT_MAX;
+                            for(auto it = map->begin(); it != map->end(); ++it){
+                                if(std::abs(it->first * *frameWidth_ - mousePosX) < BestFrame) BestFrame = it->first;
+                            }
+
+                            if(std::abs(BestFrame * *frameWidth_ - mousePosX) <= pickRadius){
+                                selectedKeyframes[map].insert(BestFrame);
                                 clickedOnSomething = true;
                             }
                             break;
@@ -215,7 +221,8 @@
             return;
         }
 
-        if(dragFrameOffset_ == 0) {
+        if(dragFrameOffset_ == 0){
+            holding_ = false;
             update();
             return;
         }
