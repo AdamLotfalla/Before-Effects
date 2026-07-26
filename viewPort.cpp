@@ -2322,6 +2322,7 @@ viewPort::viewPort(QWidget* parent, int* frame): QGraphicsView(parent)
 
 void viewPort::enableSelectionTool(bool state)
 {
+    if(selectionToolActivated_ == state) return; 
     selectionToolActivated_ = state;
     if(selectedPath_ != nullptr)
         selectedPath_->update();
@@ -2329,6 +2330,7 @@ void viewPort::enableSelectionTool(bool state)
 
 void viewPort::enableNodeTool(bool state)
 {
+    if(nodeToolActivated_ == state) return;
     nodeToolActivated_ = state;
     
     if(selectedPath_ != nullptr){
@@ -2339,6 +2341,7 @@ void viewPort::enableNodeTool(bool state)
 
 void viewPort::enableBezierTool(bool state)
 {
+    if(bezierToolActivated_ == state) return;
     bezierToolActivated_ = state;
     startedNewPath_ = false;
     if(state) setSelectedPath(nullptr);
@@ -2466,6 +2469,8 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 emit pathCreated(currentPath);
                 emit attributePanelUpdateNeeded(currentPath);
                 emit updateLayer(currentPath);
+
+                emit enableSelectionToolSignal(true);
             }
             else{
                 currentPath->addPoint(pointToAdd);
@@ -2880,6 +2885,8 @@ void viewPort::keyPressEvent(QKeyEvent *event)
                 emit pathCreated(currentPath);
                 emit attributePanelUpdateNeeded(currentPath);
                 emit updateLayer(currentPath);
+
+                emit enableSelectionToolSignal(true);
         }
     }
 }

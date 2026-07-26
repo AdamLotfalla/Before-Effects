@@ -142,6 +142,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // select path from timeline and select layer from viewport
     QObject::connect(viewPort_, &viewPort::selectLayer, TimelinePanel_, &Timeline::setSelectedLayer);
+
+    QObject::connect(viewPort_, &viewPort::enableSelectionToolSignal, this, &MainWindow::selectionTool);
+    QObject::connect(viewPort_, &viewPort::enableNodeToolSignal, this, &MainWindow::nodeTool);
+    QObject::connect(viewPort_, &viewPort::enableBezierToolSignal, this, &MainWindow::bezierTool);
+
     QObject::connect(TimelinePanel_, &Timeline::setSelectedPath, [&](path* p){viewPort_->setSelectedPath(p);});
 
     QObject::connect(TimelinePanel_, &Timeline::frameChanged, viewPort_, &viewPort::onFrameChanged);
