@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     bezierPen_->setIconSize(QSize(20,20));
     bezierPen_->setFixedSize(QSize(28,28));
     bezierPen_->setCheckable(true);
-    selectionTool_->setToolTip("Bezier pen\t(B)");
+    bezierPen_->setToolTip("Bezier pen\t(B)");
     
     nodeTool_ = new QToolButton(toolBar);
     nodeTool_->setStyleSheet(toolBarButtonStyle);
@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     nodeTool_->setIconSize(QSize(20,20));
     nodeTool_->setFixedSize(QSize(28,28));
     nodeTool_->setCheckable(true);
-    selectionTool_->setToolTip("Node edit\t(N)");
+    nodeTool_->setToolTip("Node edit\t(N)");
     
     selectionTool_ = new QToolButton(toolBar);
     selectionTool_->setStyleSheet(toolBarButtonStyle);
