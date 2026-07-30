@@ -1484,14 +1484,16 @@
         if(initialIndex == targetIndex) return;
         else if(initialIt > targetIt){
             std::rotate(targetIt, initialIt, initialIt + 1);
-            hierarchyLayerLayout_->removeWidget(layer);
-            hierarchyLayerLayout_->insertWidget(targetIndex, layer);
         } 
         else{
             std::rotate(initialIt, initialIt + 1, targetIt + 1);
-            hierarchyLayerLayout_->removeWidget(layer);
-            hierarchyLayerLayout_->insertWidget(targetIndex, layer);
         }  
+        hierarchyLayerLayout_->removeWidget(layer);
+        hierarchyLayerLayout_->insertWidget(targetIndex, layer);
+
+        auto KLayer = layerLookup_.find(layer->relatedPath_).value().second;
+        keyframeLayerLayout_->removeWidget(KLayer);
+        keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer); // not top bar spacer item
     }
 
     void Timeline::refreshLayer(path* p)
