@@ -83,6 +83,7 @@ public:
     void setDrawMode(DrawMode newMode);
     void setExpanded(bool state);
     static void setOffset(int value);
+    static int getLayerHeight();
     path* relatedPath_ = nullptr;
     QColor color_ = QColor("#F16E7A"); //light coral; temporary
     void setLBoundFrame(int frame);
@@ -91,8 +92,8 @@ public:
 private:
     inline static int offset_;
     int* frameWidth_;
-    int layerHeight_ = 22;
-    int keyframeLayerHeight_ = 20;
+    static const int layerHeight_ = 22;
+    static const int keyframeLayerHeight_ = 20;
     // int startFrame_ = 0, endFrame_ = 240;
     int LboundFrame_, RBoundFrame_; // int LboundFrame_ = startFrame_, RBoundFrame_ = endFrame_; 
     void paintEvent(QPaintEvent* event) override;
@@ -126,6 +127,8 @@ signals:
     void rectSelectionFinished(QRect panelRect, bool shifting);
     void keyframeDragging(int offset);
     void keyframeDragFinished();
+    void reorderingLayers(QPoint pos, QPoint holdStartPos, Layer* layer);
+    void stopReorderingLayers(QPoint pos, QPoint holdStartPos, Layer* layer);
 public slots:
     void applyExternalDragOffset(int offset);
     void commitExternalDrag();
@@ -260,12 +263,16 @@ private:
     MarginPanel* keyframeLayerPanel_ ;
     QVBoxLayout* keyframeLayerLayout_;
 
+    Layer* dragLayer_ = nullptr;
+
     QHash<path*, QPair<Layer*, Layer*>> layerLookup_;
 
     QToolButton* playButton;
 
     void resizeEvent(QResizeEvent *event) override;
     void playButtonClickEvent();
+    void layerReorderPending(QPoint pos, QPoint holdStartPos, Layer* layer);
+    void layerReordered(QPoint pos, QPoint holdStartPos, Layer* layer);
     
 public slots:
     void setSelectedLayer(path* p);

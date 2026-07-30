@@ -114,6 +114,11 @@
         Layer::offset_ = value;
     }
 
+    int Layer::getLayerHeight()
+    {
+        return layerHeight_;
+    }
+
     void Layer::setLBoundFrame(int frame)
     {
         LboundFrame_ = frame;
@@ -212,6 +217,7 @@
     {
 
         releaseMouse();
+        emit stopReorderingLayers(event->pos(), holdStartPos_.toPoint(), this);
         QGuiApplication::restoreOverrideCursor();
         if(rectSelecting_){
             rectSelecting_ = false;
@@ -321,6 +327,11 @@
                 }
                 update();
                 relatedPath_->update();
+            }
+            else if(drawMode_ == DrawMode::hierarchy){
+                if(holdStartPos_.x() > 30 && holdStartPos_.x() < width() - 30){ //not clicking functional buttons (maybe move that to a bool later when more functions are added)
+                    emit reorderingLayers(event->pos(), holdStartPos_.toPoint(), this);
+                }
             }
         }
         else{
@@ -1292,6 +1303,10 @@
             connect(otherKLayer, &Layer::keyframeDragging, keyframeLayer, &Layer::applyExternalDragOffset);
             connect(otherKLayer, &Layer::keyframeDragFinished, keyframeLayer, &Layer::commitExternalDrag);
         }
+        
+        connect(hierarchyLayer, &Layer::reorderingLayers, this, &Timeline::layerReorderPending);
+        connect(hierarchyLayer, &Layer::stopReorderingLayers, this, &Timeline::layerReordered);
+        
         connect(tickBar_, &TickBar::LBoundChanged, keyframeLayer, &Layer::setLBoundFrame);
         connect(tickBar_, &TickBar::RBoundChanged, keyframeLayer, &Layer::setRBoundFrame);
 
@@ -1428,6 +1443,55 @@
         }
 
         emit playSignal(playing_);
+    }
+
+    void Timeline::layerReorderPending(QPoint pos, QPoint holdStartPos, Layer *layer)
+    {
+        if(!dragLayer_){
+            dragLayer_ = new Layer(hierarchyPanel_, layer->relatedPath_, &frameWidth_);
+            dragLayer_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint
+                                    | Qt::WindowStaysOnTopHint
+                                    | Qt::WindowDoesNotAcceptFocus);
+            dragLayer_->setAttribute(Qt::WA_TranslucentBackground);
+            dragLayer_->setAttribute(Qt::WA_TransparentForMouseEvents);
+            dragLayer_->setAttribute(Qt::WA_ShowWithoutActivating);
+            dragLayer_->setWindowOpacity(0.6);
+        }
+        dragLayer_->setFixedSize(layer->size());
+        dragLayer_->show();
+        dragLayer_->move(layer->mapToGlobal(QPoint(0,0)) + (pos - holdStartPos));
+    }
+
+    void Timeline::layerReordered(QPoint pos, QPoint holdStartPos, Layer *layer)
+    {
+        if(dragLayer_){
+            dragLayer_->deleteLater();
+            dragLayer_ = nullptr;
+        }
+
+        int count = (int)layers_.size();
+        
+        QPoint mappedPos = layer->mapToParent(pos);
+        int targetIndex = std::round((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1; // zero must be the top bar spacing
+        targetIndex = std::clamp(targetIndex, 1, count);
+        auto targetIt = layers_.begin() + targetIndex;
+        
+        mappedPos = layer->mapToParent(holdStartPos);
+        int initialIndex = std::round((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1;
+        initialIndex = std::clamp(initialIndex, 1, count);
+        auto initialIt = layers_.begin() + initialIndex;
+
+        if(initialIndex == targetIndex) return;
+        else if(initialIt > targetIt){
+            std::rotate(targetIt, initialIt, initialIt + 1);
+            hierarchyLayerLayout_->removeWidget(layer);
+            hierarchyLayerLayout_->insertWidget(targetIndex, layer);
+        } 
+        else{
+            std::rotate(initialIt, initialIt + 1, targetIt + 1);
+            hierarchyLayerLayout_->removeWidget(layer);
+            hierarchyLayerLayout_->insertWidget(targetIndex, layer);
+        }  
     }
 
     void Timeline::refreshLayer(path* p)
