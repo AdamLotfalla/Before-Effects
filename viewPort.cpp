@@ -2470,7 +2470,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 emit attributePanelUpdateNeeded(currentPath);
                 emit updateLayer(currentPath);
 
-                emit enableSelectionToolSignal(true);
+                emit enableSelectionToolSignal();
             }
             else{
                 currentPath->addPoint(pointToAdd);
@@ -2886,8 +2886,17 @@ void viewPort::keyPressEvent(QKeyEvent *event)
                 emit attributePanelUpdateNeeded(currentPath);
                 emit updateLayer(currentPath);
 
-                emit enableSelectionToolSignal(true);
+                emit enableSelectionToolSignal();
         }
+    }
+    else if(event->key() == 'B'){
+        emit enableBezierToolSignal();
+    }
+    else if(event->key() == 'N'){
+        emit enableNodeToolSignal();
+    }
+    else if(event->key() == 'S'){
+        emit enableSelectionToolSignal();
     }
 }
 

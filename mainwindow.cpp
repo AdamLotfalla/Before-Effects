@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     bezierPen_->setIconSize(QSize(20,20));
     bezierPen_->setFixedSize(QSize(28,28));
     bezierPen_->setCheckable(true);
-    bezierPen_->setChecked(false);
+    selectionTool_->setToolTip("Bezier pen\t(B)");
     
     nodeTool_ = new QToolButton(toolBar);
     nodeTool_->setStyleSheet(toolBarButtonStyle);
@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     nodeTool_->setIconSize(QSize(20,20));
     nodeTool_->setFixedSize(QSize(28,28));
     nodeTool_->setCheckable(true);
-    nodeTool_->setChecked(false);
+    selectionTool_->setToolTip("Node edit\t(N)");
     
     selectionTool_ = new QToolButton(toolBar);
     selectionTool_->setStyleSheet(toolBarButtonStyle);
@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     selectionTool_->setIconSize(QSize(20,20));
     selectionTool_->setFixedSize(QSize(28,28));
     selectionTool_->setCheckable(true);
-    selectionTool_->setChecked(false);
+    selectionTool_->setToolTip("Selection tool\t(S)");
 
     QToolButton* exportButton = new QToolButton(toolBar);
     exportButton->setStyleSheet(toolBarButtonStyle);
@@ -143,9 +143,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // select path from timeline and select layer from viewport
     QObject::connect(viewPort_, &viewPort::selectLayer, TimelinePanel_, &Timeline::setSelectedLayer);
 
-    QObject::connect(viewPort_, &viewPort::enableSelectionToolSignal, this, &MainWindow::selectionTool);
-    QObject::connect(viewPort_, &viewPort::enableNodeToolSignal, this, &MainWindow::nodeTool);
-    QObject::connect(viewPort_, &viewPort::enableBezierToolSignal, this, &MainWindow::bezierTool);
+    QObject::connect(viewPort_, &viewPort::enableSelectionToolSignal, [this](){selectionTool(true);});
+    QObject::connect(viewPort_, &viewPort::enableNodeToolSignal, [this](){nodeTool(true);});
+    QObject::connect(viewPort_, &viewPort::enableBezierToolSignal, [this](){bezierTool(true);});
 
     QObject::connect(TimelinePanel_, &Timeline::setSelectedPath, [&](path* p){viewPort_->setSelectedPath(p);});
 

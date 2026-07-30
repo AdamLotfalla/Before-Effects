@@ -590,7 +590,7 @@ signals:
     void frameChanged();
     void optimizeSignal(bool state);
     void supressKeyframesSignal(bool state);
-    void enableSelectionToolSignal(bool state);
-    void enableBezierToolSignal(bool state);
-    void enableNodeToolSignal(bool state);
+    void enableSelectionToolSignal();
+    void enableBezierToolSignal();
+    void enableNodeToolSignal();
 };
