@@ -264,6 +264,7 @@ private:
     QVBoxLayout* keyframeLayerLayout_;
 
     Layer* dragLayer_ = nullptr;
+    QWidget* dragIndicator;
 
     QHash<path*, QPair<Layer*, Layer*>> layerLookup_;
 

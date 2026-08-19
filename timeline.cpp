@@ -1460,6 +1460,19 @@
         dragLayer_->setFixedSize(layer->size());
         dragLayer_->show();
         dragLayer_->move(layer->mapToGlobal(QPoint(0,0)) + (pos - holdStartPos));
+
+        if(!dragIndicator){
+            dragIndicator = new QWidget();
+        }
+        dragIndicator->setFixedHeight(3);
+        dragIndicator->setAutoFillBackground(true);
+        dragIndicator->setPalette(QPalette(QColor("#569CD6")));
+
+        QPoint mappedPos = layer->mapToParent(pos);
+        int count = (int)layers_.size();
+        int targetIndex = std::round((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1; // zero must be the top bar spacing
+        targetIndex = std::clamp(targetIndex, 1, count + 1); //count + 1 to put it at the end
+        hierarchyLayerLayout_->insertWidget(targetIndex, dragIndicator);
     }
 
     void Timeline::layerReordered(QPoint pos, QPoint holdStartPos, Layer *layer)
@@ -1481,13 +1494,20 @@
         initialIndex = std::clamp(initialIndex, 1, count);
         auto initialIt = layers_.begin() + initialIndex;
 
+        if(dragIndicator){
+            hierarchyLayerLayout_->removeWidget(dragIndicator);
+            dragIndicator->deleteLater();
+            dragIndicator = nullptr;
+        }
+
         if(initialIndex == targetIndex) return;
         else if(initialIt > targetIt){
             std::rotate(targetIt, initialIt, initialIt + 1);
         } 
         else{
             std::rotate(initialIt, initialIt + 1, targetIt + 1);
-        }  
+        }
+        
         hierarchyLayerLayout_->removeWidget(layer);
         hierarchyLayerLayout_->insertWidget(targetIndex, layer);
 
