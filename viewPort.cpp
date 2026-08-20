@@ -2426,11 +2426,7 @@ void viewPort::reorderPath(path *p, int zDiff)
     
     for(int i = 0; i < paths_.size(); i++){
         paths_[i]->setZValue(i);
-        paths_[i]->update();
     }
-
-    update();
-    canvas_->update();
 }
 
 void viewPort::mousePressEvent(QMouseEvent *event)
