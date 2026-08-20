@@ -2468,7 +2468,6 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             
             paths_.push_back(currentPath);
             currentPath->setZValue(paths_.size());
-            return; //early return when having just one node
         }
         else{
             currentPath = paths_.back();
@@ -2507,7 +2506,6 @@ void viewPort::mousePressEvent(QMouseEvent *event)
         currentPath->calculateBoundaries();
         currentPath->update();
         scene_->update();
-        return;
     }
     else if(nodeToolActivated_ && event->button() == Qt::LeftButton){      
         bool clickedOnNode = false;
