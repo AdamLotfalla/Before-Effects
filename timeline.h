@@ -287,4 +287,5 @@ signals:
     void frameChanged(int frame);
     void optimize(bool state);
     void setSelectedPath(path* newSelectedPath);
+    void reorderPathSignal(path* p, int zDiff);
 };

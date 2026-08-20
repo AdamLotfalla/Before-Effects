@@ -1463,15 +1463,16 @@
 
         if(!dragIndicator){
             dragIndicator = new QWidget();
+            dragIndicator->setFixedHeight(3);
+            dragIndicator->setAutoFillBackground(true);
+            dragIndicator->setPalette(QPalette(QColor("#569CD6")));
         }
-        dragIndicator->setFixedHeight(3);
-        dragIndicator->setAutoFillBackground(true);
-        dragIndicator->setPalette(QPalette(QColor("#569CD6")));
 
         QPoint mappedPos = layer->mapToParent(pos);
         int count = (int)layers_.size();
         int targetIndex = std::round((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1; // zero must be the top bar spacing
         targetIndex = std::clamp(targetIndex, 1, count + 1); //count + 1 to put it at the end
+        hierarchyLayerLayout_->removeWidget(dragIndicator);
         hierarchyLayerLayout_->insertWidget(targetIndex, dragIndicator);
     }
 
@@ -1482,38 +1483,53 @@
             dragLayer_ = nullptr;
         }
 
-        int count = (int)layers_.size();
-        
-        QPoint mappedPos = layer->mapToParent(pos);
-        int targetIndex = std::round((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1; // zero must be the top bar spacing
-        targetIndex = std::clamp(targetIndex, 1, count);
-        auto targetIt = layers_.begin() + targetIndex;
-        
-        mappedPos = layer->mapToParent(holdStartPos);
-        int initialIndex = std::round((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1;
-        initialIndex = std::clamp(initialIndex, 1, count);
-        auto initialIt = layers_.begin() + initialIndex;
-
         if(dragIndicator){
             hierarchyLayerLayout_->removeWidget(dragIndicator);
             dragIndicator->deleteLater();
             dragIndicator = nullptr;
         }
 
-        if(initialIndex == targetIndex) return;
-        else if(initialIt > targetIt){
-            std::rotate(targetIt, initialIt, initialIt + 1);
-        } 
-        else{
-            std::rotate(initialIt, initialIt + 1, targetIt + 1);
-        }
+        int count = (int)layers_.size();
         
-        hierarchyLayerLayout_->removeWidget(layer);
-        hierarchyLayerLayout_->insertWidget(targetIndex, layer);
+        QPoint mappedPos = layer->mapToParent(pos);
+        int targetIndex = std::round((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1; // zero must be the top bar spacing
+        targetIndex = std::clamp(targetIndex, 1, count + 1); //count + 1 to put it at the end
+        auto targetIt = layers_.begin() + targetIndex;
+        
+        mappedPos = layer->mapToParent(holdStartPos);
+        int initialIndex = std::floor((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight()) + 1; //floor because the mouse pos is contained inside the layer
+        initialIndex = std::clamp(initialIndex, 1, count);
+        auto initialIt = layers_.begin() + initialIndex;
+
 
         auto KLayer = layerLookup_.find(layer->relatedPath_).value().second;
-        keyframeLayerLayout_->removeWidget(KLayer);
-        keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer); // not top bar spacer item
+        
+        
+        if(initialIt > targetIt){
+            std::rotate(targetIt, initialIt, initialIt + 1);
+            hierarchyLayerLayout_->removeWidget(layer);
+            hierarchyLayerLayout_->insertWidget(targetIndex, layer);
+    
+            keyframeLayerLayout_->removeWidget(KLayer);
+            keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer); // no top bar spacer item in keyframe panel
+        } 
+        else if(initialIt < targetIt){
+            std::rotate(initialIt, initialIt + 1, targetIt + 1);
+
+            targetIndex --; // the layer is removed so every index after it is shifted. 
+            //should subtract the number of selected (moved) layers not 1 when implemented
+
+            hierarchyLayerLayout_->removeWidget(layer);
+            hierarchyLayerLayout_->insertWidget(targetIndex, layer); 
+            
+            keyframeLayerLayout_->removeWidget(KLayer);
+            keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer); // no top bar spacer item in keyframe panel
+        }
+        
+        qDebug() << initialIndex << "->" << targetIndex;
+
+
+        emit reorderPathSignal(layer->relatedPath_, initialIndex - targetIndex);
     }
 
     void Timeline::refreshLayer(path* p)

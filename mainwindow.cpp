@@ -148,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QObject::connect(viewPort_, &viewPort::enableBezierToolSignal, [this](){bezierTool(true);});
 
     QObject::connect(TimelinePanel_, &Timeline::setSelectedPath, [&](path* p){viewPort_->setSelectedPath(p);});
+    QObject::connect(TimelinePanel_, &Timeline::reorderPathSignal, viewPort_, &viewPort::reorderPath);
 
     QObject::connect(TimelinePanel_, &Timeline::frameChanged, viewPort_, &viewPort::onFrameChanged);
     QObject::connect(TimelinePanel_, &Timeline::optimize, viewPort_, &viewPort::optimize);

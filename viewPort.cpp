@@ -985,6 +985,7 @@ void viewPort::createTestPath()
     paths_.push_back(testPath);
     emit updateLayer(testPath);
 
+    testPath->setZValue(paths_.size());
     testPath->update();
     scene_->update();
 }
@@ -2404,6 +2405,34 @@ void viewPort::optimize(bool state)
     emit optimizeSignal(state);
 }
 
+void viewPort::reorderPath(path *p, int zDiff)
+{
+    //p.lower(); A method for QWidgets; will not work
+    int initialIndex = paths_.indexOf(p); 
+    if(initialIndex < 0) return;
+    
+    int targetIndex = std::clamp(initialIndex + zDiff, 0, (int)paths_.size() - 1);
+    if(targetIndex == initialIndex) return;
+
+    auto initialIt = paths_.begin() + initialIndex;
+    auto targetIt = paths_.begin() + targetIndex;
+
+    if(initialIt > targetIt){
+        std::rotate(targetIt, initialIt, initialIt + 1);
+    } 
+    else if(initialIt < targetIt){
+        std::rotate(initialIt, initialIt + 1, targetIt + 1);
+    }
+    
+    for(int i = 0; i < paths_.size(); i++){
+        paths_[i]->setZValue(i);
+        paths_[i]->update();
+    }
+
+    update();
+    canvas_->update();
+}
+
 void viewPort::mousePressEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -2442,6 +2471,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
             connect(this, &viewPort::optimizeSignal, currentPath, &path::optimize);
             
             paths_.push_back(currentPath);
+            currentPath->setZValue(paths_.size());
             return; //early return when having just one node
         }
         else{
