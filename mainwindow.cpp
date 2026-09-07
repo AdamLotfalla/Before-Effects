@@ -134,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timer_ = new QTimer(this); 
     timer_->setInterval(1000/frameRate_);
     QObject::connect(timer_, &QTimer::timeout, TimelinePanel_, &Timeline::step);
-    QObject::connect(viewPort_, &viewPort::attributePanelUpdateNeeded, LPanel, &AttributePanelWidget::showObject);
+    QObject::connect(viewPort_, &viewPort::showCorrespondingAttrPanel, LPanel, &AttributePanelWidget::showObject);
     QObject::connect(viewPort_, &viewPort::pathCreated, TimelinePanel_, &Timeline::addLayer);
     QObject::connect(viewPort_, &viewPort::pathDeleted, TimelinePanel_, &Timeline::removeLayer);
     // QObject::connect(viewPort_, &viewPort::updateLayer, TimelinePanel_, &Timeline::onLayersUpdate);

@@ -104,6 +104,7 @@ private:
     void shiftKeyframeLayer(qreal Xdist);
     bool rectSelecting_ = false;
     QRubberBand* rubberBand_ = nullptr;
+    QLineEdit* nameLabel;
 
     bool holding_ = false;
     bool draggingLboundary_ = false;

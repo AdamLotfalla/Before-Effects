@@ -980,7 +980,7 @@ void viewPort::createTestPath()
     testPath->yScaleFrames[11] = 1;
 
     emit pathCreated(testPath);
-    emit attributePanelUpdateNeeded(testPath);
+    emit showCorrespondingAttrPanel(testPath);
     
     paths_.push_back(testPath);
     emit updateLayer(testPath);
@@ -1023,6 +1023,10 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         name_ = nameEdit->text();
         update();
         emit updateLayer();
+    });
+    connect(this, &path::updateName, [this, nameEdit](QString newName){
+        this->name_ = newName;
+        nameEdit->setText(newName);
     });
     // nameEdit->connect(nameEdit, &QLineEdit::editingFinished, &Timeline::updateLayer);
 
@@ -1195,7 +1199,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
     xScaleBox->connect(this, &path::updateSpinBoxes, xScaleBox, [xScaleBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
         xScaleBox->setKeyframe(xscaleF);
         xScaleBox->update();
-    });
+    }); // could be merged into one connect
 
 
     yScaleBox->connect(yScaleBox, &customSpinBox::valueChanged, [this](qreal value){
@@ -2360,7 +2364,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
             selectedPath_->update();
             selectedPath_ = nullptr;
         }
-        emit attributePanelUpdateNeeded(nullptr); // ← notify panel: nothing selected
+        emit showCorrespondingAttrPanel(nullptr); // ← notify panel: nothing selected
         emit selectLayer(nullptr);
         return;
     }
@@ -2368,7 +2372,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
     if (newSelectedPath != nullptr) {
         if (selectedPath_ != newSelectedPath) {
             if(!hideAttributePanel){
-                emit attributePanelUpdateNeeded(newSelectedPath);
+                emit showCorrespondingAttrPanel(newSelectedPath);
             } 
             
             if(selectedPath_ != nullptr){
@@ -2389,7 +2393,7 @@ void viewPort::setSelectedPath(path* newSelectedPath, bool state, bool hideAttri
             selectedPath_->update();
             selectedPath_ = nullptr;
         }
-        emit attributePanelUpdateNeeded(nullptr);
+        emit showCorrespondingAttrPanel(nullptr);
         emit selectLayer(nullptr);
     }
 
@@ -2492,7 +2496,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
                 currentPath->calculateBoundaries();
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
-                emit attributePanelUpdateNeeded(currentPath);
+                emit showCorrespondingAttrPanel(currentPath);
                 emit updateLayer(currentPath);
 
                 emit enableSelectionToolSignal();
@@ -2888,7 +2892,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
             paths_.removeOne(selectedPath_); // remove from the list first
             delete selectedPath_;
             selectedPath_ = nullptr;
-            emit attributePanelUpdateNeeded(nullptr);
+            emit showCorrespondingAttrPanel(nullptr);
         }
         update();
     }
@@ -2907,7 +2911,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
                 currentPath->calculateBoundaries();
                 currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
                 emit pathCreated(currentPath);
-                emit attributePanelUpdateNeeded(currentPath);
+                emit showCorrespondingAttrPanel(currentPath);
                 emit updateLayer(currentPath);
 
                 emit enableSelectionToolSignal();

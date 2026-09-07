@@ -9,6 +9,13 @@
         this->setMinimumHeight(layerHeight_);
         setMouseTracking(true);
 
+        nameLabel = new QLineEdit(relatedPath_->name_, this);
+        nameLabel->setText(relatedPath_->name_);
+        connect(nameLabel, &QLineEdit::editingFinished, this, [this](){
+            // relatedPath_->name_ = nameLabel->text();
+            emit relatedPath_->updateName(nameLabel->text());
+        });
+
         setAutoFillBackground(false);
     }
 
@@ -420,7 +427,7 @@
             painter.setPen(Qt::NoPen);
 
             QFont font = painter.font();
-            font.setPointSize(8.5);
+            font.setPointSize(8);
             painter.setFont(font);
             
             QPainterPath closedExpantionArrow;
@@ -436,7 +443,12 @@
             
             painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
             painter.setPen(QPen("#FFFFFF"));
-            painter.drawText(30,0, this->width() - 60, layerHeight_ - 1, Qt::AlignVCenter, relatedPath_->name_);
+            // painter.drawText(30,0, this->width() - 60, layerHeight_ - 1, Qt::AlignVCenter, relatedPath_->name_);
+            nameLabel->move(30, 0);
+            nameLabel->setFixedSize(this->width() - 60, layerHeight_ - 1);
+            nameLabel->setAlignment(Qt::AlignVCenter);
+            nameLabel->setStyleSheet("color: #FFFFFF; background: transparent; border: none;");
+            nameLabel->show();
             
             QSvgRenderer* visible = new QSvgRenderer(QString(":/LayerUtils/icons/visible.svg"));
             QSvgRenderer* invisible = new QSvgRenderer(QString(":/LayerUtils/icons/invisible.svg"));
@@ -509,7 +521,7 @@
             }
         }
         else if(drawMode_ == DrawMode::keyframe){
-            
+            nameLabel->hide();
             painter.translate(QPoint(Layer::offset_, 0));
 
             QPainterPath Rhombus;

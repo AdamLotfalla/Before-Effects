@@ -483,6 +483,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     std::function<void(qreal)> onRotationChanged;
     signals:
     void updateLayer();
+    void updateName(QString newName);
     void updateSpinBoxes(bool xposF, bool yposF, bool xpivotF, bool ypivotF, 
                          bool rotationF, bool xscaleF, bool yscaleF, 
                          bool RfillF, bool GfillF, bool BfillF, bool AfillF,
@@ -583,7 +584,7 @@ public slots:
     void supressKeyframesSlot(bool state);
 
 signals:
-    void attributePanelUpdateNeeded(AttributePanel* obj);
+    void showCorrespondingAttrPanel(AttributePanel* obj);
     void pathCreated(path* p);
     void pathDeleted(path* p);
     void updateLayer(path* p);
