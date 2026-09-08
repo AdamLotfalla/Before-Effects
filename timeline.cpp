@@ -444,8 +444,19 @@
             painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
             painter.setPen(QPen("#FFFFFF"));
             // painter.drawText(30,0, this->width() - 60, layerHeight_ - 1, Qt::AlignVCenter, relatedPath_->name_);
+            
+            QString text = nameLabel->text();
+            QFontMetrics fm = nameLabel->fontMetrics();
+            int textWidth = fm.horizontalAdvance(text);
+            QMargins tMargins = nameLabel->textMargins();
+            QMargins cMargins = nameLabel->contentsMargins();
+            int totalContentWidth = textWidth 
+                                    + tMargins.left() + tMargins.right() 
+                                    + cMargins.left() + cMargins.right() 
+                                    + 8;
+
             nameLabel->move(30, 0);
-            nameLabel->setFixedSize(this->width() - 60, layerHeight_ - 1);
+            nameLabel->setFixedSize(totalContentWidth, layerHeight_ - 1);
             nameLabel->setAlignment(Qt::AlignVCenter);
             nameLabel->setStyleSheet("color: #FFFFFF; background: transparent; border: none;");
             nameLabel->show();
