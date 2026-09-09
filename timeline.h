@@ -104,7 +104,8 @@ private:
     void shiftKeyframeLayer(qreal Xdist);
     bool rectSelecting_ = false;
     QRubberBand* rubberBand_ = nullptr;
-    QLineEdit* nameLabel;
+    QLineEdit* nameLabelEdit;
+    QLabel* nameLabel;
 
     bool holding_ = false;
     bool draggingLboundary_ = false;
@@ -117,6 +118,7 @@ private:
     int dragFrameOffset_ = 0; 
     //I will use this so the keyframe positions only change visually while dragging the layer, but the changes will be commited and it will be zeroed on unclick 
     QMap<std::map<int,qreal>*, QSet<int>> selectedKeyframes; // each map will contain many selected keyframes
+    bool eventFilter(QObject* watched, QEvent* event) override;
 
 signals:
     void expandedChanged();

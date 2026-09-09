@@ -9,14 +9,47 @@
         this->setMinimumHeight(layerHeight_);
         setMouseTracking(true);
 
-        nameLabel = new QLineEdit(relatedPath_->name_, this);
+        nameLabel = new QLabel(this);
         nameLabel->setText(relatedPath_->name_);
-        connect(nameLabel, &QLineEdit::editingFinished, this, [this](){
-            // relatedPath_->name_ = nameLabel->text();
-            emit relatedPath_->updateName(nameLabel->text());
+        nameLabel->setAlignment(Qt::AlignVCenter);
+        nameLabel->setStyleSheet("color: #FFFFFF; background: transparent; border: none;");
+        nameLabel->installEventFilter(this);
+
+        nameLabelEdit = new QLineEdit(relatedPath_->name_, this);
+        nameLabelEdit->setText(relatedPath_->name_);
+        nameLabelEdit->setAlignment(Qt::AlignVCenter);
+        nameLabelEdit->setStyleSheet("color: #FFFFFF; background: transparent; border: none;");
+
+        nameLabelEdit->hide();
+        nameLabel->show();
+
+
+        connect(nameLabelEdit, &QLineEdit::editingFinished, this, [this](){
+            emit relatedPath_->updateName(nameLabelEdit->text());
+            nameLabel->setText(nameLabelEdit->text());
+            nameLabelEdit->clearFocus();
+            nameLabelEdit->hide();
+            nameLabel->show();
         });
 
+
         setAutoFillBackground(false);
+    }
+
+    bool Layer::eventFilter(QObject* watched, QEvent* event)
+    {
+        if(watched == nameLabel && event->type() == QEvent::MouseButtonDblClick){
+            auto* mouseEvent = static_cast<QMouseEvent*>(event);
+            if(mouseEvent->button() == Qt::LeftButton){
+                nameLabel->hide();
+                nameLabelEdit->show();
+                nameLabelEdit->setFocus();
+                nameLabelEdit->selectAll();
+                update();
+                return true; // consume it
+            }
+        }
+        return QWidget::eventFilter(watched, event);
     }
 
     void Layer::selectKeyframesInRect(QRect localRect, bool additive)
@@ -444,22 +477,23 @@
             painter.drawRoundedRect(0,0, this->width(), layerHeight_, 2, 2);
             painter.setPen(QPen("#FFFFFF"));
             // painter.drawText(30,0, this->width() - 60, layerHeight_ - 1, Qt::AlignVCenter, relatedPath_->name_);
-            
-            QString text = nameLabel->text();
-            QFontMetrics fm = nameLabel->fontMetrics();
+
+            QString text = nameLabelEdit->text();
+            QFontMetrics fm = nameLabelEdit->fontMetrics();
             int textWidth = fm.horizontalAdvance(text);
-            QMargins tMargins = nameLabel->textMargins();
-            QMargins cMargins = nameLabel->contentsMargins();
+            QMargins tMargins = nameLabelEdit->textMargins();
+            QMargins cMargins = nameLabelEdit->contentsMargins();
             int totalContentWidth = textWidth 
                                     + tMargins.left() + tMargins.right() 
                                     + cMargins.left() + cMargins.right() 
                                     + 8;
 
-            nameLabel->move(30, 0);
+            nameLabel->move(30,0);
             nameLabel->setFixedSize(totalContentWidth, layerHeight_ - 1);
-            nameLabel->setAlignment(Qt::AlignVCenter);
-            nameLabel->setStyleSheet("color: #FFFFFF; background: transparent; border: none;");
-            nameLabel->show();
+            
+            nameLabelEdit->move(30, 0);
+            nameLabelEdit->setFixedSize(totalContentWidth, layerHeight_ - 1);
+
             
             QSvgRenderer* visible = new QSvgRenderer(QString(":/LayerUtils/icons/visible.svg"));
             QSvgRenderer* invisible = new QSvgRenderer(QString(":/LayerUtils/icons/invisible.svg"));
@@ -533,6 +567,7 @@
         }
         else if(drawMode_ == DrawMode::keyframe){
             nameLabel->hide();
+            nameLabelEdit->hide();
             painter.translate(QPoint(Layer::offset_, 0));
 
             QPainterPath Rhombus;
@@ -1505,6 +1540,7 @@
             dragLayer_->deleteLater();
             dragLayer_ = nullptr;
         }
+        else return;
 
         if(dragIndicator){
             hierarchyLayerLayout_->removeWidget(dragIndicator);
