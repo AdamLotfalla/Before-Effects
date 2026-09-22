@@ -1528,13 +1528,12 @@
 
         QPoint mappedPos = layer->mapToParent(pos);
         int count = (int)layers_.size();
-        int TotalPreviousLayerHeights = tickBar_->getTopBarHeight();
         int targetIndex = 1; // zero must be the top bar spacing
         for(int i = 0; i < count; i++){
-            auto height = layers_[count - i - 1].first->height();
-            if(TotalPreviousLayerHeights + height > mappedPos.y()) break;
+            auto layer = layers_[count - i - 1].first; //layer at the end is the topmost 4-> 3, 2-> 1, 3 -> 1
+            auto height = layer->pos().y() + 0.5 * layer->height();
+            if(height > mappedPos.y()) break;
 
-            TotalPreviousLayerHeights += height; //layer at the end is the topmost
             targetIndex ++;
         }
         targetIndex = std::clamp(targetIndex, 1, count + 1); //count + 1 to put it at the end
@@ -1562,37 +1561,45 @@ void Timeline::layerReordered(QPoint pos, QPoint holdStartPos, Layer *layer)
     qreal TotalPreviousLayerHeights = tickBar_->getTopBarHeight();
     int targetIndex = 0; // 0-based index into layers_ directly — no spacer offset here (spaghetti)
     for(int i = 0; i < count; i++){
-        auto height = layers_[count - i - 1].first->height();
-        if(TotalPreviousLayerHeights + height > mappedPos.y()) break;
-        TotalPreviousLayerHeights += height; //layer at the end is the topmost
-        targetIndex++;
+        auto l = layers_[count - i - 1].first; //layer at the end is the topmost
+        auto height = l->pos().y() + 0.5 * l->height();
+        if(height > mappedPos.y()) break;
+        targetIndex ++;
     }
     targetIndex = std::clamp(targetIndex, 0, count); // count == layers_.end(), valid only as rotate's upper bound
 
     mappedPos = layer->mapToParent(holdStartPos);
-    int initialIndex = std::floor((mappedPos.y() - tickBar_->getTopBarHeight()) / (float)Layer::getLayerHeight());
+    int initialIndex = 0;
+    for(int i = 1; i < count; i++){
+        if(layers_[count - i - 1].first->pos().y() > mappedPos.y()) break;
+
+        initialIndex++;
+    }
     initialIndex = std::clamp(initialIndex, 0, count - 1); // must reference a REAL element — never end()
 
-    auto targetIt  = layers_.begin() + targetIndex;
-    auto initialIt = layers_.begin() + initialIndex;
-
+    
     auto KLayer = layerLookup_.find(layer->relatedPath_).value().second;
+    
 
+    auto targetIt  = layers_.begin() + count - initialIndex; //to reverse the order since layers are the reverse of the layout order
+    auto initialIt = layers_.begin() + count - targetIndex;
+    
     if(initialIt > targetIt){
-        std::rotate(targetIt, initialIt, initialIt + 1);
-
+        std::rotate(targetIt - 1, targetIt, initialIt); //why -1??
+        
         hierarchyLayerLayout_->removeWidget(layer);
         hierarchyLayerLayout_->insertWidget(targetIndex + 1, layer); // +1 = spacer offset, this layout only
-
+        
         keyframeLayerLayout_->removeWidget(KLayer);
         keyframeLayerLayout_->insertWidget(targetIndex, KLayer); // no spacer in this panel
     }
     else if(initialIt < targetIt){
-        std::rotate(initialIt, initialIt + 1, targetIt);
-
+        //BUG: THE UPMOST LAYER IS THE LAST IN INDEX
+        std::rotate(initialIt, targetIt - 1, targetIt);
+        
         hierarchyLayerLayout_->removeWidget(layer);
         hierarchyLayerLayout_->insertWidget(targetIndex, layer); // layer removed first, so indices shift down by one
-
+        
         keyframeLayerLayout_->removeWidget(KLayer);
         keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer);
     }
