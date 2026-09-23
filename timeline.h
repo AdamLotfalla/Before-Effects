@@ -88,6 +88,7 @@ public:
     QColor color_ = QColor("#F16E7A"); //light coral; temporary
     void setLBoundFrame(int frame);
     void setRBoundFrame(int frame);
+    void updateName(QString newName);
     
 private:
     inline static int offset_;

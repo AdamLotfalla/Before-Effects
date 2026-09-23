@@ -425,6 +425,12 @@
         );
     }
 
+    void Layer::updateName(QString newName)
+    {
+        nameLabel->setText(newName);
+        nameLabelEdit->setText(newName);
+    }
+
     void Layer::paintEvent(QPaintEvent *event)
     {
         QPainter painter(this);
@@ -1561,7 +1567,7 @@ void Timeline::layerReordered(QPoint pos, QPoint holdStartPos, Layer *layer)
     qreal TotalPreviousLayerHeights = tickBar_->getTopBarHeight();
 
     int targetIndex = 1; //0 is the top bar layout position
-    
+
     for(int i = 0; i < count; i++){
         auto l = layers_[count - i - 1].first; //layer at the end is the topmost
         auto height = l->pos().y() + 0.5 * l->height();
@@ -1615,6 +1621,7 @@ void Timeline::layerReordered(QPoint pos, QPoint holdStartPos, Layer *layer)
     {
         auto it = layerLookup_.find(p);
         if(it == layerLookup_.end()) return;
+        it.value().first->updateName(p->name_);
         it.value().first->update();    // now used to repaint the name text since text is extracted every layer paint event
         it.value().second->update();
     }

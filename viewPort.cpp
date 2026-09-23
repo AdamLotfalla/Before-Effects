@@ -1021,6 +1021,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
     nameEdit->connect(nameEdit, &QLineEdit::editingFinished, [this, nameEdit](){
         name_ = nameEdit->text();
+        nameEdit->clearFocus();
         update();
         emit updateLayer();
     });
