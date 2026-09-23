@@ -1559,52 +1559,56 @@ void Timeline::layerReordered(QPoint pos, QPoint holdStartPos, Layer *layer)
 
     QPoint mappedPos = layer->mapToParent(pos);
     qreal TotalPreviousLayerHeights = tickBar_->getTopBarHeight();
-    int targetIndex = 0; // 0-based index into layers_ directly — no spacer offset here (spaghetti)
+
+    int targetIndex = 1; //0 is the top bar layout position
+    
     for(int i = 0; i < count; i++){
         auto l = layers_[count - i - 1].first; //layer at the end is the topmost
         auto height = l->pos().y() + 0.5 * l->height();
         if(height > mappedPos.y()) break;
         targetIndex ++;
     }
-    targetIndex = std::clamp(targetIndex, 0, count); // count == layers_.end(), valid only as rotate's upper bound
+    targetIndex = std::clamp(targetIndex, 1, count + 1);
+
+    int targetVecIndex = targetIndex - 1; //to make it 0-based index
 
     mappedPos = layer->mapToParent(holdStartPos);
-    int initialIndex = 0;
+    int initialVecIndex = 0;
     for(int i = 1; i < count; i++){
         if(layers_[count - i - 1].first->pos().y() > mappedPos.y()) break;
 
-        initialIndex++;
+        initialVecIndex++;
     }
-    initialIndex = std::clamp(initialIndex, 0, count - 1); // must reference a REAL element — never end()
+    initialVecIndex = std::clamp(initialVecIndex, 0, count - 1); // must reference a REAL element — never end()
 
     
     auto KLayer = layerLookup_.find(layer->relatedPath_).value().second;
     
 
-    auto targetIt  = layers_.begin() + count - initialIndex; //to reverse the order since layers are the reverse of the layout order
-    auto initialIt = layers_.begin() + count - targetIndex;
+    auto targetIt  = layers_.begin() + count - initialVecIndex; //to reverse the order since layers are the reverse of the layout order
+    auto initialIt = layers_.begin() + count - targetVecIndex;
     
     if(initialIt > targetIt){
         std::rotate(targetIt - 1, targetIt, initialIt); //why -1??
         
         hierarchyLayerLayout_->removeWidget(layer);
-        hierarchyLayerLayout_->insertWidget(targetIndex + 1, layer); // +1 = spacer offset, this layout only
+        hierarchyLayerLayout_->insertWidget(targetVecIndex + 1, layer); // +1 = spacer offset, this layout only
         
         keyframeLayerLayout_->removeWidget(KLayer);
-        keyframeLayerLayout_->insertWidget(targetIndex, KLayer); // no spacer in this panel
+        keyframeLayerLayout_->insertWidget(targetVecIndex, KLayer); // no spacer in this panel
     }
     else if(initialIt < targetIt){
         //BUG: THE UPMOST LAYER IS THE LAST IN INDEX
         std::rotate(initialIt, targetIt - 1, targetIt);
         
         hierarchyLayerLayout_->removeWidget(layer);
-        hierarchyLayerLayout_->insertWidget(targetIndex, layer); // layer removed first, so indices shift down by one
+        hierarchyLayerLayout_->insertWidget(targetVecIndex, layer); // layer removed first, so indices shift down by one
         
         keyframeLayerLayout_->removeWidget(KLayer);
-        keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer);
+        keyframeLayerLayout_->insertWidget(targetVecIndex - 1, KLayer);
     }
 
-    emit reorderPathSignal(layer->relatedPath_, initialIndex - targetIndex);
+    emit reorderPathSignal(layer->relatedPath_, initialVecIndex - targetVecIndex);
 }
 
     void Timeline::refreshLayer(path* p)
