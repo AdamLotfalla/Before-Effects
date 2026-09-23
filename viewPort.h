@@ -510,7 +510,7 @@ class viewPort : public QGraphicsView{
     void optimize(bool state);
     QRectF canvasSceneRect() const { return canvas_->sceneBoundingRect(); }
 
-    void reorderPath(path* p, int zDiff);
+    void reorderPath(int initialVecIndex, int targetVecIndex);
     
     private:
     QGraphicsScene* scene_;

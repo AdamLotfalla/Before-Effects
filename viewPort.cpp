@@ -2410,23 +2410,21 @@ void viewPort::optimize(bool state)
     emit optimizeSignal(state);
 }
 
-void viewPort::reorderPath(path *p, int zDiff)
+void viewPort::reorderPath(int initialVecIndex, int targetVecIndex)
 {
     //p.lower(); A method for QWidgets; will not work
-    int initialIndex = paths_.indexOf(p); 
-    if(initialIndex < 0) return;
+    //will use the same code as the layer reordering in timeline
+    int count = paths_.size();
+
+    auto targetIt  = paths_.begin() + count - initialVecIndex; //to reverse the order since layers are the reverse of the layout order
+    auto initialIt = paths_.begin() + count - targetVecIndex;
     
-    int targetIndex = std::clamp(initialIndex + zDiff, 0, (int)paths_.size() - 1);
-    if(targetIndex == initialIndex) return;
-
-    auto initialIt = paths_.begin() + initialIndex;
-    auto targetIt = paths_.begin() + targetIndex;
-
     if(initialIt > targetIt){
-        std::rotate(targetIt, initialIt, initialIt + 1);
-    } 
+        std::rotate(targetIt - 1, targetIt, initialIt); //why -1??
+    }
     else if(initialIt < targetIt){
-        std::rotate(initialIt, initialIt + 1, targetIt + 1);
+        //BUG: THE UPMOST LAYER IS THE LAST IN INDEX
+        std::rotate(initialIt, targetIt - 1, targetIt);
     }
     
     for(int i = 0; i < paths_.size(); i++){
