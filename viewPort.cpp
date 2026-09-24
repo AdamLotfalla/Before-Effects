@@ -1121,10 +1121,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    xPositionBox->connect(this, &path::updateSpinBoxes, xPositionBox, [xPositionBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        xPositionBox->setKeyframe(xposF);
-        xPositionBox->update();
-    });
+
 
     yPositionBox->connect(yPositionBox, &customSpinBox::valueChanged, [this](qreal value){
         setPosition(position_.x(), value);
@@ -1144,10 +1141,8 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    yPositionBox->connect(this, &path::updateSpinBoxes, yPositionBox, [yPositionBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        yPositionBox->setKeyframe(yposF);
-        yPositionBox->update();
-    });
+    
+
 
     QHBoxLayout* scaleLayout = new QHBoxLayout();
 
@@ -1210,10 +1205,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    xScaleBox->connect(this, &path::updateSpinBoxes, xScaleBox, [xScaleBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        xScaleBox->setKeyframe(xscaleF);
-        xScaleBox->update();
-    }); // could be merged into one connect
 
 
     yScaleBox->connect(yScaleBox, &customSpinBox::valueChanged, [this](qreal value){
@@ -1232,10 +1223,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    yScaleBox->connect(this, &path::updateSpinBoxes, yScaleBox, [yScaleBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        yScaleBox->setKeyframe(yscaleF);
-        yScaleBox->update();
-    });
+
 
 
     QHBoxLayout* rotationLayout = new QHBoxLayout();
@@ -1285,10 +1273,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    rotationBox->connect(this, &path::updateSpinBoxes, rotationBox, [rotationBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        rotationBox->setKeyframe(rotationF);
-        rotationBox->update();
-    });
+
 
 
     QHBoxLayout* pivotLayout = new QHBoxLayout();
@@ -1326,10 +1311,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    xPivotBox->connect(this, &path::updateSpinBoxes, xPivotBox, [xPivotBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        xPivotBox->setKeyframe(xpivotF);
-        xPivotBox->update();
-    });
+
 
     yPivotBox->connect(yPivotBox, &customSpinBox::valueChanged, [this](qreal value){
         pivotPoint_.setY(value);
@@ -1347,10 +1329,7 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    yPivotBox->connect(this, &path::updateSpinBoxes, yPivotBox, [yPivotBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        yPivotBox->setKeyframe(ypivotF);
-        yPivotBox->update();
-    });
+
 
     VLayout->addSpacing(10);
     QLabel* ColorTitle = new QLabel("Color");
@@ -1521,12 +1500,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-
-    fillRSpinBox->connect(this, &path::updateSpinBoxes, fillRSpinBox, [fillRSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        fillRSpinBox->setKeyframe(RfillF);
-        fillRSpinBox->update();
-    });
-
     fillGSpinBox->connect(fillGSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1534,12 +1507,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-
-    fillGSpinBox->connect(this, &path::updateSpinBoxes, fillGSpinBox, [fillGSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        fillGSpinBox->setKeyframe(GfillF);
-        fillGSpinBox->update();
-    });
-
     fillBSpinBox->connect(fillBSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1547,12 +1514,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-
-    fillBSpinBox->connect(this, &path::updateSpinBoxes, fillBSpinBox, [fillBSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        fillBSpinBox->setKeyframe(BfillF);
-        fillBSpinBox->update();
-    });
-
     fillASpinBox->connect(fillASpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1560,12 +1521,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-
-    fillASpinBox->connect(this, &path::updateSpinBoxes, fillASpinBox, [fillASpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        fillASpinBox->setKeyframe(AfillF);
-        fillASpinBox->update();
-    });
-
     fillEnable->connect(fillEnable, &QCheckBox::toggled, [this, fillPreview, fillHexSpinBox, fillASpinBox, fillRSpinBox, fillGSpinBox, fillBSpinBox](bool state){
         fill_ = state;
         fillPreview->setDisabled(!state);
@@ -1740,7 +1695,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         update();
         emit updateLayer();
     });  
-
     strokeEnable->connect(strokeEnable, &QCheckBox::toggled, [this, strokePreview, strokeHexSpinBox, strokeASpinBox, strokeRSpinBox, strokeGSpinBox, strokeBSpinBox](bool state){
         stroke_ = state;
         strokePreview->setDisabled(!state);
@@ -1753,7 +1707,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
 
         update();
     });
-
     strokeRSpinBox->connect(strokeRSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1761,12 +1714,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-
-    strokeRSpinBox->connect(this, &path::updateSpinBoxes, strokeRSpinBox, [strokeRSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        strokeRSpinBox->setKeyframe(RstrokeF);
-        strokeRSpinBox->update();
-    });
-
     strokeGSpinBox->connect(strokeGSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1774,12 +1721,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-
-    strokeGSpinBox->connect(this, &path::updateSpinBoxes, strokeGSpinBox, [strokeGSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        strokeGSpinBox->setKeyframe(GstrokeF);
-        strokeGSpinBox->update();
-    });
-
     strokeBSpinBox->connect(strokeBSpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1787,12 +1728,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-
-    strokeBSpinBox->connect(this, &path::updateSpinBoxes, strokeBSpinBox, [strokeBSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        strokeBSpinBox->setKeyframe(BstrokeF);
-        strokeBSpinBox->update();
-    });
-
     strokeASpinBox->connect(strokeASpinBox, &customSpinBox::toggledKeyframe, [&](bool state, qreal value){
         if(currentFrame_ == nullptr) return;
         if(state){
@@ -1801,10 +1736,6 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         emit updateLayer();
     });
 
-    strokeASpinBox->connect(this, &path::updateSpinBoxes, strokeASpinBox, [strokeASpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
-        strokeASpinBox->setKeyframe(AstrokeF);
-        strokeASpinBox->update();
-    });
 
 
     fillEnable->setChecked(fill_);
@@ -1856,10 +1787,63 @@ QWidget *path::createAttributeWidget(QWidget *parent)
         }
         emit updateLayer();
     });
-    strokeWidthSpinBox->connect(this, &path::updateSpinBoxes, strokeWidthSpinBox, [strokeWidthSpinBox](bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, bool RfillF, bool GfillF, bool BfillF, bool AfillF, bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
+
+    connect(this, &path::updateSpinBoxes, [xPositionBox, yPositionBox, xScaleBox, yScaleBox, rotationBox, xPivotBox, yPivotBox, 
+            fillRSpinBox, fillGSpinBox, fillBSpinBox, fillASpinBox, 
+            strokeRSpinBox, strokeGSpinBox, strokeBSpinBox, strokeASpinBox, strokeWidthSpinBox]
+            (bool xposF, bool yposF, bool xpivotF, bool ypivotF, bool rotationF, bool xscaleF, bool yscaleF, 
+            bool RfillF, bool GfillF, bool BfillF, bool AfillF, 
+            bool RstrokeF, bool GstrokeF, bool BstrokeF, bool AstrokeF, bool strokeWF){
+
+        xPositionBox->setKeyframe(xposF);
+        xPositionBox->update();
+        
+        yPositionBox->setKeyframe(yposF);
+        yPositionBox->update();
+
+        xScaleBox->setKeyframe(xscaleF);
+        xScaleBox->update();
+
+        yScaleBox->setKeyframe(yscaleF);
+        yScaleBox->update();
+
+        rotationBox->setKeyframe(rotationF);
+        rotationBox->update();
+
+        xPivotBox->setKeyframe(xpivotF);
+        xPivotBox->update();
+
+        yPivotBox->setKeyframe(ypivotF);
+        yPivotBox->update();
+
+        fillRSpinBox->setKeyframe(RfillF);
+        fillRSpinBox->update();
+
+        fillGSpinBox->setKeyframe(GfillF);
+        fillGSpinBox->update();
+
+        fillBSpinBox->setKeyframe(BfillF);
+        fillBSpinBox->update();
+
+        fillASpinBox->setKeyframe(AfillF);
+        fillASpinBox->update();
+
+        strokeRSpinBox->setKeyframe(RstrokeF);
+        strokeRSpinBox->update();
+
+        strokeGSpinBox->setKeyframe(GstrokeF);
+        strokeGSpinBox->update();
+
+        strokeBSpinBox->setKeyframe(BstrokeF);
+        strokeBSpinBox->update();
+
+        strokeASpinBox->setKeyframe(AstrokeF);
+        strokeASpinBox->update();
+
         strokeWidthSpinBox->setKeyframe(strokeWF);
         strokeWidthSpinBox->update();
     });
+
 
     QHBoxLayout* jointLayout = new QHBoxLayout();
     QLabel* JointLabel = new QLabel(background);
