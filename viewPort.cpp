@@ -2432,6 +2432,66 @@ void viewPort::reorderPath(int initialVecIndex, int targetVecIndex)
     }
 }
 
+void viewPort::raiseToTop()
+{
+    //moving to the end of vector since last layer is the topmost
+    if(!selectedPath_) return;
+    int selectedIndex = paths_.indexOf(selectedPath_);
+
+    auto It = paths_.begin() + selectedIndex;
+    std::rotate(It, It + 1, paths_.end());
+
+    for(int i = 0; i < paths_.size(); i++){
+        paths_[i]->setZValue(i);
+    }
+}
+
+void viewPort::lowerToBottom()
+{
+    //moving to the start of vector since last layer is the topmost
+    if(!selectedPath_) return;
+    int selectedIndex = paths_.indexOf(selectedPath_);
+
+    auto It = paths_.begin() + selectedIndex;
+    std::rotate(paths_.begin(), It, It + 1);
+
+    for(int i = 0; i < paths_.size(); i++){
+        paths_[i]->setZValue(i);
+    }
+}
+
+void viewPort::raiseOneStep()
+{
+    // moving towards the end since the last layer is the topmost
+    if(!selectedPath_) return;
+    int selectedIndex = paths_.indexOf(selectedPath_);
+
+    auto It = paths_.begin() + selectedIndex;
+    if(It != paths_.end() - 1){
+        std::rotate(It, It + 1, It + 2);
+    }
+
+    for(int i = 0; i < paths_.size(); i++){
+        paths_[i]->setZValue(i);
+    }
+}
+
+void viewPort::lowerOneStep()
+{
+    // moving towards the start since the last layer is the topmost
+    if(!selectedPath_) return;
+    int selectedIndex = paths_.indexOf(selectedPath_);
+
+    auto It = paths_.begin() + selectedIndex;
+    if(It != paths_.begin()){
+        std::rotate(It - 1, It, It + 1);
+    }
+
+    for(int i = 0; i < paths_.size(); i++){
+        paths_[i]->setZValue(i);
+    }
+}
+
 void viewPort::mousePressEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -2924,6 +2984,18 @@ void viewPort::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == 'S'){
         emit enableSelectionToolSignal();
+    }
+    else if(event->key() == Qt::Key_Home){
+        raiseToTop();
+    }
+    else if(event->key() == Qt::Key_PageUp){
+        raiseOneStep();
+    }
+    else if(event->key() == Qt::Key_End){
+        lowerToBottom();
+    }
+    else if(event->key() == Qt::Key_PageDown){
+        lowerOneStep();
     }
 }
 
