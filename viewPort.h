@@ -19,6 +19,8 @@
 #include <QDebug>
 #include <QStyleOptionGraphicsItem>
 #include "common_widget_styles.h"
+#include <cstdlib> // Required for rand() and srand()
+#include <ctime>   // Required for time()
 
 enum class handleMode{
     smooth,   //circle(M)
@@ -501,7 +503,7 @@ class viewPort : public QGraphicsView{
     void enableSelectionTool(bool state);
     void enableNodeTool(bool state);
     void enableBezierTool(bool state);
-    void createTestPath();
+    void createTestPath(QString name = "testPath", QString fillColor = "#EDAE49", bool keyframe = false);
 
 
     void setSelectedPath(path* newSelectedPath = nullptr, bool state = true, bool hideAttributePanel = false);
@@ -594,6 +596,7 @@ signals:
     void pathDeleted(path* p);
     void updateLayer(path* p);
     void selectLayer(path* p);
+    void reorderLayerSignal(int initialVecIndex, int targetVecIndex);
     void frameChanged();
     void optimizeSignal(bool state);
     void supressKeyframesSignal(bool state);

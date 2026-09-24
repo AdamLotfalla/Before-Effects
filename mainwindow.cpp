@@ -146,15 +146,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QObject::connect(viewPort_, &viewPort::enableSelectionToolSignal, [this](){selectionTool(true);});
     QObject::connect(viewPort_, &viewPort::enableNodeToolSignal, [this](){nodeTool(true);});
     QObject::connect(viewPort_, &viewPort::enableBezierToolSignal, [this](){bezierTool(true);});
+    QObject::connect(viewPort_, &viewPort::reorderLayerSignal, TimelinePanel_, &Timeline::reorderLayers);
 
     QObject::connect(TimelinePanel_, &Timeline::setSelectedPath, [&](path* p){viewPort_->setSelectedPath(p);});
     QObject::connect(TimelinePanel_, &Timeline::reorderPathSignal, viewPort_, &viewPort::reorderPath);
+
 
     QObject::connect(TimelinePanel_, &Timeline::frameChanged, viewPort_, &viewPort::onFrameChanged);
     QObject::connect(TimelinePanel_, &Timeline::optimize, viewPort_, &viewPort::optimize);
 
     selectionTool(true);
-    viewPort_->createTestPath();
+    viewPort_->createTestPath("Orange", "#EDAE49", true);
+    viewPort_->createTestPath("Pink", "#dd40a1");
+    viewPort_->createTestPath("Blue", "#4295cc");
+    viewPort_->createTestPath("Green", "#abd858");
+
+    viewPort_->setFocus();
 }
 
 MainWindow::~MainWindow()

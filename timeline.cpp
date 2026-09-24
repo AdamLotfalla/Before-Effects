@@ -1570,50 +1570,26 @@
 
         for(int i = 0; i < count; i++){
             auto l = layers_[count - i - 1].first; //layer at the end is the topmost
+            if(l == layer) continue; //this layer will be removed to be moved
             auto height = l->pos().y() + 0.5 * l->height();
             if(height > mappedPos.y()) break;
             targetIndex ++;
         }
-        targetIndex = std::clamp(targetIndex, 1, count + 1);
-
-        int targetVecIndex = targetIndex - 1; //to make it 0-based index
+        targetIndex = std::clamp(targetIndex, 1, count + 1); //count + 1 because target could be after the last element (before the strech), unlike initialIndex
 
         mappedPos = layer->mapToParent(holdStartPos);
-        int initialVecIndex = 0;
+        int initialIndex = 1;
         for(int i = 1; i < count; i++){
             if(layers_[count - i - 1].first->pos().y() > mappedPos.y()) break;
 
-            initialVecIndex++;
+            initialIndex++;
         }
-        initialVecIndex = std::clamp(initialVecIndex, 0, count - 1); // must reference a REAL element — never end()
+        initialIndex = std::clamp(initialIndex, 1, count);
 
-        
-        auto KLayer = layerLookup_.find(layer->relatedPath_).value().second;
-        
+        int initialVecIndex = count - initialIndex; //make it 0 based and reverse the order
+        int targetVecIndex = count - targetIndex; 
 
-        auto targetIt  = layers_.begin() + count - initialVecIndex; //to reverse the order since layers are the reverse of the layout order
-        auto initialIt = layers_.begin() + count - targetVecIndex;
-        
-        if(initialIt > targetIt){
-            std::rotate(targetIt - 1, targetIt, initialIt); //why -1??
-            
-            hierarchyLayerLayout_->removeWidget(layer);
-            hierarchyLayerLayout_->insertWidget(targetVecIndex + 1, layer); // +1 = spacer offset, this layout only
-            
-            keyframeLayerLayout_->removeWidget(KLayer);
-            keyframeLayerLayout_->insertWidget(targetVecIndex, KLayer); // no spacer in this panel
-        }
-        else if(initialIt < targetIt){
-            //BUG: THE UPMOST LAYER IS THE LAST IN INDEX
-            std::rotate(initialIt, targetIt - 1, targetIt);
-            
-            hierarchyLayerLayout_->removeWidget(layer);
-            hierarchyLayerLayout_->insertWidget(targetVecIndex, layer); // layer removed first, so indices shift down by one
-            
-            keyframeLayerLayout_->removeWidget(KLayer);
-            keyframeLayerLayout_->insertWidget(targetVecIndex - 1, KLayer);
-        }
-
+        reorderLayers(initialVecIndex, targetVecIndex);
         emit reorderPathSignal(initialVecIndex, targetVecIndex);
     }
 
@@ -1626,6 +1602,41 @@
         it.value().second->update();
     }
 
+    void Timeline::reorderLayers(int initialVecIndex, int targetVecIndex)
+    {
+        //THE UPMOST LAYER IS THE LAST IN INDEX
+        int count = layers_.size();
+        if(initialVecIndex == targetVecIndex) return;
+
+        auto initialIt = layers_.begin() + initialVecIndex;
+        auto targetIt  = layers_.begin() + targetVecIndex;
+
+        
+        auto layer = layers_[initialVecIndex].first;
+        auto KLayer = layers_[initialVecIndex].second;
+
+        int targetIndex = count - targetVecIndex; //1-indexed, reverse of vecIndex
+        
+        if(initialIt > targetIt){ //initialVecIndex > targetVecIndex ==> initialIndex < targetIndex
+            std::rotate(targetIt, initialIt, initialIt + 1);
+            
+            hierarchyLayerLayout_->removeWidget(layer);
+            hierarchyLayerLayout_->insertWidget(targetIndex, layer); //layerReordered already accounts for the -1 made by removing the layer 
+            
+            keyframeLayerLayout_->removeWidget(KLayer);
+            keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer);
+        }
+        else if(initialIt < targetIt){ //initialVecIndex < targetvecIndex ==> initialIndex > targetIndex
+            std::rotate(initialIt, initialIt + 1, targetIt + 1);
+            
+            hierarchyLayerLayout_->removeWidget(layer);
+            hierarchyLayerLayout_->insertWidget(targetIndex, layer);
+            
+            keyframeLayerLayout_->removeWidget(KLayer);
+            keyframeLayerLayout_->insertWidget(targetIndex - 1, KLayer);
+        }
+    }
+    
     void Timeline::setSelectedLayer(path *p)
     {
         if(p == nullptr){ setActiveLayer(nullptr); return; }

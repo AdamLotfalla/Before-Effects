@@ -246,6 +246,7 @@ public:
     void addLayer(path* p);
     void removeLayer(path* p);
     void setActiveLayer(Layer *l); //active layer will always point to the hierarchy layer
+    void reorderLayers(int initialVecIndex, int targetVecIndex);
     
 private:
     int *frameRate_; // initialized on creating the instance 

@@ -945,16 +945,24 @@ void path::makeDirty()
     needTransformUpdate_ = true;
 }
 
-void viewPort::createTestPath()
+void viewPort::createTestPath(QString name, QString fillColor, bool keyframe)
 {
-    QPointF points[4] = {{400,400}, {400,800}, {800,800}, {800,400}};
+    qreal rand1 = (rand() % 8 + 1) * 100;
+    qreal rand2;
+    do{rand2 = (rand() % 8 + 1) * 100;}while(rand1 == rand2);
+    qreal randl = (rand() % 5 + 1) * 100;
+    QPointF p1 = {rand1, rand2};
+    QPointF p2 = {rand1 + randl, rand2 + randl};
+
+    QVector<node*> nodes;
+    nodes.push_back(new node(p1));
+    nodes.push_back(new node({p1.x(), p2.y()}));
+    nodes.push_back(new node(p2));
+    nodes.push_back(new node({p2.x(), p1.y()}));
+
     QVector<QVector<int>> edges = {{1}, {2}, {3}, {0}};
-    QVector<node*> defaultPathNodes;
-    for(auto i : points){
-        node* temporaryNode = new node(i);
-        defaultPathNodes.push_back(temporaryNode);
-    }
-    path* testPath = new path(defaultPathNodes, edges, canvas_, &inPathEditingMode_, currentFrame_);
+
+    path* testPath = new path(nodes, edges, canvas_, &inPathEditingMode_, currentFrame_);
     testPath->setDrawingMode(true);
     setSelectedPath(testPath, true, true);
 
@@ -972,12 +980,17 @@ void viewPort::createTestPath()
     
     testPath->calculateBoundaries();
     testPath->position_ = {(testPath->minX_ + testPath->maxX_)/2.0, (testPath->minY_ + testPath->maxY_)/2.0};
+    testPath->fillColor_ = fillColor;
+    testPath->name_ = name;
 
-    testPath->xPositionFrames[3] = 600;
-    testPath->xPositionFrames[17] = 1200;
 
-    testPath->rotationFrames[7] = 90;
-    testPath->yScaleFrames[11] = 1;
+    if(keyframe){
+        testPath->xPositionFrames[3] = 600;
+        testPath->xPositionFrames[17] = 1200;
+        
+        testPath->rotationFrames[7] = 90;
+        testPath->yScaleFrames[11] = 1;
+    }
 
     emit pathCreated(testPath);
     emit showCorrespondingAttrPanel(testPath);
@@ -2286,6 +2299,7 @@ void path::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
 
 viewPort::viewPort(QWidget* parent, int* frame): QGraphicsView(parent)
 {    
+    std::srand(std::time(0));
     currentFrame_ = frame;
     scene_ = new QGraphicsScene(0,0, 2560, 1600, this);
     this->setScene(scene_);
@@ -2430,6 +2444,8 @@ void viewPort::reorderPath(int initialVecIndex, int targetVecIndex)
     for(int i = 0; i < paths_.size(); i++){
         paths_[i]->setZValue(i);
     }
+
+    //this function is already called by layers so no need to emit reorderLayerSignal();
 }
 
 void viewPort::raiseToTop()
@@ -2444,6 +2460,8 @@ void viewPort::raiseToTop()
     for(int i = 0; i < paths_.size(); i++){
         paths_[i]->setZValue(i);
     }
+    
+    emit reorderLayerSignal(selectedIndex, paths_.size() - 1);
 }
 
 void viewPort::lowerToBottom()
@@ -2458,6 +2476,8 @@ void viewPort::lowerToBottom()
     for(int i = 0; i < paths_.size(); i++){
         paths_[i]->setZValue(i);
     }
+
+    emit reorderLayerSignal(selectedIndex, 0);
 }
 
 void viewPort::raiseOneStep()
@@ -2469,11 +2489,13 @@ void viewPort::raiseOneStep()
     auto It = paths_.begin() + selectedIndex;
     if(It != paths_.end() - 1){
         std::rotate(It, It + 1, It + 2);
+        emit reorderLayerSignal(selectedIndex, selectedIndex + 1);
     }
-
+    
     for(int i = 0; i < paths_.size(); i++){
         paths_[i]->setZValue(i);
     }
+    
 }
 
 void viewPort::lowerOneStep()
@@ -2481,10 +2503,11 @@ void viewPort::lowerOneStep()
     // moving towards the start since the last layer is the topmost
     if(!selectedPath_) return;
     int selectedIndex = paths_.indexOf(selectedPath_);
-
+    
     auto It = paths_.begin() + selectedIndex;
     if(It != paths_.begin()){
         std::rotate(It - 1, It, It + 1);
+        emit reorderLayerSignal(selectedIndex, selectedIndex - 1);
     }
 
     for(int i = 0; i < paths_.size(); i++){
