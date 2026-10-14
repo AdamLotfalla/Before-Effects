@@ -60,7 +60,11 @@ Use the follwing keys to raise/lower paths over/behind others:
 
 
 ### Timeline
-https://github.com/user-attachments/assets/de1e72f0-30f8-41dd-91aa-80e473c752b4
+
+
+[https://github.com/user-attachments/assets/cc516a98-f381-4e43-bc20-877ee9542848](https://github.com/user-attachments/assets/a67d0935-b265-41f6-af6a-9f66e8041f94)
+
+
 - Click and drag on the top bar to move the time indicator. Use the 5 playback control buttons to control it precisely. Use the zoom slider or buttons to zoom.
 - Paths are shown as layers in their order of drawing and named. The selected path has a yellow highlight.
 - Double click the layer name to rename the path.
