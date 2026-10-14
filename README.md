@@ -34,7 +34,7 @@ Use the follwing keys to raise/lower paths over/behind others:
 
 - Click to add a linear node
 - Click and drag to add a bezier symmetric node. Release to set handles
-- Go near the start node to see the snap rectangle. Click there to close the path and end drawing.
+- Go near the start node to see the snap rectangle; click there to close the path and end drawing. Or Press enter mid-drawing to finish it
 
 ### Attribute panel
 - Modify attributes like
@@ -50,9 +50,10 @@ Use the follwing keys to raise/lower paths over/behind others:
     - Stroke Width
     - Joint Style (Miter, Bevel, Round)
 
-        <img width="175" height="175" alt="image" src="https://github.com/user-attachments/assets/baed10db-d457-46c5-8770-7aa4e5d9aff0" />
-        <img width="175" height="175" alt="image" src="https://github.com/user-attachments/assets/1e189f68-f06d-4923-8390-643eb7a7d5b2" />
-        <img width="175" height="175" alt="image" src="https://github.com/user-attachments/assets/ebb11a37-e9d5-44d3-9370-aeb62a8198cc" />
+        <img width="200" height="200" alt="Bevel Joint" src="https://github.com/user-attachments/assets/3afa1ca5-ac16-4199-a262-5a80bf07c778" />
+        <img width="200" height="200" alt="Round Joint" src="https://github.com/user-attachments/assets/4513e704-71bb-4793-ad5e-62cc15bf0c42" />
+        <img width="200" height="200" alt="Miterl Joint" src="https://github.com/user-attachments/assets/e084d8c0-5d58-4644-946b-067f34f80d0f" />
+
 
     - Cap Style (Square, Flat, Round)
 
@@ -66,8 +67,9 @@ https://github.com/user-attachments/assets/de1e72f0-30f8-41dd-91aa-80e473c752b4
 - Show/Hide the path using the eye icon.
 - Click on the diamond symbol on any attribute that has it in the attribute panel, a similar diamond will be shown on the corresponding layer on the current frame
 
-<img width="158" height="34" alt="image" src="https://github.com/user-attachments/assets/615990c9-a0b6-46ee-a1b3-399f7355dc54" />
-<img width="157" height="28" alt="image" src="https://github.com/user-attachments/assets/5d721ea5-f60f-42dd-bd33-8e7cacaab5bd" />
+    <img width="160" height="30" alt="Not Keyframed" src="https://github.com/user-attachments/assets/cdc053eb-826f-485e-ad8c-4e358cc274c0" />
+    <img width="160" height="30" alt="Kyeframed" src="https://github.com/user-attachments/assets/95e807fe-5157-4712-999b-152a0c26bc5f" />
+
 
 - Expand a layer with keyframes to see which keyframes are for which attributes.
 - Drage keyframes. Select multiple by making a selection box or by pressing shift while clicking.
