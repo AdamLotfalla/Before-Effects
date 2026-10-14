@@ -156,10 +156,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QObject::connect(TimelinePanel_, &Timeline::optimize, viewPort_, &viewPort::optimize);
 
     selectionTool(true);
-    viewPort_->createTestPath("Orange", "#EDAE49", true);
-    viewPort_->createTestPath("Pink", "#dd40a1");
-    viewPort_->createTestPath("Blue", "#4295cc");
-    viewPort_->createTestPath("Green", "#abd858");
+    // viewPort_->createTestPath("Orange", "#EDAE49", true);
+    // viewPort_->createTestPath("Pink", "#dd40a1");
+    // viewPort_->createTestPath("Blue", "#4295cc");
+    // viewPort_->createTestPath("Green", "#abd858");
 
     viewPort_->setFocus();
 }
