@@ -119,7 +119,3 @@ Fedora
 ``` 
 sudo dnf install ffmpeg
 ```
-
-Uploading Tutorial_3.mp4…
-
-https://github.com/user-attachments/assets/083edd17-71d1-4805-838b-4fa0ad429842
