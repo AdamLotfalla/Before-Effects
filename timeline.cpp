@@ -811,10 +811,14 @@
         case 1:
             tickInterval_ = 20;
             break;
-        case 2 ... 3:
+        case 2:
+        case 3:
             tickInterval_ = 10;
             break;
-        case 4 ... 7:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
             tickInterval_ = 5;
             break;
         default:
