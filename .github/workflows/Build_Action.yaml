@@ -1,29 +1,63 @@
-name: Build
+name: Build Qt Executable
+
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
+  build:
+    name: Build Executable
+    # Matrix strategy lets you build for Windows, Ubuntu, and macOS simultaneously
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            qt-arch: win64_msvc2022_64
+          - os: ubuntu-latest
+            qt-arch: gcc_64
+          - os: macos-latest
+            qt-arch: clang_64
 
-  Build_Windows:
-    include: win64_msvc2022_64
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Clone
-        uses: actions/chekout@v4
+      # Step 1: Clone your source code repository onto the runner
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
 
-      - run: choco install ninja 
-      - name: Install Qt
+      # Step 2: Install system-level build tools (Ninja makes builds much faster)
+      - name: Install Build Tools (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt-get update && sudo apt-get install -y ninja-build libgl1-mesa-dev
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            brew install ninja
+          fi
+
+      - name: Install Ninja (Windows)
+        if: matrix.os == 'windows-latest'
+        run: choco install ninja
+
+      # Step 3: Define and pull the Qt dependency
+      - name: Install Qt Dependency
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.10.1'               # Define the specific Qt Version
-          arch: win64_msvc2022_64   # Pull the matching architecture from matrix
-          cache: true    
+          version: '6.8.3'               # Define the specific Qt Version
+          arch: ${{ matrix.qt-arch }}    # Pull the matching architecture from matrix
+          modules: 'qtcharts'            # Optional: Add specific components if needed
+          cache: true                    # Speed up consecutive runs by caching Qt binaries
+
+      # Step 4: Configure and Compile your executable using CMake
       - name: Configure CMake
         run: cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release
 
       - name: Compile Application
         run: cmake --build build --config Release
 
+      # Step 5: Upload the compiled binary as a GitHub artifact
       - name: Upload Build Artifact
         uses: actions/artifacts-upload@v4
         with:
@@ -31,17 +65,3 @@ jobs:
           path: |
             build/my_qt_app
             build/Release/my_qt_app.exe
-
-
-  # Build_Linux:
-  #   include: gcc_64
-  #   runs-on: ubunto-latest
-  #   steps:
-  #     - run: sudo apt-get update && sudo apt-get install -y ninja-build libgl1-mesa-dev
-
-
-  # Build_Mac:
-  #   include: clang_64
-  #   runs-on: mac-latest
-  #   steps:
-  #     - run: brew install ninja
