@@ -29,8 +29,6 @@ int main(int argc, char *argv[])
     w.showMaximized();
     w.setWindowIcon(QIcon(":/Program/icons/Program_icon.svg"));
 
-    int ret = a.exec();
-    qDebug() << "exec returned" << ret;
-    return ret;
+    return a.exec();
 }
 
