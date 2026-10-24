@@ -3,6 +3,9 @@ name: Build
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: ${{ matrix.name }}
@@ -12,7 +15,7 @@ jobs:
       matrix:
         include:
           - name: Linux
-            os: ubuntu-24.04
+            os: ubuntu-22.04
             qt_arch: ""
           - name: Windows
             os: windows-2022
@@ -52,25 +55,38 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Path dist | Out-Null
+          New-Item -ItemType Directory -Path dist, release | Out-Null
           Copy-Item build/Release/Before_Effects.exe dist/
-          windeployqt --release dist/Before_Effects.exe
+          windeployqt --release --compiler-runtime dist/Before_Effects.exe
+          Compress-Archive -Path dist -DestinationPath release/Before_Effects-Windows.zip
 
       - name: Package macOS
         if: runner.os == 'macOS'
         run: |
           macdeployqt build/Before_Effects.app -dmg
-          mkdir dist
-          mv build/Before_Effects.dmg dist/
+          mkdir release
+          mv build/Before_Effects.dmg release/Before_Effects-macOS.dmg
 
       - name: Package Linux
         if: runner.os == 'Linux'
         run: |
-          mkdir dist
-          cp build/Before_Effects dist/
+          mkdir release
+          export QMAKE=$(which qmake)
+          export APPIMAGE_EXTRACT_AND_RUN=1
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy*.AppImage
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir -e build/Before_Effects -d packaging/Before_Effects.desktop -i packaging/Before_Effects.png --plugin qt --output appimage
+          mv Before_Effects*.AppImage release/Before_Effects-Linux-x86_64.AppImage
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Before_Effects-${{ matrix.name }}
-          path: dist/
+          path: release/
+
+      # - name: Publish release
+      #   if: startsWith(github.ref, 'refs/tags/v')
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     files: release/*
