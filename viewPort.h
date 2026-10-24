@@ -21,6 +21,7 @@
 #include "common_widget_styles.h"
 #include <cstdlib> // Required for rand() and srand()
 #include <ctime>   // Required for time()
+#include <QPointer>
 
 enum class handleMode{
     smooth,   //circle(M)
@@ -436,7 +437,7 @@ class path : public QObject, public QGraphicsItem, public AttributePanel{
     QPainterPath shape() const override;
     
     //optimization
-    QWidget* cachedAttributeWidget_ = nullptr;
+    QPointer<QWidget> cachedAttributeWidget_ = nullptr;
     bool needTransformUpdate_ = true;
     void updateTransformedNodes();
     
