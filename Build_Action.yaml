@@ -1,0 +1,47 @@
+name: Build
+on:
+  workflow_dispatch:
+
+jobs:
+
+  Build_Windows:
+    include: win64_msvc2022_64
+    runs-on: windows-latest
+    steps:
+      - name: Clone
+        uses: actions/chekout@v4
+
+      - run: choco install ninja 
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.10.1'               # Define the specific Qt Version
+          arch: win64_msvc2022_64   # Pull the matching architecture from matrix
+          cache: true    
+      - name: Configure CMake
+        run: cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release
+
+      - name: Compile Application
+        run: cmake --build build --config Release
+
+      - name: Upload Build Artifact
+        uses: actions/artifacts-upload@v4
+        with:
+          name: qt-app-${{ matrix.os }}
+          path: |
+            build/my_qt_app
+            build/Release/my_qt_app.exe
+
+
+  # Build_Linux:
+  #   include: gcc_64
+  #   runs-on: ubunto-latest
+  #   steps:
+  #     - run: sudo apt-get update && sudo apt-get install -y ninja-build libgl1-mesa-dev
+
+
+  # Build_Mac:
+  #   include: clang_64
+  #   runs-on: mac-latest
+  #   steps:
+  #     - run: brew install ninja
