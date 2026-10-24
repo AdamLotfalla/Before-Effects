@@ -41,8 +41,10 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-dev libxkbcommon-x11-0 libxcb-cursor0
-
+          sudo apt-get install -y gcc-12 g++-12 libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-dev libxkbcommon-x11-0 libxcb-cursor0
+          echo "CC=gcc-12" >> "$GITHUB_ENV"
+          echo "CXX=g++-12" >> "$GITHUB_ENV"
+          
       - name: Configure
         shell: bash
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
