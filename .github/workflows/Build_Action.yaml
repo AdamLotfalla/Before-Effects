@@ -1,67 +1,77 @@
-name: Build Qt Executable
+name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build Executable
-    # Matrix strategy lets you build for Windows, Ubuntu, and macOS simultaneously
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - os: windows-latest
-            qt-arch: win64_msvc2022_64
-          - os: ubuntu-latest
-            qt-arch: gcc_64
-          - os: macos-latest
-            qt-arch: clang_64
-
-    runs-on: ${{ matrix.os }}
+          - name: Linux
+            os: ubuntu-24.04
+            qt_arch: ""
+          - name: Windows
+            os: windows-2022
+            qt_arch: win64_msvc2022_64
+          - name: macOS
+            os: macos-14
+            qt_arch: ""
 
     steps:
-      # Step 1: Clone your source code repository onto the runner
-      - name: Checkout Source Code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # Step 2: Install system-level build tools (Ninja makes builds much faster)
-      - name: Install Build Tools (Linux/macOS)
-        if: matrix.os != 'windows-latest'
-        run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            sudo apt-get update && sudo apt-get install -y ninja-build libgl1-mesa-dev
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            brew install ninja
-          fi
-
-      - name: Install Ninja (Windows)
-        if: matrix.os == 'windows-latest'
-        run: choco install ninja
-
-      # Step 3: Define and pull the Qt dependency
-      - name: Install Qt Dependency
+      - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.8.3'               # Define the specific Qt Version
-          arch: ${{ matrix.qt-arch }}    # Pull the matching architecture from matrix
-          modules: 'qtcharts'            # Optional: Add specific components if needed
-          cache: true                    # Speed up consecutive runs by caching Qt binaries
+          version: 6.8.*
+          arch: ${{ matrix.qt_arch }}
+          cache: true
 
-      # Step 4: Configure and Compile your executable using CMake
-      - name: Configure CMake
-        run: cmake -B build -S . -G "Ninja" -DCMAKE_BUILD_TYPE=Release
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-dev libxkbcommon-x11-0 libxcb-cursor0
 
-      - name: Compile Application
-        run: cmake --build build --config Release
+      - name: Configure
+        shell: bash
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-      # Step 5: Upload the compiled binary as a GitHub artifact
-      - name: Upload Build Artifact
-        uses: actions/artifacts-upload@v4
+      - name: Build
+        shell: bash
+        run: cmake --build build --config Release --parallel
+
+      - name: Package Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist | Out-Null
+          Copy-Item build/Release/Before_Effects.exe dist/
+          windeployqt --release dist/Before_Effects.exe
+
+      - name: Package macOS
+        if: runner.os == 'macOS'
+        run: |
+          macdeployqt build/Before_Effects.app -dmg
+          mkdir dist
+          mv build/Before_Effects.dmg dist/
+
+      - name: Package Linux
+        if: runner.os == 'Linux'
+        run: |
+          mkdir dist
+          cp build/Before_Effects dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: qt-app-${{ matrix.os }}
-          path: |
-            build/my_qt_app
-            build/Release/my_qt_app.exe
+          name: Before_Effects-${{ matrix.name }}
+          path: dist/
