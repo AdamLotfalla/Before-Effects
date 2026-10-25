@@ -68,10 +68,10 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Path dist, release | Out-Null
-          Copy-Item build/Release/Before_Effects.exe dist/
-          windeployqt --release --compiler-runtime dist/Before_Effects.exe
-          Compress-Archive -Path dist -DestinationPath release/Before_Effects-Windows.zip
+          New-Item -ItemType Directory -Path Before_Effects, release | Out-Null
+          Copy-Item build/Release/Before_Effects.exe Before_Effects/
+          windeployqt --release --compiler-runtime Before_Effects/Before_Effects.exe
+          Compress-Archive -Path Before_Effects -DestinationPath release/Before_Effects-Windows.zip
 
       - name: Package macOS
         if: runner.os == 'macOS'
@@ -98,8 +98,11 @@ jobs:
           name: Before_Effects-${{ matrix.name }}
           path: release/
 
-      # - name: Publish release
-      #   if: startsWith(github.ref, 'refs/tags/v')
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     files: release/*
+      - name: Upload to latest release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          echo "Uploading to $TAG"
+          gh release upload "$TAG" release/* --repo "$GITHUB_REPOSITORY" --clobber
