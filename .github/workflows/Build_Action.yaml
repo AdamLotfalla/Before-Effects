@@ -76,9 +76,15 @@ jobs:
       - name: Package macOS
         if: runner.os == 'macOS'
         run: |
-          macdeployqt build/Before_Effects.app -dmg
-          mkdir release
-          mv build/Before_Effects.dmg release/Before_Effects-macOS.dmg
+          sudo mdutil -a -i off || true
+          macdeployqt build/Before_Effects.app
+          mkdir -p release
+          for i in 1 2 3 4 5; do
+            hdiutil create -volname Before_Effects -srcfolder build/Before_Effects.app -ov -format UDZO release/Before_Effects-macOS.dmg && break
+            echo "hdiutil failed (attempt $i), retrying..."
+            sleep 10
+          done
+          test -f release/Before_Effects-macOS.dmg
 
       - name: Package Linux
         if: runner.os == 'Linux'
