@@ -519,6 +519,7 @@ class viewPort : public QGraphicsView{
     void raiseOneStep();
     void lowerOneStep();
 
+
     
     private:
     QGraphicsScene* scene_;
@@ -586,6 +587,7 @@ class viewPort : public QGraphicsView{
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void resizeEvent(QResizeEvent* event) override;
+    void endDrawing();
 
 public slots:
     void onFrameChanged(int frame);

@@ -2330,6 +2330,7 @@ void viewPort::enableSelectionTool(bool state)
     selectionToolActivated_ = state;
     if(selectedPath_ != nullptr)
         selectedPath_->update();
+    endDrawing();
 }
 
 void viewPort::enableNodeTool(bool state)
@@ -2341,6 +2342,7 @@ void viewPort::enableNodeTool(bool state)
         selectedPath_->clearHighlightedNodes();
         selectedPath_->update();
     }
+    endDrawing();
 }
 
 void viewPort::enableBezierTool(bool state)
@@ -2499,6 +2501,24 @@ void viewPort::lowerOneStep()
     }
 }
 
+void viewPort::endDrawing()
+{
+    if(startedNewPath_){
+        path* currentPath = paths_.back();
+        currentPath->clearPreviewPoint();
+        currentPath->setDrawingMode(false);
+        currentPath->showSnapMargin(false);
+        
+        startedNewPath_ = false;
+        
+        currentPath->calculateBoundaries();
+        currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
+        emit pathCreated(currentPath);
+        emit showCorrespondingAttrPanel(currentPath);
+        emit updateLayer(currentPath);
+    }
+}
+
 void viewPort::mousePressEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -2553,18 +2573,7 @@ void viewPort::mousePressEvent(QMouseEvent *event)
 
             if (snap) {
                 currentPath->addEdge(lastPointIndex, 0);
-                currentPath->clearPreviewPoint();
-                currentPath->setDrawingMode(false);
-                currentPath->showSnapMargin(false);
-            
-                startedNewPath_ = false;
-
-                currentPath->calculateBoundaries();
-                currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
-                emit pathCreated(currentPath);
-                emit showCorrespondingAttrPanel(currentPath);
-                emit updateLayer(currentPath);
-
+                endDrawing();
                 emit enableSelectionToolSignal();
             }
             else{
@@ -2966,21 +2975,9 @@ void viewPort::keyPressEvent(QKeyEvent *event)
         controlPressed_ = true;
     }
     else if(event->key() == Qt::Key_Return){
+        endDrawing();
         if(startedNewPath_){
-                path* currentPath = paths_.back();
-                currentPath->clearPreviewPoint();
-                currentPath->setDrawingMode(false);
-                currentPath->showSnapMargin(false);
-            
-                startedNewPath_ = false;
-
-                currentPath->calculateBoundaries();
-                currentPath->position_ = {(currentPath->minX_ + currentPath->maxX_)/2.0, (currentPath->minY_ + currentPath->maxY_)/2.0};
-                emit pathCreated(currentPath);
-                emit showCorrespondingAttrPanel(currentPath);
-                emit updateLayer(currentPath);
-
-                emit enableSelectionToolSignal();
+            emit enableSelectionToolSignal();
         }
     }
     else if(event->key() == 'B'){
@@ -2990,6 +2987,7 @@ void viewPort::keyPressEvent(QKeyEvent *event)
         emit enableNodeToolSignal();
     }
     else if(event->key() == 'S'){
+        endDrawing();
         emit enableSelectionToolSignal();
     }
     else if(event->key() == Qt::Key_Home){
