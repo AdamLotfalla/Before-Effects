@@ -1,6 +1,9 @@
 # Before Effects Release 1.1.0
 A cross-platform motion graphics desktop software supporting basic vector drawing and animation. Built using c++ Qt wigets and CMake.
 
+https://github.com/user-attachments/assets/6e815b78-18b6-4250-96a5-9d9c6fbae0cd
+
+
 ## Features
 
 Use the follwing keys to raise/lower paths over/behind others:
